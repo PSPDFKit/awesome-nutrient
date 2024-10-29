@@ -5,7 +5,7 @@
 When working with PSPDFKit Web SDK, you may need to detect when the UI has fully loaded to determine setting some configurations in your application accordingly.
 
 
-## Proposed Suggestion
+## Proposed Workaround
 
 While we don't have a specific event for UI loading completion, there are two effective approaches to detect when the UI has loaded:
 
