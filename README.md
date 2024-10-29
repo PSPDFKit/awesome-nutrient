@@ -35,6 +35,7 @@ Other examples:
 - [React](https://github.com/PSPDFKit/pspdfkit-web-example-react)
 - [Angular](https://github.com/PSPDFKit/pspdfkit-web-example-angular)
 - [Next.js](https://github.com/PSPDFKit/pspdfkit-web-example-nextjs)
+- [Next.js v15 + Locally Hosted SDK Assets](https://github.com/PSPDFKit/pspdfkit-web-example-nextjs-15)
 - [Nuxt2 + Vuetify](https://github.com/PSPDFKit/pspdfkit-web-example-nuxt2-with-vuetify)
 
 #### Annotations
