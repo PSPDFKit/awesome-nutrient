@@ -64,7 +64,7 @@ While we don't have a specific event for UI loading completion, there are two ef
 
 ## Summary
 
-While PSPDFKit Web SDK doesn't provide a direct event for UI loading completion, you can use either the `renderPageCallback` or a MutationObserver to detect when the UI has loaded. Choose the method that best fits your specific use case and application architecture.
+While PSPDFKit Web SDK doesn't provide a direct event for UI loading completion, you can use either the `renderPageCallback` or a `MutationObserver` to detect when the UI has loaded. Choose the method that best fits your specific use case and application architecture.
 
 Remember to test your implementation thoroughly to ensure it works consistently across different documents and loading scenarios.
 
