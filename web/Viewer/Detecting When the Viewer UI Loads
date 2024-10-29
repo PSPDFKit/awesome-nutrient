@@ -59,7 +59,7 @@ While we don't have a specific event for UI loading completion, there are two ef
 ## Choosing the Right Approach
 
 - Use `renderPageCallback` if you need to know when specific pages are rendered or if you prefer using PSPDFKit's built-in APIs.
-- Use the MutationObserver approach if you want a more general solution that doesn't depend on PSPDFKit-specific callbacks.
+- Use the `MutationObserver` approach if you want a more general solution that doesn't depend on Nutrient specific callbacks.
 
 
 ## Summary
