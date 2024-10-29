@@ -2,14 +2,14 @@
 
 ## Introduction
 
-When working with PSPDFKit Web SDK, you may need to detect when the UI has fully loaded to determine setting some configurations in your application accordingly.
+When working with Nutrient Web SDK, you may need to detect when the UI has fully loaded to determine setting some configurations in your application accordingly.
 
 
 ## Proposed Workaround
 
 While we don't have a specific event for UI loading completion, there are two effective approaches to detect when the UI has loaded:
 
-1. Using [renderPageCallback](https://pspdfkit.com/guides/web/current/rendering/custom-page-rendering/#rendering-pages-with-custom-annotations):
+1. Using [renderPageCallback](https://www.nutrient.io/api/web/PSPDFKit.Configuration.html#renderPageCallback):
 
    ```javascript
    let globalInstance;
@@ -54,12 +54,12 @@ While we don't have a specific event for UI loading completion, there are two ef
    ```
 
 - This approach listens for changes in the DOM, specifically for the addition of elements with the `PSPDFKit-Page` class.
-- It's a more general method that doesn't rely on PSPDFKit-specific APIs.
+- It's a more general method that doesn't rely on Nutrient-specific APIs.
 
 ## Choosing the Right Approach
 
-- Use `renderPageCallback` if you need to know when specific pages are rendered or if you prefer using PSPDFKit's built-in APIs.
-- Use the `MutationObserver` approach if you want a more general solution that doesn't depend on Nutrient specific callbacks.
+- Use `renderPageCallback` if you need to know when specific pages are rendered or if you prefer using Nutrient's built-in APIs.
+- Use the `MutationObserver` approach if you want a more general solution that doesn't depend on Nutrient-specific callbacks.
 
 
 ## Summary
