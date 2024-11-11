@@ -1,0 +1,27 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.App-input {
+  border: 0;
+  display: block;
+  width: 100%;
+  background: rgb(97, 139, 224);
+  color: white;
+  font-size: 1.2em;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
+.App-input input[type="file"] {
+  display: none;
+}
+
+.App-viewer {
+  position: relative;
+  flex: 1;
+}
