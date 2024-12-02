@@ -9,7 +9,7 @@ This repository contains examples built with PSPDFKit. These examples are not of
 
 ## Web
 
-A wide variety of examples what PSPDFKit for Web can do can be found in the [Example Catalog](https://github.com/PSPDFKit/pspdfkit-web-examples-catalog) - [Try them online](https://web-examples.services.demo.pspdfkit.com/).
+A wide variety of examples what PSPDFKit for Web can do can be found in the [Example Catalog](https://github.com/PSPDFKit/pspdfkit-web-examples-catalog) - [Try them online](https://web-examples.our.services.nutrient-powered.io/).
 
 - **Electronic Signatures:** Use our API to add electronic signature images to PDFs.
 - **Watermarks:** Add custom content (like images, text, and logos) as watermarks to your PDF pages.
