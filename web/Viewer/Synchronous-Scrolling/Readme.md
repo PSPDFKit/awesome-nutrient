@@ -20,7 +20,7 @@ Renders a document in two @Document Viewer instances, side by side. Scrolling th
     npm install
     ```
 
-3. Copy the PSPDFKit for Web library assets to the `public` directory:
+3. Copy the Nutrient Web SDK library assets to the `public` directory:
     ```sh
     cp -R ./node_modules/pspdfkit/dist/pspdfkit-lib/ assets/pspdfkit-lib
     cp -R ./node_modules/pspdfkit/dist/pspdfkit.js assets/

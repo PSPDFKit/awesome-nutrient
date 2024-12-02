@@ -1,19 +1,19 @@
-# Awesome PSPDFKit
+# Awesome Nutrient
 
 ![The PDF SDK Developers Trust](./resources/header.png)
 
 [![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)
 [![Chat](https://img.shields.io/badge/chat-on_discord-7289da.svg)](https://discord.gg/Z754Pfb8bD)
 
-This repository contains examples built with PSPDFKit. These examples are not officially supported. They may stop working, they may not be repaired -- and still serve for inspiration. Read [the disclaimer](https://github.com/PSPDFKit/awesome-pspdfkit/blob/master/DISCLAIMER.md) or [reach out if you have questions](https://support.pspdfkit.com/hc/en-us/requests/new).
+This repository contains examples built with Nutrient. These examples are not officially supported. They may stop working, they may not be repaired -- and still serve for inspiration. Read [the disclaimer](https://github.com/PSPDFKit/awesome-pspdfkit/blob/master/DISCLAIMER.md) or [reach out if you have questions](https://support.pspdfkit.com/hc/en-us/requests/new).
 
 ## Web
 
-A wide variety of examples what PSPDFKit for Web can do can be found in the [Example Catalog](https://github.com/PSPDFKit/pspdfkit-web-examples-catalog) - [Try them online](https://web-examples.our.services.nutrient-powered.io/).
+A wide variety of examples what Nutrient Web SDK can do can be found in the [Example Catalog](https://github.com/PSPDFKit/pspdfkit-web-examples-catalog) - [Try them online](https://web-examples.our.services.nutrient-powered.io/).
 
 - **Electronic Signatures:** Use our API to add electronic signature images to PDFs.
 - **Watermarks:** Add custom content (like images, text, and logos) as watermarks to your PDF pages.
-- **Image Annotations:** Annotate images with PSPDFKit for Web.
+- **Image Annotations:** Annotate images with Nutrient Web SDK.
 - **Custom UI for Annotations:** Create a fully customized UI for working with annotations.
 - **Custom Annotation Permissions:** Define custom permissions for annotation types.
 - **Custom Annotation Tools:** Add your own tools or actions when an annotation is selected.
@@ -143,7 +143,7 @@ Other examples:
 - [Add a custom button in the Create Signature Modal that changes a custom state](https://www.nutrient.io/playground?p=eyJ2IjoxLCJqcyI6ImxldCBjb3VudD0wO2Z1bmN0aW9uIGNvdW50ZXIoKXtjb3VudCsrfWNvbnN0e2NyZWF0ZUJsb2NrOmNyZWF0ZUJsb2NrLEludGVyZmFjZXM6SW50ZXJmYWNlcyxSZWNpcGVzOlJlY2lwZXMsQ29yZTpDb3JlfT1QU1BERktpdC5VSTtQU1BERktpdC5sb2FkKHsuLi5iYXNlT3B0aW9ucyx0aGVtZTpQU1BERktpdC5UaGVtZS5EQVJLLHVpOntbSW50ZXJmYWNlcy5DcmVhdGVTaWduYXR1cmVdOih7cHJvcHM6cHJvcHN9KT0%252BKHtjb250ZW50OmNyZWF0ZUJsb2NrKFJlY2lwZXMuQ3JlYXRlU2lnbmF0dXJlLHByb3BzLCgoe3VpOnVpLHN0YXRlOnN0YXRlfSk9Pihcbi8vIEN1c3RvbWlzYXRpb24gY29kZSBnb2VzIGhlcmVcbnVpLmluc2VydEFmdGVyKCd0aXRsZScsY3JlYXRlQmxvY2soQ29yZS5BY3Rpb25CdXR0b24se2xhYmVsOnN0YXRlLmdldCgnY2xpY2tDb3VudCcpPz9jb3VudCx2YXJpYW50OidzdWNjZXNzJ30pKSx1aS5pbnNlcnRBZnRlcigndGl0bGUnLGNyZWF0ZUJsb2NrKENvcmUuQWN0aW9uQnV0dG9uLHtsYWJlbDonSW5jcmVtZW50JyxvblByZXNzOigpPT57Y291bnRlcigpLC8vIEluY3JlbWVudCBhbmQgbG9nIHRoZSBjb3VudGVyXG5zdGF0ZS5zZXQoJ2NsaWNrQ291bnQnLGNvdW50KX0sdmFyaWFudDonc2Vjb25kYXJ5JywnYXJpYS1sYWJlbCc6J0luY3JlbWVudCd9KSksdWkuY3JlYXRlQ29tcG9uZW50KCkpKSkuY3JlYXRlQ29tcG9uZW50KCl9KX19KS50aGVuKChpbnN0YW5jZT0%252Be2NvbnNvbGUubG9nKCdQU1BERktpdCBsb2FkZWQhJyksY29uc29sZS5sb2coJ0FQSSBkb2NzOiBodHRwczovL3BzcGRma2l0LmNvbS9hcGkvd2ViLycpLGNvbnNvbGUubG9nKCdHdWlkZXM6IGh0dHBzOi8vcHNwZGZraXQuY29tL2d1aWRlcy93ZWIvJyl9KSk7In0%253D) This examples displays and changes a custom state in the Create Signature Modal
 -
 ## AI
-- [Document Assistant for PSPDFKit](https://github.com/PSPDFKit/ai-document-assistant-demo) - AI Document Assistant for PSPDFKit Demo showcases how to interact with PDFs using natural language commands powered by AI, integrated with PSPDFKit for Web.
+- [Document Assistant for PSPDFKit](https://github.com/PSPDFKit/ai-document-assistant-demo) - AI Document Assistant for PSPDFKit Demo showcases how to interact with PDFs using natural language commands powered by AI, integrated with Nutrient Web SDK.
 
 ## iOS
 
@@ -154,7 +154,7 @@ Other examples:
 - [Android Catalog](https://github.com/PSPDFKit/pspdfkit-android-catalog) - A wide variety of examples what PSPDFKit for Android can do. Clone it and play with it.
 
 ## Windows
-- [Using PSPDFKit for Web in WinUI3 app](/windows/pspdfkit-with-winui3) - Learn how to use web SDK in WinUI3 app or any app that supports WebView2.
+- [Using Nutrient Web SDK in WinUI3 app](/windows/pspdfkit-with-winui3) - Learn how to use web SDK in WinUI3 app or any app that supports WebView2.
 
 ## Cross-Platform
 

@@ -20,7 +20,7 @@ This project enables speech-to-text functionality, allowing you to speak and con
     ```bash
     npm install
 
-4.  Copy the PSPDFKit for Web library assets to the public directory by running:
+4.  Copy the Nutrient Web SDK library assets to the public directory by running:
     ```bash
     cp -R ./node_modules/pspdfkit/dist/pspdfkit-lib public/pspdfkit-lib
 
