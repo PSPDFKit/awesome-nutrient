@@ -2,7 +2,7 @@
   "name": "pspdfkit-vite",
   "version": "1.0.0",
   "type": "module",
-  "description": "Standalone and offline PDF viewer web application built with PSPDFKit for Web and React",
+  "description": "Standalone and offline PDF viewer web application built with Nutrient Web SDK and React",
   "keywords": [
     "wasm",
     "web",

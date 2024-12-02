@@ -52,7 +52,7 @@ Please ensure you have signed our CLA so that we can accept your contributions.
 
 ## Support, Issues and License Questions
 
-PSPDFKit offers support for customers with an active SDK license via [PSPDFKit Support](https://support.nutrient.io/hc/en-us/requests/new).
+Nutrient offers support for customers with an active SDK license via [PSPDFKit Support](https://support.nutrient.io/hc/en-us/requests/new).
 
 Are you [evaluating our SDK](https://www.nutrient.io/getting-started/web/?frontend=vanillajs&download=npm&integration=global-variable)? That's great, we're happy to help out! To make sure this is fast, please use a work email and have someone from your company fill out our [sales form](https://www.nutrient.io/contact-sales).
 
