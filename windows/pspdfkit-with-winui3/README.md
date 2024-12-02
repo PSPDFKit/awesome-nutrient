@@ -11,4 +11,4 @@ This is a simple example of how to use the Nutrient Web SDK SDK in a WinUI 3 app
 
 ## Contact Us
 
-If you have any questions, please feel free to get in touch with us - [support](https://pspdfkit.com/support/request/)
+If you have any questions, please feel free to get in touch with us - [support](https://www.nutrient.io/support/request/)

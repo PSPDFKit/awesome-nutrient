@@ -1,6 +1,6 @@
 # Redact_onebyone_PSPDFKit
 
-This is a simple sample project built in React, TypeScript, and Vite to mark the text for redactions programmatically using the PSPDFKit Web SDK. It allows users to review redaction annotations and either accept or reject them.
+This is a simple sample project built in React, TypeScript, and Vite to mark the text for redactions programmatically using the Nutrient Web SDK. It allows users to review redaction annotations and either accept or reject them.
 
 ## Prerequisites
 
@@ -54,9 +54,9 @@ Please ensure you have signed our CLA so that we can accept your contributions.
 
 ## Support, Issues and License Questions
 
-PSPDFKit offers support for customers with an active SDK license via [PSPDFKit Support](https://pspdfkit.com/support/request/).
+Nutrient offers support for customers with an active SDK license via [PSPDFKit Support](https://www.nutrient.io/support/request/).
 
-Are you [evaluating our SDK](https://pspdfkit.com/try/)? That's great, we're happy to help out! To make sure this is fast, please use a work email and have someone from your company fill out our [sales form](https://pspdfkit.com/sales/).
+Are you [evaluating our SDK](https://www.nutrient.io/sdk/try)? That's great, we're happy to help out! To make sure this is fast, please use a work email and have someone from your company fill out our [sales form](https://www.nutrient.io/contact-sales/).
 
 ## Disclaimer
 

@@ -1,6 +1,6 @@
 # Signing Demo - VanillaJS
 
-This proof of concept (POC) demonstrates a signing demo using PSPDFKit. Admin can select the signee from the context menu of the sign field.
+This proof of concept (POC) demonstrates a signing demo using Nutrient Web SDK. Admin can select the signee from the context menu of the sign field.
 
 ## Usage
 

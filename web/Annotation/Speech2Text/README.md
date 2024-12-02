@@ -45,7 +45,7 @@ This project is licensed under the BSD license. See the LICENSE file for more de
 Please ensure you have signed our CLA so that we can accept your contributions.
 
 ## Support, Issues, and License Questions
-PSPDFKit offers support for customers with an active SDK license via PSPDFKit Support.
+Nutrient offers support for customers with an active SDK license via PSPDFKit Support.
 
 ### Are you evaluating our SDK? We're happy to help! To ensure quick assistance, please use a work email and have someone from your company fill out our sales form.
 

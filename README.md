@@ -147,19 +147,19 @@ Other examples:
 
 ## iOS
 
-- [iOS Catalog](https://github.com/PSPDFKit/pspdfkit-ios-catalog) - A wide variety of examples what PSPDFKit for iOS can do. Clone it and play with it.
+- [iOS Catalog](https://github.com/PSPDFKit/pspdfkit-ios-catalog) - A wide variety of examples what Nutrient iOS SDK can do. Clone it and play with it.
 
 ## Android
 
-- [Android Catalog](https://github.com/PSPDFKit/pspdfkit-android-catalog) - A wide variety of examples what PSPDFKit for Android can do. Clone it and play with it.
+- [Android Catalog](https://github.com/PSPDFKit/pspdfkit-android-catalog) - A wide variety of examples what Nutrient Android SDK can do. Clone it and play with it.
 
 ## Windows
 - [Using Nutrient Web SDK in WinUI3 app](/windows/pspdfkit-with-winui3) - Learn how to use web SDK in WinUI3 app or any app that supports WebView2.
 
 ## Cross-Platform
 
-- [React Native Catalog](https://github.com/PSPDFKit/react-native/tree/master/samples/Catalog) - A diverse range of examples showcasing what PSPDFKit for React Native is capable of. Clone the repository and explore its features firsthand.
-- [MAUI Catalog](https://github.com/PSPDFKit/pspdfkit-maui-catalog) - A diverse range of examples showcasing what PSPDFKit for MAUI is capable of. Clone the repository and explore its features.
-- [Flutter Sample](https://github.com/PSPDFKit/pspdfkit-flutter/tree/master/example) - Discover a practical example showcasing the power of PSPDFKit for Flutter.
-- [.NET for Android Sample](https://github.com/PSPDFKit/dotnet-pdf-library-for-android/tree/main/samples) - Learn how to use C# Bindings for PSPDFKit for Android.
-- [.NET for iOS Sample](https://github.com/PSPDFKit/dotnet-pdf-library-for-ios/tree/main/Samples) - Learn how to use C# Bindings for PSPDFKit for iOS.
+- [React Native Catalog](https://github.com/PSPDFKit/react-native/tree/master/samples/Catalog) - A diverse range of examples showcasing what Nutrient React Native SDK is capable of. Clone the repository and explore its features firsthand.
+- [MAUI Catalog](https://github.com/PSPDFKit/pspdfkit-maui-catalog) - A diverse range of examples showcasing what Nutrient MAUI SDK is capable of. Clone the repository and explore its features.
+- [Flutter Sample](https://github.com/PSPDFKit/pspdfkit-flutter/tree/master/example) - Discover a practical example showcasing the power of Nutrient Flutter SDK.
+- [.NET for Android Sample](https://github.com/PSPDFKit/dotnet-pdf-library-for-android/tree/main/samples) - Learn how to use C# Bindings for Nutrient Android SDK.
+- [.NET for iOS Sample](https://github.com/PSPDFKit/dotnet-pdf-library-for-ios/tree/main/Samples) - Learn how to use C# Bindings for Nutrient iOS SDK.
