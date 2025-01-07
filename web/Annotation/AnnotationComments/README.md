@@ -1,6 +1,6 @@
 # Annotation Comments POC
 
-This is a proof-of-concept project showcasing the usage of comment linked to annotations automatically with PSPDFKit. Please note that this project is built using a [nightly build](https://pspdfkit.com/guides/web/troubleshooting/nightlies/) version of PSPDFKit. For production applications, we recommend using the official stable version.
+This is a proof-of-concept project showcasing the usage of comment linked to annotations automatically with Nutrient. Please note that this project is built using a [nightly build](https://pspdfkit.com/guides/web/troubleshooting/nightlies/) version of Nutrient Web SDK. For production applications, we recommend using the official stable version.
 
 To get started with this project, follow the instructions below:
 

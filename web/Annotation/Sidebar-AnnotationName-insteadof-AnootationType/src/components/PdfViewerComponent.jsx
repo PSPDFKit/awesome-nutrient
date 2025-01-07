@@ -150,7 +150,7 @@ export default function PdfViewerComponent(props) {
           },
         })
       ),
-      console.log("PSPDFKit for Web successfully loaded!", instance);
+      console.log("Nutrient Web SDK successfully loaded!", instance);
 
       instance.addEventListener("textSelection.change", async (textSelection) => {
         if (textSelection) {

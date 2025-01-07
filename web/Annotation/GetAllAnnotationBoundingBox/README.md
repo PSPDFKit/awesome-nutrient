@@ -45,9 +45,9 @@ Please ensure you have signed our CLA so that we can accept your contributions.
 
 ## Support, Issues and License Questions
 
-PSPDFKit offers support for customers with an active SDK license via https://pspdfkit.com/support/request/
+Nutrient offers support for customers with an active SDK license via https://www.nutrient.io/support/request/
 
-Are you [evaluating our SDK](https://pspdfkit.com/try/)? That's great, we're happy to help out! To make sure this is fast, please use a work email and have someone from your company fill out our sales form: https://pspdfkit.com/sales/
+Are you [evaluating our SDK](https://www.nutrient.io/sdk/try)? That's great, we're happy to help out! To make sure this is fast, please use a work email and have someone from your company fill out our sales form: https://www.nutrient.io/contact-sales/
 
 ### About
 Get all annotations coordinates, create annotations from clipboard data, cut, copy, and paste annotations between pages, and jump and zoom into annotations or just jump to the next annotation without zooming in.
