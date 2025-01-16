@@ -11,7 +11,6 @@ import {
 } from "./helpers.js";
 
 // We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
-// const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.5.2/";
 const baseUrl = `${window.location.protocol}//${window.location.host}/assets/`;
 
 const classButtons = generateAddToClasses(classes);
@@ -52,9 +51,7 @@ const docEditToolItems = [
 ];
 
 const docEditFootItems = [
-  // downloadAllClass,
   ...modifiedSecondHalfClassButtons,
-  // ...PSPDFKit.defaultDocumentEditorFooterItems,
 ];
 
 
@@ -72,11 +69,6 @@ function initializePSPDFKit(pdfArrayBuffer) {
     // initialViewState: new PSPDFKit.ViewState().set("interactionMode",PSPDFKit.InteractionMode.DOCUMENT_EDITOR),
     styleSheets: [`/style.css`],
   }
-  
-  // let licenseKey = process.env.PSPDFKIT_LICENSE_KEY;
-  // if (licenseKey) {
-  //   pspdfkitConfig = { ...pspdfkitConfig, licenseKey };
-  // }
 
   PSPDFKit.load(pspdfkitConfig)
     .then(async (instance) => {

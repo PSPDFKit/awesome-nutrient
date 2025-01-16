@@ -46,10 +46,6 @@ export const classes = [
 // Enable or disable the download button based on whether all pages are finalised
 export function enableDownIfAllFinalised() {
   const totalPages = window.instance.totalPageCount;
-  // const finalisedData = JSON.parse(
-  //   localStorage.getItem("finalisedData") || "[]"
-  // );
-
 
   // Create a set of all finalised page indices
   const finalisedPages = new Set(
@@ -90,9 +86,6 @@ export function downloadFile(buffer, filename) {
 // Apply stored finalisations to the document UI
 export function applyStoredFinalisations() {
   setTimeout(() => {
-    // let finalisedData = JSON.parse(
-    //   localStorage.getItem("finalisedData") || "[]"
-    // );
     clearAllFinalisations();
     window.finalisedData.forEach((item) => {
       item.pages.forEach((page) => {
@@ -111,9 +104,6 @@ export function applyStoredFinalisations() {
 
 // Add this new function to get the currently active classification
 export function getActiveClassification() {
-  // const finalisedData = JSON.parse(
-  //   localStorage.getItem("finalisedData") || "[]"
-  // );
   const temporaryItem = window.finalisedData.find(
     (item) => item.label === "Temporary"
   );
@@ -150,23 +140,6 @@ export function generateAddToClasses(classes) {
           // Filter out already finalised pages
           const nonFinalisedPages = selectedPages; //.filter((pageIndex) => !isPageFinalised(pageIndex));
 
-          // if (nonFinalisedPages.length === 0) {
-          //   alert(
-          //     "All selected pages are already finalised. You cannot add more classifications to finalised pages."
-          //   );
-          //   return;
-          // }
-
-          // if (nonFinalisedPages.length < selectedPages.length) {
-          //   alert(
-          //     `Some selected pages are already finalised and will be skipped. Proceeding with ${nonFinalisedPages.length} non-finalised pages.`
-          //   );
-          // }
-
-          // Get existing finalisedData from localStorage
-          // let finalisedData = JSON.parse(
-          //   localStorage.getItem("finalisedData") || "[]"
-          // );
           let existingItem = window.finalisedData.find(
             (item) => item.label === "Temporary"
           );
@@ -303,8 +276,6 @@ export function clearAllFinalisations() {
     }
   });
 }
-
-// export const downloadAllClass = {
 //   type: "custom",
 //   id: "DownClasses",
 //   className: "class",
@@ -686,7 +657,6 @@ async function getScrollContainer() {
       return scrollContainer;
     }
     attempts++;
-    // console.log("Scroll container not found. Retrying..."+attempts);
     
     await new Promise((resolve) => setTimeout(resolve, 50)); // Retry after 50ms
   }
