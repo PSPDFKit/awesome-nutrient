@@ -1,0 +1,29 @@
+{
+  "name": "signing-demo-baseline",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "copyPSPDF": "cp -R ./node_modules/pspdfkit/dist/pspdfkit-lib public/pspdfkit-lib",
+    "build": "npm run copyPSPDF && next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@baseline-ui/core": "^0.18.1",
+    "@baseline-ui/recipes": "^0.18.1",
+    "@baseline-ui/tokens": "^0.18.1",
+    "next": "14.1.4",
+    "pspdfkit": "^2024.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.1.4",
+    "typescript": "^5.4.5"
+  }
+}

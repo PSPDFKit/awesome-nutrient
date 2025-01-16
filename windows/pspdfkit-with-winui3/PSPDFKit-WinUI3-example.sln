@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSPDFKitWinUI3Example", "PSPDFKitWinUI3Example\PSPDFKitWinUI3Example.csproj", "{B827072A-2698-4B86-9C43-99344C37A9FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{64116F42-4599-4EB2-9065-4C97B218A7F6}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Debug|ARM64.Build.0 = Debug|ARM64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Debug|x64.ActiveCfg = Debug|x64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Debug|x64.Build.0 = Debug|x64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Debug|x64.Deploy.0 = Debug|x64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Debug|x86.ActiveCfg = Debug|x86
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Debug|x86.Build.0 = Debug|x86
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Debug|x86.Deploy.0 = Debug|x86
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Release|ARM64.ActiveCfg = Release|ARM64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Release|ARM64.Build.0 = Release|ARM64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Release|ARM64.Deploy.0 = Release|ARM64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Release|x64.ActiveCfg = Release|x64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Release|x64.Build.0 = Release|x64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Release|x64.Deploy.0 = Release|x64
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Release|x86.ActiveCfg = Release|x86
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Release|x86.Build.0 = Release|x86
+		{B827072A-2698-4B86-9C43-99344C37A9FA}.Release|x86.Deploy.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8B324F40-CF65-40ED-BB84-6D6AED6B8CAF}
+	EndGlobalSection
+EndGlobal

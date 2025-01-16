@@ -1,0 +1,103 @@
+/* CSS for download popup */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 9999;
+  }
+  
+  .modal-content {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 80rem;
+    width: 100%;
+    padding: 1.5rem;
+  }
+  
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .modal-text {
+    margin-bottom: 1rem;
+  }
+  
+  .folder-structure {
+    margin-bottom: 1rem;
+  }
+  
+  .folder-title {
+    font-weight: 600;
+  }
+  
+  .subfolder {
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  .subfolder-title {
+    font-weight: 600;
+  }
+  
+  .file-list {
+    list-style-type: disc;
+    list-style-position: inside;
+    margin-left: 1rem;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    border: 0.5px solid grey;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .button-cancel {
+    background-color: #e2e8f0;
+    color: #1a202c;
+  }
+  
+  .button-cancel:hover {
+    background-color: #cbd5e0;
+  }
+  
+  .button-confirm {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .button-confirm:hover {
+    background-color: #2563eb;
+  }
+  
+  .button-confirm:disabled {
+    background-color: #93c5fd;
+    cursor: not-allowed;
+  }
+
+  .list-container{
+    overflow-y: auto;
+    height: 50vh;
+    background: whitesmoke;
+    border-radius: 25px;
+  }

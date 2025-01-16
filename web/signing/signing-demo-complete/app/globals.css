@@ -1,0 +1,107 @@
+@import "@baseline-ui/tokens/dist/index.css";
+@import "@baseline-ui/core/dist/index.css";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+@import "@baseline-ui/recipes/dist/index.css";
+
+@layer reset {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+._1gzftth6 {
+  display: block !important;
+}
+
+body {
+  font-family: "Inter", "sans-serif" !important;
+  /* @apply text-gray-70; */
+}
+
+.input-custom-style button {
+  border: 1px solid #d7dce4;
+  background: #ffffff;
+  height: 44px;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3d434e;
+}
+
+.heading-custom-style {
+  border: 1px solid #d7dce4;
+  background: #ffffff;
+  height: 44px;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3d434e;
+  margin-bottom: 10px;
+}
+
+.highlight-signee{
+  border-color: #4537de !important;
+}
+
+.heading-custom-style_hover {
+  border: 1px solid #d7dce4;
+  background: #ffffff;
+  height: 44px;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.7s ease;
+  color: #3d434e;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.cross {
+  opacity: 0;
+  transition: all 0.3s ease;
+  visibility: hidden;
+}
+
+.heading-custom-style_hover:hover {
+  transition: all 0.7s ease;
+  background: #edfbff;
+}
+
+.heading-custom-style_hover:hover .cross {
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.custom-button {
+  width: 100%;
+  height: 33px;
+  padding: 8px 16px 8px 16px;
+  border-radius: 6px;
+  background: #4537de;
+  color: #ffffff;
+  text-align: center !important;
+  font-size: 14px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.para {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14.52px;
+  text-align: left;
+}

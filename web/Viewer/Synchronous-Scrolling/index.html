@@ -49,7 +49,7 @@
       scrollElement.scrollTop = customViewState.scrollTop;
     }
 
-    // Load the left viewer with PSPDFKit
+    // Load the left viewer with Nutrient
     PSPDFKit.load({
       container: "#pspdfkitLeft",
       document: "https://pj-document-bucket.s3.ca-central-1.amazonaws.com/The+Magnificent+Agreement+Regarding+the+History+of+the+Portable+Document+Format.pdf",
@@ -67,7 +67,7 @@
       console.error("Error loading left viewer:", error.message);
     });
 
-    // Load the right viewer with PSPDFKit
+    // Load the right viewer with Nutrient
     PSPDFKit.load({
       container: "#pspdfkitRight",
       document: "https://pj-document-bucket.s3.ca-central-1.amazonaws.com/The+Magnificent+Agreement+Regarding+the+History+of+the+Portable+Document+Format.pdf",

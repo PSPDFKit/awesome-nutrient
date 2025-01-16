@@ -1,0 +1,106 @@
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  
+}
+
+/* Body styles */
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Header styles */
+header {
+  background-color: #4941a1;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  height: 5%;
+  vertical-align: middle;
+}
+
+Avatar
+{
+  direction: rtl !important;
+}
+
+/* Main container styles */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:space-between;
+  margin: 5px;
+}
+
+/* Left column styles */
+.left-column {
+  width: 15%;
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+
+.bdrcol {
+border: red;
+border-width: 2;
+border-style:groove;
+border-radius: 20%;
+padding: 7px;
+}
+
+/* Right column styles */
+.right-column {
+  width: 85%;
+  background-color: #fff;
+  padding: 5px;
+}
+
+/* Footer styles */
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  clear: both;
+}
+
+/* Responsive layout - adjust the columns for smaller screens */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  left-column, right-column {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+.btnstyle {
+  display: inline-block;
+  padding: 5px 8px;
+  font-size: 14px;
+  cursor:all-scroll;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #0b0b0b;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 6px #999;
+align-self: center;
+width: 180px;
+height:25px;
+transition: height 1s;
+}
+
+/* .btnstyle:hover {background-color: #3e8e41; height: 30px; font-size: larger;} */
+
+/* .btnstyle:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+} */

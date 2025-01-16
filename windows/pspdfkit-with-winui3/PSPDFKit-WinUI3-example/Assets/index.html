@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>PSPDFKit for Electron Example App</title>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f6f7fa;
+        }
+
+        header {
+            display: none;
+        }
+
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <header></header>
+    <div id="root"></div>
+
+    <script src="./pspdfkit.js"></script>
+
+    <script type="module">
+
+      let instance = null;
+
+
+      async function load(document) {
+        if (instance) {
+          PSPDFKit.unload(instance);
+          hasUnsavedAnnotations = false;
+          instance = null;
+        }
+
+        const configuration = {
+          document,
+          container: "#root",
+          // Add when using a license key
+          // licenseKey: "LICENSE KEY GOES HERE",
+        };
+
+        instance = await PSPDFKit.load(configuration);
+      }
+
+      window.onload = () => load("./document.pdf");
+    </script>
+</body>
+</html>
