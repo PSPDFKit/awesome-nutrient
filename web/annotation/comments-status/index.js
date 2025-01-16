@@ -1,7 +1,7 @@
 const PSPDFKit = window.PSPDFKit;
 
 // We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
-const baseUrl = 'https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/';
+const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/";
 
 var _instance = null;
 
@@ -27,7 +27,10 @@ const createCommentAnnotation = async (instance, annotation) => {
   });
   const commentAnnots = await instance.create([parentCom, firstCom]);
   // Add the comment id to the annotation customData
-  const customData = { commentAnnotationID: commentID, commentAnnotation: commentAnnots[0]};
+  const customData = {
+    commentAnnotationID: commentID,
+    commentAnnotation: commentAnnots[0],
+  };
   const updatedAnnotation = annotation.set("customData", customData);
   const updatedAnnot = await instance.update(updatedAnnotation);
   return updatedAnnot[0];
@@ -58,11 +61,13 @@ const duplicateAnnotationTooltipCallback = (annotation) => {
             annotation = await createCommentAnnotation(_instance, annotation);
 
           const parentAnnotationID = annotation.customData.commentAnnotationID;
-          try{
+          try {
             await _instance.setSelectedAnnotations(
               PSPDFKit.Immutable.List([parentAnnotationID])
             );
-          } catch(error) {console.warn(error); }
+          } catch (error) {
+            console.warn(error);
+          }
         }
       }
     },
@@ -71,21 +76,20 @@ const duplicateAnnotationTooltipCallback = (annotation) => {
 };
 
 const setCommentColor = (ele, currStatus) => {
-  if(_instance && _instance.contentDocument){
+  if (_instance && _instance.contentDocument) {
     const commentDiv = ele.current;
-    if(commentDiv){
-      if("approved" === currStatus){
+    if (commentDiv) {
+      if ("approved" === currStatus) {
         commentDiv.style.backgroundColor = "lightgreen";
-      }
-      else if("rejected" === currStatus){
+      } else if ("rejected" === currStatus) {
         commentDiv.style.backgroundColor = "lightcoral";
       }
     }
   }
-}
+};
 
 const {
-  UI: { createBlock, Recipes, Interfaces, Core },
+  UI: { createBlock, Recipes, Interfaces },
 } = PSPDFKit;
 
 PSPDFKit.load({
@@ -99,21 +103,24 @@ PSPDFKit.load({
             comment.setProp("menuProps", {
               ...menuProps,
               onAction: (id) => {
-                if("approve" === id){
+                if ("approve" === id) {
                   setCommentColor(props.ref, "approved");
-                  window.alert(`Approved ${props.comments[0].id}`)
-                }
-                else if("reject" === id){
+                  window.alert(`Approved ${props.comments[0].id}`);
+                } else if ("reject" === id) {
                   setCommentColor(props.ref, "rejected");
-                  window.alert(`Rejected ${props.comments[0].id}`)
+                  window.alert(`Rejected ${props.comments[0].id}`);
                 }
                 // Add more status as needed
-                else{
-                  menuProps.onAction(id)
-                };
+                else {
+                  menuProps.onAction(id);
+                }
               },
               // Also add status here
-              items: [...menuProps.items, { id: "approve", label: "Approve" }, { id: "reject", label: "Reject" }],
+              items: [
+                ...menuProps.items,
+                { id: "approve", label: "Approve" },
+                { id: "reject", label: "Reject" },
+              ],
             });
         }
         return ui.createComponent();
@@ -143,12 +150,17 @@ PSPDFKit.load({
         annotation.customData.commentAnnotationID
       ) {
         try {
-        // Update the comment annotation when the parent annotation is updated
-        let commentAnnotation = annotation.customData.commentAnnotation;
-        commentAnnotation= commentAnnotation.set("boundingBox",annotation.boundingBox);
-        const update = await instance.update(commentAnnotation);
-        console.log("Annotation updated", update);
-        } catch (error) {console.warn(error);}
+          // Update the comment annotation when the parent annotation is updated
+          let commentAnnotation = annotation.customData.commentAnnotation;
+          commentAnnotation = commentAnnotation.set(
+            "boundingBox",
+            annotation.boundingBox
+          );
+          const update = await instance.update(commentAnnotation);
+          console.log("Annotation updated", update);
+        } catch (error) {
+          console.warn(error);
+        }
       }
     });
     // When a comment is pressed, select the parent annotation
@@ -163,11 +175,11 @@ PSPDFKit.load({
           event.annotation.customData.parentAnnotation.id;
         await instance.setSelectedAnnotations(
           PSPDFKit.Immutable.List([parentAnnotationID])
-        )
+        );
         //,console.log("Annotation pressed", event);
       }
     });
   })
   .catch((error) => {
-    //console.error(error.message);
+    console.error(error.message);
   });
