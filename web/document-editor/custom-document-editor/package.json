@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "pspdfkit": "^2024.5.2"
-  },
-  "scripts": {
-    "copyAssets": "cp -R ./node_modules/pspdfkit/dist/ ./assets/",
-    "start": "serve -l 8080 ."
-  }
-}
