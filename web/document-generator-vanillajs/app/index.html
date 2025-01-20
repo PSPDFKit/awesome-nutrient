@@ -1,0 +1,196 @@
+<html>
+    <head>   
+        <!-- Picnic CSS Framework -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic" />
+
+        <!-- Nutrient Document Authoring SDK -->
+        <script src="https://document-authoring-cdn.pspdfkit.com/releases/document-authoring-1.0.26-umd.js"></script>
+        
+        <!-- Code Mirror -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/codemirror.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/mode/javascript/javascript.min.js"></script>
+      
+        <!-- Web SDK -->
+        <script src="http://localhost:8080/web-sdk/pspdfkit.js"></script>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="styles.css" />        
+    </head>
+    <body>
+        <nav class="demo">
+            <a id="theTitle" href="#" class="brand">
+              <img class="logo" src="assets/nutrient.jpg" />
+              <span>Document Generator</span>
+            </a>            
+        </nav>
+
+          <section id="Transition" data-initialized="yes" class="none">
+            <div class="nutri-transition">
+              <h2>Transition</h2>
+            </div>
+          </section>
+
+          <section id="Step1_SelectTemplate" data-initialized="no" class="none">
+            <article class="card">
+              <header>
+                <h2>(1/5) Select Template</h2>
+              </header>            
+              <div style="padding: 20px;">
+                <h3>DEMO</h3>
+                <div class="flex three">
+                    <div>
+                      <article class="card">
+                        <header>
+                          <h3>Checklist</h3>
+                        </header>
+                        <p class="nutri-template">
+                          <img src="./assets/checklist.png" />
+                        </p>
+                        <p>Create a checklist with predefined data.</p>
+                        <footer>      
+                          <div style="text-align: right;">
+                            <button class="nutri-button-dark" data-tpl="checklist">Edit Template →</button>
+                          </div>                
+                        </footer>
+                      </article>                  
+                    </div>           
+                    <div>
+                      <article class="card">
+                        <header>
+                          <h3>Invoice</h3>
+                        </header>
+                        <p class="nutri-template">
+                          <img src="./assets/invoice.png" />
+                        </p>
+                        <p>Create an invoice with predefined data.</p>
+                        <footer>      
+                          <div style="text-align: right;">
+                            <button class="nutri-button-dark" data-tpl="invoice">Edit Template →</button>
+                          </div>                                      
+                        </footer>
+                      </article>
+                    </div> 
+                    <div>
+                      <article class="card">
+                        <header>
+                          <h3>Menu</h3>
+                        </header>
+                        <p class="nutri-template">
+                          <img src="./assets/menu.png" />
+                        </p>
+                        <p>Create a menu with predefined data.</p>                    
+                        <footer>     
+                          <div style="text-align: right;">
+                            <button class="nutri-button-dark" data-tpl="menu">Edit Template →</button>
+                          </div>
+                        </footer>
+                      </article>
+                    </div>   
+                </div>
+                <h3>CUSTOM</h3>
+                <div class="flex three">
+                  <div>
+                    <article class="card">
+                      <header>
+                        <h3>Upload document</h3>
+                      </header>
+                      <p>Upload a DocX file with a custom template.</p>
+                      <form>
+                        <div>                      
+                          <input type="file" accept=".docx" />
+                        </div>
+                      </form>
+                      <footer>      
+                        <div style="text-align: right;">
+                          <button class="nutri-button-dark" data-tpl="custom">Upload & Edit Template →</button>
+                        </div>
+                      </footer>
+                    </article>
+                  </div>     
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <section id="Step2_EditTemplate" data-initialized="no" class="none">
+            <article class="card">
+              <header>
+                <h2>(2/5) Edit DocJSON Template</h2>
+              </header>
+              <div class="nutri-editor"></div>
+              <footer>
+                <div class="flex two">
+                  <div>
+                    <button class="nutri-button-dark" data-action="back-to-template-selection">← Select Template</button>
+                  </div>  
+                  <div style="text-align: right;">
+                    <button class="nutri-button-dark" data-action="to-json-data">Prepare JSON Data →</button>
+                  </div>  
+                </div>
+              </footer>
+            </article>
+          </section>
+
+          <section id="Step3_EditData" data-initialized="no" class="none">
+            <article class="card">
+              <header>
+                <h2>(3/5) Prepare JSON Data</h2>
+              </header>
+              <div id="jsonEditor"></div>
+              <footer>
+                <div class="flex two">
+                  <div>
+                    <button class="nutri-button-dark" data-action="back-to-template-editor">← Edit Template</button>
+                  </div>  
+                  <div style="text-align: right;">
+                    <button class="nutri-button-dark" data-action="to-docx-editor">Generate DOCX →</button>
+                  </div>  
+                </div>
+              </footer>              
+            </article>
+          </section>
+
+          <section id="Step4_EditGeneratedDocx" data-initialized="no" class="none">
+            <article class="card">
+              <header>
+                <h2>(4/5) Edit Generated DOCX</h2>
+              </header>
+              <div class="nutri-editor"></div>
+              <footer>
+                <div class="flex two">
+                  <div>
+                    <button class="nutri-button-dark" data-action="back-to-edit-data">← Edit Data</button>
+                  </div>  
+                  <div style="text-align: right;">
+                    <button class="nutri-button-dark" data-action="generate-pdf">Generate PDF →</button>
+                  </div>  
+                </div>
+              </footer>              
+            </article>
+          </section>                          
+
+          <section id="Step5_PreviewPDF" data-initialized="no" class="none">
+            <article class="card">
+              <header>
+                <h2>(5/5) Final PDF</h2>
+              </header>
+              <div id="pspdfkit" class="nutri-viewer"></div>
+              <footer>
+                <div class="flex two">
+                  <div>
+                    <button class="nutri-button-dark" data-action="back-to-edit-docx">← Edit DOCX</button>
+                  </div>  
+                  <div style="text-align: right;">
+                    <button class="nutri-button-dark" data-action="download-pdf">Download PDF →</button>
+                  </div>  
+                </div>
+              </footer>              
+            </article>
+          </section>
+
+          <!-- Document Generator POC -->
+          <script src="config.js"></script>
+          <script src="index.js"></script>
+    </body>
+</html>
