@@ -1,0 +1,29 @@
+.drugAllergies{
+    background-color: rgb(255, 192, 192);
+}
+.imagingNote{
+    background-color: rgb(209, 209, 255);
+}
+.labResults{
+    background-color: rgb(213, 255, 213);
+}
+.procedureNotes{
+    background-color: rgb(100,200,150) ;
+}
+.providerFacilityNotes{
+    background-color: rgb(150,100,250);
+}
+.vaccinationsImmunizations{
+    background-color: rgb(120,190,100);
+}
+.documents{
+    background-color: rgb(210,220,110);
+}
+.other{
+    background-color: rgb(200,200,200);
+}
+
+.PSPDFKit-3jpjxq56vk2un8ub8pje71u85a {
+    height: calc(100% - 0px);
+    width: calc(100% - 0px);
+}

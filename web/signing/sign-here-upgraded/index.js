@@ -1,4 +1,3 @@
-/* global PSPDFKit */
 import "./assets/pspdfkit.js";
 
 // We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
@@ -12,8 +11,7 @@ PSPDFKit.load({
 }).then(async (instance) => {
   // Create and append the "Sign Here" widget to the document.
   const signHereWidget = document.createElement("div");
-  signHereWidget.innerHTML =
-    '\n<svg viewBox="193.583 215.541 113.747 40.714" width="113.747" height="40.714">\n  <path d="M 193.709 216.256 H 287.206 L 287.206 216.256 L 307.206 236.256 L 287.206 256.256 L 287.206 256.256 H 193.709 V 216.256 Z" data-bx-shape="arrow 193.709 216.256 113.497 40 40 20 0 1@f3ec9ecd" style="fill: rgb(90, 120, 255); stroke: rgb(255, 255, 255); stroke-opacity: 0;" transform="matrix(0.99998, -0.0063, 0.0063, 0.99998, -1.484668, 1.225137)"></path>\n  <text style="fill: rgb(254, 254, 254); font-family: Arial, sans-serif; font-size: 19.1px; stroke-opacity: 0; white-space: pre;" x="201.663" y="242.006">Sign Here</text>\n</svg>\n';
+  signHereWidget.innerHTML = '\n<svg viewBox="193.583 215.541 113.747 40.714" width="113.747" height="40.714">\n  <path d="M 193.709 216.256 H 287.206 L 287.206 216.256 L 307.206 236.256 L 287.206 256.256 L 287.206 256.256 H 193.709 V 216.256 Z" data-bx-shape="arrow 193.709 216.256 113.497 40 40 20 0 1@f3ec9ecd" style="fill: rgb(90, 120, 255); stroke: rgb(255, 255, 255); stroke-opacity: 0;" transform="matrix(0.99998, -0.0063, 0.0063, 0.99998, -1.484668, 1.225137)"></path>\n  <text style="fill: rgb(254, 254, 254); font-family: Arial, sans-serif; font-size: 19.1px; stroke-opacity: 0; white-space: pre;" x="201.663" y="242.006">Sign Here</text>\n</svg>\n';
   signHereWidget.style.position = "absolute";
   instance.contentDocument
     .querySelector(`.PSPDFKit-Spread[data-spread-index="0"]`)
@@ -96,7 +94,7 @@ PSPDFKit.load({
       const position = element.getBoundingClientRect();
       signHereWidget.style.top = position.top - 66 + "px";
       signHereWidget.style.position = "absolute";
-      signHereWidget.style.left = `${-116}px`;
+      signHereWidget.style.left = `${-116}px`; 
       signHereWidget.style.display = "block";
     } else if (signHereWidget.style.display === "block") {
       alert("Thank you for signing the document, you are now a PDF Expert!");
@@ -105,6 +103,9 @@ PSPDFKit.load({
   };
 
   // Update the "Sign Here" widget whenever the user scrolls.
+  // instance.contentDocument
+  //   .querySelector(".PSPDFKit-Scroll")
+  //   .addEventListener("scroll", updateSignHereWidget);
 
   // Update the "Sign Here" widget when someone signs
   instance.addEventListener("annotations.change", () => {
