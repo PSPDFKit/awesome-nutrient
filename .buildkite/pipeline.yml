@@ -1,9 +1,0 @@
-steps:
-  - label: "🔍 Run ESLint"
-    command: scripts/ci/eslint.sh
-    env:
-      CI: true
-    plugins:
-      - docker#v5.9.0:
-          image: "node:20.9.0"
-          propagate-environment: true
