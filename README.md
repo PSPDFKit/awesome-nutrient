@@ -31,12 +31,11 @@ A wide variety of examples what Nutrient Web SDK can do can be found in the [Exa
 - **Electronic Signatures Persistence:** Keep electronic signatures across page refreshes.
 
 Other examples:
-
-- [React](https://github.com/PSPDFKit/pspdfkit-web-example-react)
-- [Angular](https://github.com/PSPDFKit/pspdfkit-web-example-angular)
-- [Next.js](https://github.com/PSPDFKit/pspdfkit-web-example-nextjs)
-- [Next.js v15 + Locally Hosted SDK Assets](https://github.com/PSPDFKit/pspdfkit-web-example-nextjs-15)
-- [Nuxt2 + Vuetify](https://github.com/PSPDFKit/pspdfkit-web-example-nuxt2-with-vuetify)
+- [Nutrient Examples] (https://github.com/PSPDFKit/nutrient-examples)
+- [React]([https://github.com/PSPDFKit/pspdfkit-web-example-react](https://github.com/PSPDFKit/nutrient-examples/tree/main/examples/react))
+- [Angular]([https://github.com/PSPDFKit/pspdfkit-web-example-angular](https://github.com/PSPDFKit/nutrient-examples/tree/main/examples/angular))
+- [Next](https://github.com/PSPDFKit/nutrient-examples/tree/main/examples/nextjs)
+- [Nuxt](https://github.com/PSPDFKit/nutrient-examples/tree/main/examples/nuxtjs)
 
 #### Annotations
 
