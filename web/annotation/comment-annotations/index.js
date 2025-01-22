@@ -1,4 +1,3 @@
-/* global PSPDFKit */
 import "./assets/pspdfkit.js";
 
 // We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
