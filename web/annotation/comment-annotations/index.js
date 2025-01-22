@@ -3,7 +3,7 @@ import "./assets/pspdfkit.js";
 // We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
 const baseUrl = `${window.location.protocol}//${window.location.host}/assets/`;
 
-var _instance = null;
+let _instance = null;
 
 const createCommentAnnotation = async (instance, annotation) => {
   // Get the first created annotation
@@ -53,17 +53,13 @@ const duplicateAnnotationTooltipCallback = (annotation) => {
           !(annotation instanceof PSPDFKit.Annotations.CommentMarkerAnnotation)
         ) {
           // Create a new comment annotation if it does not exist
-          if (
-            !(
-              annotation.customData && annotation.customData.commentAnnotationID
-            )
-          )
+          if (!annotation.customData?.commentAnnotationID)
             annotation = await createCommentAnnotation(_instance, annotation);
 
           const parentAnnotationID = annotation.customData.commentAnnotationID;
           try {
             await _instance.setSelectedAnnotations(
-              PSPDFKit.Immutable.List([parentAnnotationID])
+              PSPDFKit.Immutable.List([parentAnnotationID]),
             );
           } catch (error) {
             console.warn(error);
@@ -98,9 +94,9 @@ PSPDFKit.load({
               "aria-label": "Dislike",
               count: 1,
               size: "md",
-              icon: `m`,
+              icon: "m",
             },
-          ])
+          ]),
       );
       return {
         content: createBlock(Recipes.CommentThread, props, ({ ui }) => {
@@ -126,17 +122,13 @@ PSPDFKit.load({
     _instance = instance;
     instance.addEventListener("annotations.update", async (event) => {
       const annotation = event.toArray()[0];
-      if (
-        annotation &&
-        annotation.customData &&
-        annotation.customData.commentAnnotationID
-      ) {
+      if (annotation?.customData?.commentAnnotationID) {
         try {
           // Update the comment annotation when the parent annotation is updated
           let commentAnnotation = annotation.customData.commentAnnotation;
           commentAnnotation = commentAnnotation.set(
             "boundingBox",
-            annotation.boundingBox
+            annotation.boundingBox,
           );
           const update = await instance.update(commentAnnotation);
           console.log("Annotation updated", update);
@@ -156,7 +148,7 @@ PSPDFKit.load({
         const parentAnnotationID =
           event.annotation.customData.parentAnnotation.id;
         await instance.setSelectedAnnotations(
-          PSPDFKit.Immutable.List([parentAnnotationID])
+          PSPDFKit.Immutable.List([parentAnnotationID]),
         );
       }
     });

@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from "react";
 
 export default function PdfViewerComponent(props) {
   const containerRef = useRef(null);
-  let PSPDFKit, instance;
+  let PSPDFKit;
+  let instance;
 
-  const [textToRead, setTextToRead] = useState('');
+  const [textToRead, setTextToRead] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
 
-    (async function () {
+    (async () => {
       PSPDFKit = await import("pspdfkit");
 
       PSPDFKit.unload(container); // Ensure that there's only one PSPDFKit instance.
@@ -28,34 +29,37 @@ export default function PdfViewerComponent(props) {
       });
 
       // Add event listener for text selection change
-      instance.addEventListener("textSelection.change", async textSelection => {
-        if (textSelection) {
-          window.speechSynthesis.cancel();
-          setIsSpeaking(false);
-          const text = await textSelection.getText();
-          console.log("Selected text:", text);
-          //setTextToRead(text);
-          
+      instance.addEventListener(
+        "textSelection.change",
+        async (textSelection) => {
+          if (textSelection) {
+            window.speechSynthesis.cancel();
+            setIsSpeaking(false);
+            const text = await textSelection.getText();
+            console.log("Selected text:", text);
+            //setTextToRead(text);
+
             const utterance = new SpeechSynthesisUtterance(text);
             window.speechSynthesis.speak(utterance);
             setIsSpeaking(true);
-        
+
             utterance.onend = () => {
               setIsSpeaking(false);
             };
-          const results = await instance.search(text);
-          const annotations = results.map((result) => {
-            return new PSPDFKit.Annotations.HighlightAnnotation({
-              pageIndex: result.pageIndex,
-              rects: result.rectsOnPage,
-              boundingBox: PSPDFKit.Geometry.Rect.union(result.rectsOnPage),
+            const results = await instance.search(text);
+            const annotations = results.map((result) => {
+              return new PSPDFKit.Annotations.HighlightAnnotation({
+                pageIndex: result.pageIndex,
+                rects: result.rectsOnPage,
+                boundingBox: PSPDFKit.Geometry.Rect.union(result.rectsOnPage),
+              });
             });
-          });
-          //instance.create(annotations);
-        } else {
-          console.log("No text is selected");
-        }
-      });
+            //instance.create(annotations);
+          } else {
+            console.log("No text is selected");
+          }
+        },
+      );
 
       // Cleanup event listener on component unmount
       return () => {
@@ -64,7 +68,6 @@ export default function PdfViewerComponent(props) {
     })();
   }, [props.document]);
 
-  
   const handlePause = () => {
     if (isSpeaking) {
       window.speechSynthesis.pause();
@@ -85,7 +88,16 @@ export default function PdfViewerComponent(props) {
   return (
     <div style={{ width: "100%", height: "100vh", position: "relative" }}>
       <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
-      <div style={{ position: "absolute", top: 0, left: 0, zIndex: 1000, background: "white", padding: "10px" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 1000,
+          background: "white",
+          padding: "10px",
+        }}
+      >
         <button onClick={handlePause}>Pause</button>
         <button onClick={handleResume}>Resume</button>
         <button onClick={handleStop}>Stop</button>

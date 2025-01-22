@@ -1,25 +1,25 @@
 "use client";
-import type { User } from "../utils/types";
-import { useEffect, useState } from "react";
+import { chatBotSVG } from "@/utils/helpers";
 import { ChatDialog } from "@baseline-ui/recipes";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import type { User } from "../utils/types";
 import type { AIMessage } from "../utils/types";
 import askAI from "./api/askAI";
-import dynamic from "next/dynamic";
-import { chatBotSVG } from "@/utils/helpers";
 
 // Dynamic imports for components that are not needed during SSR
 const DynamicSignComp = dynamic(() => import("./signingDemo"), { ssr: false });
 const I18nProvider = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.I18nProvider),
-  { ssr: false }
+  { ssr: false },
 );
 const ThemeProvider = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.ThemeProvider),
-  { ssr: false }
+  { ssr: false },
 );
 const Drawer = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.Drawer),
-  { ssr: false }
+  { ssr: false },
 );
 
 const App: React.FC = () => {
@@ -53,7 +53,7 @@ const App: React.FC = () => {
   const [messages, setMessages] = useState([...initMessages]);
   const [aiMessages, setAiMessages] = useState<AIMessage[]>([]);
   useEffect(() => {
-    var PSPDFKit: any;
+    let PSPDFKit: any;
     (async () => {
       PSPDFKit = await import("pspdfkit");
       allUsers.forEach((user: any) => {
@@ -166,14 +166,14 @@ const App: React.FC = () => {
                     setAiMessages([
                       ...aiMessages,
                       { role: "user", content: inp },
-                      res["choices"][0]["message"],
+                      res.choices[0].message,
                     ]);
                     setMessages([
                       ...messages,
                       newMessage,
                       {
                         type: "PLAIN",
-                        text: res["choices"][0]["message"]["content"],
+                        text: res.choices[0].message.content,
                         sender: aiName,
                         isComplete: true,
                         canCopy: true,

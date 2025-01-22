@@ -26,14 +26,14 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
       const toolbarItemsDefault = PSPDFKit.defaultToolbarItems;
       instance = await PSPDFKit.load({
-        licenseKey:"Your License key goes here",
+        licenseKey: "Your License key goes here",
         container,
         document: props.document,
         baseUrl: `${window.location.protocol}//${window.location.host}/`,
         toolbarItems: toolbarItemsDefault,
       });
     })();
-    return () => PSPDFKit && PSPDFKit.unload(container);
+    return () => PSPDFKit?.unload(container);
   }, [props.document]);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
           instance
             .renderPageAsImageURL(
               { width: right - left },
-              0 // Assuming pageIndex is 0
+              0, // Assuming pageIndex is 0
             )
             .then((imageUrl: string) => {
               // Display or save the image as needed

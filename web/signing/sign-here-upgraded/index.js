@@ -21,36 +21,36 @@ PSPDFKit.load({
   // Define a helper function to check if one box is within another.
   const updateSignHereWidget = async () => {
     const widgetAnnotations = (
-        await Promise.all(
-          Array.from({ length: instance.totalPageCount }).map((_, pageIndex) =>
-            instance
-              .getAnnotations(pageIndex)
-              .then((annotations) =>
-                annotations.filter(
-                  (annotation) =>
-                    annotation instanceof PSPDFKit.Annotations.WidgetAnnotation
-                )
-              )
-          )
-        )
-      )
-        .flat()
-        .flatMap((annotation) =>
-          annotation._tail ? annotation._tail.array : []
+      await Promise.all(
+        Array.from({ length: instance.totalPageCount }).map((_, pageIndex) =>
+          instance
+            .getAnnotations(pageIndex)
+            .then((annotations) =>
+              annotations.filter(
+                (annotation) =>
+                  annotation instanceof PSPDFKit.Annotations.WidgetAnnotation,
+              ),
+            ),
         ),
-      signatures = (
-        await Promise.all(
-          Array.from({ length: instance.totalPageCount }).map((_, pageIndex) =>
-            instance
-              .getAnnotations(pageIndex)
-              .then((annotations) =>
-                annotations.filter((annotation) => annotation.isSignature)
-              )
-          )
-        )
       )
-        .flat()
-        .flatMap((signature) => (signature._tail ? signature._tail.array : []));
+    )
+      .flat()
+      .flatMap((annotation) =>
+        annotation._tail ? annotation._tail.array : [],
+      );
+    const signatures = (
+      await Promise.all(
+        Array.from({ length: instance.totalPageCount }).map((_, pageIndex) =>
+          instance
+            .getAnnotations(pageIndex)
+            .then((annotations) =>
+              annotations.filter((annotation) => annotation.isSignature),
+            ),
+        ),
+      )
+    )
+      .flat()
+      .flatMap((signature) => (signature._tail ? signature._tail.array : []));
 
     // Flatten widgetAnnotationsUnFlattened to a single dimensional array
     // Move the "Sign Here" widget.
@@ -74,15 +74,15 @@ PSPDFKit.load({
 
     if (firstWidget) {
       const element = instance.contentDocument.querySelector(
-        `.PSPDFKit-Annotation[data-annotation-id="${firstWidget.id}"]`
+        `.PSPDFKit-Annotation[data-annotation-id="${firstWidget.id}"]`,
       );
       const state = instance.viewState;
       // Switch to the page of the current signature widget.
       instance.setViewState(
-        state.set("currentPageIndex", firstWidget.pageIndex)
+        state.set("currentPageIndex", firstWidget.pageIndex),
       );
       const spreadElement = instance.contentDocument.querySelector(
-        `.PSPDFKit-Spread[data-spread-index="${firstWidget.pageIndex}"]`
+        `.PSPDFKit-Spread[data-spread-index="${firstWidget.pageIndex}"]`,
       );
 
       // Remove the widget from its current parent if it has one
@@ -93,7 +93,7 @@ PSPDFKit.load({
       spreadElement.appendChild(signHereWidget);
 
       const position = element.getBoundingClientRect();
-      signHereWidget.style.top = position.top - 66 + "px";
+      signHereWidget.style.top = `${position.top - 66}px`;
       signHereWidget.style.position = "absolute";
       signHereWidget.style.left = `${-116}px`;
       signHereWidget.style.display = "block";

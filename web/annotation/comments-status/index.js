@@ -3,7 +3,7 @@ const PSPDFKit = window.PSPDFKit;
 // We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
 const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/";
 
-var _instance = null;
+let _instance = null;
 
 const createCommentAnnotation = async (instance, annotation) => {
   // Get the first created annotation
@@ -53,17 +53,13 @@ const duplicateAnnotationTooltipCallback = (annotation) => {
           !(annotation instanceof PSPDFKit.Annotations.CommentMarkerAnnotation)
         ) {
           // Create a new comment annotation if it does not exist
-          if (
-            !(
-              annotation.customData && annotation.customData.commentAnnotationID
-            )
-          )
+          if (!annotation.customData?.commentAnnotationID)
             annotation = await createCommentAnnotation(_instance, annotation);
 
           const parentAnnotationID = annotation.customData.commentAnnotationID;
           try {
             await _instance.setSelectedAnnotations(
-              PSPDFKit.Immutable.List([parentAnnotationID])
+              PSPDFKit.Immutable.List([parentAnnotationID]),
             );
           } catch (error) {
             console.warn(error);
@@ -76,7 +72,7 @@ const duplicateAnnotationTooltipCallback = (annotation) => {
 };
 
 const setCommentColor = (ele, currStatus) => {
-  if (_instance && _instance.contentDocument) {
+  if (_instance?.contentDocument) {
     const commentDiv = ele.current;
     if (commentDiv) {
       if ("approved" === currStatus) {
@@ -94,11 +90,11 @@ const {
 
 PSPDFKit.load({
   ui: {
-    [Interfaces.CommentThread]: ({ props: props }) => ({
-      content: createBlock(Recipes.CommentThread, props, ({ ui: ui }) => {
+    [Interfaces.CommentThread]: ({ props }) => ({
+      content: createBlock(Recipes.CommentThread, props, ({ ui }) => {
         const comment = ui.getBlockById("comment");
-        if (comment && comment.props) {
-          const { menuProps: menuProps } = comment.props;
+        if (comment?.props) {
+          const { menuProps } = comment.props;
           menuProps &&
             comment.setProp("menuProps", {
               ...menuProps,
@@ -144,17 +140,13 @@ PSPDFKit.load({
     _instance = instance;
     instance.addEventListener("annotations.update", async (event) => {
       const annotation = event.toArray()[0];
-      if (
-        annotation &&
-        annotation.customData &&
-        annotation.customData.commentAnnotationID
-      ) {
+      if (annotation?.customData?.commentAnnotationID) {
         try {
           // Update the comment annotation when the parent annotation is updated
           let commentAnnotation = annotation.customData.commentAnnotation;
           commentAnnotation = commentAnnotation.set(
             "boundingBox",
-            annotation.boundingBox
+            annotation.boundingBox,
           );
           const update = await instance.update(commentAnnotation);
           console.log("Annotation updated", update);
@@ -174,7 +166,7 @@ PSPDFKit.load({
         const parentAnnotationID =
           event.annotation.customData.parentAnnotation.id;
         await instance.setSelectedAnnotations(
-          PSPDFKit.Immutable.List([parentAnnotationID])
+          PSPDFKit.Immutable.List([parentAnnotationID]),
         );
         //,console.log("Annotation pressed", event);
       }

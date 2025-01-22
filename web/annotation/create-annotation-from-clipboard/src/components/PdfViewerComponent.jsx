@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 
 export default function PdfViewerComponent(props) {
   const containerRef = useRef(null);
-  let PSPDFKit, instance;
+  let PSPDFKit;
+  let instance;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -33,13 +34,15 @@ export default function PdfViewerComponent(props) {
         isProcessingPaste = true;
 
         try {
-          const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+          const items = (
+            event.clipboardData || event.originalEvent.clipboardData
+          ).items;
           const item = items[0]; // this will get only the last copied data from clipboard
 
           const content_Type = item.type;
           const currentPage = instance.viewState.currentPageIndex;
 
-          if (item.kind === 'file' && item.type.startsWith('image')) {
+          if (item.kind === "file" && item.type.startsWith("image")) {
             const file = item.getAsFile();
             const imageAttachmentId = await instance.createAttachment(file);
             const annotation = new PSPDFKit.Annotations.ImageAnnotation({
@@ -51,26 +54,25 @@ export default function PdfViewerComponent(props) {
                 left: 10,
                 top: 50,
                 width: 150,
-                height: 150
-              })
+                height: 150,
+              }),
             });
             await instance.create(annotation);
-
-          } else if (item.kind === 'string') {
+          } else if (item.kind === "string") {
             item.getAsString(async (pastedText) => {
               // Here you can create a text annotation if needed
               const textAnnotation = new PSPDFKit.Annotations.TextAnnotation({
                 pageIndex: currentPage,
                 text: {
                   format: "plain",
-                  value: pastedText
+                  value: pastedText,
                 },
                 boundingBox: new PSPDFKit.Geometry.Rect({
                   left: 10,
                   top: 50,
                   width: 150,
-                  height: 50
-                })
+                  height: 50,
+                }),
               });
               await instance.create(textAnnotation);
             });
@@ -82,11 +84,11 @@ export default function PdfViewerComponent(props) {
         }
       };
 
-      document.addEventListener('paste', handlePaste);
+      document.addEventListener("paste", handlePaste);
 
       // Cleanup event listener on component unmount
       return () => {
-        document.removeEventListener('paste', handlePaste);
+        document.removeEventListener("paste", handlePaste);
         PSPDFKit.unload(container);
       };
     })();
@@ -94,8 +96,6 @@ export default function PdfViewerComponent(props) {
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
 }
-
-
 
 // import { useEffect, useRef } from "react";
 
@@ -105,7 +105,6 @@ export default function PdfViewerComponent(props) {
 
 //   useEffect(() => {
 //     const container = containerRef.current;
-    
 
 //     (async function () {
 //       PSPDFKit = await import("pspdfkit");
@@ -201,10 +200,8 @@ export default function PdfViewerComponent(props) {
 //   return new Blob([new Uint8Array(array)], { type });
 // }
 
-    
 //     return () => PSPDFKit && PSPDFKit.unload(container);
 //     }, [props.document]);
-    
 
 //   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
 // }

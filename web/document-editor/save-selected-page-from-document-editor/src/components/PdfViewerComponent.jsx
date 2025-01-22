@@ -5,7 +5,8 @@ export default function PdfViewerComponent(props) {
 
   useEffect(() => {
     const container = containerRef.current;
-    let PSPDFKit, instance;
+    let PSPDFKit;
+    let instance;
 
     (async () => {
       PSPDFKit = await import("pspdfkit");
@@ -21,18 +22,18 @@ export default function PdfViewerComponent(props) {
         title: "My Save as",
         onPress: async () => {
           console.log("started");
-          
+
           // Select pages marked as selected
           const selectedPages = Array.from(
             instance.contentDocument.querySelectorAll(
-              ".PSPDFKit-DocumentEditor-Thumbnails-Page-Selected"
-            )
+              ".PSPDFKit-DocumentEditor-Thumbnails-Page-Selected",
+            ),
           );
 
           const selectedPagesIndex = selectedPages.map((e) =>
-            Number.parseInt(e.getAttribute("data-page-index"), 10)
+            Number.parseInt(e.getAttribute("data-page-index"), 10),
           );
-          
+
           console.log("Selected pages indices: ", selectedPagesIndex);
 
           if (selectedPagesIndex.length === 0) {
@@ -43,13 +44,13 @@ export default function PdfViewerComponent(props) {
           // Export the selected pages
           const file = await instance.exportPDFWithOperations([
             {
-              type: 'keepPages',
+              type: "keepPages",
               pageIndexes: selectedPagesIndex,
             },
           ]);
 
           const fileName = "selectedpages.pdf";
-          const blob = new Blob([file], { type: 'application/pdf' });
+          const blob = new Blob([file], { type: "application/pdf" });
 
           // Download the file
           if (window.navigator.msSaveOrOpenBlob) {
@@ -81,7 +82,7 @@ export default function PdfViewerComponent(props) {
       });
     })();
 
-    return () => PSPDFKit && PSPDFKit.unload(container);
+    return () => PSPDFKit?.unload(container);
   }, [props.document]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;

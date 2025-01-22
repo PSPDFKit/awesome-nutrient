@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import PdfViewerComponent from "./components/PdfViewerComponent";
 import {
-  ThemeProvider,
-  I18nProvider,
-  Link,
+  ActionButton,
   Avatar,
   FileUpload,
-  ActionButton,
+  I18nProvider,
+  Link,
+  ThemeProvider,
 } from "@baseline-ui/core";
+import React, { useState } from "react";
+import PdfViewerComponent from "./components/PdfViewerComponent";
 import "./App.css";
 
 function App() {
@@ -19,10 +19,10 @@ function App() {
   };
 
   const reset = () => {
-    setTimeout(function() {
-    setHandleAnnotation("");
+    setTimeout(() => {
+      setHandleAnnotation("");
     }, 1000);
-  }
+  };
   const handleFileSelected = (files) => {
     if (files && files.length > 0) {
       const fileUrl = URL.createObjectURL(files[0]);
@@ -33,7 +33,7 @@ function App() {
   return (
     <ThemeProvider>
       <I18nProvider locale="en-US">
-        <div className="background"></div>
+        <div className="background" />
         <h1 className="first-heading">
           Learning
           <span className="first-heading--special">Baseline-UI</span>

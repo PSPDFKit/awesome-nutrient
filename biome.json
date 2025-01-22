@@ -1,59 +1,45 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-	"vcs": {
-		"enabled": false,
-		"clientKind": "git",
-		"useIgnoreFile": false
-	},
-	"files": {
-		"ignoreUnknown": false,
-		"ignore": [
-			"**/pspdfkit.js",
-			"**/pspdfkit-lib/**",
-			"./web/annotation/comment-annotations/**",
-			"./web/annotation/comments-status/**",
-			"./web/annotation/create-annotation-from-clipboard/**",
-			"./web/annotation/speech-2-text/**",
-			"./web/annotation/customise-annotation-sidebar/**",
-			"./web/annotation/get-all-annotations-boundingBox/**",
-			"./web/annotation/redact-one-by-one/**",
-			"./web/annotation/snipping-annotation/**",
-			"./web/annotation/text-2-speech/**",
-			"./web/document-editor/save-selected-page-from-document-editor/**",
-			"./web/signing/signing-demo-complete/**",
-			"./web/signing/sign-here-upgraded"
-		]
-	},
-	"formatter": {
-		"enabled": true,
-		"indentStyle": "tab"
-	},
-	"organizeImports": {
-		"enabled": true
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"style": {
-				"useFilenamingConvention": {
-					"level": "error",
-					"options": {
-						"filenameCases": ["kebab-case"]
-					}
-				}
-			},
-			"recommended": true,
-			"complexity": {
-				"noForEach": "off"
-			},
-			"suspicious": {
-				"noExplicitAny": "off"
-			}
-		}
-	},
-	"javascript": {
-		"formatter": {
-			"quoteStyle": "double"
-		}
-	}
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "ignore": ["**/pspdfkit.js", "**/pspdfkit-lib/**"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "useFilenamingConvention": {
+          "level": "error",
+          "options": {
+            "filenameCases": ["kebab-case"]
+          }
+        }
+      },
+      "recommended": true,
+      "complexity": {
+        "noForEach": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  }
 }

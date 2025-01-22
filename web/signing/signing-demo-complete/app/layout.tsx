@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
-import ImageComponent from "next/image";
 import logo from "@/public/android-chrome-512x512.png";
+import ImageComponent from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +15,7 @@ export const metadata = {
   metadataBase: `http://localhost:${process.env.PORT || 3000}`,
   link: {
     rel: "icon",
-    href: NEXT_PUBLIC_BASE_PATH + "/favicon.ico",
+    href: `${NEXT_PUBLIC_BASE_PATH}/favicon.ico`,
     sizes: "16x16",
     type: "image/png",
   },
@@ -99,9 +99,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-      className={SFProText.variable+" "+SFProDisplay.variable}
-      >
+      <body className={`${SFProText.variable} ${SFProDisplay.variable}`}>
         <nav style={{ display: "flex", alignItems: "center", margin: "10px" }}>
           <ImageComponent
             src={logo}
