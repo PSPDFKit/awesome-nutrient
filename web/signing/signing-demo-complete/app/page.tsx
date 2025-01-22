@@ -1,8 +1,8 @@
 "use client";
-import { User } from "../utils/types";
+import type { User } from "../utils/types";
 import { useEffect, useState } from "react";
 import { ChatDialog } from "@baseline-ui/recipes";
-import { AIMessage } from "../utils/types";
+import type { AIMessage } from "../utils/types";
 import askAI from "./api/askAI";
 import dynamic from "next/dynamic";
 import { chatBotSVG } from "@/utils/helpers";
@@ -54,7 +54,7 @@ const App: React.FC = () => {
   const [aiMessages, setAiMessages] = useState<AIMessage[]>([]);
   useEffect(() => {
     var PSPDFKit: any;
-    (async function () {
+    (async () => {
       PSPDFKit = await import("pspdfkit");
       allUsers.forEach((user: any) => {
         user.color = PSPDFKit.Color.LIGHT_BLUE;

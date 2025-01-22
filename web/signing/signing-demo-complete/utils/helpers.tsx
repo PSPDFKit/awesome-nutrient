@@ -66,7 +66,7 @@ export const getAnnotationRenderers = ({ annotation }: any) => {
 
     // Append the annotation to the box
     //box.appendChild(annotation.node);
-    let ele = { node: box, append: true}
+    const ele = { node: box, append: true}
     // Replace the annotation with the box
     //annotation.node = box;
     return ele;

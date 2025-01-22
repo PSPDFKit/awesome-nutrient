@@ -7,7 +7,7 @@ export default function PdfViewerComponent(props) {
     const container = containerRef.current;
     let PSPDFKit, instance;
 
-    (async function () {
+    (async () => {
       PSPDFKit = await import("pspdfkit");
 
       PSPDFKit.unload(container); // Ensure that there's only one PSPDFKit instance.
@@ -30,7 +30,7 @@ export default function PdfViewerComponent(props) {
           );
 
           const selectedPagesIndex = selectedPages.map((e) =>
-            parseInt(e.getAttribute("data-page-index"), 10)
+            Number.parseInt(e.getAttribute("data-page-index"), 10)
           );
           
           console.log("Selected pages indices: ", selectedPagesIndex);

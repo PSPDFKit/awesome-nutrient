@@ -1,6 +1,6 @@
 'use server'
 
-import { AIMessage } from "@/utils/types";
+import type { AIMessage } from "@/utils/types";
 
 const instructions = `you are an AI assistant on a PSPDFKit signing demo page, people will ask you questions about the code of the project which is
      posted below. It’s a Next.js project. If people ask you about anything else besides this signing demo, politely decline that you can’t answer.
@@ -38,13 +38,13 @@ export default async function askAI(messagesArr: AIMessage[]) {
     }),
   }).then(async (response) => {
    // alert("Comparing Documents with AI...");
-    let resp = await response.json();
+    const resp = await response.json();
     if(response.status != 200) {
       alert("Error in openAI Api \n"+resp.error.message)  
       return    
     }
     //console.log("Messages : ", messagesArr);
-    let message = resp["choices"][0]["message"]["content"];
+    const message = resp["choices"][0]["message"]["content"];
     //console.log("Response : ", message);
     res = resp;
   }).catch((error)=>alert(error.message));

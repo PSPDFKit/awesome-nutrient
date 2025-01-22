@@ -54,7 +54,7 @@ PSPDFKit.load({
 
     // Flatten widgetAnnotationsUnFlattened to a single dimensional array
     // Move the "Sign Here" widget.
-    let firstWidget = widgetAnnotations.filter((annotation) => {
+    const firstWidget = widgetAnnotations.filter((annotation) => {
       let signatureSet = false;
       return (
         signatures.length > 0 &&

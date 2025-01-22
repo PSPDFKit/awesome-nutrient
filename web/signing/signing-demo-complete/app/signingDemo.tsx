@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { AnnotationTypeEnum, User } from "../utils/types";
+import { AnnotationTypeEnum, type User } from "../utils/types";
 const ActionButton = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.ActionButton),
   { ssr: false }
@@ -87,7 +87,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
 
   function onDragStart(event: React.DragEvent<HTMLDivElement>, type: string) {
     const instantId = "PSPDFKit.generateInstantId()";
-    let data =
+    const data =
       currSignee.name + // value from select, name of signer
       "%" + // % is an invalid email character so we can use it as a delimiter
       currSignee.email + // value from select, email of signer
@@ -312,9 +312,9 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
         (field: any) => field instanceof PSPDFKit.FormFields.SignatureFormField
       );
       const signatureAnnotations = async () => {
-        let annotations: any[] = [];
+        const annotations: any[] = [];
         for (let i = 0; i < instance.totalPageCount; i++) {
-          let ann = await instance.getAnnotations(i);
+          const ann = await instance.getAnnotations(i);
           ann.forEach((annotation: any) => {
             if (
               annotation.customData &&
@@ -355,13 +355,13 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   };
 
   // Tracking whether add Signature/Initial UI
-  let isCreateInitial: boolean = false;
+  let isCreateInitial = false;
 
   // Load PSPDFKit
   useEffect(() => {
     const container = containerRef.current;
     let PSPDFKit: any;
-    (async function () {
+    (async () => {
       PSPDFKit = await import("pspdfkit");
       setPSPDFKit(PSPDFKit);
       if (container) {
@@ -422,10 +422,8 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
               }),
           },
           styleSheets: [`/viewer.css`],
-          isEditableAnnotation: function (annotation:any) {
-            return !annotation.isSignature;
-          },
-        }).then(async function (inst: any) {
+          isEditableAnnotation: (annotation:any) => !annotation.isSignature,
+        }).then(async (inst: any) => {
           setInstance(inst);
 
           // **** Setting Page Index ****
@@ -441,7 +439,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
 
           //@ts-ignore
           const cont = inst.contentDocument.host;
-          cont.ondrop = async function (e: any) {
+          cont.ondrop = async (e: any) => {
             await handleDrop(e, inst, PSPDFKit);
           };
 
@@ -450,7 +448,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
           // Track which signature form field was clicked on
           // and wether it was an initial field or not.
           inst.addEventListener("annotations.press", (event: any) => {
-            let lastFormFieldClicked = event.annotation;
+            const lastFormFieldClicked = event.annotation;
 
             let annotationsToLoad;
             if (
@@ -503,7 +501,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
 
           inst.addEventListener(
             "annotations.load",
-            async function (loadedAnnotations: any) {
+            async (loadedAnnotations: any) => {
               for await (const annotation of loadedAnnotations) {
                 await handleAnnotatitonCreation(
                   inst,
@@ -518,7 +516,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
 
           inst.addEventListener(
             "annotations.create",
-            async function (createdAnnotations: any) {
+            async (createdAnnotations: any) => {
               const annotation = createdAnnotations.get(0);
               await handleAnnotatitonCreation(
                 inst,
@@ -577,8 +575,8 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   };
 
   const deleteUser = (user: User) => {
-    let remainingUsers = users.filter((userL: User) => userL.id !== user.id);
-    let currSig = users.find(
+    const remainingUsers = users.filter((userL: User) => userL.id !== user.id);
+    const currSig = users.find(
       (userL) => user !== userL && userL.role !== "Editor"
     );
     setUsers(remainingUsers);
