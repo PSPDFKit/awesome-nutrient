@@ -43,3 +43,4 @@ Chart.lock
 .terraformrc
 terraform.rc
 node_modules/
+.tool-versions
