@@ -1,141 +1,124 @@
+// Import necessary React hooks
 import { useEffect, useRef } from "react";
 
+// Global variables for tracking annotation positions
+var linecount = 0;
+let add = 0;
+let currentPage, pageHeight, pageWidth;
+
+// Define the main PDF viewer component
 export default function PdfViewerComponent(props) {
+  // Create references for the PDF container and PSPDFKit instance
   const containerRef = useRef(null);
-  let PSPDFKit;
-  let instance;
-  let isProcessingPaste = false;
+  const instanceRef = useRef(null); // Store PSPDFKit instance
+  const PSPDFKitRef = useRef(null); // Store PSPDFKit module
 
-  // Handle clipboard paste - moved outside useEffect to make it accessible
-  const handlePaste = async (event, instance) => {
-    if (isProcessingPaste) return;
-    isProcessingPaste = true;
-
-    try {
-      const items = (event.clipboardData || event.originalEvent.clipboardData)
-        .items;
-      const item = items[0]; // this will get only the last copied data from clipboard
-
-      const content_Type = item.type;
-      const currentPage = instance.viewState.currentPageIndex;
-
-      if (item.kind === "file" && item.type.startsWith("image")) {
-        const file = item.getAsFile();
-        const imageAttachmentId = await instance.createAttachment(file);
-        const annotation = new PSPDFKit.Annotations.ImageAnnotation({
-          pageIndex: currentPage,
-          contentType: content_Type,
-          imageAttachmentId,
-          description: "Pasted Image Annotation",
-          boundingBox: new PSPDFKit.Geometry.Rect({
-            left: 10,
-            top: 50,
-            width: 150,
-            height: 150,
-          }),
-        });
-        await instance.create(annotation);
-      } else if (item.kind === "string") {
-        item.getAsString(async (pastedText) => {
-          // Here you can create a text annotation if needed
-          const textAnnotation = new PSPDFKit.Annotations.TextAnnotation({
-            pageIndex: currentPage,
-            text: {
-              format: "plain",
-              value: pastedText,
-            },
-            boundingBox: new PSPDFKit.Geometry.Rect({
-              left: 10,
-              top: 50,
-              width: 600,
-              height: 250,
-            }),
-          });
-          await instance.create(textAnnotation);
-        });
-      } else {
-        console.log("Unsupported clipboard item");
-      }
-    } finally {
-      isProcessingPaste = false;
-    }
+  // Function to enhance text with first letter to uppercase
+  const correctText = (text) => {
+    return text
+      .replace(
+        /(\.\s+|^)([a-z])/g,
+        (match, prefix, letter) => prefix + letter.toUpperCase()
+      ) // Capitalize first letter
+      .replace(/\bi\b/g, "I") // Capitalize 'I'
+      .trim();
   };
 
+  // useEffect hook to load PSPDFKit and set up event listeners
   useEffect(() => {
     const container = containerRef.current;
 
-    (async () => {
-      PSPDFKit = await import("pspdfkit");
+    (async function () {
+      const PSPDFKit = await import("pspdfkit");
+      PSPDFKitRef.current = PSPDFKit; // Store PSPDFKit module globally
+      PSPDFKit.unload(container); // Ensure only one instance exists
 
-      PSPDFKit.unload(container); // Ensure that there's only one PSPDFKit instance.
-
-      const defaultToolbarItems = PSPDFKit.defaultDocumentEditorToolbarItems;
-
-      // Insert custom item at the desired position
-      const toolbarItems = [...defaultToolbarItems];
-
-      instance = await PSPDFKit.load({
+      // Load PSPDFKit instance
+      const instance = await PSPDFKit.load({
         licenseKey: import.meta.env.VITE_lkey,
         container,
         document: props.document,
         baseUrl: `${window.location.protocol}//${window.location.host}/${
           import.meta.env.PUBLIC_URL ?? ""
         }`,
-        documentEditorToolbarItems: toolbarItems,
+        toolbarItems: PSPDFKit.defaultToolbarItems,
       });
 
-      // Add event listener for paste
-      const handlePasteEvent = (event) => handlePaste(event, instance);
-      document.addEventListener("paste", handlePasteEvent);
+      instanceRef.current = instance; // Store instance in ref
+
+      // Store current page details
+      currentPage = instance.viewState.currentPageIndex;
+      console.log("Current Page: ", currentPage);
+      const pageInfo = instance.pageInfoForIndex(currentPage);
+      pageWidth = pageInfo.width;
+      pageHeight = pageInfo.height;
+      console.log("Page Width: ", pageWidth);
+      console.log("Page Height: ", pageHeight);
 
       // Cleanup on component unmount
       return () => {
-        document.removeEventListener("paste", handlePasteEvent);
         PSPDFKit.unload(container);
       };
     })();
   }, [props.document]);
 
-  // Function to handle speech-to-text and create annotation
-  const handleSpeechToText = () => {
-    const recognition = new (
-      window.SpeechRecognition || window.webkitSpeechRecognition
-    )();
+  // Function to handle speech-to-text and create annotation with text enhancements
+  const handleSpeechToText = async () => {
+    const recognition = new (window.SpeechRecognition ||
+      window.webkitSpeechRecognition)();
     recognition.lang = "en-US";
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
+    recognition.onresult = async (event) => {
+      let transcript = event.results[0][0].transcript;
+      transcript = correctText(transcript); // Apply text corrections
 
-      // Copy text to clipboard
-      navigator.clipboard.writeText(transcript).then(() => {
-        console.log("Text copied to clipboard");
+      if (!instanceRef.current || !PSPDFKitRef.current) {
+        console.error("PSPDFKit instance is not available.");
+        return;
+      }
 
-        // Directly call handlePaste with simulated event data
-        simulatePasteEvent(transcript);
+      const PSPDFKit = PSPDFKitRef.current; // Access PSPDFKit module
+
+      // To track annotation position place them correctly 
+      linecount += 1;
+      add = linecount > 1 ? add + 25 : 0;
+
+      const bbox = new PSPDFKit.Geometry.Rect({
+        left: 10,
+        top: 50 + add,
+        width: pageWidth - 20,
+        height: 25,
       });
+
+      const textAnnotation = new PSPDFKit.Annotations.TextAnnotation({
+        pageIndex: currentPage,
+        text: {
+          format: "plain",
+          value: transcript,
+        },
+        isFitting: true,
+        fontSize: 10,
+        font: "Verdana",
+        boundingBox: bbox,
+      });
+
+      try {
+        await instanceRef.current.create(textAnnotation);
+      } catch (error) {
+        console.error("Error creating annotation:", error);
+      }
     };
 
     recognition.start();
   };
 
-  // Function to simulate paste event
-  const simulatePasteEvent = (text) => {
-    const pasteEvent = new ClipboardEvent("paste", {
-      clipboardData: new DataTransfer(),
-    });
-
-    // Manually set the clipboard data with the text
-    pasteEvent.clipboardData.setData("text/plain", text);
-
-    // Call handlePaste directly with instance
-    handlePaste(pasteEvent, instance);
-  };
-
   return (
     <div>
+      {/* Button to start speech-to-text */}
       <button onClick={handleSpeechToText}>Start Speech to Text</button>
+      {/* PDF Viewer Container */}
       <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />
     </div>
   );
