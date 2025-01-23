@@ -42,3 +42,5 @@ Chart.lock
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+node_modules/
+.tool-versions

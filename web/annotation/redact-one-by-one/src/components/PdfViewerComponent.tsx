@@ -29,10 +29,10 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
           return annotation instanceof PSPDFKit.Annotations.RedactionAnnotation
             ? [
                 {
-                  type: 'custom',
-                  title: 'Accept',
-                  id: 'tooltip-accept-annotation',
-                  className: 'TooltipItem-Duplication',
+                  type: "custom",
+                  title: "Accept",
+                  id: "tooltip-accept-annotation",
+                  className: "TooltipItem-Duplication",
                   onPress: async () => {
                     const allRedactionAnnotations = (
                       await getAllAnnotations()
@@ -43,23 +43,23 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
                   },
                 },
                 {
-                  type: 'custom',
-                  title: 'Reject',
-                  id: 'tooltip-reject-annotation',
-                  className: 'TooltipItem-Duplication',
+                  type: "custom",
+                  title: "Reject",
+                  id: "tooltip-reject-annotation",
+                  className: "TooltipItem-Duplication",
                   onPress: async () => {
                     instance.delete(annotation);
                   },
-                },  
+                },
               ]
             : [];
         };
-      
+
         const getAllAnnotations = async () => {
           let annotationsList = PSPDFKit.Immutable.List();
           for (let i = 0; i < instance.totalPageCount - 1; i++) {
             const anns = (await instance.getAnnotations(i)).filter(
-              (a) => a instanceof PSPDFKit.Annotations.RedactionAnnotation
+              (a) => a instanceof PSPDFKit.Annotations.RedactionAnnotation,
             );
             annotationsList = annotationsList.concat(anns);
           }
@@ -75,7 +75,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
           styleSheets: ["/mypspdfkit.css"],
           toolbarPlacement: PSPDFKit.ToolbarPlacement.TOP,
         });
-        console.log("Instance:",instance);
+        console.log("Instance:", instance);
         // Create redactions once PSPDFKit is loaded
         createRedactions();
       } catch (error) {
@@ -86,28 +86,28 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
     initializePSPDFKit();
     const createRedactions = async () => {
       const terms = ["summarize", "trees", "Learning", "Forests"];
-  
+
       for (const term of terms) {
         console.log("Search term:", term);
-  
+
         if (term.length === 0) {
           console.error("Search term is empty.");
           continue;
         }
-  
+
         if (instance) {
           const options = {
             searchType: PSPDFKit.SearchType.TEXT,
             searchInAnnotations: true,
           };
           console.log("Options:", options);
-  
+
           try {
             const ids = await instance.createRedactionsBySearch(term, options);
             console.log(
               "The following annotations have been added for term:",
               term,
-              ids
+              ids,
             );
             // Apply redactions if needed
             // await instance.applyRedactions();
@@ -116,11 +116,11 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
           }
         }
       }
-  
+
       console.log("All redactions have been created.");
     };
 
-    return () => PSPDFKit && PSPDFKit.unload(container);
+    return () => PSPDFKit?.unload(container);
   }, [props.document]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;

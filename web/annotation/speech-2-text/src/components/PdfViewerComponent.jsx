@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 
 export default function PdfViewerComponent(props) {
   const containerRef = useRef(null);
-  let PSPDFKit, instance;
+  let PSPDFKit;
+  let instance;
   let isProcessingPaste = false;
 
   // Handle clipboard paste - moved outside useEffect to make it accessible
@@ -63,7 +64,7 @@ export default function PdfViewerComponent(props) {
   useEffect(() => {
     const container = containerRef.current;
 
-    (async function () {
+    (async () => {
       PSPDFKit = await import("pspdfkit");
 
       PSPDFKit.unload(container); // Ensure that there's only one PSPDFKit instance.
@@ -97,8 +98,9 @@ export default function PdfViewerComponent(props) {
 
   // Function to handle speech-to-text and create annotation
   const handleSpeechToText = () => {
-    const recognition = new (window.SpeechRecognition ||
-      window.webkitSpeechRecognition)();
+    const recognition = new (
+      window.SpeechRecognition || window.webkitSpeechRecognition
+    )();
     recognition.lang = "en-US";
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;

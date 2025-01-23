@@ -1,0 +1,16 @@
+{
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@eslint/js": "^9.18.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.1"
+  },
+  "scripts": {
+    "format": "biome check --unsafe --write .",
+    "prepare": "husky",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*": ["biome check --write --no-errors-on-unmatched"]
+  }
+}

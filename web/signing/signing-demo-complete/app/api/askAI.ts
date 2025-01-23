@@ -1,6 +1,6 @@
-'use server'
+"use server";
 
-import { AIMessage } from "@/utils/types";
+import type { AIMessage } from "@/utils/types";
 
 const instructions = `you are an AI assistant on a PSPDFKit signing demo page, people will ask you questions about the code of the project which is
      posted below. It’s a Next.js project. If people ask you about anything else besides this signing demo, politely decline that you can’t answer.
@@ -17,7 +17,7 @@ export default async function askAI(messagesArr: AIMessage[]) {
     //@ts-ignore
     headers: {
       "Content-Type": "application/json",
-      Authorization: process.env.NEXT_PUBLIC_OPEN_AI_KEY
+      Authorization: process.env.NEXT_PUBLIC_OPEN_AI_KEY,
     },
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
@@ -27,7 +27,7 @@ export default async function askAI(messagesArr: AIMessage[]) {
           role: "system",
           content: instructions,
         },
-        ...messagesArr
+        ...messagesArr,
         // {
         //   role: "user",
         //   content: message,
@@ -36,17 +36,19 @@ export default async function askAI(messagesArr: AIMessage[]) {
         // },
       ],
     }),
-  }).then(async (response) => {
-   // alert("Comparing Documents with AI...");
-    let resp = await response.json();
-    if(response.status != 200) {
-      alert("Error in openAI Api \n"+resp.error.message)  
-      return    
-    }
-    //console.log("Messages : ", messagesArr);
-    let message = resp["choices"][0]["message"]["content"];
-    //console.log("Response : ", message);
-    res = resp;
-  }).catch((error)=>alert(error.message));
+  })
+    .then(async (response) => {
+      // alert("Comparing Documents with AI...");
+      const resp = await response.json();
+      if (response.status !== 200) {
+        alert(`Error in openAI Api \n${resp.error.message}`);
+        return;
+      }
+      //console.log("Messages : ", messagesArr);
+      const message = resp.choices[0].message.content;
+      //console.log("Response : ", message);
+      res = resp;
+    })
+    .catch((error) => alert(error.message));
   return res;
 }

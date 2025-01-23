@@ -3,7 +3,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
 }
 
 /* Body styles */
@@ -21,8 +20,7 @@ header {
   vertical-align: middle;
 }
 
-Avatar
-{
+Avatar {
   direction: rtl !important;
 }
 
@@ -30,7 +28,7 @@ Avatar
 .container {
   display: flex;
   flex-wrap: wrap;
-  justify-content:space-between;
+  justify-content: space-between;
   margin: 5px;
 }
 
@@ -41,13 +39,12 @@ Avatar
   padding: 20px;
 }
 
-
 .bdrcol {
-border: red;
-border-width: 2;
-border-style:groove;
-border-radius: 20%;
-padding: 7px;
+  border: red;
+  border-width: 2;
+  border-style: groove;
+  border-radius: 20%;
+  padding: 7px;
 }
 
 /* Right column styles */
@@ -72,7 +69,8 @@ footer {
     flex-direction: column;
   }
 
-  left-column, right-column {
+  left-column,
+  right-column {
     width: 100%;
     margin-bottom: 10px;
   }
@@ -82,7 +80,7 @@ footer {
   display: inline-block;
   padding: 5px 8px;
   font-size: 14px;
-  cursor:all-scroll;
+  cursor: all-scroll;
   text-align: center;
   text-decoration: none;
   outline: none;
@@ -91,10 +89,10 @@ footer {
   border: none;
   border-radius: 10px;
   box-shadow: 0 6px #999;
-align-self: center;
-width: 180px;
-height:25px;
-transition: height 1s;
+  align-self: center;
+  width: 180px;
+  height: 25px;
+  transition: height 1s;
 }
 
 /* .btnstyle:hover {background-color: #3e8e41; height: 30px; font-size: larger;} */

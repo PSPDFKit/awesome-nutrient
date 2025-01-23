@@ -65,7 +65,7 @@
   font-size: 0.5rem;
   background-color: transparent;
   padding: 0;
-  color: #555
+  color: #555;
 }
 
 .signature-id-demo {
@@ -84,7 +84,7 @@
   top: -0.9375rem;
   left: -0.9375rem;
   width: 0.875rem;
-  height: calc(var(--box-height)/2);
+  height: calc(var(--box-height) / 2);
   border: 0.0625rem solid grey;
   border-radius: 1.25rem 0 0 0;
   border-bottom: none;
@@ -97,9 +97,9 @@
   bottom: -0.9375rem;
   left: -0.9375rem;
   width: 3rem;
-  height: calc(var(--box-height)/2);
+  height: calc(var(--box-height) / 2);
   border: 0.0625rem solid grey;
-  border-radius: 0 0 0 1.25rem; 
+  border-radius: 0 0 0 1.25rem;
   border-top: none;
   border-right: none;
 }

@@ -26,14 +26,14 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
       const toolbarItemsDefault = PSPDFKit.defaultToolbarItems;
       instance = await PSPDFKit.load({
-        licenseKey:"Your License Key goes here",
+        licenseKey: "Your License Key goes here",
         container,
         document: props.document,
         baseUrl: `${window.location.protocol}//${window.location.host}/`,
         toolbarItems: toolbarItemsDefault,
       });
     })();
-    return () => PSPDFKit && PSPDFKit.unload(container);
+    return () => PSPDFKit?.unload(container);
   }, [props.document]);
 
   useEffect(() => {
@@ -44,13 +44,24 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
           const { bottom, left, right, top } = annotation.boundingBox;
           const width = right - left;
           const height = bottom - top;
-          console.log("Bottom: ",bottom," Left: ",left, " Right: ", right," Width: ", width," Height: ", height);
-          console.log("Annotation Bounding Box: ",annotation.boundingBox);
+          console.log(
+            "Bottom: ",
+            bottom,
+            " Left: ",
+            left,
+            " Right: ",
+            right,
+            " Width: ",
+            width,
+            " Height: ",
+            height,
+          );
+          console.log("Annotation Bounding Box: ", annotation.boundingBox);
           // Render the full page as an image URL
           instance
             .renderPageAsImageURL(
               { width: instance.pageInfoForIndex(0).width },
-              0 // Assuming pageIndex is 0
+              0, // Assuming pageIndex is 0
             )
             .then(async (imageUrl: string) => {
               // Create a temporary image element to load the full page image
@@ -58,7 +69,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
               tempImage.src = imageUrl;
 
               // When the temporary image is loaded, crop it using canvas
-              tempImage.onload = function () {
+              tempImage.onload = () => {
                 const canvas = document.createElement("canvas");
                 const ctx = canvas.getContext("2d")!;
                 canvas.width = width;
@@ -72,7 +83,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
                   0,
                   0,
                   width,
-                  height
+                  height,
                 );
 
                 // Convert the cropped canvas to a data URL (JPEG)

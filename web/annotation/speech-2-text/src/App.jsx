@@ -13,8 +13,6 @@ function App() {
     setDocument(objectUrl);
   };
 
-
-
   return (
     <div className="App">
       <label htmlFor="file-input" className="App-input">
