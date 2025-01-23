@@ -1,0 +1,218 @@
+{
+  "type": "https://pspdfkit.com/document-authoring/persistence/container",
+  "version": 1,
+  "container": {
+    "document": {
+      "stylesTable": {
+        "Normal": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 0,
+          "spaceAfter": 8,
+          "bold": false,
+          "italic": false,
+          "color": "#000000",
+          "strikeout": false,
+          "underline": false,
+          "highlight": "none",
+          "face": "Carlito",
+          "pointSize": 11
+        },
+        "Title": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "bold": false,
+          "italic": false,
+          "color": "#000000",
+          "strikeout": false,
+          "underline": false,
+          "highlight": "none",
+          "face": "Carlito",
+          "pointSize": 28
+        },
+        "Subtitle": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 0,
+          "spaceAfter": 16,
+          "bold": false,
+          "italic": false,
+          "color": "#666666",
+          "strikeout": false,
+          "underline": false,
+          "highlight": "none",
+          "face": "Carlito",
+          "pointSize": 15
+        },
+        "Heading 1": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 20,
+          "spaceAfter": 6,
+          "bold": false,
+          "italic": false,
+          "color": "#000000",
+          "strikeout": false,
+          "underline": false,
+          "highlight": "none",
+          "face": "Carlito",
+          "pointSize": 20
+        },
+        "Heading 2": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 18,
+          "spaceAfter": 6,
+          "bold": false,
+          "italic": false,
+          "color": "#000000",
+          "strikeout": false,
+          "underline": false,
+          "highlight": "none",
+          "face": "Carlito",
+          "pointSize": 16
+        },
+        "Heading 3": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 16,
+          "spaceAfter": 4,
+          "bold": false,
+          "italic": false,
+          "color": "#434343",
+          "strikeout": false,
+          "underline": false,
+          "highlight": "none",
+          "face": "Carlito",
+          "pointSize": 14
+        },
+        "Heading 4": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 14,
+          "spaceAfter": 4,
+          "bold": false,
+          "italic": false,
+          "color": "#666666",
+          "strikeout": false,
+          "underline": false,
+          "highlight": "none",
+          "face": "Carlito",
+          "pointSize": 12
+        },
+        "Heading 5": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 12,
+          "spaceAfter": 4,
+          "bold": false,
+          "italic": false,
+          "color": "#666666",
+          "strikeout": false,
+          "underline": false,
+          "highlight": "none",
+          "face": "Carlito",
+          "pointSize": 11
+        },
+        "Heading 6": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 12,
+          "spaceAfter": 4,
+          "bold": false,
+          "italic": true,
+          "color": "#666666",
+          "strikeout": false,
+          "underline": false,
+          "highlight": "none",
+          "face": "Carlito",
+          "pointSize": 11
+        }
+      },
+      "body": {
+        "sections": [
+          {
+            "pageSetup": {
+              "size": { "x": 595, "y": 842 },
+              "margins": { "l": 72, "r": 72, "t": 72, "b": 72 }
+            },
+            "elements": [
+              {
+                "type": "p",
+                "pPr": { "styleId": "Title" },
+                "elements": [
+                  {
+                    "type": "r",
+                    "rPr": { "color": "#FFFFFF", "highlight": "#474747" },
+                    "text": "{{title}}"
+                  }
+                ]
+              },
+              {
+                "type": "p",
+                "pPr": {
+                  "styleId": "Subtitle",
+                  "alignment": "left",
+                  "indentation": { "firstLineShift": 0, "left": 0, "right": 0 },
+                  "lineSpacingFactor": 1,
+                  "spaceBefore": 0,
+                  "spaceAfter": 0
+                },
+                "elements": [{ "type": "r", "text": "The Ultimate Checklist" }]
+              },
+              {
+                "type": "p",
+                "pPr": { "styleId": "Heading 1" },
+                "elements": [
+                  {
+                    "type": "r",
+                    "rPr": { "highlight": "#E9E9E9" },
+                    "text": "{{#sections}}{{title}}"
+                  }
+                ]
+              },
+              {
+                "type": "p",
+                "pPr": {
+                  "styleId": "Normal",
+                  "alignment": "left",
+                  "indentation": { "firstLineShift": 0, "left": 0, "right": 0 },
+                  "lineSpacingFactor": 1.08,
+                  "spaceBefore": 0,
+                  "spaceAfter": 8
+                },
+                "elements": [
+                  { "type": "r", "text": "{{#items}}☐{{text}}{{/items}}" }
+                ]
+              },
+              {
+                "type": "p",
+                "pPr": {
+                  "styleId": "Normal",
+                  "alignment": "left",
+                  "indentation": { "firstLineShift": 0, "left": 0, "right": 0 },
+                  "lineSpacingFactor": 1.08,
+                  "spaceBefore": 0,
+                  "spaceAfter": 8
+                },
+                "elements": [{ "type": "r", "text": "{{/sections}}" }]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "resources": {}
+}

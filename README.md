@@ -146,6 +146,9 @@ Other examples:
 ## AI
 - [Document Assistant for PSPDFKit](https://github.com/PSPDFKit/ai-document-assistant-demo) - AI Document Assistant for PSPDFKit Demo showcases how to interact with PDFs using natural language commands powered by AI, integrated with Nutrient Web SDK.
 
+## Document Authoring
+- [Document Generator VanillaJS](./web/document-generator-vanillajs/) - A fully functional step-by-step document generator that brings the user from a template to a PDF document, where they get to make modifications on every step of the way. Demonstrates the combined capabilities of Nutrient's Document Authoring and Web SDKs.
+
 ## iOS
 
 - [iOS Catalog](https://github.com/PSPDFKit/pspdfkit-ios-catalog) - A wide variety of examples what Nutrient iOS SDK can do. Clone it and play with it.

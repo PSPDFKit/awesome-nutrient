@@ -1,0 +1,195 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "title": "BUSINESS STARTUP CHECKLIST",
+    "sections": [
+      {
+        "title": "ASSESSING YOUR OPPORTUNITY (WHAT DO YOU WANT?)",
+        "items": [
+          {
+            "text": "Determine why you want to start a business"
+          },
+          {
+            "text": "Conduct a SWOT analysis to identify your strengths and weaknesses."
+          },
+          {
+            "text": "Decide whether you want to provide a product or a service; build an online business or bricks and mortar."
+          },
+          {
+            "text": "Assess how much capital you have to risk and how long it will last"
+          },
+          {
+            "text": "Determine if you want the business to be part-time or full-time."
+          },
+          {
+            "text": "Discuss your plans with family members to ensure they are behind you."
+          }
+        ]
+      },
+      {
+        "title": "COMMITING TO YOUR BUSINESS",
+        "items": [
+          {
+            "text": "Make a list of business ideas that fit your strengths and interests."
+          },
+          {
+            "text": "Identify businesses that are having success today."
+          },
+          {
+            "text": "Understand the problem(s) your business will solve."
+          },
+          {
+            "text": "Define the market you want to pursue and your target customer."
+          },
+          {
+            "text": "Validate your idea by talking to potential customers about it."
+          },
+          {
+            "text": "Evaluate how customers solve this problem today, as well as what the competition offers."
+          },
+          {
+            "text": "Create a quick financial plan, identifying costs and forecasted sales to see if your capital gets you to a profit."
+          }
+        ]
+      },
+      {
+        "title": "SETTING UP YOUR BUSINESS",
+        "items": [
+          {
+            "text": "Select your business name and search the internet to make sure it’s not being used."
+          },
+          {
+            "text": "Register a domain name and secure social media profiles for the company."
+          },
+          {
+            "text": "Apply for an EIN with the IRS and local or state business licenses."
+          },
+          {
+            "text": "Decide on a legal structure or business structure and incorporate: Corporation, LLC or Sole Proprietorship. "
+          },
+          {
+            "text": "Get your website up and running."
+          },
+          {
+            "text": "Establish your company’s accounting plan: hire an accountant, select an accounting system, and a fiscal year."
+          },
+          {
+            "text": "Evaluate and select needed insurance policies for your business: liability, workers comp, or health insurance"
+          },
+          {
+            "text": "Open a business bank account and business credit card."
+          },
+          {
+            "text": "Begin networking with pre-marketing materials such as business cards, brochures, or public relations."
+          }
+        ]
+      },
+      {
+        "title": "ENSURING SUFFICIENT FUNDS ARE AVAILABLE",
+        "items": [
+          {
+            "text": "Estimate how long it will take for your business to acquire paying customers."
+          },
+          {
+            "text": "Itemize your living expenses for the first year, at least, and assess where this will come from."
+          },
+          {
+            "text": "Itemize how much capital is required to launch the business and project how long before profitability."
+          },
+          {
+            "text": "From this, determine how many months of savings or investment you have to get to breakeven or profit."
+          },
+          {
+            "text": "If outside investment is required beyond the founders’ savings, complete a business plan."
+          }
+        ]
+      },
+      {
+        "title": "PLANNING FOR YOUR BUSINESS",
+        "items": [
+          {
+            "text": "Write an Executive Summary after the other sections of the Business Plan are completed below."
+          },
+          {
+            "text": "Complete a Company Overview that includes basic information and a summary of the management team."
+          },
+          {
+            "text": "Write a Product Description section describing your products or services and what problems they solve."
+          },
+          {
+            "text": "Prepare a Market Analysis section that describes the total market and your target market, specific segment needs, competitive offerings available, and any trends that will affect the analysis."
+          },
+          {
+            "text": "Describe an Operating Plan for the business, such as operating hours, number of employees, key suppliers, or seasonal adjustments your business might need to adjust to."
+          },
+          {
+            "text": "Create a Marketing and Sales Plan that includes a \"Go To Market\" or launch plan, pricing, how your business will generate leads, and close new business."
+          },
+          {
+            "text": "Build a Financial Plan that shows a break-even analysis, projected profit and loss, and projected cash flows."
+          }
+        ]
+      },
+      {
+        "title": "SETTING UP TO OPERATE",
+        "items": [
+          {
+            "text": "Find and secure a business location, even home offices need good design."
+          },
+          {
+            "text": "Identify any staffing needs and the profile of employee or contractor that is best."
+          },
+          {
+            "text": "Recruit, interview, hire, and train employees."
+          },
+          {
+            "text": "Identify and set up any needed technology: POS, Email, Phones, CRM, Billing and Payment systems"
+          },
+          {
+            "text": "Ensure your technology systems are secure with your information or customer information."
+          },
+          {
+            "text": "Depending on the business type, identify and partner with the right suppliers."
+          }
+        ]
+      },
+      {
+        "title": "MARKETING AND LAUNCHING YOUR BUSINESS",
+        "items": [
+          {
+            "text": "Develop and refine a brand for your company and its products or services."
+          },
+          {
+            "text": "Create and fine tune an Elevator Pitch through conversations with anyone who will list."
+          },
+          {
+            "text": "Begin distributing or displaying your marketing materials: shop signs, brochures, or banners."
+          },
+          {
+            "text": "Online, initiate digital marketing through blogs, emails, or SEO strategies to drive traffic to your web site."
+          },
+          {
+            "text": "Hire a salesperson or sales team."
+          },
+          {
+            "text": "Let the local or regional press know you are opening."
+          },
+          {
+            "text": "Utilize Guerrilla Marketing tactics to generate traffic."
+          },
+          {
+            "text": "Organize an opening day."
+          },
+          {
+            "text": "Have fun!!"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,2095 @@
+{
+  "type": "https://pspdfkit.com/document-authoring/persistence/container",
+  "version": 1,
+  "container": {
+    "document": {
+      "stylesTable": {
+        "Normal": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 0,
+          "spaceAfter": 8,
+          "face": "Carlito",
+          "bold": false,
+          "italic": false,
+          "pointSize": 9,
+          "color": "#404040",
+          "highlight": "none",
+          "underline": false,
+          "strikeout": false
+        },
+        "Heading 1": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 30,
+          "spaceAfter": 12,
+          "face": "Carlito",
+          "bold": true,
+          "italic": false,
+          "pointSize": 14,
+          "color": "#1F4E79",
+          "highlight": "none",
+          "underline": false,
+          "strikeout": false
+        },
+        "Heading 2": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 18,
+          "spaceAfter": 6,
+          "face": "Carlito",
+          "bold": true,
+          "italic": false,
+          "pointSize": 12,
+          "color": "#5B9BD5",
+          "highlight": "none",
+          "underline": false,
+          "strikeout": false
+        },
+        "Subtitle": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.1666666666666667,
+          "spaceBefore": 4,
+          "spaceAfter": 0,
+          "face": "Carlito",
+          "bold": true,
+          "italic": false,
+          "pointSize": 12,
+          "color": "#2E74B5",
+          "highlight": "none",
+          "underline": false,
+          "strikeout": false
+        },
+        "Title": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.75,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "face": "Carlito",
+          "bold": false,
+          "italic": false,
+          "pointSize": 19,
+          "color": "#1F4E79",
+          "highlight": "none",
+          "underline": false,
+          "strikeout": false
+        },
+        "Heading 3": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 16,
+          "spaceAfter": 4,
+          "face": "Carlito",
+          "bold": false,
+          "italic": false,
+          "pointSize": 14,
+          "color": "#434343",
+          "highlight": "none",
+          "underline": false,
+          "strikeout": false
+        },
+        "Heading 4": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 14,
+          "spaceAfter": 4,
+          "face": "Carlito",
+          "bold": false,
+          "italic": false,
+          "pointSize": 12,
+          "color": "#666666",
+          "highlight": "none",
+          "underline": false,
+          "strikeout": false
+        },
+        "Heading 5": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 12,
+          "spaceAfter": 4,
+          "face": "Carlito",
+          "bold": false,
+          "italic": false,
+          "pointSize": 11,
+          "color": "#666666",
+          "highlight": "none",
+          "underline": false,
+          "strikeout": false
+        },
+        "Heading 6": {
+          "alignment": "left",
+          "indentation": { "left": 0, "right": 0, "firstLineShift": 0 },
+          "lineSpacingFactor": 1.08,
+          "spaceBefore": 12,
+          "spaceAfter": 4,
+          "face": "Carlito",
+          "bold": false,
+          "italic": true,
+          "pointSize": 11,
+          "color": "#666666",
+          "highlight": "none",
+          "underline": false,
+          "strikeout": false
+        }
+      },
+      "body": {
+        "sections": [
+          {
+            "pageSetup": {
+              "margins": { "l": 72, "r": 72, "t": 54, "b": 36 },
+              "size": { "x": 612, "y": 792 }
+            },
+            "elements": [
+              {
+                "type": "p",
+                "pPr": {
+                  "styleId": "Heading 1",
+                  "alignment": "left",
+                  "lineSpacingFactor": 1.15,
+                  "spaceBefore": 0,
+                  "spaceAfter": 8
+                },
+                "elements": [{ "type": "r", "text": "HAPPIEST VALLEY FARMS" }],
+                "importedElementInfo": { "elementRef": "" }
+              },
+              {
+                "type": "p",
+                "pPr": {
+                  "styleId": "Normal",
+                  "alignment": "left",
+                  "indentation": { "firstLineShift": 0, "left": 0, "right": 0 },
+                  "lineSpacingFactor": 1.15,
+                  "spaceBefore": 0,
+                  "spaceAfter": 8
+                },
+                "elements": [{ "type": "r", "text": "{{invoice_date}}" }]
+              },
+              {
+                "type": "p",
+                "pPr": {
+                  "styleId": "Normal",
+                  "alignment": "left",
+                  "indentation": { "firstLineShift": 0, "left": 0, "right": 0 },
+                  "lineSpacingFactor": 1.15,
+                  "spaceBefore": 0,
+                  "spaceAfter": 8
+                },
+                "elements": []
+              },
+              {
+                "type": "p",
+                "pPr": {
+                  "styleId": "Title",
+                  "alignment": "left",
+                  "indentation": { "firstLineShift": 0, "left": 0, "right": 0 },
+                  "lineSpacingFactor": 1.15,
+                  "spaceBefore": 0,
+                  "spaceAfter": 8
+                },
+                "elements": [
+                  { "type": "r", "text": "Invoice {{invoice_number}}" }
+                ]
+              },
+              {
+                "type": "t",
+                "rows": [
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "styleId": "Heading 2",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [{ "type": "r", "text": "Bill to:" }]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "styleId": "Heading 2",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [{ "type": "r", "text": "Ship to:" }]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": null
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Customer"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{customer_name}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Recipient"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{recipient_name}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Customer ID# "
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{customer_id}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Address"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{recipient_address}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Address"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{customer_address}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Phone"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{recipient_phone}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Phone"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{customer_phone}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Payment Due "
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{payment_due_date}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Delivery Date "
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{delivery_date}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Salesperson"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{salesperson}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Shipping Method "
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{shipping_method}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Payment Terms"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{payment_terms}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Shipping Terms "
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{shipping_terms}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": null
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": null,
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "tPr": { "cols": [{ "width": 80 }, {}, { "width": 80 }, {}] }
+              },
+              { "type": "p", "elements": [] },
+              {
+                "type": "p",
+                "pPr": {
+                  "styleId": "Normal",
+                  "alignment": "left",
+                  "indentation": { "firstLineShift": 0, "left": 0, "right": 0 },
+                  "lineSpacingFactor": 1.08,
+                  "spaceBefore": 0,
+                  "spaceAfter": 8
+                },
+                "elements": []
+              },
+              {
+                "type": "t",
+                "rows": [
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Qty."
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": "#000000",
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Item#"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Description"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Unit price"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Discount"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Line total"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": "#000000",
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{#items}}{{quantity}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": "#000000",
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [{ "type": "r", "text": "{{number}}" }]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": [
+                              { "type": "r", "text": "{{description}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [{ "type": "r", "text": "{{price}}" }]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [
+                              { "type": "r", "text": "{{discount}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [
+                              { "type": "r", "text": "{{total}} {{/items}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": "#000000",
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [
+                              { "type": "r", "text": "Total Discount " }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [
+                              { "type": "r", "text": "{{total_discount}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [{ "type": "r", "text": "Subtotal" }]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [
+                              { "type": "r", "text": "{{subtotal}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#FFFFFF"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [{ "type": "r", "text": "Sales Tax " }]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [
+                              { "type": "r", "text": "{{sales_tax}}" }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#FFFFFF",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "cells": [
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": { "spaceBefore": 0, "spaceAfter": 0 },
+                            "elements": []
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "Total"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "elements": [
+                          {
+                            "type": "p",
+                            "pPr": {
+                              "alignment": "right",
+                              "spaceBefore": 0,
+                              "spaceAfter": 0
+                            },
+                            "elements": [
+                              {
+                                "type": "r",
+                                "rPr": { "bold": true },
+                                "text": "{{total}}"
+                              }
+                            ]
+                          }
+                        ],
+                        "tcPr": {
+                          "padding": { "l": 3, "r": 3 },
+                          "border": {
+                            "colors": {
+                              "l": null,
+                              "r": null,
+                              "t": "#000000",
+                              "b": "#000000"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              { "type": "p", "elements": [] },
+              {
+                "type": "p",
+                "pPr": {
+                  "styleId": "Normal",
+                  "alignment": "left",
+                  "indentation": { "firstLineShift": 0, "left": 0, "right": 0 },
+                  "lineSpacingFactor": 1.08,
+                  "spaceBefore": 0,
+                  "spaceAfter": 8
+                },
+                "elements": [
+                  {
+                    "type": "r",
+                    "rPr": { "bold": true },
+                    "text": "Thank you for your business!"
+                  }
+                ]
+              },
+              {
+                "type": "p",
+                "pPr": {
+                  "styleId": "Normal",
+                  "alignment": "left",
+                  "indentation": { "firstLineShift": 0, "left": 0, "right": 0 },
+                  "lineSpacingFactor": 1.08,
+                  "spaceBefore": 0,
+                  "spaceAfter": 8
+                },
+                "elements": [
+                  { "type": "r", "text": "Happiest Valley Farms" },
+                  { "type": "b" },
+                  {
+                    "type": "r",
+                    "text": "456 Anyroad, Anywhere | interestingsite.com"
+                  },
+                  { "type": "b" },
+                  {
+                    "type": "r",
+                    "text": "p.(123) 987-6543 |  f.(123) 987-6542  |  happiest@example.com"
+                  }
+                ]
+              }
+            ],
+            "importedElementInfo": { "elementRef": "CP" }
+          }
+        ]
+      },
+      "importedDocumentInfo": {
+        "documentHash": "cd0fd1985d3f682635cfcbef73a702ebdb162967"
+      }
+    }
+  },
+  "resources": {}
+}
