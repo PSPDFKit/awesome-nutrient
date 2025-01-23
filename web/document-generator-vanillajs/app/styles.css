@@ -1,56 +1,56 @@
-.nutri-button-dark { 
-    background-color: #1A1414; 
+.nutri-button-dark {
+  background-color: #1a1414;
 }
 
-section { 
-    position: relative; 
-    padding:20px; 
-    padding-top: 70px; 
-    width: 100%; 
-    height: 100vh; 
-}     
-form { 
-    position: relative; 
-    padding:20px; 
-    width: 100%; 
-}       
+section {
+  position: relative;
+  padding: 20px;
+  padding-top: 70px;
+  width: 100%;
+  height: 100vh;
+}
+form {
+  position: relative;
+  padding: 20px;
+  width: 100%;
+}
 
-p.nutri-template { 
-    text-align: center;;
+p.nutri-template {
+  text-align: center;
 }
 p.nutri-template img {
-    height: 300px;
-    max-width: 100%;
+  height: 300px;
+  max-width: 100%;
 }
 
-.nutri-transition { 
-    position: relative; 
-    width: 100%; 
-    height: 1024px;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
+.nutri-transition {
+  position: relative;
+  width: 100%;
+  height: 1024px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.nutri-editor, 
-.nutri-viewer { 
-    position: relative; 
-    width: 100%; 
-    height: 1024px; 
+.nutri-editor,
+.nutri-viewer {
+  position: relative;
+  width: 100%;
+  height: 1024px;
 }
 
-#jsonEditor { 
-    width: 100%; 
+#jsonEditor {
+  width: 100%;
 }
-#jsonEditor .CodeMirror { 
-    width: 100%; 
-    height: 1024px; 
+#jsonEditor .CodeMirror {
+  width: 100%;
+  height: 1024px;
 }
 
-article header { 
-    background-color: #1A1414; 
-    color: #EFEBE7; 
+article header {
+  background-color: #1a1414;
+  color: #efebe7;
 }
-article footer { 
-    border-top: dotted #aaa;
+article footer {
+  border-top: dotted #aaa;
 }
