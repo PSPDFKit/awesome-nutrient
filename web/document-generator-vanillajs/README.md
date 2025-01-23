@@ -13,7 +13,7 @@ Here are all the steps:
 ![Step 1](./app/assets/step-1.png)
 2) **Edit DocJSON Template**: user edits the template using the Document Authoring SDK;
 ![Step 2](./app/assets/step-2.png)
-3) **Prepare JSON Data**: after either the DEMO data (based on the previousluy selected DEMO template) or an outline of a dataset is loaded, the user defines and fine tunes the data that will be used to populate the template;
+3) **Prepare JSON Data**: after either the DEMO data (based on the previously selected DEMO template) or an outline of a dataset is loaded, the user defines and fine tunes the data that will be used to populate the template;
 ![Step 3](./app/assets/step-3.png)
 4) **Edit Generated DOCX**: after the template is populated with data using the Web SDK, the user edits the output document with the Document Authoring SDK;
 ![Step 4](./app/assets/step-4.png)
@@ -101,14 +101,14 @@ For example, here's how step 4 looks like:
 
 #### 2️⃣ Transition
 
-This is a step-by-step POC where the user can traverse steps by basically doing back and fourth. This is implemented by the means of `go<Section>()` functions, which ensure the transition from the current section to the desired section. The current section is whichever section is visible (the one that does not have `class="none"`, courtecy of Picnic CSS).
+This is a step-by-step POC where the user can traverse steps by basically doing back and fourth. This is implemented by the means of `go<Section>()` functions, which ensure the transition from the current section to the desired section. The current section is whichever section is visible (the one that does not have `class="none"`, courtesy of Picnic CSS).
 
 > [!NOTE]  
-> There's a transition section which is used to "block" the sreen during transition from one step to another, for which `startTransition(message)` and `endTransitionTo(section)` functions are used.
+> There's a transition section which is used to "block" the screen during transition from one step to another, for which `startTransition(message)` and `endTransitionTo(section)` functions are used.
 
 When one step transitions into another is where the magic happens - this is where we load, construct, deconstruct documents and render them into appropriate editors or viewers.
 
-Here's an example of transioning to the DOCX editor step (step 4), where we're fine tuning the generated DOCX, before converting it to a PDF:
+Here's an example of transitioning to the DOCX editor step (step 4), where we're fine tuning the generated DOCX, before converting it to a PDF:
 
 ```
 function goDocxEditor() {  

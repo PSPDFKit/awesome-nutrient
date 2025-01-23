@@ -1,4 +1,4 @@
-const backendUrl = `${window.location.protocol}/${window.location.host}/../`;
+const backendUrl = (new URL("",`${window.location.protocol}/${window.location.host}/../`)).href;
 const APP = { docAuthSystem: null };
 const sections = document.getElementsByTagName("section");
 
