@@ -148,9 +148,7 @@
             "related": ".pdb;.xml"
           }
         },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
+        "frameworkReferences": ["Microsoft.AspNetCore.App"]
       },
       "Swashbuckle.AspNetCore.SwaggerGen/6.9.0": {
         "type": "package",
@@ -180,9 +178,7 @@
             "related": ".pdb;.xml"
           }
         },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
+        "frameworkReferences": ["Microsoft.AspNetCore.App"]
       },
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {
         "type": "package",
@@ -697,10 +693,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net8.0": [
-      "GdPicture >= 14.2.92",
-      "Swashbuckle.AspNetCore >= 6.9.0"
-    ]
+    "net8.0": ["GdPicture >= 14.2.92", "Swashbuckle.AspNetCore >= 6.9.0"]
   },
   "packageFolders": {
     "C:\\Users\\naras\\.nuget\\packages\\": {},
@@ -723,9 +716,7 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
-      "originalTargetFrameworks": [
-        "net8.0"
-      ],
+      "originalTargetFrameworks": ["net8.0"],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
@@ -738,9 +729,7 @@
         }
       },
       "warningProperties": {
-        "warnAsError": [
-          "NU1605"
-        ]
+        "warnAsError": ["NU1605"]
       }
     },
     "frameworks": {

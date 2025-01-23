@@ -26,7 +26,9 @@ function App() {
 
   return (
     <div className="App">
-      <label htmlFor="file-input" className="App-input">Open another document</label>
+      <label htmlFor="file-input" className="App-input">
+        Open another document
+      </label>
       <input
         id="file-input"
         type="file"
@@ -35,16 +37,15 @@ function App() {
         accept="application/pdf"
         name="pdf"
       />
-      <button
-        onClick={handleAnnotationCoordinates}
-        className="btnstyle"
-      >Refresh / Reset Annotations</button>
-      <br/>
+      <button onClick={handleAnnotationCoordinates} className="btnstyle">
+        Refresh / Reset Annotations
+      </button>
+      <br />
 
       <div className="App-viewer">
-        <PdfViewerComponent 
-          document={document} 
-          handleAnnotation={handleAnnotation} 
+        <PdfViewerComponent
+          document={document}
+          handleAnnotation={handleAnnotation}
         />
       </div>
     </div>
@@ -52,7 +53,6 @@ function App() {
 }
 
 export default App;
-
 
 // import { useState } from "react";
 // import PdfViewerComponent from "./components/PdfViewerComponent.jsx";

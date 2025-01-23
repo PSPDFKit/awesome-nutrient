@@ -2,11 +2,11 @@ import { useState } from "react";
 import PdfViewerComponent from "./components/PdfViewerComponent";
 import "./App.css";
 import {
-  ThemeProvider,
-  I18nProvider,
-  Link,
   Avatar,
   FileUpload,
+  I18nProvider,
+  Link,
+  ThemeProvider,
 } from "@baseline-ui/core";
 
 function App() {
@@ -26,13 +26,13 @@ function App() {
       <ThemeProvider>
         <I18nProvider locale="en-US">
           <header>
-          <Link
+            <Link
               href="https://pspdfkit.com"
               target="_blank"
               size="lg"
               style={{ color: "white", width: "50px" }}
             >
-            <h1>Redact one by one on Marked Annotation</h1>
+              <h1>Redact one by one on Marked Annotation</h1>
             </Link>
           </header>
           <div className="container">
@@ -44,7 +44,7 @@ function App() {
                 className="btnstyle"
                 onValueChange={(files) => handleFileSelected(files)}
               />
-              <br></br>
+              <br />
             </div>
             <div className="right-column">
               <PdfViewerComponent document={document} toolbar={toolbar} />

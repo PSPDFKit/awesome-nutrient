@@ -1,7 +1,7 @@
-const PSPDFKit = window.PSPDFKit;
+import "./assets/pspdfkit.js";
 
 // We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
-const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/";
+const baseUrl = `${window.location.protocol}//${window.location.host}/assets/`;
 
 let _instance = null;
 
@@ -71,57 +71,39 @@ const duplicateAnnotationTooltipCallback = (annotation) => {
   return [duplicateItem];
 };
 
-const setCommentColor = (ele, currStatus) => {
-  if (_instance?.contentDocument) {
-    const commentDiv = ele.current;
-    if (commentDiv) {
-      if ("approved" === currStatus) {
-        commentDiv.style.backgroundColor = "lightgreen";
-      } else if ("rejected" === currStatus) {
-        commentDiv.style.backgroundColor = "lightcoral";
-      }
-    }
-  }
-};
-
 const {
   UI: { createBlock, Recipes, Interfaces },
 } = PSPDFKit;
 
 PSPDFKit.load({
   ui: {
-    [Interfaces.CommentThread]: ({ props }) => ({
-      content: createBlock(Recipes.CommentThread, props, ({ ui }) => {
-        const comment = ui.getBlockById("comment");
-        if (comment?.props) {
-          const { menuProps } = comment.props;
-          menuProps &&
-            comment.setProp("menuProps", {
-              ...menuProps,
-              onAction: (id) => {
-                if ("approve" === id) {
-                  setCommentColor(props.ref, "approved");
-                  window.alert(`Approved ${props.comments[0].id}`);
-                } else if ("reject" === id) {
-                  setCommentColor(props.ref, "rejected");
-                  window.alert(`Rejected ${props.comments[0].id}`);
-                }
-                // Add more status as needed
-                else {
-                  menuProps.onAction(id);
-                }
-              },
-              // Also add status here
-              items: [
-                ...menuProps.items,
-                { id: "approve", label: "Approve" },
-                { id: "reject", label: "Reject" },
-              ],
-            });
-        }
-        return ui.createComponent();
-      }).createComponent(),
-    }),
+    [Interfaces.CommentThread]: ({ props }) => {
+      //console.log("Comment thread props", props);
+      // Set the comment reactions here
+      props.comments.forEach(
+        (obj) =>
+          (obj.reactions = [
+            {
+              id: "like",
+              "aria-label": "Like",
+              count: 2,
+              size: "md",
+            },
+            {
+              id: "dislike",
+              "aria-label": "Dislike",
+              count: 1,
+              size: "md",
+              icon: "m",
+            },
+          ]),
+      );
+      return {
+        content: createBlock(Recipes.CommentThread, props, ({ ui }) => {
+          return ui.createComponent();
+        }).createComponent(),
+      };
+    },
   },
   baseUrl,
   container: "#pspdfkit",
@@ -168,7 +150,6 @@ PSPDFKit.load({
         await instance.setSelectedAnnotations(
           PSPDFKit.Immutable.List([parentAnnotationID]),
         );
-        //,console.log("Annotation pressed", event);
       }
     });
   })

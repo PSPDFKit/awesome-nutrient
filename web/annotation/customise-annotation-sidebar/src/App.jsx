@@ -30,7 +30,6 @@ function App() {
       <div className="App-viewer">
         <PdfViewerComponent document={document} />
       </div>
-      
     </div>
   );
 }
