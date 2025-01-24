@@ -48,12 +48,9 @@ export default function PdfViewerComponent(props) {
 
       // Store current page details
       currentPage = instance.viewState.currentPageIndex;
-      console.log("Current Page: ", currentPage);
       const pageInfo = instance.pageInfoForIndex(currentPage);
       pageWidth = pageInfo.width;
       pageHeight = pageInfo.height;
-      console.log("Page Width: ", pageWidth);
-      console.log("Page Height: ", pageHeight);
 
       // Cleanup on component unmount
       return () => {
