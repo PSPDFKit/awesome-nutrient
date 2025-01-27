@@ -18,7 +18,6 @@
       "./web/annotation/get-all-annotations-boundingBox/**",
       "./web/annotation/redact-one-by-one/**",
       "./web/annotation/snipping-annotation/**",
-      "./web/annotation/text-2-speech/**",
       "./web/document-editor/save-selected-page-from-document-editor/**",
       "./web/signing/signing-demo-complete/**",
       "./web/signing/sign-here-upgraded"
