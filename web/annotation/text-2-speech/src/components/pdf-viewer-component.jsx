@@ -11,9 +11,10 @@ export default function PdfViewerComponent(props) {
   // useEffect hook to load PSPDFKit when the component mounts
   useEffect(() => {
     const container = containerRef.current;
-    let PSPDFKit, instance; // Declared here to ensure accessibility in cleanup
+    let PSPDFKit;
+    let instance; // Declared here to ensure accessibility in cleanup
 
-    (async function () {
+    (async () => {
       // Dynamically import PSPDFKit to support tree shaking
       PSPDFKit = await import("pspdfkit");
 
@@ -31,10 +32,10 @@ export default function PdfViewerComponent(props) {
         toolbarItems: PSPDFKit.defaultToolbarItems, // Default toolbar settings
         inlineTextSelectionToolbarItems: (
           { defaultItems, hasDesktopLayout },
-          selection
+          selection,
         ) => {
           return [];
-        },// To remove in the inline toolbar when text is selection
+        }, // To remove in the inline toolbar when text is selection
       });
 
       // Add event listener to detect text selection changes
@@ -77,7 +78,7 @@ export default function PdfViewerComponent(props) {
           } else {
             console.log("No text is selected");
           }
-        }
+        },
       );
 
       // Cleanup function: unload PSPDFKit when the component unmounts
@@ -109,7 +110,9 @@ export default function PdfViewerComponent(props) {
           padding: "10px",
         }}
       >
-        <button onClick={handleStop}>Stop</button>
+        <button type="button" onClick={handleStop}>
+          Stop
+        </button>
       </div>
     </div>
   );
