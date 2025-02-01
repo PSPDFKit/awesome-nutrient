@@ -115,7 +115,8 @@ A wide variety of examples what Nutrient Web SDK can do can be found in the [Exa
 
 #### Text Comparison
 
-- [Text Comparison Sample](https://github.com/jonaddams/awesome-pspdfkit-web-demos/tree/main/src/app/web/text-comparison) ([Demo](https://awesome-pspdfkit-web-demos.vercel.app/web/text-comparison/))
+- [Custom Text Comparison Sample](https://github.com/jonaddams/nutrient-web-text-comparison-custom-ui)
+- [Custom Text Comparison Demo](https://nutrient-web-text-comparison-custom-ui.vercel.app/))
 
 #### Viewer
 
