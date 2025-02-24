@@ -1,0 +1,16 @@
+{
+  "name": "signhereupgraded",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copy-assets": "cp -R ./node_modules/pspdfkit/dist/ ./assets/",
+    "start": "serve -l 8080 ."
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "pspdfkit": "^2024.4.0"
+  }
+}

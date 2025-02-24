@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "pspdfkit": "https://my.pspdfkit.com/download/pspdfkit-web/nightly.tar.gz?cachebust=todaysdate"
+  },
+  "scripts": {
+    "add-assets": "cp -R ./node_modules/pspdfkit/dist/ ./assets/",
+    "start": "serve -l 8080 ."
+  }
+}

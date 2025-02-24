@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PSPDFKitWinUI3Example (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "PSPDFKitWinUI3Example (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
