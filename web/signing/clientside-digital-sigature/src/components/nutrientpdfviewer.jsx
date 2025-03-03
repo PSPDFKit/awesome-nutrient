@@ -19,7 +19,9 @@ export default function NutrientPdfViewer(props) {
     function arrayBufferToBase64(buffer) {
       let binary = "";
       const bytes = new Uint8Array(buffer);
-      bytes.forEach((b) => (binary += String.fromCharCode(b)));
+      bytes.forEach((b) => {
+        binary += String.fromCharCode(b);
+      });
       return window.btoa(binary);
     }
 
@@ -87,7 +89,6 @@ export default function NutrientPdfViewer(props) {
       };
 
       // Build toolbar items using default items if available.
-      // PSPDFKit.defaultToolbarItems is available in PSPDFKit for Web.
       const defaultToolbarItems = PSPDFKit.defaultToolbarItems || [];
       const toolbarItems = [...defaultToolbarItems];
 
@@ -112,7 +113,7 @@ export default function NutrientPdfViewer(props) {
 
     initializeSDK();
 
-    return () => PSPDFKit && PSPDFKit.unload(container);
+    return () => PSPDFKit?.unload(container);
   }, [props.document]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
