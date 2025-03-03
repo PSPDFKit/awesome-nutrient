@@ -20,7 +20,8 @@
       "./web/annotation/snipping-annotation/**",
       "./web/document-editor/save-selected-page-from-document-editor/**",
       "./web/signing/signing-demo-complete/**",
-      "./web/signing/sign-here-upgraded"
+      "./web/signing/sign-here-upgraded",
+      "./web/signing/clientside-digital-signature/**"
     ]
   },
   "formatter": {
