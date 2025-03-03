@@ -224,7 +224,7 @@ A wide variety of examples showcasing what Nutrient Web SDK can do can be found 
 
 ## Windows
 - [Using Nutrient Web SDK in WinUI3 app](/windows/pspdfkit-with-winui3)
-  - Learn how to use web SDK in WinUI3 app or any app that supports WebView2
+  - Learn how to use web SDK in WinUI3 app or any app that supports WebView2.
 
 ## Cross-Platform
 
