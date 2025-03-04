@@ -89,9 +89,7 @@ export default function NutrientPdfViewer(props) {
       };
 
       // Build toolbar items using default items if available.
-      // PSPDFKit.defaultToolbarItems is available in PSPDFKit for Web.
-      const defaultToolbarItems = PSPDFKit.defaultToolbarItems || [];
-      const toolbarItems = [...defaultToolbarItems];
+      const toolbarItems = [PSPDFKit.defaultToolbarItems];
 
       // Add our custom "Digitally Sign" button.
       toolbarItems.push({
