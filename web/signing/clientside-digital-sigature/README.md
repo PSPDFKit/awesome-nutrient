@@ -12,10 +12,9 @@ Secure Signing: Implements secure hash-based signing using SHA-256.
 
 ## 🚀 Getting Started
 
-```
 Prerequisites
 Ensure you have the following installed:
-
+```
 Node.js (v14 or higher recommended)
 npm or yarn
 A valid PSPDFKit license key (trial or full version)
@@ -24,13 +23,12 @@ A valid PSPDFKit license key (trial or full version)
 ## 📥 Installation
 
 Clone the Repository
-
 ```
-git clone <repository-url>
-cd nutrient-vite-clientside-digital-sigature
+git clone https://github.com/PSPDFKit/awesome-nutrient.git
+cd web/signing/clientside-digital-sigature
+```
+
 Install Dependencies
-```
-
 ```
 npm install
 # or
@@ -43,9 +41,9 @@ yarn install
   - The application loads with a default PDF document ("Good.pdf") located in the public folder.
 - Environment Variables:
   - Create a .env file in the root directory and add:
-env
-Copy
+```
 VITE_lkey=your_pspdfkit_license_key
+```
 
 ## 📂 Project Structure
 
@@ -70,13 +68,11 @@ Nutrient PDF Viewer with Digital Signatures/
 ## 🚀 Running the Application
 
 Start the development server with:
-
 ```
 npm run dev
 # or
 yarn dev
 ```
-
 This will launch the app in your default browser at:
 http://localhost:3000
 
