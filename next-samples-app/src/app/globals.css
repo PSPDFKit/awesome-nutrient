@@ -1,0 +1,10 @@
+@import "@baseline-ui/tokens/dist/index.css";
+@import "@baseline-ui/core/dist/index.css";
+
+@layer bui-reset {
+  * {
+    box-sizing: border-box;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+  }
+}
