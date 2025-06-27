@@ -80,7 +80,7 @@ export default function HomePage(): JSX.Element {
           ) => {
             try {
               callback(entries, observer);
-            } catch (error) {
+            } catch (_error) {
               // Completely silent - no logging at all
               return;
             }
