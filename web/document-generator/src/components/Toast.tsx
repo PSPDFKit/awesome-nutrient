@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import type React from 'react';
+import { useEffect } from 'react';
 import { classNames } from '@/lib/utils';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';

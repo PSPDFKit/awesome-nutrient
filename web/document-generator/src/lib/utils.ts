@@ -1,4 +1,4 @@
-import { TemplateData, TemplateType } from '@/types';
+import type { TemplateData, TemplateType } from '@/types';
 
 export const fetchTemplateData = async (
   template: TemplateType

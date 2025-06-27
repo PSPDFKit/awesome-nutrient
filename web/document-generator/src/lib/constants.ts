@@ -1,4 +1,4 @@
-import { type TemplateOption } from '@/types';
+import type { TemplateOption } from '@/types';
 
 export const TEMPLATE_OPTIONS: TemplateOption[] = [
   {

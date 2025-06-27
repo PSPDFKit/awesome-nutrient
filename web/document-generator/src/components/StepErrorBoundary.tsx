@@ -1,9 +1,9 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import ErrorBoundary from './ErrorBoundary';
-import { AppError } from '@/lib/errorHandler';
-import { StepType } from '@/types';
+import type { AppError } from '@/lib/errorHandler';
+import type { StepType } from '@/types';
 
 interface StepErrorBoundaryProps {
   children: ReactNode;

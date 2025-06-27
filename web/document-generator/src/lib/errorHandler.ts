@@ -1,4 +1,4 @@
-import { StepType } from '@/types';
+import type { StepType } from '@/types';
 
 export class AppError extends Error {
   constructor(
