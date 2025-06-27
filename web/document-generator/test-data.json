@@ -1,0 +1,24 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "title": "Custom Document",
+    "subtitle": "Generated from uploaded template",
+    "author": "John Doe",
+    "date": "2024-06-24",
+    "content": {
+      "introduction": "This is a sample document created from a custom template.",
+      "body": "You can customize this content based on your template's requirements.",
+      "conclusion": "Thank you for using our document generator."
+    },
+    "metadata": {
+      "version": "1.0",
+      "category": "Custom",
+      "tags": ["document", "template", "custom"]
+    }
+  }
+}

@@ -1,0 +1,89 @@
+@import 'tailwindcss';
+
+@layer base {
+  :root {
+    --nutrient-primary: #1a1414;
+    --nutrient-secondary: #efebe7;
+    --nutrient-background: #ffffff;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .nutri-button {
+    @apply px-6 py-3 rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .nutri-button-primary {
+    @apply px-6 py-3 rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 text-white hover:bg-gray-800;
+    background-color: var(--nutrient-primary);
+    color: var(--nutrient-secondary);
+  }
+
+  .nutri-button-secondary {
+    @apply px-6 py-3 rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400;
+  }
+
+  .nutri-card {
+    @apply bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200;
+  }
+
+  .nutri-card-header {
+    @apply px-6 py-4;
+    background-color: var(--nutrient-primary);
+    color: var(--nutrient-secondary);
+  }
+
+  .nutri-card-content {
+    @apply p-6;
+  }
+
+  .nutri-card-footer {
+    @apply px-6 py-4 border-t border-gray-200 bg-gray-50;
+  }
+
+  .nutri-editor {
+    @apply w-full bg-gray-50 border border-gray-300 rounded-lg;
+    min-height: 600px;
+  }
+
+  .nutri-viewer {
+    @apply w-full bg-gray-50 border border-gray-300 rounded-lg;
+    height: 64rem; /* 1024px equivalent */
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .nutri-editor,
+    .nutri-viewer {
+      height: 24rem; /* Smaller height on mobile */
+    }
+  }
+
+  .nutri-transition {
+    @apply flex items-center justify-center w-full h-screen bg-gray-50;
+  }
+
+  .nutri-template-image {
+    @apply h-72 max-w-full object-contain mx-auto;
+  }
+}
+
+/* CodeMirror overrides */
+.CodeMirror {
+  @apply w-full border border-gray-300 rounded-lg;
+  height: 100% !important;
+  min-height: 600px;
+}
+
+.CodeMirror-scroll {
+  @apply min-h-full;
+}
+
+/* Ensure full height for main content */
+.main-content {
+  min-height: calc(100vh - 4rem); /* Subtract navigation height */
+}

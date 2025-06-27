@@ -1,0 +1,28 @@
+# Robots.txt for Nutrient Document Generator Demo
+
+User-agent: *
+Allow: /
+
+# Disallow sensitive or internal paths
+Disallow: /api/
+Disallow: /.env*
+Disallow: /node_modules/
+Disallow: /.next/
+
+# Allow common static assets
+Allow: /assets/
+Allow: /templates/
+Allow: /data/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.ico
+Allow: /*.woff
+Allow: /*.woff2
+
+# Sitemap location
+Sitemap: https://document-generator.nutrient.io/sitemap.xml
