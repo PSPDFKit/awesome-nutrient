@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { useWizard } from '../../context/WizardContext';
 import { downloadPdf } from '@/lib/utils';
 
@@ -31,7 +31,7 @@ export default function DownloadStep() {
       // Check if ArrayBuffer is detached
       try {
         new Uint8Array(state.pdfDocument);
-      } catch (detachedError) {
+      } catch (_detachedError) {
         throw new Error('PDF document ArrayBuffer is detached');
       }
 
@@ -68,11 +68,11 @@ export default function DownloadStep() {
           // Try multiple cleanup approaches
           await window.PSPDFKit.unload(container);
           console.log('🧹 Unloaded PSPDFKit from container element');
-        } catch (unloadError1) {
+        } catch (_unloadError1) {
           try {
             // Try unloading by CSS selector - but skip since PSPDFKit.unload expects element
             console.log('ℹ️ Skipping CSS selector unload (not supported)');
-          } catch (unloadError2) {
+          } catch (_unloadError2) {
             console.log(
               'ℹ️ No existing PSPDFKit instance to unload (this is normal)'
             );
@@ -155,7 +155,7 @@ export default function DownloadStep() {
               // Try more aggressive cleanup before retry
               try {
                 await window.PSPDFKit.unload(container);
-              } catch (cleanupError) {
+              } catch (_cleanupError) {
                 // Ignore cleanup errors
               }
 

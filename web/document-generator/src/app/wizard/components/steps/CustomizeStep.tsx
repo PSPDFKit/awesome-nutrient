@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import { useWizard } from '../../context/WizardContext';
 import StepNavigation from '../StepNavigation';
 import { fetchTemplateJson } from '@/lib/utils';
-import { TemplateType } from '@/types';
+import type { TemplateType } from '@/types';
 
 export default function CustomizeStep() {
   const { state, dispatch, completeCurrentStep, nextStep } = useWizard();
@@ -23,7 +23,7 @@ export default function CustomizeStep() {
 
   // Add global error handler for SDK errors
   useEffect(() => {
-    const handleSDKError = (event: ErrorEvent): boolean | void => {
+    const handleSDKError = (event: ErrorEvent): boolean | undefined => {
       const error = event.error;
       const message = event.message || '';
       const stack = error?.stack || '';

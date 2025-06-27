@@ -9,7 +9,7 @@ import StepContent from './wizard/components/StepContent';
 export default function HomePage(): JSX.Element {
   // Simplified global error handler for SDK IntersectionObserver errors
   useEffect(() => {
-    const handleSDKError = (event: ErrorEvent): boolean | void => {
+    const handleSDKError = (event: ErrorEvent): boolean | undefined => {
       const filename = event.filename || '';
       const message = event.message || '';
       const stack = event.error?.stack || '';
@@ -30,7 +30,7 @@ export default function HomePage(): JSX.Element {
     };
 
     // Simplified promise rejection handler
-    const handleSDKRejection = (event: PromiseRejectionEvent): boolean | void => {
+    const handleSDKRejection = (event: PromiseRejectionEvent): boolean | undefined => {
       const stack = event.reason?.stack || '';
 
       if (

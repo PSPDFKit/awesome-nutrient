@@ -1,0 +1,475 @@
+web/document-generator/src/app/page.tsx:12:59   FIXABLE  ━━━━━━━━━━
+
+  ⚠ void is confusing inside a union type.
+  
+    10 │   // Simplified global error handler for SDK IntersectionObserver errors
+    11 │   useEffect(() => {
+  > 12 │     const handleSDKError = (event: ErrorEvent): boolean | void => {
+       │                                                           ^^^^
+    13 │       const filename = event.filename || '';
+    14 │       const message = event.message || '';
+  
+  ℹ Unsafe fix: Use undefined instead.
+  
+     10  10 │     // Simplified global error handler for SDK IntersectionObserver errors
+     11  11 │     useEffect(() => {
+     12     │ - ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·void·=>·{
+         12 │ + ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·undefined·=>·{
+     13  13 │         const filename = event.filename || '';
+     14  14 │         const message = event.message || '';
+  
+
+web/document-generator/src/app/page.tsx:33:74   FIXABLE  ━━━━━━━━━━
+
+  ⚠ void is confusing inside a union type.
+  
+    32 │     // Simplified promise rejection handler
+  > 33 │     const handleSDKRejection = (event: PromiseRejectionEvent): boolean | void => {
+       │                                                                          ^^^^
+    34 │       const stack = event.reason?.stack || '';
+    35 │ 
+  
+  ℹ Unsafe fix: Use undefined instead.
+  
+     31  31 │   
+     32  32 │       // Simplified promise rejection handler
+     33     │ - ····const·handleSDKRejection·=·(event:·PromiseRejectionEvent):·boolean·|·void·=>·{
+         33 │ + ····const·handleSDKRejection·=·(event:·PromiseRejectionEvent):·boolean·|·undefined·=>·{
+     34  34 │         const stack = event.reason?.stack || '';
+     35  35 │   
+  
+
+web/document-generator/src/app/wizard/components/WizardLayout.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import { ReactNode } from 'react';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ import { useWizard } from '../context/WizardContext';
+    5 │ 
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    3 │ import·type·{·ReactNode·}·from·'react';
+      │        +++++                           
+
+web/document-generator/src/app/wizard/components/steps/CustomizeStep.tsx:7:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    5 │ import StepNavigation from '../StepNavigation';
+    6 │ import { fetchTemplateJson } from '@/lib/utils';
+  > 7 │ import { TemplateType } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    8 │ 
+    9 │ export default function CustomizeStep() {
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    7 │ import·type·{·TemplateType·}·from·'@/types';
+      │        +++++                                
+
+web/document-generator/src/app/wizard/components/steps/CustomizeStep.tsx:26:59   FIXABLE  ━━━━━━━━━━
+
+  ⚠ void is confusing inside a union type.
+  
+    24 │   // Add global error handler for SDK errors
+    25 │   useEffect(() => {
+  > 26 │     const handleSDKError = (event: ErrorEvent): boolean | void => {
+       │                                                           ^^^^
+    27 │       const error = event.error;
+    28 │       const message = event.message || '';
+  
+  ℹ Unsafe fix: Use undefined instead.
+  
+     24  24 │     // Add global error handler for SDK errors
+     25  25 │     useEffect(() => {
+     26     │ - ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·void·=>·{
+         26 │ + ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·undefined·=>·{
+     27  27 │         const error = event.error;
+     28  28 │         const message = event.message || '';
+  
+
+web/document-generator/src/app/wizard/components/steps/DataStep.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ The default import is only used as a type.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { useState, useEffect, useRef, useCallback } from 'react';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ import { useWizard } from '../../context/WizardContext';
+    5 │ import StepNavigation from '../StepNavigation';
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+      1   1 │   'use client';
+      2   2 │   
+      3     │ - import·React,·{·useState,·useEffect,·useRef,·useCallback·}·from·'react';
+          3 │ + import·type·React·from·'react';
+          4 │ + import·{·useState,·useEffect,·useRef,·useCallback·}·from·'react';
+      4   5 │   import { useWizard } from '../../context/WizardContext';
+      5   6 │   import StepNavigation from '../StepNavigation';
+  
+
+web/document-generator/src/app/wizard/components/steps/DataStep.tsx:8:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+     6 │ import { fetchTemplateData, validateJsonString } from '@/lib/utils';
+     7 │ import { transformJsonToReadable } from '@/lib/jsonTransformer';
+   > 8 │ import { TemplateType, CodeMirrorInstance, TemplateData } from '@/types';
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     9 │ 
+    10 │ export default function DataStep() {
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    8 │ import·type·{·TemplateType,·CodeMirrorInstance,·TemplateData·}·from·'@/types';
+      │        +++++                                                                  
+
+web/document-generator/src/app/wizard/components/steps/DataStep.tsx:172:20   FIXABLE  ━━━━━━━━━━
+
+  ⚠ This variable error is unused.
+  
+    170 │             const parsed = JSON.parse(value);
+    171 │             dispatch({ type: 'SET_DATA_JSON', payload: parsed });
+  > 172 │           } catch (error) {
+        │                    ^^^^^
+    173 │             // Should not happen if validateJsonString returns true
+    174 │           }
+  
+  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  ℹ Unsafe fix: If this is intentional, prepend error with an underscore.
+  
+    170 170 │               const parsed = JSON.parse(value);
+    171 171 │               dispatch({ type: 'SET_DATA_JSON', payload: parsed });
+    172     │ - ··········}·catch·(error)·{
+        172 │ + ··········}·catch·(_error)·{
+    173 173 │               // Should not happen if validateJsonString returns true
+    174 174 │             }
+  
+
+web/document-generator/src/app/wizard/components/steps/DataStep.tsx:289:18   FIXABLE  ━━━━━━━━━━
+
+  ⚠ This variable error is unused.
+  
+    287 │           completeCurrentStep();
+    288 │           nextStep();
+  > 289 │         } catch (error) {
+        │                  ^^^^^
+    290 │           setJsonError('Failed to parse JSON data');
+    291 │         }
+  
+  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  ℹ Unsafe fix: If this is intentional, prepend error with an underscore.
+  
+    287 287 │             completeCurrentStep();
+    288 288 │             nextStep();
+    289     │ - ········}·catch·(error)·{
+        289 │ + ········}·catch·(_error)·{
+    290 290 │             setJsonError('Failed to parse JSON data');
+    291 291 │           }
+  
+
+web/document-generator/src/app/wizard/components/steps/DataStep.tsx:352:18   FIXABLE  ━━━━━━━━━━
+
+  ⚠ This variable error is unused.
+  
+    350 │           const jsonData = JSON.parse(reader.result as string);
+    351 │           resolve(jsonData);
+  > 352 │         } catch (error) {
+        │                  ^^^^^
+    353 │           reject(new Error('Invalid JSON format'));
+    354 │         }
+  
+  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  ℹ Unsafe fix: If this is intentional, prepend error with an underscore.
+  
+    350 350 │             const jsonData = JSON.parse(reader.result as string);
+    351 351 │             resolve(jsonData);
+    352     │ - ········}·catch·(error)·{
+        352 │ + ········}·catch·(_error)·{
+    353 353 │             reject(new Error('Invalid JSON format'));
+    354 354 │           }
+  
+
+web/document-generator/src/app/wizard/components/steps/DownloadStep.tsx:75:20   FIXABLE  ━━━━━━━━━━
+
+  ⚠ This variable unloadError2 is unused.
+  
+    73 │             // Try unloading by CSS selector - but skip since PSPDFKit.unload expects element
+    74 │             console.log('ℹ� Skipping CSS selector unload (not supported)');
+  > 75 │           } catch (unloadError2) {
+       │                    ^^^^^^^^^^^^
+    76 │             console.log(
+    77 │               'ℹ� No existing PSPDFKit instance to unload (this is normal)'
+  
+  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  ℹ Unsafe fix: If this is intentional, prepend unloadError2 with an underscore.
+  
+     73  73 │               // Try unloading by CSS selector - but skip since PSPDFKit.unload expects element
+     74  74 │               console.log('ℹ� Skipping CSS selector unload (not supported)');
+     75     │ - ··········}·catch·(unloadError2)·{
+         75 │ + ··········}·catch·(_unloadError2)·{
+     76  76 │               console.log(
+     77  77 │                 'ℹ� No existing PSPDFKit instance to unload (this is normal)'
+  
+
+web/document-generator/src/app/wizard/components/steps/DownloadStep.tsx:71:18   FIXABLE  ━━━━━━━━━━
+
+  ⚠ This variable unloadError1 is unused.
+  
+    69 │           await window.PSPDFKit.unload(container);
+    70 │           console.log('🧹 Unloaded PSPDFKit from container element');
+  > 71 │         } catch (unloadError1) {
+       │                  ^^^^^^^^^^^^
+    72 │           try {
+    73 │             // Try unloading by CSS selector - but skip since PSPDFKit.unload expects element
+  
+  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  ℹ Unsafe fix: If this is intentional, prepend unloadError1 with an underscore.
+  
+     69  69 │             await window.PSPDFKit.unload(container);
+     70  70 │             console.log('🧹 Unloaded PSPDFKit from container element');
+     71     │ - ········}·catch·(unloadError1)·{
+         71 │ + ········}·catch·(_unloadError1)·{
+     72  72 │             try {
+     73  73 │               // Try unloading by CSS selector - but skip since PSPDFKit.unload expects element
+  
+
+web/document-generator/src/app/wizard/components/steps/DownloadStep.tsx:34:16   FIXABLE  ━━━━━━━━━━
+
+  ⚠ This variable detachedError is unused.
+  
+    32 │       try {
+    33 │         new Uint8Array(state.pdfDocument);
+  > 34 │       } catch (detachedError) {
+       │                ^^^^^^^^^^^^^
+    35 │         throw new Error('PDF document ArrayBuffer is detached');
+    36 │       }
+  
+  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  ℹ Unsafe fix: If this is intentional, prepend detachedError with an underscore.
+  
+     32  32 │         try {
+     33  33 │           new Uint8Array(state.pdfDocument);
+     34     │ - ······}·catch·(detachedError)·{
+         34 │ + ······}·catch·(_detachedError)·{
+     35  35 │           throw new Error('PDF document ArrayBuffer is detached');
+     36  36 │         }
+  
+
+web/document-generator/src/app/wizard/components/steps/DownloadStep.tsx:158:24   FIXABLE  ━━━━━━━━━━
+
+  ⚠ This variable cleanupError is unused.
+  
+    156 │               try {
+    157 │                 await window.PSPDFKit.unload(container);
+  > 158 │               } catch (cleanupError) {
+        │                        ^^^^^^^^^^^^
+    159 │                 // Ignore cleanup errors
+    160 │               }
+  
+  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  ℹ Unsafe fix: If this is intentional, prepend cleanupError with an underscore.
+  
+    156 156 │                 try {
+    157 157 │                   await window.PSPDFKit.unload(container);
+    158     │ - ··············}·catch·(cleanupError)·{
+        158 │ + ··············}·catch·(_cleanupError)·{
+    159 159 │                   // Ignore cleanup errors
+    160 160 │                 }
+  
+
+web/document-generator/src/app/wizard/components/steps/DownloadStep.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ These imports are unused.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { useEffect, useRef, useCallback, useState } from 'react';
+      │        ^^^^^
+    4 │ import { useWizard } from '../../context/WizardContext';
+    5 │ import { downloadPdf } from '@/lib/utils';
+  
+  ℹ Unused imports might be the result of an incomplete refactoring.
+  
+  ℹ Unsafe fix: Remove the unused imports.
+  
+    3 │ import·React,·{·useEffect,·useRef,·useCallback,·useState·}·from·'react';
+      │        -------                                                          
+
+web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:16:59   FIXABLE  ━━━━━━━━━━
+
+  ⚠ void is confusing inside a union type.
+  
+    14 │   // Add global error handler for SDK IntersectionObserver errors
+    15 │   useEffect(() => {
+  > 16 │     const handleSDKError = (event: ErrorEvent): boolean | void => {
+       │                                                           ^^^^
+    17 │       const error = event.error;
+    18 │       const message = event.message || '';
+  
+  ℹ Unsafe fix: Use undefined instead.
+  
+     14  14 │     // Add global error handler for SDK IntersectionObserver errors
+     15  15 │     useEffect(() => {
+     16     │ - ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·void·=>·{
+         16 │ + ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·undefined·=>·{
+     17  17 │         const error = event.error;
+     18  18 │         const message = event.message || '';
+  
+
+web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:23:10   FIXABLE  ━━━━━━━━━━
+
+  ⚠ Change to an optional chain.
+  
+    21 │       if (
+    22 │         message.includes('docauth-impl') ||
+  > 23 │         (error && error.stack && error.stack.includes('IntersectionObserver'))
+       │          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    24 │       ) {
+    25 │         console.warn(
+  
+  ℹ Unsafe fix: Change to an optional chain.
+  
+     21  21 │         if (
+     22  22 │           message.includes('docauth-impl') ||
+     23     │ - ········(error·&&·error.stack·&&·error.stack.includes('IntersectionObserver'))
+         23 │ + ········(error?.stack?.includes('IntersectionObserver'))
+     24  24 │         ) {
+     25  25 │           console.warn(
+  
+
+web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:214:26   FIXABLE  ━━━━━━━━━━
+
+  ⚠ Forbidden non-null assertion.
+  
+    212 │         const createEditorSafely = async () => {
+    213 │           try {
+  > 214 │             return await docAuthSystem!.createEditor(container, {
+        │                          ^^^^^^^^^^^^^^
+    215 │               document: docxDocument!,
+    216 │             });
+  
+  ℹ Unsafe fix: Replace with optional chain operator ?. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator
+  
+    212 212 │           const createEditorSafely = async () => {
+    213 213 │             try {
+    214     │ - ············return·await·docAuthSystem!.createEditor(container,·{
+        214 │ + ············return·await·docAuthSystem?.createEditor(container,·{
+    215 215 │                 document: docxDocument!,
+    216 216 │               });
+  
+
+web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:215:25  ━━━━━━━━━━
+
+  ⚠ Forbidden non-null assertion.
+  
+    213 │           try {
+    214 │             return await docAuthSystem!.createEditor(container, {
+  > 215 │               document: docxDocument!,
+        │                         ^^^^^^^^^^^^^
+    216 │             });
+    217 │           } catch (error) {
+  
+
+web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:229:28   FIXABLE  ━━━━━━━━━━
+
+  ⚠ Forbidden non-null assertion.
+  
+    227 │               // Wait longer and retry
+    228 │               await new Promise((resolve) => setTimeout(resolve, 1000));
+  > 229 │               return await docAuthSystem!.createEditor(container, {
+        │                            ^^^^^^^^^^^^^^
+    230 │                 document: docxDocument!,
+    231 │               });
+  
+  ℹ Unsafe fix: Replace with optional chain operator ?. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator
+  
+    227 227 │                 // Wait longer and retry
+    228 228 │                 await new Promise((resolve) => setTimeout(resolve, 1000));
+    229     │ - ··············return·await·docAuthSystem!.createEditor(container,·{
+        229 │ + ··············return·await·docAuthSystem?.createEditor(container,·{
+    230 230 │                   document: docxDocument!,
+    231 231 │                 });
+  
+
+web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:230:27  ━━━━━━━━━━
+
+  ⚠ Forbidden non-null assertion.
+  
+    228 │               await new Promise((resolve) => setTimeout(resolve, 1000));
+    229 │               return await docAuthSystem!.createEditor(container, {
+  > 230 │                 document: docxDocument!,
+        │                           ^^^^^^^^^^^^^
+    231 │               });
+    232 │             }
+  
+
+web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:258:34   FIXABLE  ━━━━━━━━━━
+
+  ⚠ Forbidden non-null assertion.
+  
+    257 │           try {
+  > 258 │             const editor = await docAuthSystem!.createEditor(container, {
+        │                                  ^^^^^^^^^^^^^^
+    259 │               document: docxDocument!,
+    260 │             });
+  
+  ℹ Unsafe fix: Replace with optional chain operator ?. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator
+  
+    256 256 │   
+    257 257 │             try {
+    258     │ - ············const·editor·=·await·docAuthSystem!.createEditor(container,·{
+        258 │ + ············const·editor·=·await·docAuthSystem?.createEditor(container,·{
+    259 259 │                 document: docxDocument!,
+    260 260 │               });
+  
+
+web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:259:25  ━━━━━━━━━━
+
+  ⚠ Forbidden non-null assertion.
+  
+    257 │           try {
+    258 │             const editor = await docAuthSystem!.createEditor(container, {
+  > 259 │               document: docxDocument!,
+        │                         ^^^^^^^^^^^^^
+    260 │             });
+    261 │             console.log('✅ DOCX editor created on retry');
+  
+
+web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ These imports are unused.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { useEffect, useRef, useCallback, useState } from 'react';
+      │        ^^^^^
+    4 │ import { useWizard } from '../../context/WizardContext';
+    5 │ import StepNavigation from '../StepNavigation';
+  
+  ℹ Unused imports might be the result of an incomplete refactoring.
+  
+  ℹ Unsafe fix: Remove the unused imports.
+  
+    3 │ import·React,·{·useEffect,·useRef,·useCallback,·useState·}·from·'react';

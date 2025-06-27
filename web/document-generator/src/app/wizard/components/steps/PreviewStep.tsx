@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { useWizard } from '../../context/WizardContext';
 import StepNavigation from '../StepNavigation';
 
@@ -13,14 +13,14 @@ export default function PreviewStep() {
 
   // Add global error handler for SDK IntersectionObserver errors
   useEffect(() => {
-    const handleSDKError = (event: ErrorEvent): boolean | void => {
+    const handleSDKError = (event: ErrorEvent): boolean | undefined => {
       const error = event.error;
       const message = event.message || '';
 
       // Check if this is the known IntersectionObserver SDK error
       if (
         message.includes('docauth-impl') ||
-        (error && error.stack && error.stack.includes('IntersectionObserver'))
+        (error?.stack?.includes('IntersectionObserver'))
       ) {
         console.warn(
           '⚠️ Document Authoring SDK IntersectionObserver error caught and handled:',
@@ -211,7 +211,7 @@ export default function PreviewStep() {
         // Wrap SDK creation in additional error handling
         const createEditorSafely = async () => {
           try {
-            return await docAuthSystem!.createEditor(container, {
+            return await docAuthSystem?.createEditor(container, {
               document: docxDocument!,
             });
           } catch (error) {
@@ -226,7 +226,7 @@ export default function PreviewStep() {
               );
               // Wait longer and retry
               await new Promise((resolve) => setTimeout(resolve, 1000));
-              return await docAuthSystem!.createEditor(container, {
+              return await docAuthSystem?.createEditor(container, {
                 document: docxDocument!,
               });
             }
@@ -255,7 +255,7 @@ export default function PreviewStep() {
           await new Promise((resolve) => setTimeout(resolve, 1000));
 
           try {
-            const editor = await docAuthSystem!.createEditor(container, {
+            const editor = await docAuthSystem?.createEditor(container, {
               document: docxDocument!,
             });
             console.log('✅ DOCX editor created on retry');

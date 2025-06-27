@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import type React from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useWizard } from '../../context/WizardContext';
 import StepNavigation from '../StepNavigation';
 import { fetchTemplateData, validateJsonString } from '@/lib/utils';
 import { transformJsonToReadable } from '@/lib/jsonTransformer';
-import { TemplateType, CodeMirrorInstance, TemplateData } from '@/types';
+import type { TemplateType, CodeMirrorInstance, TemplateData } from '@/types';
 
 export default function DataStep() {
   const { state, dispatch, completeCurrentStep, nextStep } = useWizard();
@@ -169,7 +170,7 @@ export default function DataStep() {
           try {
             const parsed = JSON.parse(value);
             dispatch({ type: 'SET_DATA_JSON', payload: parsed });
-          } catch (error) {
+          } catch (_error) {
             // Should not happen if validateJsonString returns true
           }
         } else {
@@ -286,7 +287,7 @@ export default function DataStep() {
           dispatch({ type: 'SET_DATA_JSON', payload: dataJson });
           completeCurrentStep();
           nextStep();
-        } catch (error) {
+        } catch (_error) {
           setJsonError('Failed to parse JSON data');
         }
       } else {
@@ -349,7 +350,7 @@ export default function DataStep() {
         try {
           const jsonData = JSON.parse(reader.result as string);
           resolve(jsonData);
-        } catch (error) {
+        } catch (_error) {
           reject(new Error('Invalid JSON format'));
         }
       };
