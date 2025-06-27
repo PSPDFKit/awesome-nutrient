@@ -28,23 +28,33 @@
     "indentStyle": "space",
     "indentWidth": 2
   },
+  "organizeImports": {
+    "enabled": true
+  },
   "linter": {
     "enabled": true,
     "rules": {
+      "recommended": true,
       "style": {
         "useFilenamingConvention": {
           "level": "error",
           "options": {
             "filenameCases": ["kebab-case"]
           }
-        }
+        },
+        "useImportType": "error"
       },
-      "recommended": true,
       "complexity": {
         "noForEach": "off"
       },
       "suspicious": {
-        "noExplicitAny": "off"
+        "noExplicitAny": "error"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "error"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "error"
       }
     }
   },
