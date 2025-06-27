@@ -111,7 +111,7 @@ export default function DataEditor({
         textarea.value = JSON.stringify(dataJson, null, 2);
         console.log(
           '📝 JSON data to edit:',
-          JSON.stringify(dataJson, null, 2).substring(0, 200) + '...'
+          `${JSON.stringify(dataJson, null, 2).substring(0, 200)}...`
         );
 
         // Clear container and add textarea safely
