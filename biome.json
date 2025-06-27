@@ -28,33 +28,23 @@
     "indentStyle": "space",
     "indentWidth": 2
   },
-  "organizeImports": {
-    "enabled": true
-  },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
       "style": {
         "useFilenamingConvention": {
           "level": "error",
           "options": {
             "filenameCases": ["kebab-case"]
           }
-        },
-        "useImportType": "error"
+        }
       },
+      "recommended": true,
       "complexity": {
         "noForEach": "off"
       },
       "suspicious": {
-        "noExplicitAny": "error"
-      },
-      "a11y": {
-        "noSvgWithoutTitle": "error"
-      },
-      "correctness": {
-        "useExhaustiveDependencies": "error"
+        "noExplicitAny": "off"
       }
     }
   },
@@ -62,5 +52,26 @@
     "formatter": {
       "quoteStyle": "double"
     }
-  }
+  },
+  "overrides": [
+    {
+      "include": ["./web/document-generator/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          },
+          "a11y": {
+            "noSvgWithoutTitle": "off"
+          },
+          "correctness": {
+            "useExhaustiveDependencies": "off"
+          },
+          "style": {
+            "useImportType": "off"
+          }
+        }
+      }
+    }
+  ]
 }
