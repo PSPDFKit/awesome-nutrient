@@ -112,7 +112,7 @@ export default function PreviewStep() {
     try {
       // Generate DOCX from template and data if not already done
       let docxDocument = state.docxDocument;
-      let docAuthSystem = state.docAuthSystem;
+      const docAuthSystem = state.docAuthSystem;
 
       if (!docxDocument) {
         console.log('📄 Generating DOCX document from template and data...');

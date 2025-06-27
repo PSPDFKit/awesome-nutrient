@@ -1,8 +1,9 @@
 'use client';
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import type React from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 import {
-  AppError,
+  type AppError,
   handleError,
   getRetryMessage,
   shouldShowDetails,
@@ -59,7 +60,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
-    const appError = handleError(error, 'Error boundary', undefined);
+    const _appError = handleError(error, 'Error boundary', undefined);
     // Log additional context for debugging
     console.error('Component stack:', errorInfo.componentStack);
   }

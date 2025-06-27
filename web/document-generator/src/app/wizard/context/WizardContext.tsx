@@ -1,7 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import {
+import type React from 'react';
+import { createContext, useContext, useReducer, type ReactNode } from 'react';
+import type {
   DocAuthSystem,
   DocAuthDocument,
   DocAuthEditor,

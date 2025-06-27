@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { AppState, StepType, AppError } from '@/types';
+import { useState, useCallback, useEffect } from 'react';
+import type { AppState, StepType, AppError } from '@/types';
 import { TRANSITION_MESSAGES } from '@/lib/constants';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from './Toast';

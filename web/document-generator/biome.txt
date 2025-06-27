@@ -1,111 +1,52 @@
-web/document-generator/src/app/page.tsx:12:59   FIXABLE  ━━━━━━━━━━
+web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:115:7   FIXABLE  ━━━━━━━━━━
 
-  ⚠ void is confusing inside a union type.
+  ⚠ This let declares a variable that is only assigned once.
   
-    10 │   // Simplified global error handler for SDK IntersectionObserver errors
-    11 │   useEffect(() => {
-  > 12 │     const handleSDKError = (event: ErrorEvent): boolean | void => {
-       │                                                           ^^^^
-    13 │       const filename = event.filename || '';
-    14 │       const message = event.message || '';
+    113 │       // Generate DOCX from template and data if not already done
+    114 │       let docxDocument = state.docxDocument;
+  > 115 │       let docAuthSystem = state.docAuthSystem;
+        │       ^^^
+    116 │ 
+    117 │       if (!docxDocument) {
   
-  ℹ Unsafe fix: Use undefined instead.
+  ℹ 'docAuthSystem' is never reassigned.
   
-     10  10 │     // Simplified global error handler for SDK IntersectionObserver errors
-     11  11 │     useEffect(() => {
-     12     │ - ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·void·=>·{
-         12 │ + ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·undefined·=>·{
-     13  13 │         const filename = event.filename || '';
-     14  14 │         const message = event.message || '';
+    113 │       // Generate DOCX from template and data if not already done
+    114 │       let docxDocument = state.docxDocument;
+  > 115 │       let docAuthSystem = state.docAuthSystem;
+        │           ^^^^^^^^^^^^^
+    116 │ 
+    117 │       if (!docxDocument) {
   
-
-web/document-generator/src/app/page.tsx:33:74   FIXABLE  ━━━━━━━━━━
-
-  ⚠ void is confusing inside a union type.
+  ℹ Safe fix: Use const instead.
   
-    32 │     // Simplified promise rejection handler
-  > 33 │     const handleSDKRejection = (event: PromiseRejectionEvent): boolean | void => {
-       │                                                                          ^^^^
-    34 │       const stack = event.reason?.stack || '';
-    35 │ 
-  
-  ℹ Unsafe fix: Use undefined instead.
-  
-     31  31 │   
-     32  32 │       // Simplified promise rejection handler
-     33     │ - ····const·handleSDKRejection·=·(event:·PromiseRejectionEvent):·boolean·|·void·=>·{
-         33 │ + ····const·handleSDKRejection·=·(event:·PromiseRejectionEvent):·boolean·|·undefined·=>·{
-     34  34 │         const stack = event.reason?.stack || '';
-     35  35 │   
+    113 113 │         // Generate DOCX from template and data if not already done
+    114 114 │         let docxDocument = state.docxDocument;
+    115     │ - ······let·docAuthSystem·=·state.docAuthSystem;
+        115 │ + ······const·docAuthSystem·=·state.docAuthSystem;
+    116 116 │   
+    117 117 │         if (!docxDocument) {
   
 
-web/document-generator/src/app/wizard/components/WizardLayout.tsx:3:8   FIXABLE  ━━━━━━━━━━
+web/document-generator/src/app/wizard/context/WizardContext.tsx:3:8   FIXABLE  ━━━━━━━━━━
 
-  ⚠ All these imports are only used as types.
+  ⚠ The default import and some named imports are only used as types.
   
     1 │ 'use client';
     2 │ 
-  > 3 │ import { ReactNode } from 'react';
-      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^
-    4 │ import { useWizard } from '../context/WizardContext';
-    5 │ 
+  > 3 │ import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ import {
+    5 │   DocAuthSystem,
   
-  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
-  
-  ℹ Safe fix: Use import type.
-  
-    3 │ import·type·{·ReactNode·}·from·'react';
-      │        +++++                           
-
-web/document-generator/src/app/wizard/components/steps/CustomizeStep.tsx:7:8   FIXABLE  ━━━━━━━━━━
-
-  ⚠ All these imports are only used as types.
-  
-    5 │ import StepNavigation from '../StepNavigation';
-    6 │ import { fetchTemplateJson } from '@/lib/utils';
-  > 7 │ import { TemplateType } from '@/types';
-      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    8 │ 
-    9 │ export default function CustomizeStep() {
-  
-  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
-  
-  ℹ Safe fix: Use import type.
-  
-    7 │ import·type·{·TemplateType·}·from·'@/types';
-      │        +++++                                
-
-web/document-generator/src/app/wizard/components/steps/CustomizeStep.tsx:26:59   FIXABLE  ━━━━━━━━━━
-
-  ⚠ void is confusing inside a union type.
-  
-    24 │   // Add global error handler for SDK errors
-    25 │   useEffect(() => {
-  > 26 │     const handleSDKError = (event: ErrorEvent): boolean | void => {
-       │                                                           ^^^^
-    27 │       const error = event.error;
-    28 │       const message = event.message || '';
-  
-  ℹ Unsafe fix: Use undefined instead.
-  
-     24  24 │     // Add global error handler for SDK errors
-     25  25 │     useEffect(() => {
-     26     │ - ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·void·=>·{
-         26 │ + ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·undefined·=>·{
-     27  27 │         const error = event.error;
-     28  28 │         const message = event.message || '';
-  
-
-web/document-generator/src/app/wizard/components/steps/DataStep.tsx:3:8   FIXABLE  ━━━━━━━━━━
-
-  ⚠ The default import is only used as a type.
+  ℹ This import is only used as a type.
   
     1 │ 'use client';
     2 │ 
-  > 3 │ import React, { useState, useEffect, useRef, useCallback } from 'react';
-      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    4 │ import { useWizard } from '../../context/WizardContext';
-    5 │ import StepNavigation from '../StepNavigation';
+  > 3 │ import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+      │                                                        ^^^^^^^^^
+    4 │ import {
+    5 │   DocAuthSystem,
   
   ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
   
@@ -113,363 +54,774 @@ web/document-generator/src/app/wizard/components/steps/DataStep.tsx:3:8   FIXABL
   
       1   1 │   'use client';
       2   2 │   
-      3     │ - import·React,·{·useState,·useEffect,·useRef,·useCallback·}·from·'react';
+      3     │ - import·React,·{·createContext,·useContext,·useReducer,·ReactNode·}·from·'react';
           3 │ + import·type·React·from·'react';
-          4 │ + import·{·useState,·useEffect,·useRef,·useCallback·}·from·'react';
-      4   5 │   import { useWizard } from '../../context/WizardContext';
-      5   6 │   import StepNavigation from '../StepNavigation';
+          4 │ + import·{·createContext,·useContext,·useReducer,·type·ReactNode·}·from·'react'
+      4   5 │   import {
+      5   6 │     DocAuthSystem,
   
 
-web/document-generator/src/app/wizard/components/steps/DataStep.tsx:8:8   FIXABLE  ━━━━━━━━━━
+web/document-generator/src/app/wizard/context/WizardContext.tsx:4:8   FIXABLE  ━━━━━━━━━━
 
   ⚠ All these imports are only used as types.
   
-     6 │ import { fetchTemplateData, validateJsonString } from '@/lib/utils';
-     7 │ import { transformJsonToReadable } from '@/lib/jsonTransformer';
-   > 8 │ import { TemplateType, CodeMirrorInstance, TemplateData } from '@/types';
-       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     9 │ 
-    10 │ export default function DataStep() {
+     3 │ import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+   > 4 │ import {
+       │        ^
+   > 5 │   DocAuthSystem,
+        ...
+  > 10 │   TemplateData,
+  > 11 │ } from '@/types';
+       │ ^^^^^^^^^^^^^^^^
+    12 │ 
+    13 │ // Types
   
   ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
   
   ℹ Safe fix: Use import type.
   
-    8 │ import·type·{·TemplateType,·CodeMirrorInstance,·TemplateData·}·from·'@/types';
-      │        +++++                                                                  
+    4 │ import·type·{
+      │        +++++ 
 
-web/document-generator/src/app/wizard/components/steps/DataStep.tsx:172:20   FIXABLE  ━━━━━━━━━━
-
-  ⚠ This variable error is unused.
-  
-    170 │             const parsed = JSON.parse(value);
-    171 │             dispatch({ type: 'SET_DATA_JSON', payload: parsed });
-  > 172 │           } catch (error) {
-        │                    ^^^^^
-    173 │             // Should not happen if validateJsonString returns true
-    174 │           }
-  
-  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
-  
-  ℹ Unsafe fix: If this is intentional, prepend error with an underscore.
-  
-    170 170 │               const parsed = JSON.parse(value);
-    171 171 │               dispatch({ type: 'SET_DATA_JSON', payload: parsed });
-    172     │ - ··········}·catch·(error)·{
-        172 │ + ··········}·catch·(_error)·{
-    173 173 │               // Should not happen if validateJsonString returns true
-    174 174 │             }
-  
-
-web/document-generator/src/app/wizard/components/steps/DataStep.tsx:289:18   FIXABLE  ━━━━━━━━━━
-
-  ⚠ This variable error is unused.
-  
-    287 │           completeCurrentStep();
-    288 │           nextStep();
-  > 289 │         } catch (error) {
-        │                  ^^^^^
-    290 │           setJsonError('Failed to parse JSON data');
-    291 │         }
-  
-  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
-  
-  ℹ Unsafe fix: If this is intentional, prepend error with an underscore.
-  
-    287 287 │             completeCurrentStep();
-    288 288 │             nextStep();
-    289     │ - ········}·catch·(error)·{
-        289 │ + ········}·catch·(_error)·{
-    290 290 │             setJsonError('Failed to parse JSON data');
-    291 291 │           }
-  
-
-web/document-generator/src/app/wizard/components/steps/DataStep.tsx:352:18   FIXABLE  ━━━━━━━━━━
-
-  ⚠ This variable error is unused.
-  
-    350 │           const jsonData = JSON.parse(reader.result as string);
-    351 │           resolve(jsonData);
-  > 352 │         } catch (error) {
-        │                  ^^^^^
-    353 │           reject(new Error('Invalid JSON format'));
-    354 │         }
-  
-  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
-  
-  ℹ Unsafe fix: If this is intentional, prepend error with an underscore.
-  
-    350 350 │             const jsonData = JSON.parse(reader.result as string);
-    351 351 │             resolve(jsonData);
-    352     │ - ········}·catch·(error)·{
-        352 │ + ········}·catch·(_error)·{
-    353 353 │             reject(new Error('Invalid JSON format'));
-    354 354 │           }
-  
-
-web/document-generator/src/app/wizard/components/steps/DownloadStep.tsx:75:20   FIXABLE  ━━━━━━━━━━
-
-  ⚠ This variable unloadError2 is unused.
-  
-    73 │             // Try unloading by CSS selector - but skip since PSPDFKit.unload expects element
-    74 │             console.log('ℹ� Skipping CSS selector unload (not supported)');
-  > 75 │           } catch (unloadError2) {
-       │                    ^^^^^^^^^^^^
-    76 │             console.log(
-    77 │               'ℹ� No existing PSPDFKit instance to unload (this is normal)'
-  
-  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
-  
-  ℹ Unsafe fix: If this is intentional, prepend unloadError2 with an underscore.
-  
-     73  73 │               // Try unloading by CSS selector - but skip since PSPDFKit.unload expects element
-     74  74 │               console.log('ℹ� Skipping CSS selector unload (not supported)');
-     75     │ - ··········}·catch·(unloadError2)·{
-         75 │ + ··········}·catch·(_unloadError2)·{
-     76  76 │               console.log(
-     77  77 │                 'ℹ� No existing PSPDFKit instance to unload (this is normal)'
-  
-
-web/document-generator/src/app/wizard/components/steps/DownloadStep.tsx:71:18   FIXABLE  ━━━━━━━━━━
-
-  ⚠ This variable unloadError1 is unused.
-  
-    69 │           await window.PSPDFKit.unload(container);
-    70 │           console.log('🧹 Unloaded PSPDFKit from container element');
-  > 71 │         } catch (unloadError1) {
-       │                  ^^^^^^^^^^^^
-    72 │           try {
-    73 │             // Try unloading by CSS selector - but skip since PSPDFKit.unload expects element
-  
-  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
-  
-  ℹ Unsafe fix: If this is intentional, prepend unloadError1 with an underscore.
-  
-     69  69 │             await window.PSPDFKit.unload(container);
-     70  70 │             console.log('🧹 Unloaded PSPDFKit from container element');
-     71     │ - ········}·catch·(unloadError1)·{
-         71 │ + ········}·catch·(_unloadError1)·{
-     72  72 │             try {
-     73  73 │               // Try unloading by CSS selector - but skip since PSPDFKit.unload expects element
-  
-
-web/document-generator/src/app/wizard/components/steps/DownloadStep.tsx:34:16   FIXABLE  ━━━━━━━━━━
-
-  ⚠ This variable detachedError is unused.
-  
-    32 │       try {
-    33 │         new Uint8Array(state.pdfDocument);
-  > 34 │       } catch (detachedError) {
-       │                ^^^^^^^^^^^^^
-    35 │         throw new Error('PDF document ArrayBuffer is detached');
-    36 │       }
-  
-  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
-  
-  ℹ Unsafe fix: If this is intentional, prepend detachedError with an underscore.
-  
-     32  32 │         try {
-     33  33 │           new Uint8Array(state.pdfDocument);
-     34     │ - ······}·catch·(detachedError)·{
-         34 │ + ······}·catch·(_detachedError)·{
-     35  35 │           throw new Error('PDF document ArrayBuffer is detached');
-     36  36 │         }
-  
-
-web/document-generator/src/app/wizard/components/steps/DownloadStep.tsx:158:24   FIXABLE  ━━━━━━━━━━
-
-  ⚠ This variable cleanupError is unused.
-  
-    156 │               try {
-    157 │                 await window.PSPDFKit.unload(container);
-  > 158 │               } catch (cleanupError) {
-        │                        ^^^^^^^^^^^^
-    159 │                 // Ignore cleanup errors
-    160 │               }
-  
-  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
-  
-  ℹ Unsafe fix: If this is intentional, prepend cleanupError with an underscore.
-  
-    156 156 │                 try {
-    157 157 │                   await window.PSPDFKit.unload(container);
-    158     │ - ··············}·catch·(cleanupError)·{
-        158 │ + ··············}·catch·(_cleanupError)·{
-    159 159 │                   // Ignore cleanup errors
-    160 160 │                 }
-  
-
-web/document-generator/src/app/wizard/components/steps/DownloadStep.tsx:3:8   FIXABLE  ━━━━━━━━━━
+web/document-generator/src/components/DocumentGenerator.tsx:3:8   FIXABLE  ━━━━━━━━━━
 
   ⚠ These imports are unused.
   
     1 │ 'use client';
     2 │ 
-  > 3 │ import React, { useEffect, useRef, useCallback, useState } from 'react';
+  > 3 │ import React, { useState, useCallback, useEffect } from 'react';
       │        ^^^^^
-    4 │ import { useWizard } from '../../context/WizardContext';
-    5 │ import { downloadPdf } from '@/lib/utils';
+    4 │ import { AppState, StepType, AppError } from '@/types';
+    5 │ import { TRANSITION_MESSAGES } from '@/lib/constants';
   
   ℹ Unused imports might be the result of an incomplete refactoring.
   
   ℹ Unsafe fix: Remove the unused imports.
   
-    3 │ import·React,·{·useEffect,·useRef,·useCallback,·useState·}·from·'react';
-      │        -------                                                          
+    3 │ import·React,·{·useState,·useCallback,·useEffect·}·from·'react';
+      │        -------                                                  
 
-web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:16:59   FIXABLE  ━━━━━━━━━━
+web/document-generator/src/components/DocumentGenerator.tsx:4:8   FIXABLE  ━━━━━━━━━━
 
-  ⚠ void is confusing inside a union type.
+  ⚠ All these imports are only used as types.
   
-    14 │   // Add global error handler for SDK IntersectionObserver errors
-    15 │   useEffect(() => {
-  > 16 │     const handleSDKError = (event: ErrorEvent): boolean | void => {
-       │                                                           ^^^^
-    17 │       const error = event.error;
-    18 │       const message = event.message || '';
+    3 │ import React, { useState, useCallback, useEffect } from 'react';
+  > 4 │ import { AppState, StepType, AppError } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 │ import { TRANSITION_MESSAGES } from '@/lib/constants';
+    6 │ import { useToast } from '@/hooks/useToast';
   
-  ℹ Unsafe fix: Use undefined instead.
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
   
-     14  14 │     // Add global error handler for SDK IntersectionObserver errors
-     15  15 │     useEffect(() => {
-     16     │ - ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·void·=>·{
-         16 │ + ····const·handleSDKError·=·(event:·ErrorEvent):·boolean·|·undefined·=>·{
-     17  17 │         const error = event.error;
-     18  18 │         const message = event.message || '';
+  ℹ Safe fix: Use import type.
+  
+    4 │ import·type·{·AppState,·StepType,·AppError·}·from·'@/types';
+      │        +++++                                                
+
+web/document-generator/src/components/ErrorBoundary.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ The default import and some named imports are only used as types.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { Component, ErrorInfo, ReactNode } from 'react';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ import {
+    5 │   AppError,
+  
+  ℹ This import is only used as a type.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { Component, ErrorInfo, ReactNode } from 'react';
+      │                            ^^^^^^^^^
+    4 │ import {
+    5 │   AppError,
+  
+  ℹ This import is only used as a type.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { Component, ErrorInfo, ReactNode } from 'react';
+      │                                       ^^^^^^^^^
+    4 │ import {
+    5 │   AppError,
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+      1   1 │   'use client';
+      2   2 │   
+      3     │ - import·React,·{·Component,·ErrorInfo,·ReactNode·}·from·'react';
+          3 │ + import·type·React·from·'react';
+          4 │ + import·{·Component,·type·ErrorInfo,·type·ReactNode·}·from·'react'
+      4   5 │   import {
+      5   6 │     AppError,
   
 
-web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:23:10   FIXABLE  ━━━━━━━━━━
+web/document-generator/src/components/ErrorBoundary.tsx:4:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ Some named imports are only used as types.
+  
+     3 │ import React, { Component, ErrorInfo, ReactNode } from 'react';
+   > 4 │ import {
+       │        ^
+   > 5 │   AppError,
+   > 6 │   handleError,
+   > 7 │   getRetryMessage,
+   > 8 │   shouldShowDetails,
+   > 9 │ } from '@/lib/errorHandler';
+       │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    10 │ 
+    11 │ interface Props {
+  
+  ℹ This import is only used as a type.
+  
+    3 │ import React, { Component, ErrorInfo, ReactNode } from 'react';
+    4 │ import {
+  > 5 │   AppError,
+      │   ^^^^^^^^
+    6 │   handleError,
+    7 │   getRetryMessage,
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Add inline type keywords.
+  
+    5 │ ··type·AppError,
+      │   +++++         
+
+web/document-generator/src/components/ErrorBoundary.tsx:62:11   FIXABLE  ━━━━━━━━━━
+
+  ⚠ This variable appError is unused.
+  
+    60 │   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    61 │     console.error('Error caught by boundary:', error, errorInfo);
+  > 62 │     const appError = handleError(error, 'Error boundary', undefined);
+       │           ^^^^^^^^
+    63 │     // Log additional context for debugging
+    64 │     console.error('Component stack:', errorInfo.componentStack);
+  
+  ℹ Unused variables are often the result of an incomplete refactoring, typos, or other sources of bugs.
+  
+  ℹ Unsafe fix: If this is intentional, prepend appError with an underscore.
+  
+     60  60 │     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+     61  61 │       console.error('Error caught by boundary:', error, errorInfo);
+     62     │ - ····const·appError·=·handleError(error,·'Error·boundary',·undefined);
+         62 │ + ····const·_appError·=·handleError(error,·'Error·boundary',·undefined);
+     63  63 │       // Log additional context for debugging
+     64  64 │       console.error('Component stack:', errorInfo.componentStack);
+  
+
+web/document-generator/src/components/KeyboardShortcuts.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ These imports are unused.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { useState, useEffect } from 'react';
+      │        ^^^^^
+    4 │ 
+    5 │ interface KeyboardShortcutsProps {
+  
+  ℹ Unused imports might be the result of an incomplete refactoring.
+  
+  ℹ Unsafe fix: Remove the unused imports.
+  
+    3 │ import·React,·{·useState,·useEffect·}·from·'react';
+      │        -------                                     
+
+web/document-generator/src/components/LiveRegion.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ The default import is only used as a type.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { useEffect, useRef } from 'react';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ 
+    5 │ interface LiveRegionProps {
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+     1  1 │   'use client';
+     2  2 │   
+     3    │ - import·React,·{·useEffect,·useRef·}·from·'react';
+        3 │ + import·type·React·from·'react';
+        4 │ + import·{·useEffect,·useRef·}·from·'react';
+     4  5 │   
+     5  6 │   interface LiveRegionProps {
+  
+
+web/document-generator/src/components/LoadingSpinner.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React from 'react';
+      │        ^^^^^^^^^^^^^^^^^^
+    4 │ 
+    5 │ interface LoadingSpinnerProps {
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    3 │ import·type·React·from·'react';
+      │        +++++                   
+
+web/document-generator/src/components/StepErrorBoundary.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ These imports are unused.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { ReactNode } from 'react';
+      │        ^^^^^
+    4 │ import ErrorBoundary from './ErrorBoundary';
+    5 │ import { AppError } from '@/lib/errorHandler';
+  
+  ℹ Unused imports might be the result of an incomplete refactoring.
+  
+  ℹ Unsafe fix: Remove the unused imports.
+  
+    3 │ import·React,·{·ReactNode·}·from·'react';
+      │        -------                           
+
+web/document-generator/src/components/StepErrorBoundary.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ Some named imports are only used as types.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { ReactNode } from 'react';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ import ErrorBoundary from './ErrorBoundary';
+    5 │ import { AppError } from '@/lib/errorHandler';
+  
+  ℹ This import is only used as a type.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { ReactNode } from 'react';
+      │                 ^^^^^^^^^
+    4 │ import ErrorBoundary from './ErrorBoundary';
+    5 │ import { AppError } from '@/lib/errorHandler';
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Add inline type keywords.
+  
+    3 │ import·React,·{·type·ReactNode·}·from·'react';
+      │                 +++++                         
+
+web/document-generator/src/components/StepErrorBoundary.tsx:5:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    3 │ import React, { ReactNode } from 'react';
+    4 │ import ErrorBoundary from './ErrorBoundary';
+  > 5 │ import { AppError } from '@/lib/errorHandler';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    6 │ import { StepType } from '@/types';
+    7 │ 
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    5 │ import·type·{·AppError·}·from·'@/lib/errorHandler';
+      │        +++++                                       
+
+web/document-generator/src/components/StepErrorBoundary.tsx:6:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    4 │ import ErrorBoundary from './ErrorBoundary';
+    5 │ import { AppError } from '@/lib/errorHandler';
+  > 6 │ import { StepType } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    7 │ 
+    8 │ interface StepErrorBoundaryProps {
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    6 │ import·type·{·StepType·}·from·'@/types';
+      │        +++++                            
+
+web/document-generator/src/components/Toast.tsx:3:8   FIXABLE  ━━━━━━━━━━━━━
+
+  ⚠ The default import is only used as a type.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { useEffect } from 'react';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ import { classNames } from '@/lib/utils';
+    5 │ 
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+      1   1 │   'use client';
+      2   2 │   
+      3     │ - import·React,·{·useEffect·}·from·'react';
+          3 │ + import·type·React·from·'react';
+          4 │ + import·{·useEffect·}·from·'react';
+      4   5 │   import { classNames } from '@/lib/utils';
+      5   6 │   
+  
+
+web/document-generator/src/components/Transition.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ This import is unused.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React from 'react';
+      │        ^^^^^
+    4 │ import { TransitionProps } from '@/types';
+    5 │ 
+  
+  ℹ Unused imports might be the result of an incomplete refactoring.
+  
+  ℹ Unsafe fix: Remove the unused imports.
+  
+     1  1 │   'use client';
+     2    │ - 
+     3    │ - import·React·from·'react';
+        2 │ + 
+     4  3 │   import { TransitionProps } from '@/types';
+     5  4 │   
+  
+
+web/document-generator/src/components/Transition.tsx:4:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    3 │ import React from 'react';
+  > 4 │ import { TransitionProps } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 │ 
+    6 │ export default function Transition({ isVisible, message }: TransitionProps) {
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    4 │ import·type·{·TransitionProps·}·from·'@/types';
+      │        +++++                                   
+
+web/document-generator/src/components/steps/DataEditor.tsx:4:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    3 │ import React, { useEffect, useRef, useCallback } from 'react';
+  > 4 │ import { AppState } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 │ import { STEP_TITLES } from '@/lib/constants';
+    6 │ import { fetchTemplateData, validateJsonString } from '@/lib/utils';
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    4 │ import·type·{·AppState·}·from·'@/types';
+      │        +++++                            
+
+web/document-generator/src/components/steps/DocxEditor.tsx:190:30   FIXABLE  ━━━━━━━━━━
+
+  ⚠ Forbidden non-null assertion.
+  
+    189 │       try {
+  > 190 │         const editor = await docAuthSystem!.createEditor(container, {
+        │                              ^^^^^^^^^^^^^^
+    191 │           document: docxDocument!,
+    192 │         });
+  
+  ℹ Unsafe fix: Replace with optional chain operator ?. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator
+  
+    188 188 │   
+    189 189 │         try {
+    190     │ - ········const·editor·=·await·docAuthSystem!.createEditor(container,·{
+        190 │ + ········const·editor·=·await·docAuthSystem?.createEditor(container,·{
+    191 191 │             document: docxDocument!,
+    192 192 │           });
+  
+
+web/document-generator/src/components/steps/DocxEditor.tsx:191:21  ━━━━━━━━━━
+
+  ⚠ Forbidden non-null assertion.
+  
+    189 │       try {
+    190 │         const editor = await docAuthSystem!.createEditor(container, {
+  > 191 │           document: docxDocument!,
+        │                     ^^^^^^^^^^^^^
+    192 │         });
+    193 │         console.log('✅ DOCX editor created successfully:', editor);
+  
+
+web/document-generator/src/components/steps/DocxEditor.tsx:205:34   FIXABLE  ━━━━━━━━━━
+
+  ⚠ Forbidden non-null assertion.
+  
+    203 │         if (container.isConnected && container.parentElement) {
+    204 │           try {
+  > 205 │             const editor = await docAuthSystem!.createEditor(container, {
+        │                                  ^^^^^^^^^^^^^^
+    206 │               document: docxDocument!,
+    207 │             });
+  
+  ℹ Unsafe fix: Replace with optional chain operator ?. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator
+  
+    203 203 │           if (container.isConnected && container.parentElement) {
+    204 204 │             try {
+    205     │ - ············const·editor·=·await·docAuthSystem!.createEditor(container,·{
+        205 │ + ············const·editor·=·await·docAuthSystem?.createEditor(container,·{
+    206 206 │                 document: docxDocument!,
+    207 207 │               });
+  
+
+web/document-generator/src/components/steps/DocxEditor.tsx:206:25  ━━━━━━━━━━
+
+  ⚠ Forbidden non-null assertion.
+  
+    204 │           try {
+    205 │             const editor = await docAuthSystem!.createEditor(container, {
+  > 206 │               document: docxDocument!,
+        │                         ^^^^^^^^^^^^^
+    207 │             });
+    208 │             console.log(
+  
+
+web/document-generator/src/components/steps/DocxEditor.tsx:3:28   FIXABLE  ━━━━━━━━━━
+
+  ⚠ Several of these imports are unused.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+      │                            ^^^^^^^^^^^^^^^
+    4 │ import { AppState } from '@/types';
+    5 │ import { STEP_TITLES } from '@/lib/constants';
+  
+  ℹ Unused imports might be the result of an incomplete refactoring.
+  
+  ℹ Unsafe fix: Remove the unused imports.
+  
+    3 │ import·React,·{·useEffect,·useLayoutEffect,·useRef,·useCallback·}·from·'react';
+      │                            -----------------                                   
+
+web/document-generator/src/components/steps/DocxEditor.tsx:4:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    3 │ import React, { useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+  > 4 │ import { AppState } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 │ import { STEP_TITLES } from '@/lib/constants';
+    6 │ 
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    4 │ import·type·{·AppState·}·from·'@/types';
+      │        +++++                            
+
+web/document-generator/src/components/steps/DocxEditor.tsx:95:7   FIXABLE  ━━━━━━━━━━
+
+  ⚠ This let declares a variable that is only assigned once.
+  
+    93 │       // Generate DOCX from template and data if not already done
+    94 │       let docxDocument = appState.docxDocument;
+  > 95 │       let docAuthSystem = appState.docAuthSystem;
+       │       ^^^
+    96 │ 
+    97 │       if (!docxDocument) {
+  
+  ℹ 'docAuthSystem' is never reassigned.
+  
+    93 │       // Generate DOCX from template and data if not already done
+    94 │       let docxDocument = appState.docxDocument;
+  > 95 │       let docAuthSystem = appState.docAuthSystem;
+       │           ^^^^^^^^^^^^^
+    96 │ 
+    97 │       if (!docxDocument) {
+  
+  ℹ Safe fix: Use const instead.
+  
+     93  93 │         // Generate DOCX from template and data if not already done
+     94  94 │         let docxDocument = appState.docxDocument;
+     95     │ - ······let·docAuthSystem·=·appState.docAuthSystem;
+         95 │ + ······const·docAuthSystem·=·appState.docAuthSystem;
+     96  96 │   
+     97  97 │         if (!docxDocument) {
+  
+
+web/document-generator/src/components/steps/PdfViewer.tsx:4:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    3 │ import React, { useEffect, useRef, useCallback } from 'react';
+  > 4 │ import { AppState } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 │ import { STEP_TITLES } from '@/lib/constants';
+    6 │ import { downloadPdf } from '@/lib/utils';
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    4 │ import·type·{·AppState·}·from·'@/types';
+      │        +++++                            
+
+web/document-generator/src/components/steps/TemplateEditor.tsx:4:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    3 │ import React, { useEffect, useRef, useCallback } from 'react';
+  > 4 │ import { AppState } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 │ import { STEP_TITLES } from '@/lib/constants';
+    6 │ import { fetchTemplateJson } from '@/lib/utils';
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    4 │ import·type·{·AppState·}·from·'@/types';
+      │        +++++                            
+
+web/document-generator/src/components/steps/TemplateSelection.tsx:3:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ The default import is only used as a type.
+  
+    1 │ 'use client';
+    2 │ 
+  > 3 │ import React, { useState, useCallback } from 'react';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ import Image from 'next/image';
+    5 │ import { AppState, TemplateType } from '@/types';
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+      1   1 │   'use client';
+      2   2 │   
+      3     │ - import·React,·{·useState,·useCallback·}·from·'react';
+          3 │ + import·type·React·from·'react';
+          4 │ + import·{·useState,·useCallback·}·from·'react';
+      4   5 │   import Image from 'next/image';
+      5   6 │   import { AppState, TemplateType } from '@/types';
+  
+
+web/document-generator/src/components/steps/TemplateSelection.tsx:5:8  
+
+  ⚠ All these imports are only used as types.
+  
+    3 │ import React, { useState, useCallback } from 'react';
+    4 │ import Image from 'next/image';
+  > 5 │ import { AppState, TemplateType } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    6 │ import { TEMPLATE_OPTIONS, STEP_TITLES } from '@/lib/constants';
+    7 │ import { readFileAsArrayBuffer } from '@/lib/utils';
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    5 │ import·type·{·AppState,·TemplateType·}·from·'@/types';
+      │        +++++                                          
+
+web/document-generator/src/components/steps/TemplateSelection.tsx:22:3  ━━━━━━━━━━
+
+  ⚠ This parameter is unused.
+  
+    21 │ export default function TemplateSelection({
+  > 22 │   appState,
+       │   ^^^^^^^^
+    23 │   updateAppState,
+    24 │   navigateToStep,
+  
+  ℹ Unused parameters might be the result of an incomplete refactoring.
+  
+
+web/document-generator/src/components/steps/TemplateSelection.tsx:26:3  ━━━━━━━━━━
+
+  ⚠ This parameter is unused.
+  
+    24 │   navigateToStep,
+    25 │   showError,
+  > 26 │   showWarning,
+       │   ^^^^^^^^^^^
+    27 │ }: TemplateSelectionProps) {
+    28 │   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
+  ℹ Unused parameters might be the result of an incomplete refactoring.
+  
+
+web/document-generator/src/hooks/useFocusManagement.ts:53:11   FIXABLE  ━━━━━━━━━━
 
   ⚠ Change to an optional chain.
   
-    21 │       if (
-    22 │         message.includes('docauth-impl') ||
-  > 23 │         (error && error.stack && error.stack.includes('IntersectionObserver'))
-       │          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    24 │       ) {
-    25 │         console.warn(
+    51 │       const element = containerElement.querySelector(selector) as HTMLElement;
+    52 │ 
+  > 53 │       if (element && element.focus) {
+       │           ^^^^^^^^^^^^^^^^^^^^^^^^
+    54 │         element.focus();
+    55 │         return true;
   
   ℹ Unsafe fix: Change to an optional chain.
   
-     21  21 │         if (
-     22  22 │           message.includes('docauth-impl') ||
-     23     │ - ········(error·&&·error.stack·&&·error.stack.includes('IntersectionObserver'))
-         23 │ + ········(error?.stack?.includes('IntersectionObserver'))
-     24  24 │         ) {
-     25  25 │           console.warn(
+     51  51 │         const element = containerElement.querySelector(selector) as HTMLElement;
+     52  52 │   
+     53     │ - ······if·(element·&&·element.focus)·{
+         53 │ + ······if·(element?.focus)·{
+     54  54 │           element.focus();
+     55  55 │           return true;
   
 
-web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:214:26   FIXABLE  ━━━━━━━━━━
-
-  ⚠ Forbidden non-null assertion.
-  
-    212 │         const createEditorSafely = async () => {
-    213 │           try {
-  > 214 │             return await docAuthSystem!.createEditor(container, {
-        │                          ^^^^^^^^^^^^^^
-    215 │               document: docxDocument!,
-    216 │             });
-  
-  ℹ Unsafe fix: Replace with optional chain operator ?. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator
-  
-    212 212 │           const createEditorSafely = async () => {
-    213 213 │             try {
-    214     │ - ············return·await·docAuthSystem!.createEditor(container,·{
-        214 │ + ············return·await·docAuthSystem?.createEditor(container,·{
-    215 215 │                 document: docxDocument!,
-    216 216 │               });
-  
-
-web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:215:25  ━━━━━━━━━━
+web/document-generator/src/hooks/useFocusManagement.ts:189:9  ━━━━━━━━━━
 
   ⚠ Forbidden non-null assertion.
   
-    213 │           try {
-    214 │             return await docAuthSystem!.createEditor(container, {
-  > 215 │               document: docxDocument!,
-        │                         ^^^^^^^^^^^^^
-    216 │             });
-    217 │           } catch (error) {
+    187 │       announcer.textContent = '';
+    188 │       setTimeout(() => {
+  > 189 │         announcer!.textContent = announcement;
+        │         ^^^^^^^^^^
+    190 │       }, 100);
+    191 │     },
   
 
-web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:229:28   FIXABLE  ━━━━━━━━━━
+web/document-generator/src/hooks/useFocusManagement.ts:3:31   FIXABLE  ━━━━━━━━━━
 
-  ⚠ Forbidden non-null assertion.
-  
-    227 │               // Wait longer and retry
-    228 │               await new Promise((resolve) => setTimeout(resolve, 1000));
-  > 229 │               return await docAuthSystem!.createEditor(container, {
-        │                            ^^^^^^^^^^^^^^
-    230 │                 document: docxDocument!,
-    231 │               });
-  
-  ℹ Unsafe fix: Replace with optional chain operator ?. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator
-  
-    227 227 │                 // Wait longer and retry
-    228 228 │                 await new Promise((resolve) => setTimeout(resolve, 1000));
-    229     │ - ··············return·await·docAuthSystem!.createEditor(container,·{
-        229 │ + ··············return·await·docAuthSystem?.createEditor(container,·{
-    230 230 │                   document: docxDocument!,
-    231 231 │                 });
-  
-
-web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:230:27  ━━━━━━━━━━
-
-  ⚠ Forbidden non-null assertion.
-  
-    228 │               await new Promise((resolve) => setTimeout(resolve, 1000));
-    229 │               return await docAuthSystem!.createEditor(container, {
-  > 230 │                 document: docxDocument!,
-        │                           ^^^^^^^^^^^^^
-    231 │               });
-    232 │             }
-  
-
-web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:258:34   FIXABLE  ━━━━━━━━━━
-
-  ⚠ Forbidden non-null assertion.
-  
-    257 │           try {
-  > 258 │             const editor = await docAuthSystem!.createEditor(container, {
-        │                                  ^^^^^^^^^^^^^^
-    259 │               document: docxDocument!,
-    260 │             });
-  
-  ℹ Unsafe fix: Replace with optional chain operator ?. This operator includes runtime checks, so it is safer than the compile-only non-null assertion operator
-  
-    256 256 │   
-    257 257 │             try {
-    258     │ - ············const·editor·=·await·docAuthSystem!.createEditor(container,·{
-        258 │ + ············const·editor·=·await·docAuthSystem?.createEditor(container,·{
-    259 259 │                 document: docxDocument!,
-    260 260 │               });
-  
-
-web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:259:25  ━━━━━━━━━━
-
-  ⚠ Forbidden non-null assertion.
-  
-    257 │           try {
-    258 │             const editor = await docAuthSystem!.createEditor(container, {
-  > 259 │               document: docxDocument!,
-        │                         ^^^^^^^^^^^^^
-    260 │             });
-    261 │             console.log('✅ DOCX editor created on retry');
-  
-
-web/document-generator/src/app/wizard/components/steps/PreviewStep.tsx:3:8   FIXABLE  ━━━━━━━━━━
-
-  ⚠ These imports are unused.
+  ⚠ Several of these imports are unused.
   
     1 │ 'use client';
     2 │ 
-  > 3 │ import React, { useEffect, useRef, useCallback, useState } from 'react';
-      │        ^^^^^
-    4 │ import { useWizard } from '../../context/WizardContext';
-    5 │ import StepNavigation from '../StepNavigation';
+  > 3 │ import { useCallback, useRef, useEffect } from 'react';
+      │                               ^^^^^^^^^
+    4 │ 
+    5 │ export function useFocusManagement() {
   
   ℹ Unused imports might be the result of an incomplete refactoring.
   
   ℹ Unsafe fix: Remove the unused imports.
   
-    3 │ import·React,·{·useEffect,·useRef,·useCallback,·useState·}·from·'react';
+    3 │ import·{·useCallback,·useRef,·useEffect·}·from·'react';
+      │                               ----------               
+
+web/document-generator/src/hooks/useKeyboardNavigation.ts:4:8   FIXABLE  ━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    3 │ import { useCallback, useEffect, useMemo } from 'react';
+  > 4 │ import { StepType } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 │ 
+    6 │ interface KeyboardNavigationOptions {
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    4 │ import·type·{·StepType·}·from·'@/types';
+      │        +++++                            
+
+web/document-generator/src/hooks/useToast.ts:4:8   FIXABLE  ━━━━━━━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+    3 │ import { useState, useCallback } from 'react';
+  > 4 │ import { Toast, ToastType } from '@/components/Toast';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 │ 
+    6 │ export function useToast() {
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    4 │ import·type·{·Toast,·ToastType·}·from·'@/components/Toast';
+      │        +++++                                               
+
+web/document-generator/src/lib/constants.ts:1:8   FIXABLE  ━━━━━━━━━━━━━━━━━
+
+  ⚠ Some named imports are only used as types.
+  
+  > 1 │ import { TemplateOption, TemplateType } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    2 │ 
+    3 │ export const TEMPLATE_OPTIONS: TemplateOption[] = [
+  
+  ℹ This import is only used as a type.
+  
+  > 1 │ import { TemplateOption, TemplateType } from '@/types';
+      │          ^^^^^^^^^^^^^^
+    2 │ 
+    3 │ export const TEMPLATE_OPTIONS: TemplateOption[] = [
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Add inline type keywords.
+  
+    1 │ import·{·type·TemplateOption,·TemplateType·}·from·'@/types';
+      │          +++++                                              
+
+web/document-generator/src/lib/constants.ts:1:26   FIXABLE  ━━━━━━━━━━
+
+  ⚠ Several of these imports are unused.
+  
+  > 1 │ import { TemplateOption, TemplateType } from '@/types';
+      │                          ^^^^^^^^^^^^
+    2 │ 
+    3 │ export const TEMPLATE_OPTIONS: TemplateOption[] = [
+  
+  ℹ Unused imports might be the result of an incomplete refactoring.
+  
+  ℹ Unsafe fix: Remove the unused imports.
+  
+    1 │ import·{·TemplateOption,·TemplateType·}·from·'@/types';
+      │                          -------------                 
+
+web/document-generator/src/lib/errorHandler.ts:1:8   FIXABLE  ━━━━━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+  > 1 │ import { StepType } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    2 │ 
+    3 │ export class AppError extends Error {
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    1 │ import·type·{·StepType·}·from·'@/types';
+      │        +++++                            
+
+web/document-generator/src/lib/utils.ts:1:8   FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+
+  ⚠ All these imports are only used as types.
+  
+  > 1 │ import { TemplateData, TemplateType } from '@/types';
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    2 │ 
+    3 │ export const fetchTemplateData = async (
+  
+  ℹ Importing the types with import type ensures that they are removed by the compilers and avoids loading unnecessary modules.
+  
+  ℹ Safe fix: Use import type.
+  
+    1 │ import·type·{·TemplateData,·TemplateType·}·from·'@/types';
+      │        +++++                                              
