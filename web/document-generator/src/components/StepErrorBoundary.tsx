@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import type { AppError } from '@/lib/errorHandler';
 import type { StepType } from '@/types';

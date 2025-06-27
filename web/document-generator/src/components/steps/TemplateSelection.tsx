@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import type React from 'react';
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
-import { AppState, TemplateType } from '@/types';
+import type { AppState, TemplateType } from '@/types';
 import { TEMPLATE_OPTIONS, STEP_TITLES } from '@/lib/constants';
 import { readFileAsArrayBuffer } from '@/lib/utils';
 

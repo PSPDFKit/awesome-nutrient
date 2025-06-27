@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useLayoutEffect, useRef, useCallback } from 'react';
-import { AppState } from '@/types';
+import React, { useEffect, useRef, useCallback } from 'react';
+import type { AppState } from '@/types';
 import { STEP_TITLES } from '@/lib/constants';
 
 interface DocxEditorProps {
@@ -92,7 +92,7 @@ export default function DocxEditor({
     try {
       // Generate DOCX from template and data if not already done
       let docxDocument = appState.docxDocument;
-      let docAuthSystem = appState.docAuthSystem;
+      const docAuthSystem = appState.docAuthSystem;
 
       if (!docxDocument) {
         console.log('📄 Generating DOCX document from template and data...');
@@ -187,7 +187,7 @@ export default function DocxEditor({
       }
 
       try {
-        const editor = await docAuthSystem!.createEditor(container, {
+        const editor = await docAuthSystem?.createEditor(container, {
           document: docxDocument!,
         });
         console.log('✅ DOCX editor created successfully:', editor);
@@ -202,7 +202,7 @@ export default function DocxEditor({
         // Re-validate container is still available
         if (container.isConnected && container.parentElement) {
           try {
-            const editor = await docAuthSystem!.createEditor(container, {
+            const editor = await docAuthSystem?.createEditor(container, {
               document: docxDocument!,
             });
             console.log(

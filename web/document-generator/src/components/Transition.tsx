@@ -1,7 +1,6 @@
 'use client';
 
-import React from 'react';
-import { TransitionProps } from '@/types';
+import type { TransitionProps } from '@/types';
 
 export default function Transition({ isVisible, message }: TransitionProps) {
   if (!isVisible) return null;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef } from 'react';
 
 export function useFocusManagement() {
   const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
@@ -50,7 +50,7 @@ export function useFocusManagement() {
       const containerElement = container || document;
       const element = containerElement.querySelector(selector) as HTMLElement;
 
-      if (element && element.focus) {
+      if (element?.focus) {
         element.focus();
         return true;
       }
@@ -186,7 +186,7 @@ export function useStepFocus() {
       // Clear and set the announcement
       announcer.textContent = '';
       setTimeout(() => {
-        announcer!.textContent = announcement;
+        announcer.textContent = announcement;
       }, 100);
     },
     []

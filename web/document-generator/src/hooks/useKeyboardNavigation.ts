@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo } from 'react';
-import { StepType } from '@/types';
+import type { StepType } from '@/types';
 
 interface KeyboardNavigationOptions {
   onNext?: () => void;

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useCallback } from 'react';
-import { AppState } from '@/types';
+import type { AppState } from '@/types';
 import { STEP_TITLES } from '@/lib/constants';
 import { fetchTemplateJson } from '@/lib/utils';
 

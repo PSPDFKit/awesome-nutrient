@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Toast, ToastType } from '@/components/Toast';
+import type { Toast, ToastType } from '@/components/Toast';
 
 export function useToast() {
   const [toasts, setToasts] = useState<Toast[]>([]);
