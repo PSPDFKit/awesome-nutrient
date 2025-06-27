@@ -1,0 +1,53 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "title": "New Year’s",
+    "subtitle": "Celebration",
+    "sections": [
+      {
+        "title": "STARTERS",
+        "items": [
+          {
+            "title": "SALSA TRIO & FRESH CHIPS",
+            "description": "Black Bean Salsa, Green Chili, Pico de Gallo"
+          },
+          {
+            "title": "SHRIMP & AVOCADO CEVICHE",
+            "description": "Gulph Shrimp Marinated in Lime with Cilantro"
+          }
+        ]
+      },
+      {
+        "title": "ENTREES",
+        "items": [
+          {
+            "title": "GRILLED ACHIOTE CHIKEN",
+            "description": "Red Chili & Avocado Puree"
+          },
+          {
+            "title": "SHREDDED BEEF ENCHILADAS",
+            "description": "Green Chili & Cheddar"
+          }
+        ]
+      },
+      {
+        "title": "SIDES",
+        "items": [
+          {
+            "title": "CALABACITAS",
+            "description": "Zucchini, Poblano Corn, Black Beans"
+          },
+          {
+            "title": "CILANTRO LIME RICE",
+            "description": null
+          }
+        ]
+      }
+    ]
+  }
+}

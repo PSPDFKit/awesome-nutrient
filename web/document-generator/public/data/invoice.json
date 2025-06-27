@@ -1,0 +1,55 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "invoice_date": "November 30, 2022",
+    "invoice_number": "1234",
+    "customer_name": "Henry Ross",
+    "customer_id": "8675309",
+    "customer_address": "123 Avenue A, Metropolis",
+    "customer_phone": "(123) 456-7890",
+    "recipient_name": "Henry Ross",
+    "recipient_address": "123 Avenue A, Metropolis",
+    "recipient_phone": "(123) 456-7890",
+    "payment_due_date": "December 30, 2022",
+    "salesperson": "Luca Richter",
+    "payment_terms": "Cash or check",
+    "delivery_date": "December 7, 2022",
+    "shipping_method": "Ground",
+    "shipping_terms": "Returns not accepted",
+    "items": [
+      {
+        "quantity": "10",
+        "number": "123",
+        "description": "Baby chicks",
+        "price": "5.00",
+        "discount": null,
+        "total": "50.00"
+      },
+      {
+        "quantity": "2",
+        "number": "444",
+        "description": "Heat lamps",
+        "price": "24.00",
+        "discount": null,
+        "total": "48.00"
+      },
+      {
+        "quantity": "6",
+        "number": "120",
+        "description": "Chicken roosts",
+        "price": "30.00",
+        "discount": null,
+        "total": "180.00"
+      }
+    ],
+    "total_discount": "0",
+    "subtotal": "278.00",
+    "sales_tax": "13.90",
+    "total": "291.90"
+  }
+}

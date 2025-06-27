@@ -1,0 +1,9 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {}
+}
