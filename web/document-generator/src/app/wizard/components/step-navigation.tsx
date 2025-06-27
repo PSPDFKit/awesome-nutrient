@@ -45,6 +45,7 @@ export default function StepNavigation({
       <div>
         {!isFirstStep && (
           <button
+            type="button"
             onClick={handlePrevious}
             className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors cursor-pointer"
           >
@@ -54,6 +55,7 @@ export default function StepNavigation({
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
+              <title>Previous step</title>
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -75,6 +77,7 @@ export default function StepNavigation({
         {/* Next/Finish Button */}
         {!isAtLastStep && (
           <button
+            type="button"
             onClick={handleNext}
             disabled={!canProceed}
             className={`inline-flex items-center px-6 py-2 shadow-sm text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors ${
@@ -91,6 +94,7 @@ export default function StepNavigation({
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
+                <title>Next step</title>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
