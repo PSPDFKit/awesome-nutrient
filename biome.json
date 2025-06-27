@@ -55,7 +55,7 @@
   },
   "overrides": [
     {
-      "include": ["./web/document-generator/**"],
+      "includes": ["./web/document-generator/**"],
       "linter": {
         "rules": {
           "suspicious": {
