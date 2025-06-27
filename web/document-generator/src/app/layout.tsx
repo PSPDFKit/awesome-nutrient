@@ -1,42 +1,42 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import Image from 'next/image';
-import Link from 'next/link';
-import Script from 'next/script';
-import '@/styles/globals.css';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
+import Script from "next/script";
+import "@/styles/globals.css";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Nutrient Document Generator Demo',
-  description: 'A step-by-step document generator using Nutrient SDKs',
-  keywords: ['document', 'generator', 'PDF', 'DOCX', 'template', 'Nutrient'],
-  authors: [{ name: 'Nutrient' }],
-  manifest: '/manifest.json',
+  title: "Nutrient Document Generator Demo",
+  description: "A step-by-step document generator using Nutrient SDKs",
+  keywords: ["document", "generator", "PDF", "DOCX", "template", "Nutrient"],
+  authors: [{ name: "Nutrient" }],
+  manifest: "/manifest.json",
   icons: {
-    icon: '/favicon.ico',
-    apple: '/icon-192.png',
+    icon: "/favicon.ico",
+    apple: "/icon-192.png",
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
-    title: 'Doc Generator',
+    statusBarStyle: "default",
+    title: "Doc Generator",
   },
   openGraph: {
-    title: 'Nutrient Document Generator Demo',
-    description: 'A step-by-step document generator using Nutrient SDKs',
-    type: 'website',
-    locale: 'en_US',
+    title: "Nutrient Document Generator Demo",
+    description: "A step-by-step document generator using Nutrient SDKs",
+    type: "website",
+    locale: "en_US",
   },
   twitter: {
-    card: 'summary',
-    title: 'Nutrient Document Generator Demo',
-    description: 'A step-by-step document generator using Nutrient SDKs',
+    card: "summary",
+    title: "Nutrient Document Generator Demo",
+    description: "A step-by-step document generator using Nutrient SDKs",
   },
 };
 
 export const viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
 };
 
@@ -49,13 +49,19 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Resource hints for external dependencies */}
-        <link rel="preconnect" href="https://document-authoring.cdn.nutrient.io" />
+        <link
+          rel="preconnect"
+          href="https://document-authoring.cdn.nutrient.io"
+        />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
         <link rel="preconnect" href="https://cdn.cloud.pspdfkit.com" />
-        <link rel="dns-prefetch" href="https://document-authoring.cdn.nutrient.io" />
+        <link
+          rel="dns-prefetch"
+          href="https://document-authoring.cdn.nutrient.io"
+        />
         <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
         <link rel="dns-prefetch" href="https://cdn.cloud.pspdfkit.com" />
-        
+
         {/* CodeMirror CSS */}
         <link
           rel="stylesheet"
@@ -136,7 +142,7 @@ export default function RootLayout({
                   width={32}
                   height={32}
                   className="h-8 w-auto"
-                  style={{ width: 'auto', height: 'auto' }}
+                  style={{ width: "auto", height: "auto" }}
                 />
                 <h1 className="text-xl font-semibold text-gray-900">
                   Document Generator Demo

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useWizard } from '../context/wizard-context';
-import TemplateStep from './steps/template-step';
-import CustomizeStep from './steps/customize-step';
-import DataStep from './steps/data-step';
-import PreviewStep from './steps/preview-step';
-import DownloadStep from './steps/download-step';
+import { useWizard } from "../context/wizard-context";
+import CustomizeStep from "./steps/customize-step";
+import DataStep from "./steps/data-step";
+import DownloadStep from "./steps/download-step";
+import PreviewStep from "./steps/preview-step";
+import TemplateStep from "./steps/template-step";
 
 export default function StepContent() {
   const { state } = useWizard();

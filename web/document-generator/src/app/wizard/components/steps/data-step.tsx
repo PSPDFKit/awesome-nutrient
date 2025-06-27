@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import type React from 'react';
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useWizard } from '../../context/wizard-context';
-import StepNavigation from '../step-navigation';
-import { fetchTemplateData, validateJsonString } from '@/lib/utils';
-import { transformJsonToReadable } from '@/lib/json-transformer';
-import type { TemplateType, CodeMirrorInstance, TemplateData } from '@/types';
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { transformJsonToReadable } from "@/lib/json-transformer";
+import { fetchTemplateData, validateJsonString } from "@/lib/utils";
+import type { CodeMirrorInstance, TemplateData, TemplateType } from "@/types";
+import { useWizard } from "../../context/wizard-context";
+import StepNavigation from "../step-navigation";
 
 export default function DataStep() {
   const { state, dispatch, completeCurrentStep, nextStep } = useWizard();
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [jsonError, setJsonError] = useState<string | null>(null);
-  const [previewMode, setPreviewMode] = useState<'interactive' | 'simple'>(
-    'interactive'
+  const [previewMode, setPreviewMode] = useState<"interactive" | "simple">(
+    "interactive",
   );
   const [uploadedJsonFile, setUploadedJsonFile] = useState<File | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -23,25 +23,25 @@ export default function DataStep() {
   const isInitializing = useRef(false);
 
   const initializeDataEditor = useCallback(async () => {
-    console.log('🔄 DataStep: Initializing data editor for:', state.template);
+    console.log("🔄 DataStep: Initializing data editor for:", state.template);
 
     if (isInitializing.current) {
-      console.log('⏸️ Initialization already in progress, skipping');
+      console.log("⏸️ Initialization already in progress, skipping");
       return;
     }
 
     // Clean up any existing editor first
     if (state.dataEditor) {
       console.log(
-        '🧹 Cleaning up existing data editor before initializing new one'
+        "🧹 Cleaning up existing data editor before initializing new one",
       );
       try {
         state.dataEditor.toTextArea();
       } catch (error) {
-        console.warn('⚠️ CodeMirror cleanup failed:', error);
+        console.warn("⚠️ CodeMirror cleanup failed:", error);
       }
-      dispatch({ type: 'SET_DATA_EDITOR', payload: null });
-      dispatch({ type: 'SET_DATA_JSON', payload: null });
+      dispatch({ type: "SET_DATA_EDITOR", payload: null });
+      dispatch({ type: "SET_DATA_JSON", payload: null });
     }
 
     // Wait for ref to be available
@@ -49,21 +49,21 @@ export default function DataStep() {
     const maxAttempts = 20;
     while (!editorContainerRef.current && attempts < maxAttempts) {
       console.log(
-        `🔄 Waiting for data editor container ref (attempt ${attempts + 1}/${maxAttempts})...`
+        `🔄 Waiting for data editor container ref (attempt ${attempts + 1}/${maxAttempts})...`,
       );
       await new Promise((resolve) => setTimeout(resolve, 100));
       attempts++;
     }
 
     if (!editorContainerRef.current) {
-      console.warn('❌ No data editor container ref available after waiting');
+      console.warn("❌ No data editor container ref available after waiting");
       return;
     }
 
     // Validate DOM connection and dimensions
     if (!editorContainerRef.current.isConnected) {
       console.warn(
-        '❌ Data editor container ref element is not connected to DOM'
+        "❌ Data editor container ref element is not connected to DOM",
       );
       return;
     }
@@ -71,22 +71,22 @@ export default function DataStep() {
     const rect = editorContainerRef.current.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) {
       console.warn(
-        '❌ Data editor container ref element has zero dimensions:',
-        rect
+        "❌ Data editor container ref element has zero dimensions:",
+        rect,
       );
       await new Promise((resolve) => setTimeout(resolve, 200));
       const newRect = editorContainerRef.current.getBoundingClientRect();
       if (newRect.width === 0 || newRect.height === 0) {
         console.warn(
-          '❌ Data editor container ref element still has zero dimensions after waiting:',
-          newRect
+          "❌ Data editor container ref element still has zero dimensions after waiting:",
+          newRect,
         );
         return;
       }
     }
 
     if (!state.template) {
-      console.warn('❌ No template selected');
+      console.warn("❌ No template selected");
       return;
     }
 
@@ -95,42 +95,42 @@ export default function DataStep() {
 
     try {
       // Always fetch the template JSON data for the current template
-      console.log('📄 Fetching template data for:', state.template);
-      let dataJson;
+      console.log("📄 Fetching template data for:", state.template);
+      let dataJson: any = null;
       try {
         dataJson = await fetchTemplateData(state.template as TemplateType);
-        console.log('✅ Template data fetched for:', state.template, dataJson);
-        dispatch({ type: 'SET_DATA_JSON', payload: dataJson });
+        console.log("✅ Template data fetched for:", state.template, dataJson);
+        dispatch({ type: "SET_DATA_JSON", payload: dataJson });
       } catch (fetchError) {
-        console.error('❌ Error fetching template data:', fetchError);
+        console.error("❌ Error fetching template data:", fetchError);
         // Use default data structure if fetch fails
         dataJson = {
           config: {
             delimiter: {
-              start: '{{',
-              end: '}}',
+              start: "{{",
+              end: "}}",
             },
           },
           model: {
-            companyName: 'Acme Corporation',
-            invoiceNumber: 'INV-001',
-            date: '2024-01-15',
-            customerName: 'John Doe',
-            amount: '$1,250.00',
+            companyName: "Acme Corporation",
+            invoiceNumber: "INV-001",
+            date: "2024-01-15",
+            customerName: "John Doe",
+            amount: "$1,250.00",
           },
         };
-        dispatch({ type: 'SET_DATA_JSON', payload: dataJson });
+        dispatch({ type: "SET_DATA_JSON", payload: dataJson });
       }
 
       // Create CodeMirror editor
       if (!window.CodeMirror) {
-        console.error('❌ CodeMirror not available - may not be loaded');
-        throw new Error('CodeMirror not loaded');
+        console.error("❌ CodeMirror not available - may not be loaded");
+        throw new Error("CodeMirror not loaded");
       }
 
-      console.log('🖊️ Creating CodeMirror data editor...');
+      console.log("🖊️ Creating CodeMirror data editor...");
 
-      const textarea = document.createElement('textarea');
+      const textarea = document.createElement("textarea");
       textarea.value = JSON.stringify(dataJson, null, 2);
 
       const container = editorContainerRef.current;
@@ -148,46 +148,46 @@ export default function DataStep() {
       }
 
       container.appendChild(textarea);
-      console.log('📝 Textarea added to container');
+      console.log("📝 Textarea added to container");
 
       // Initialize CodeMirror
       const editor = window.CodeMirror.fromTextArea(textarea, {
-        mode: { name: 'javascript', json: true },
-        theme: 'default',
+        mode: { name: "javascript", json: true },
+        theme: "default",
         tabSize: 2,
         lineNumbers: true,
         lineWrapping: true,
         foldGutter: true,
-        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
       });
-      console.log('✅ CodeMirror data editor created');
+      console.log("✅ CodeMirror data editor created");
 
       // Validate JSON on change
-      editor.on('change', (instance: CodeMirrorInstance) => {
+      editor.on("change", (instance: CodeMirrorInstance) => {
         const value = instance.getValue();
         if (validateJsonString(value)) {
           setJsonError(null);
           try {
             const parsed = JSON.parse(value);
-            dispatch({ type: 'SET_DATA_JSON', payload: parsed });
+            dispatch({ type: "SET_DATA_JSON", payload: parsed });
           } catch (_error) {
             // Should not happen if validateJsonString returns true
           }
         } else {
-          setJsonError('Invalid JSON format');
+          setJsonError("Invalid JSON format");
         }
       });
 
-      dispatch({ type: 'SET_DATA_EDITOR', payload: editor });
-      console.log('✅ Data editor ready');
+      dispatch({ type: "SET_DATA_EDITOR", payload: editor });
+      console.log("✅ Data editor ready");
     } catch (error) {
-      console.error('❌ Error initializing data editor:', error);
+      console.error("❌ Error initializing data editor:", error);
       dispatch({
-        type: 'SET_ERROR',
+        type: "SET_ERROR",
         payload:
           error instanceof Error
             ? error.message
-            : 'Data editor initialization failed',
+            : "Data editor initialization failed",
       });
     } finally {
       setIsLoading(false);
@@ -198,28 +198,33 @@ export default function DataStep() {
   // Effect to handle template changes and editor initialization
   useEffect(() => {
     console.log(
-      '📍 DataStep useEffect triggered with template:',
+      "📍 DataStep useEffect triggered with template:",
       state.template,
-      'editor exists:',
-      !!state.dataEditor
+      "editor exists:",
+      !!state.dataEditor,
     );
 
     // Check if we need to initialize or reconnect editor
     if (state.template && !isInitializing.current) {
       if (!state.dataEditor) {
-        console.log('🎆 Initializing data editor for template:', state.template);
+        console.log(
+          "🎆 Initializing data editor for template:",
+          state.template,
+        );
         initializeDataEditor();
       } else {
         // Editor exists but might need reconnection to DOM
-        console.log('🔄 Checking if existing data editor needs reconnection...');
-        
+        console.log(
+          "🔄 Checking if existing data editor needs reconnection...",
+        );
+
         // Check if the current container is empty or if we need to reinitialize
         const currentContainer = editorContainerRef.current;
-        
+
         if (!currentContainer || currentContainer.children.length === 0) {
-          console.log('🔄 Data editor container is empty, reinitializing...');
+          console.log("🔄 Data editor container is empty, reinitializing...");
           // Clear the disconnected editor from state and reinitialize
-          dispatch({ type: 'SET_DATA_EDITOR', payload: null });
+          dispatch({ type: "SET_DATA_EDITOR", payload: null });
           setTimeout(() => {
             if (!isInitializing.current) {
               initializeDataEditor();
@@ -227,19 +232,19 @@ export default function DataStep() {
           }, 100);
         } else {
           // Editor container has content, ensure it has the current data
-          console.log('✅ Data editor container has content, updating data...');
+          console.log("✅ Data editor container has content, updating data...");
           if (state.dataJson) {
             const currentValue = state.dataEditor.getValue();
             const expectedValue = JSON.stringify(state.dataJson, null, 2);
             if (currentValue !== expectedValue) {
-              console.log('🔄 Updating editor content with current data');
+              console.log("🔄 Updating editor content with current data");
               state.dataEditor.setValue(expectedValue);
             }
           }
         }
       }
     } else {
-      console.log('🚫 Not initializing data editor:', {
+      console.log("🚫 Not initializing data editor:", {
         hasTemplate: !!state.template,
         hasEditor: !!state.dataEditor,
         isInitializing: isInitializing.current,
@@ -252,11 +257,11 @@ export default function DataStep() {
   useEffect(() => {
     return () => {
       if (state.dataEditor) {
-        console.log('🧹 Cleaning up data editor on template change');
+        console.log("🧹 Cleaning up data editor on template change");
         try {
           state.dataEditor.toTextArea();
         } catch (error) {
-          console.warn('⚠️ CodeMirror cleanup failed:', error);
+          console.warn("⚠️ CodeMirror cleanup failed:", error);
         }
       }
     };
@@ -267,11 +272,11 @@ export default function DataStep() {
   useEffect(() => {
     return () => {
       if (state.dataEditor) {
-        console.log('🧹 Final cleanup on unmount');
+        console.log("🧹 Final cleanup on unmount");
         try {
           state.dataEditor.toTextArea();
         } catch (error) {
-          console.warn('⚠️ Final cleanup error:', error);
+          console.warn("⚠️ Final cleanup error:", error);
         }
       }
     };
@@ -284,14 +289,14 @@ export default function DataStep() {
       if (validateJsonString(jsonString)) {
         try {
           const dataJson = JSON.parse(jsonString);
-          dispatch({ type: 'SET_DATA_JSON', payload: dataJson });
+          dispatch({ type: "SET_DATA_JSON", payload: dataJson });
           completeCurrentStep();
           nextStep();
         } catch (_error) {
-          setJsonError('Failed to parse JSON data');
+          setJsonError("Failed to parse JSON data");
         }
       } else {
-        setJsonError('Please fix JSON errors before proceeding');
+        setJsonError("Please fix JSON errors before proceeding");
       }
     }
   };
@@ -320,7 +325,7 @@ export default function DataStep() {
 
   // JSON file upload functionality
   const isCustomTemplate =
-    state.template === 'custom' && state.customTemplateBinary;
+    state.template === "custom" && state.customTemplateBinary;
 
   // JSON file validation helper
   const validateJsonFile = (file: File): string | null => {
@@ -328,15 +333,15 @@ export default function DataStep() {
 
     // Check file size
     if (file.size > MAX_FILE_SIZE) {
-      return 'File size must be less than 5MB';
+      return "File size must be less than 5MB";
     }
 
     // Check file type
     if (
-      file.type !== 'application/json' &&
-      !file.name.toLowerCase().endsWith('.json')
+      file.type !== "application/json" &&
+      !file.name.toLowerCase().endsWith(".json")
     ) {
-      return 'Please select a valid JSON file';
+      return "Please select a valid JSON file";
     }
 
     return null;
@@ -351,7 +356,7 @@ export default function DataStep() {
           const jsonData = JSON.parse(reader.result as string);
           resolve(jsonData);
         } catch (_error) {
-          reject(new Error('Invalid JSON format'));
+          reject(new Error("Invalid JSON format"));
         }
       };
       reader.onerror = () => reject(reader.error);
@@ -375,7 +380,7 @@ export default function DataStep() {
 
         // Always update state with uploaded JSON
         dispatch({
-          type: 'SET_DATA_JSON',
+          type: "SET_DATA_JSON",
           payload: jsonData as TemplateData,
         });
 
@@ -386,15 +391,15 @@ export default function DataStep() {
 
         setUploadedJsonFile(file);
         setJsonError(null);
-        console.log('🎯 DataStep: JSON file uploaded successfully:', file.name);
+        console.log("🎯 DataStep: JSON file uploaded successfully:", file.name);
       } catch (error) {
-        console.error('Error reading JSON file:', error);
+        console.error("Error reading JSON file:", error);
         setUploadError(
-          'Failed to parse JSON file. Please check the file format.'
+          "Failed to parse JSON file. Please check the file format.",
         );
       }
     },
-    [dispatch, state.dataEditor]
+    [dispatch, state.dataEditor],
   );
 
   // Handle JSON file input change
@@ -405,7 +410,7 @@ export default function DataStep() {
         handleJsonFileSelect(file);
       }
     },
-    [handleJsonFileSelect]
+    [handleJsonFileSelect],
   );
 
   // Handle JSON file drag and drop
@@ -429,7 +434,7 @@ export default function DataStep() {
         handleJsonFileSelect(files[0]);
       }
     },
-    [handleJsonFileSelect]
+    [handleJsonFileSelect],
   );
 
   // Handle click to upload JSON
@@ -452,7 +457,7 @@ export default function DataStep() {
   const DataPreview = ({
     data,
     level = 0,
-    keyName = '',
+    keyName = "",
     options = { indentSize: 16, maxArrayPreview: 3, autoExpandLevels: 2 },
   }: {
     data: unknown;
@@ -475,8 +480,8 @@ export default function DataStep() {
     // Convert key to Title Case
     const toTitleCase = (str: string): string => {
       return str
-        .replace(/_/g, ' ')
-        .replace(/([A-Z])/g, ' $1')
+        .replace(/_/g, " ")
+        .replace(/([A-Z])/g, " $1")
         .replace(/\b\w/g, (l) => l.toUpperCase())
         .trim();
     };
@@ -484,50 +489,50 @@ export default function DataStep() {
     // Get smart preview for arrays and objects
     const getSmartPreview = (value: unknown): string => {
       if (Array.isArray(value)) {
-        if (value.length === 0) return 'empty';
+        if (value.length === 0) return "empty";
 
         // Get preview of array items
         const previews = value
           .slice(0, options.maxArrayPreview || 3)
           .map((item) => {
-            if (typeof item === 'string' || typeof item === 'number') {
+            if (typeof item === "string" || typeof item === "number") {
               return String(item);
             }
-            if (typeof item === 'object' && item !== null) {
+            if (typeof item === "object" && item !== null) {
               // Look for a representative field
               const displayFields = [
-                'name',
-                'title',
-                'label',
-                'text',
-                'description',
+                "name",
+                "title",
+                "label",
+                "text",
+                "description",
               ];
               for (const field of displayFields) {
                 const itemObj = item as Record<string, unknown>;
                 if (itemObj[field]) return String(itemObj[field]);
               }
-              return 'object';
+              return "object";
             }
             return typeof item;
           });
 
         const remaining = value.length - (options.maxArrayPreview || 3);
-        const suffix = remaining > 0 ? ` +${remaining} more` : '';
-        return `${previews.join(', ')}${suffix}`;
+        const suffix = remaining > 0 ? ` +${remaining} more` : "";
+        return `${previews.join(", ")}${suffix}`;
       }
 
-      if (typeof value === 'object' && value !== null) {
+      if (typeof value === "object" && value !== null) {
         const keys = Object.keys(value as Record<string, unknown>);
-        if (keys.length === 0) return 'empty';
+        if (keys.length === 0) return "empty";
 
         // Try to find a representative value
-        const displayFields = ['name', 'title', 'label', 'text', 'description'];
+        const displayFields = ["name", "title", "label", "text", "description"];
         for (const field of displayFields) {
           const valueObj = value as Record<string, unknown>;
           if (valueObj[field]) return String(valueObj[field]);
         }
 
-        return `${keys.length} field${keys.length !== 1 ? 's' : ''}`;
+        return `${keys.length} field${keys.length !== 1 ? "s" : ""}`;
       }
 
       return String(value);
@@ -554,9 +559,9 @@ export default function DataStep() {
 
     // Handle primitive values
     if (
-      typeof data === 'string' ||
-      typeof data === 'number' ||
-      typeof data === 'boolean'
+      typeof data === "string" ||
+      typeof data === "number" ||
+      typeof data === "boolean"
     ) {
       return (
         <div
@@ -605,14 +610,14 @@ export default function DataStep() {
               onClick={toggleExpansion}
             >
               <span className="text-green-600 mr-2 w-4 text-center inline-block select-none">
-                {isExpanded ? '▼' : '▶'}
+                {isExpanded ? "▼" : "▶"}
               </span>
               <span className="text-gray-700">{toTitleCase(keyName)}:</span>
               <span className="text-gray-500 ml-2">{preview}</span>
             </div>
           )}
           {(isExpanded || !keyName) && (
-            <div className={keyName ? 'mt-0.5' : ''}>
+            <div className={keyName ? "mt-0.5" : ""}>
               {data.map((item, index) => (
                 <DataPreview
                   key={index}
@@ -629,7 +634,7 @@ export default function DataStep() {
     }
 
     // Handle objects
-    if (typeof data === 'object') {
+    if (typeof data === "object") {
       const keys = Object.keys(data as Record<string, unknown>);
       if (keys.length === 0) {
         if (!keyName) return null;
@@ -652,7 +657,7 @@ export default function DataStep() {
       const hasNestedData = keys.some(
         (key) =>
           Array.isArray(dataObj[key]) ||
-          (typeof dataObj[key] === 'object' && dataObj[key] !== null)
+          (typeof dataObj[key] === "object" && dataObj[key] !== null),
       );
 
       return (
@@ -663,7 +668,7 @@ export default function DataStep() {
               onClick={toggleExpansion}
             >
               <span className="text-green-600 mr-2 w-4 text-center inline-block select-none">
-                {isExpanded ? '▼' : '▶'}
+                {isExpanded ? "▼" : "▶"}
               </span>
               <span className="text-gray-700">{toTitleCase(keyName)}:</span>
               <span className="text-gray-500 ml-2">{preview}</span>
@@ -679,7 +684,7 @@ export default function DataStep() {
             </div>
           )}
           {(isExpanded || !keyName) && (
-            <div className={keyName ? 'mt-0.5' : ''}>
+            <div className={keyName ? "mt-0.5" : ""}>
               {keys.map((key) => (
                 <DataPreview
                   key={key}
@@ -719,7 +724,7 @@ export default function DataStep() {
             >
               JSON Data
             </label>
-            <div className="h-6"></div>{' '}
+            <div className="h-6"></div>{" "}
             {/* Spacer to match toggle button height */}
           </div>
           <div className="relative flex-1 min-h-0">
@@ -744,7 +749,7 @@ export default function DataStep() {
             <div
               ref={editorContainerRef}
               className="w-full h-full border border-gray-300 rounded-lg overflow-hidden"
-              style={{ minHeight: '400px' }}
+              style={{ minHeight: "400px" }}
               id="json-editor"
               role="textbox"
               aria-label="JSON data editor for template variables"
@@ -770,17 +775,17 @@ export default function DataStep() {
               <div
                 className={`relative p-4 border-2 border-dashed rounded-lg text-center transition-all duration-200 cursor-pointer ${
                   isDragOver
-                    ? 'border-blue-400 bg-blue-50'
+                    ? "border-blue-400 bg-blue-50"
                     : uploadedJsonFile
-                      ? 'border-green-500 bg-green-50'
-                      : 'border-gray-300 hover:border-gray-400'
+                      ? "border-green-500 bg-green-50"
+                      : "border-gray-300 hover:border-gray-400"
                 }`}
                 onDragOver={handleJsonDragOver}
                 onDragLeave={handleJsonDragLeave}
                 onDrop={handleJsonDrop}
                 onClick={handleJsonUploadClick}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     handleJsonUploadClick();
                   }
@@ -803,7 +808,7 @@ export default function DataStep() {
                 />
 
                 <svg
-                  className={`mx-auto h-8 w-8 mb-2 ${isDragOver ? 'text-blue-500' : uploadedJsonFile ? 'text-green-500' : 'text-gray-400'}`}
+                  className={`mx-auto h-8 w-8 mb-2 ${isDragOver ? "text-blue-500" : uploadedJsonFile ? "text-green-500" : "text-gray-400"}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -829,8 +834,8 @@ export default function DataStep() {
                   <div>
                     <p className="text-sm text-gray-600">
                       {isDragOver
-                        ? 'Drop your JSON file here'
-                        : 'Upload JSON data file'}
+                        ? "Drop your JSON file here"
+                        : "Upload JSON data file"}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
                       Drag & drop or click to browse
@@ -871,26 +876,26 @@ export default function DataStep() {
             >
               <button
                 type="button"
-                onClick={() => setPreviewMode('interactive')}
+                onClick={() => setPreviewMode("interactive")}
                 className={`px-3 py-1 text-xs font-medium border cursor-pointer ${
-                  previewMode === 'interactive'
-                    ? 'bg-blue-50 text-blue-700 border-blue-300'
-                    : 'bg-white text-gray-500 border-gray-300 hover:bg-gray-50'
+                  previewMode === "interactive"
+                    ? "bg-blue-50 text-blue-700 border-blue-300"
+                    : "bg-white text-gray-500 border-gray-300 hover:bg-gray-50"
                 } rounded-l-md`}
-                aria-pressed={previewMode === 'interactive'}
+                aria-pressed={previewMode === "interactive"}
                 aria-describedby="preview-mode-help"
               >
                 Interactive
               </button>
               <button
                 type="button"
-                onClick={() => setPreviewMode('simple')}
+                onClick={() => setPreviewMode("simple")}
                 className={`px-3 py-1 text-xs font-medium border-t border-r border-b cursor-pointer ${
-                  previewMode === 'simple'
-                    ? 'bg-blue-50 text-blue-700 border-blue-300'
-                    : 'bg-white text-gray-500 border-gray-300 hover:bg-gray-50'
+                  previewMode === "simple"
+                    ? "bg-blue-50 text-blue-700 border-blue-300"
+                    : "bg-white text-gray-500 border-gray-300 hover:bg-gray-50"
                 } rounded-r-md`}
-                aria-pressed={previewMode === 'simple'}
+                aria-pressed={previewMode === "simple"}
                 aria-describedby="preview-mode-help"
               >
                 Simple
@@ -906,7 +911,7 @@ export default function DataStep() {
 
           <div
             className="flex-1 p-4 bg-gray-50 border border-gray-300 rounded-lg overflow-auto"
-            style={{ minHeight: '400px' }}
+            style={{ minHeight: "400px" }}
           >
             {(() => {
               const previewData = getPreviewData();
@@ -914,13 +919,13 @@ export default function DataStep() {
                 return (
                   <div className="flex items-center justify-center h-full text-gray-500">
                     {isLoading
-                      ? 'Loading...'
-                      : 'Enter valid JSON to see preview'}
+                      ? "Loading..."
+                      : "Enter valid JSON to see preview"}
                   </div>
                 );
               }
 
-              if (previewMode === 'simple') {
+              if (previewMode === "simple") {
                 const fullData = state.dataEditor
                   ? (() => {
                       try {

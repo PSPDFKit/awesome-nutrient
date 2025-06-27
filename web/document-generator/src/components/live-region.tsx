@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import type React from 'react';
-import { useEffect, useRef } from 'react';
+import type React from "react";
+import { useEffect, useRef } from "react";
 
 interface LiveRegionProps {
   message: string;
-  priority?: 'polite' | 'assertive';
+  priority?: "polite" | "assertive";
   clearDelay?: number;
 }
 
 export default function LiveRegion({
   message,
-  priority = 'polite',
+  priority = "polite",
   clearDelay = 3000,
 }: LiveRegionProps) {
   const regionRef = useRef<HTMLDivElement>(null);
@@ -22,7 +22,7 @@ export default function LiveRegion({
     // Clear any existing timeout
     const timeoutId = setTimeout(() => {
       if (regionRef.current) {
-        regionRef.current.textContent = '';
+        regionRef.current.textContent = "";
       }
     }, clearDelay);
 

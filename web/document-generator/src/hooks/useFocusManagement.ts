@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef } from "react";
 
 export function useFocusManagement() {
   const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
@@ -56,13 +56,13 @@ export function useFocusManagement() {
       }
       return false;
     },
-    []
+    [],
   );
 
   // Focus a step indicator
   const focusStep = useCallback((stepIndex: number) => {
     const stepElement = document.querySelector(
-      `[data-step-index="${stepIndex}"]`
+      `[data-step-index="${stepIndex}"]`,
     ) as HTMLElement;
     if (stepElement) {
       stepElement.focus();
@@ -81,7 +81,7 @@ export function useFocusManagement() {
     const lastFocusable = focusableElements[focusableElements.length - 1];
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Tab') return;
+      if (event.key !== "Tab") return;
 
       if (event.shiftKey) {
         // Shift + Tab
@@ -98,14 +98,14 @@ export function useFocusManagement() {
       }
     };
 
-    container.addEventListener('keydown', handleKeyDown);
+    container.addEventListener("keydown", handleKeyDown);
 
     // Focus the first element initially
     firstFocusable.focus();
 
     // Return cleanup function
     return () => {
-      container.removeEventListener('keydown', handleKeyDown);
+      container.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
@@ -123,30 +123,30 @@ export function useFocusManagement() {
 // Helper function to get all focusable elements within a container
 function getFocusableElements(container: HTMLElement): HTMLElement[] {
   const focusableSelectors = [
-    'button:not([disabled])',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    'a[href]',
+    "button:not([disabled])",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    "a[href]",
     '[tabindex]:not([tabindex="-1"])',
     '[role="button"]:not([disabled])',
     '[role="link"]:not([disabled])',
     '[role="menuitem"]:not([disabled])',
     '[role="tab"]:not([disabled])',
-    'details summary',
-  ].join(', ');
+    "details summary",
+  ].join(", ");
 
   const elements = Array.from(
-    container.querySelectorAll(focusableSelectors)
+    container.querySelectorAll(focusableSelectors),
   ) as HTMLElement[];
 
   return elements.filter((element) => {
     // Filter out hidden elements
     const style = getComputedStyle(element);
     return (
-      style.display !== 'none' &&
-      style.visibility !== 'hidden' &&
-      !element.hasAttribute('aria-hidden') &&
+      style.display !== "none" &&
+      style.visibility !== "hidden" &&
+      !element.hasAttribute("aria-hidden") &&
       element.offsetWidth > 0 &&
       element.offsetHeight > 0
     );
@@ -160,11 +160,11 @@ export function useStepFocus() {
   const focusStepContent = useCallback(
     (stepContainer?: HTMLElement | null) => {
       // Try to focus the step heading first, then first focusable element
-      if (!focusElement('h1, h2, h3', stepContainer)) {
+      if (!focusElement("h1, h2, h3", stepContainer)) {
         focusFirstElement(stepContainer);
       }
     },
-    [focusElement, focusFirstElement]
+    [focusElement, focusFirstElement],
   );
 
   const announceStepChange = useCallback(
@@ -173,23 +173,23 @@ export function useStepFocus() {
       const announcement = `Step ${stepNumber} of ${totalSteps}: ${stepTitle}`;
 
       // Find or create the announcement container
-      let announcer = document.getElementById('step-announcer');
+      let announcer = document.getElementById("step-announcer");
       if (!announcer) {
-        announcer = document.createElement('div');
-        announcer.id = 'step-announcer';
-        announcer.setAttribute('aria-live', 'polite');
-        announcer.setAttribute('aria-atomic', 'true');
-        announcer.className = 'sr-only';
+        announcer = document.createElement("div");
+        announcer.id = "step-announcer";
+        announcer.setAttribute("aria-live", "polite");
+        announcer.setAttribute("aria-atomic", "true");
+        announcer.className = "sr-only";
         document.body.appendChild(announcer);
       }
 
       // Clear and set the announcement
-      announcer.textContent = '';
+      announcer.textContent = "";
       setTimeout(() => {
         announcer.textContent = announcement;
       }, 100);
     },
-    []
+    [],
   );
 
   return {

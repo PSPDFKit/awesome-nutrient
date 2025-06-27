@@ -1,45 +1,45 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useCallback } from 'react';
-import Image from 'next/image';
-import { useWizard } from '../../context/wizard-context';
-import StepNavigation from '../step-navigation';
+import Image from "next/image";
+import React, { useCallback, useRef, useState } from "react";
+import { useWizard } from "../../context/wizard-context";
+import StepNavigation from "../step-navigation";
 
 const templates = [
   {
-    id: 'invoice',
-    name: 'Invoice Template',
-    description: 'Professional invoice template for businesses',
-    preview: '/assets/invoice.png',
-    category: 'Business',
+    id: "invoice",
+    name: "Invoice Template",
+    description: "Professional invoice template for businesses",
+    preview: "/assets/invoice.png",
+    category: "Business",
   },
   {
-    id: 'checklist',
-    name: 'Checklist Template',
-    description: 'Organized checklist for tasks and projects',
-    preview: '/assets/checklist.png',
-    category: 'Productivity',
+    id: "checklist",
+    name: "Checklist Template",
+    description: "Organized checklist for tasks and projects",
+    preview: "/assets/checklist.png",
+    category: "Productivity",
   },
   {
-    id: 'menu',
-    name: 'Menu Template',
-    description: 'Restaurant menu template with elegant design',
-    preview: '/assets/menu.png',
-    category: 'Food & Beverage',
+    id: "menu",
+    name: "Menu Template",
+    description: "Restaurant menu template with elegant design",
+    preview: "/assets/menu.png",
+    category: "Food & Beverage",
   },
 ];
 
 export default function TemplateStep() {
   const { state, dispatch, nextStep, completeCurrentStep } = useWizard();
   const [selectedTemplate, setSelectedTemplate] = useState<string>(
-    state.template || ''
+    state.template || "",
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  console.log('🔄 TemplateStep render:', {
+  console.log("🔄 TemplateStep render:", {
     stateTemplate: state.template,
     selectedTemplate,
     currentStep: state.currentStep,
@@ -48,10 +48,10 @@ export default function TemplateStep() {
   // Add useEffect to sync local state with global state when navigating back
   React.useEffect(() => {
     console.log(
-      '🔄 TemplateStep useEffect - syncing selectedTemplate with state.template:',
-      state.template
+      "🔄 TemplateStep useEffect - syncing selectedTemplate with state.template:",
+      state.template,
     );
-    setSelectedTemplate(state.template || '');
+    setSelectedTemplate(state.template || "");
   }, [state.template]);
 
   // console.log('🎯 TemplateStep rendered:', {
@@ -61,20 +61,20 @@ export default function TemplateStep() {
   // });
 
   const handleTemplateSelect = (templateId: string) => {
-    console.log('🎯 TemplateStep: User selected template:', templateId);
+    console.log("🎯 TemplateStep: User selected template:", templateId);
     console.log(
-      '🎯 TemplateStep: Previous state.template was:',
-      state.template
+      "🎯 TemplateStep: Previous state.template was:",
+      state.template,
     );
     setSelectedTemplate(templateId);
-    dispatch({ type: 'SET_TEMPLATE', payload: templateId });
+    dispatch({ type: "SET_TEMPLATE", payload: templateId });
     // Clear custom file if selecting predefined template
-    if (templateId !== 'custom') {
+    if (templateId !== "custom") {
       setSelectedFile(null);
-      dispatch({ type: 'SET_CUSTOM_TEMPLATE_BINARY', payload: null });
+      dispatch({ type: "SET_CUSTOM_TEMPLATE_BINARY", payload: null });
     }
     setUploadError(null);
-    console.log('🎯 TemplateStep: Dispatched SET_TEMPLATE with:', templateId);
+    console.log("🎯 TemplateStep: Dispatched SET_TEMPLATE with:", templateId);
   };
 
   // File validation helper
@@ -83,15 +83,15 @@ export default function TemplateStep() {
 
     // Check file size
     if (file.size > MAX_FILE_SIZE) {
-      return 'File size must be less than 10MB';
+      return "File size must be less than 10MB";
     }
 
     // Check file type
     if (
       file.type !==
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
-      return 'Please select a valid DOCX file';
+      return "Please select a valid DOCX file";
     }
 
     return null;
@@ -105,7 +105,7 @@ export default function TemplateStep() {
         if (reader.result instanceof ArrayBuffer) {
           resolve(reader.result);
         } else {
-          reject(new Error('Failed to read file as ArrayBuffer'));
+          reject(new Error("Failed to read file as ArrayBuffer"));
         }
       };
       reader.onerror = () => reject(reader.error);
@@ -127,16 +127,16 @@ export default function TemplateStep() {
       try {
         const arrayBuffer = await readFileAsArrayBuffer(file);
         setSelectedFile(file);
-        setSelectedTemplate('custom');
-        dispatch({ type: 'SET_TEMPLATE', payload: 'custom' });
-        dispatch({ type: 'SET_CUSTOM_TEMPLATE_BINARY', payload: arrayBuffer });
-        console.log('🎯 TemplateStep: Custom template uploaded successfully');
+        setSelectedTemplate("custom");
+        dispatch({ type: "SET_TEMPLATE", payload: "custom" });
+        dispatch({ type: "SET_CUSTOM_TEMPLATE_BINARY", payload: arrayBuffer });
+        console.log("🎯 TemplateStep: Custom template uploaded successfully");
       } catch (error) {
-        console.error('Error reading file:', error);
-        setUploadError('Failed to read the selected file');
+        console.error("Error reading file:", error);
+        setUploadError("Failed to read the selected file");
       }
     },
-    [dispatch]
+    [dispatch],
   );
 
   // Handle file input change
@@ -147,7 +147,7 @@ export default function TemplateStep() {
         handleFileSelect(file);
       }
     },
-    [handleFileSelect]
+    [handleFileSelect],
   );
 
   // Handle drag and drop
@@ -171,7 +171,7 @@ export default function TemplateStep() {
         handleFileSelect(files[0]);
       }
     },
-    [handleFileSelect]
+    [handleFileSelect],
   );
 
   // Handle click to upload
@@ -205,12 +205,12 @@ export default function TemplateStep() {
             key={template.id}
             className={`relative group cursor-pointer rounded-xl border-2 transition-all duration-200 overflow-hidden ${
               selectedTemplate === template.id
-                ? 'border-indigo-500 ring-2 ring-indigo-200'
-                : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                ? "border-indigo-500 ring-2 ring-indigo-200"
+                : "border-gray-200 hover:border-gray-300 hover:shadow-md"
             }`}
             onClick={() => handleTemplateSelect(template.id)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 handleTemplateSelect(template.id);
               }
@@ -268,17 +268,17 @@ export default function TemplateStep() {
       <div
         className={`relative mt-8 p-6 border-2 border-dashed rounded-xl text-center transition-all duration-200 cursor-pointer ${
           isDragOver
-            ? 'border-indigo-400 bg-indigo-50'
-            : selectedTemplate === 'custom'
-              ? 'border-indigo-500 bg-indigo-50'
-              : 'border-gray-300 hover:border-gray-400'
+            ? "border-indigo-400 bg-indigo-50"
+            : selectedTemplate === "custom"
+              ? "border-indigo-500 bg-indigo-50"
+              : "border-gray-300 hover:border-gray-400"
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={handleUploadClick}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             handleUploadClick();
           }
@@ -301,7 +301,7 @@ export default function TemplateStep() {
         />
 
         <svg
-          className={`mx-auto h-12 w-12 ${isDragOver || selectedTemplate === 'custom' ? 'text-indigo-500' : 'text-gray-400'}`}
+          className={`mx-auto h-12 w-12 ${isDragOver || selectedTemplate === "custom" ? "text-indigo-500" : "text-gray-400"}`}
           stroke="currentColor"
           fill="none"
           viewBox="0 0 48 48"
@@ -316,7 +316,7 @@ export default function TemplateStep() {
 
         <div className="mt-4">
           <h3
-            className={`text-lg font-medium ${selectedTemplate === 'custom' ? 'text-indigo-900' : 'text-gray-900'}`}
+            className={`text-lg font-medium ${selectedTemplate === "custom" ? "text-indigo-900" : "text-gray-900"}`}
           >
             Upload Custom Template
           </h3>
@@ -333,8 +333,8 @@ export default function TemplateStep() {
           ) : (
             <p className="text-sm text-gray-600 mt-1">
               {isDragOver
-                ? 'Drop your DOCX file here'
-                : 'Drag and drop your DOCX file here, or click to browse'}
+                ? "Drop your DOCX file here"
+                : "Drag and drop your DOCX file here, or click to browse"}
             </p>
           )}
 
@@ -343,8 +343,8 @@ export default function TemplateStep() {
               type="button"
               className={`mt-3 inline-flex items-center px-4 py-2 border shadow-sm text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer ${
                 isDragOver
-                  ? 'border-indigo-300 text-indigo-700 bg-indigo-50 hover:bg-indigo-100'
-                  : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
+                  ? "border-indigo-300 text-indigo-700 bg-indigo-50 hover:bg-indigo-100"
+                  : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
               }`}
             >
               Choose File
@@ -357,9 +357,9 @@ export default function TemplateStep() {
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedFile(null);
-                setSelectedTemplate('');
-                dispatch({ type: 'SET_TEMPLATE', payload: '' });
-                dispatch({ type: 'SET_CUSTOM_TEMPLATE_BINARY', payload: null });
+                setSelectedTemplate("");
+                dispatch({ type: "SET_TEMPLATE", payload: "" });
+                dispatch({ type: "SET_CUSTOM_TEMPLATE_BINARY", payload: null });
                 setUploadError(null);
               }}
               className="mt-3 inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
@@ -370,7 +370,7 @@ export default function TemplateStep() {
         </div>
 
         {/* Selection Indicator */}
-        {selectedTemplate === 'custom' && selectedFile && (
+        {selectedTemplate === "custom" && selectedFile && (
           <div className="absolute top-3 right-3 w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center">
             <svg
               className="w-4 h-4 text-white"

@@ -6,20 +6,20 @@ interface JsonData {
 export function transformJsonToReadable(jsonData: JsonData): string {
   // Ignore config object, process only model
   if (!jsonData.model) {
-    return 'No model data found';
+    return "No model data found";
   }
 
   const result: string[] = [];
   processObject(jsonData.model, result, 0);
-  return result.join('\n');
+  return result.join("\n");
 }
 
 function processObject(
   obj: Record<string, unknown>,
   result: string[],
-  indentLevel: number
+  indentLevel: number,
 ): void {
-  const indent = '    '.repeat(indentLevel); // 4 spaces per level
+  const indent = "    ".repeat(indentLevel); // 4 spaces per level
 
   for (const [key, value] of Object.entries(obj)) {
     const titleCaseKey = toTitleCase(key);
@@ -33,7 +33,7 @@ function processObject(
         result.push(`${indent}▼ ${titleCaseKey}:`);
         processArray(value, result, indentLevel + 1);
       }
-    } else if (typeof value === 'object' && value !== null) {
+    } else if (typeof value === "object" && value !== null) {
       result.push(`${indent}▼ ${titleCaseKey}:`);
       processObject(value as Record<string, unknown>, result, indentLevel + 1);
     } else {
@@ -46,9 +46,9 @@ function processObject(
 function processArray(
   arr: unknown[],
   result: string[],
-  indentLevel: number
+  indentLevel: number,
 ): void {
-  const indent = '    '.repeat(indentLevel);
+  const indent = "    ".repeat(indentLevel);
 
   arr.forEach((item, index) => {
     if (item === null || item === undefined) {
@@ -56,7 +56,7 @@ function processArray(
     } else if (Array.isArray(item)) {
       result.push(`${indent}▼ [${index}]:`);
       processArray(item, result, indentLevel + 1);
-    } else if (typeof item === 'object' && item !== null) {
+    } else if (typeof item === "object" && item !== null) {
       result.push(`${indent}▼ [${index}]:`);
       processObject(item as Record<string, unknown>, result, indentLevel + 1);
     } else {
@@ -67,7 +67,7 @@ function processArray(
 
 function toTitleCase(str: string): string {
   return str
-    .split('_')
+    .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
+    .join(" ");
 }

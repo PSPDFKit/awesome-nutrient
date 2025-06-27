@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import type React from 'react';
-import { createContext, useContext, useReducer, type ReactNode } from 'react';
+import type React from "react";
+import { createContext, type ReactNode, useContext, useReducer } from "react";
 import type {
-  DocAuthSystem,
+  CodeMirrorInstance,
   DocAuthDocument,
   DocAuthEditor,
-  CodeMirrorInstance,
+  DocAuthSystem,
   PSPDFKitViewer,
   TemplateData,
-} from '@/types';
+} from "@/types";
 
 // Types
 export interface WizardStep {
@@ -39,57 +39,57 @@ export interface WizardState {
 }
 
 type WizardAction =
-  | { type: 'SET_CURRENT_STEP'; payload: number }
-  | { type: 'SET_TEMPLATE'; payload: string }
-  | { type: 'SET_TEMPLATE_DOCUMENT'; payload: DocAuthDocument | null }
-  | { type: 'SET_TEMPLATE_EDITOR'; payload: DocAuthEditor | null }
-  | { type: 'SET_CUSTOM_TEMPLATE_BINARY'; payload: ArrayBuffer | null }
-  | { type: 'SET_DATA_JSON'; payload: TemplateData | null }
-  | { type: 'SET_DATA_EDITOR'; payload: CodeMirrorInstance | null }
-  | { type: 'SET_DOCX_DOCUMENT'; payload: DocAuthDocument | null }
-  | { type: 'SET_DOCX_EDITOR'; payload: DocAuthEditor | null }
-  | { type: 'SET_PDF_DOCUMENT'; payload: ArrayBuffer | null }
-  | { type: 'SET_PDF_VIEWER'; payload: PSPDFKitViewer | null }
-  | { type: 'SET_DOC_AUTH_SYSTEM'; payload: DocAuthSystem | null }
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ERROR'; payload: string | null }
-  | { type: 'COMPLETE_STEP'; payload: number }
-  | { type: 'RESET_WIZARD' };
+  | { type: "SET_CURRENT_STEP"; payload: number }
+  | { type: "SET_TEMPLATE"; payload: string }
+  | { type: "SET_TEMPLATE_DOCUMENT"; payload: DocAuthDocument | null }
+  | { type: "SET_TEMPLATE_EDITOR"; payload: DocAuthEditor | null }
+  | { type: "SET_CUSTOM_TEMPLATE_BINARY"; payload: ArrayBuffer | null }
+  | { type: "SET_DATA_JSON"; payload: TemplateData | null }
+  | { type: "SET_DATA_EDITOR"; payload: CodeMirrorInstance | null }
+  | { type: "SET_DOCX_DOCUMENT"; payload: DocAuthDocument | null }
+  | { type: "SET_DOCX_EDITOR"; payload: DocAuthEditor | null }
+  | { type: "SET_PDF_DOCUMENT"; payload: ArrayBuffer | null }
+  | { type: "SET_PDF_VIEWER"; payload: PSPDFKitViewer | null }
+  | { type: "SET_DOC_AUTH_SYSTEM"; payload: DocAuthSystem | null }
+  | { type: "SET_LOADING"; payload: boolean }
+  | { type: "SET_ERROR"; payload: string | null }
+  | { type: "COMPLETE_STEP"; payload: number }
+  | { type: "RESET_WIZARD" };
 
 // Initial state
 const initialSteps: WizardStep[] = [
   {
-    id: 'template',
-    title: 'Choose Template',
-    description: 'Select a document template to get started',
+    id: "template",
+    title: "Choose Template",
+    description: "Select a document template to get started",
     isComplete: false,
     isActive: true,
   },
   {
-    id: 'customize',
-    title: 'Customize Template',
-    description: 'Edit your template design and layout',
+    id: "customize",
+    title: "Customize Template",
+    description: "Edit your template design and layout",
     isComplete: false,
     isActive: false,
   },
   {
-    id: 'data',
-    title: 'Add Data',
-    description: 'Provide the data to populate your document',
+    id: "data",
+    title: "Add Data",
+    description: "Provide the data to populate your document",
     isComplete: false,
     isActive: false,
   },
   {
-    id: 'preview',
-    title: 'Preview & Edit',
-    description: 'Review and make final adjustments',
+    id: "preview",
+    title: "Preview & Edit",
+    description: "Review and make final adjustments",
     isComplete: false,
     isActive: false,
   },
   {
-    id: 'download',
-    title: 'Download',
-    description: 'Get your finished document',
+    id: "download",
+    title: "Download",
+    description: "Get your finished document",
     isComplete: false,
     isActive: false,
   },
@@ -116,12 +116,12 @@ const initialState: WizardState = {
 // Reducer
 function wizardReducer(state: WizardState, action: WizardAction): WizardState {
   console.log(
-    '🏪 WizardReducer:',
+    "🏪 WizardReducer:",
     action.type,
-    'payload:',
-    'payload' in action ? action.payload : 'none'
+    "payload:",
+    "payload" in action ? action.payload : "none",
   );
-  console.log('🏪 Current state before action:', {
+  console.log("🏪 Current state before action:", {
     template: state.template,
     currentStep: state.currentStep,
     templateEditor: !!state.templateEditor,
@@ -129,7 +129,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
   });
 
   switch (action.type) {
-    case 'SET_CURRENT_STEP':
+    case "SET_CURRENT_STEP":
       return {
         ...state,
         currentStep: action.payload,
@@ -139,46 +139,46 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
         })),
       };
 
-    case 'SET_TEMPLATE':
+    case "SET_TEMPLATE":
       return { ...state, template: action.payload };
 
-    case 'SET_TEMPLATE_DOCUMENT':
+    case "SET_TEMPLATE_DOCUMENT":
       return { ...state, templateDocument: action.payload };
 
-    case 'SET_TEMPLATE_EDITOR':
+    case "SET_TEMPLATE_EDITOR":
       return { ...state, templateEditor: action.payload };
 
-    case 'SET_CUSTOM_TEMPLATE_BINARY':
+    case "SET_CUSTOM_TEMPLATE_BINARY":
       return { ...state, customTemplateBinary: action.payload };
 
-    case 'SET_DATA_JSON':
+    case "SET_DATA_JSON":
       return { ...state, dataJson: action.payload };
 
-    case 'SET_DATA_EDITOR':
+    case "SET_DATA_EDITOR":
       return { ...state, dataEditor: action.payload };
 
-    case 'SET_DOCX_DOCUMENT':
+    case "SET_DOCX_DOCUMENT":
       return { ...state, docxDocument: action.payload };
 
-    case 'SET_DOCX_EDITOR':
+    case "SET_DOCX_EDITOR":
       return { ...state, docxEditor: action.payload };
 
-    case 'SET_PDF_DOCUMENT':
+    case "SET_PDF_DOCUMENT":
       return { ...state, pdfDocument: action.payload };
 
-    case 'SET_PDF_VIEWER':
+    case "SET_PDF_VIEWER":
       return { ...state, pdfViewer: action.payload };
 
-    case 'SET_DOC_AUTH_SYSTEM':
+    case "SET_DOC_AUTH_SYSTEM":
       return { ...state, docAuthSystem: action.payload };
 
-    case 'SET_LOADING':
+    case "SET_LOADING":
       return { ...state, isLoading: action.payload };
 
-    case 'SET_ERROR':
+    case "SET_ERROR":
       return { ...state, error: action.payload };
 
-    case 'COMPLETE_STEP':
+    case "COMPLETE_STEP":
       return {
         ...state,
         steps: state.steps.map((step, index) => ({
@@ -187,7 +187,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
         })),
       };
 
-    case 'RESET_WIZARD':
+    case "RESET_WIZARD":
       return initialState;
 
     default:
@@ -212,32 +212,32 @@ export function WizardProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(wizardReducer, initialState);
 
   const nextStep = () => {
-    console.log('➡️ nextStep called, current step:', state.currentStep);
+    console.log("➡️ nextStep called, current step:", state.currentStep);
     if (state.currentStep < state.steps.length - 1) {
-      dispatch({ type: 'SET_CURRENT_STEP', payload: state.currentStep + 1 });
+      dispatch({ type: "SET_CURRENT_STEP", payload: state.currentStep + 1 });
     }
   };
 
   const prevStep = () => {
     console.log(
-      '⬅️ prevStep called, current step:',
+      "⬅️ prevStep called, current step:",
       state.currentStep,
-      'template:',
-      state.template
+      "template:",
+      state.template,
     );
     if (state.currentStep > 0) {
-      dispatch({ type: 'SET_CURRENT_STEP', payload: state.currentStep - 1 });
+      dispatch({ type: "SET_CURRENT_STEP", payload: state.currentStep - 1 });
     }
   };
 
   const goToStep = (step: number) => {
     if (step >= 0 && step < state.steps.length) {
-      dispatch({ type: 'SET_CURRENT_STEP', payload: step });
+      dispatch({ type: "SET_CURRENT_STEP", payload: step });
     }
   };
 
   const completeCurrentStep = () => {
-    dispatch({ type: 'COMPLETE_STEP', payload: state.currentStep });
+    dispatch({ type: "COMPLETE_STEP", payload: state.currentStep });
   };
 
   const value = {
@@ -258,7 +258,7 @@ export function WizardProvider({ children }: { children: ReactNode }) {
 export function useWizard() {
   const context = useContext(WizardContext);
   if (context === undefined) {
-    throw new Error('useWizard must be used within a WizardProvider');
+    throw new Error("useWizard must be used within a WizardProvider");
   }
   return context;
 }

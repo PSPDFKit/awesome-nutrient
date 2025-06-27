@@ -1,7 +1,7 @@
-import type { TemplateData, TemplateType } from '@/types';
+import type { TemplateData, TemplateType } from "@/types";
 
 export const fetchTemplateData = async (
-  template: TemplateType
+  template: TemplateType,
 ): Promise<TemplateData> => {
   const response = await fetch(`/data/${template}.json`);
   if (!response.ok) {
@@ -11,7 +11,7 @@ export const fetchTemplateData = async (
 };
 
 export const fetchTemplateJson = async (
-  template: TemplateType
+  template: TemplateType,
 ): Promise<unknown> => {
   const response = await fetch(`/templates/${template}.json`);
   if (!response.ok) {
@@ -22,13 +22,13 @@ export const fetchTemplateJson = async (
 
 export const downloadPdf = (
   blob: Blob,
-  filename: string = 'document.pdf'
+  filename: string = "document.pdf",
 ): void => {
   const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = filename;
-  a.style.display = 'none';
+  a.style.display = "none";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -42,10 +42,10 @@ export const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
       if (e.target?.result instanceof ArrayBuffer) {
         resolve(e.target.result);
       } else {
-        reject(new Error('Failed to read file as ArrayBuffer'));
+        reject(new Error("Failed to read file as ArrayBuffer"));
       }
     };
-    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.onerror = () => reject(new Error("Failed to read file"));
     reader.readAsArrayBuffer(file);
   });
 };
@@ -62,5 +62,5 @@ export const validateJsonString = (jsonString: string): boolean => {
 export const classNames = (
   ...classes: (string | undefined | null | false)[]
 ): string => {
-  return classes.filter(Boolean).join(' ');
+  return classes.filter(Boolean).join(" ");
 };

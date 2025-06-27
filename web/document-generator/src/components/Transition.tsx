@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import type { TransitionProps } from '@/types';
+import type { TransitionProps } from "@/types";
 
 export default function Transition({ isVisible, message }: TransitionProps) {
   if (!isVisible) return null;

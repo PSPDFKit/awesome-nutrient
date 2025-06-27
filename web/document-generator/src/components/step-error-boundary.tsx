@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
-import ErrorBoundary from './error-boundary';
-import type { AppError } from '@/lib/error-handler';
-import type { StepType } from '@/types';
+import type { ReactNode } from "react";
+import type { AppError } from "@/lib/error-handler";
+import type { StepType } from "@/types";
+import ErrorBoundary from "./error-boundary";
 
 interface StepErrorBoundaryProps {
   children: ReactNode;
@@ -26,11 +26,11 @@ function StepErrorFallback({
   onNavigateBack,
 }: StepErrorFallbackProps) {
   const stepTitles = {
-    'template-selection': 'Template Selection',
-    'template-editor': 'Template Editor',
-    'data-editor': 'Data Editor',
-    'docx-editor': 'Document Editor',
-    'pdf-viewer': 'PDF Viewer',
+    "template-selection": "Template Selection",
+    "template-editor": "Template Editor",
+    "data-editor": "Data Editor",
+    "docx-editor": "Document Editor",
+    "pdf-viewer": "PDF Viewer",
   };
 
   return (
@@ -51,7 +51,11 @@ function StepErrorFallback({
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <button onClick={resetError} className="nutri-button-primary">
+            <button
+              type="button"
+              onClick={resetError}
+              className="nutri-button-primary"
+            >
               Try Again
             </button>
             {onNavigateBack && (
@@ -70,7 +74,7 @@ function StepErrorFallback({
             </button>
           </div>
 
-          {process.env.NODE_ENV === 'development' && Boolean(error.details) && (
+          {process.env.NODE_ENV === "development" && Boolean(error.details) && (
             <details className="mt-4 p-3 bg-gray-50 rounded border">
               <summary className="cursor-pointer text-sm font-medium text-gray-700 mb-2">
                 Debug Information
@@ -83,17 +87,17 @@ function StepErrorFallback({
                   <strong>Step:</strong> {error.step || step}
                 </div>
                 <div>
-                  <strong>Recoverable:</strong>{' '}
-                  {error.recoverable ? 'Yes' : 'No'}
+                  <strong>Recoverable:</strong>{" "}
+                  {error.recoverable ? "Yes" : "No"}
                 </div>
                 {Boolean(error.details) && (
                   <div>
                     <strong>Details:</strong>
                     <pre className="mt-1 text-gray-600 overflow-auto max-h-32 bg-white p-2 rounded border">
                       {String(
-                        typeof error.details === 'string'
+                        typeof error.details === "string"
                           ? error.details
-                          : JSON.stringify(error.details, null, 2)
+                          : JSON.stringify(error.details, null, 2),
                       )}
                     </pre>
                   </div>

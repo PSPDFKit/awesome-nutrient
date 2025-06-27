@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo } from 'react';
-import type { StepType } from '@/types';
+import { useCallback, useEffect, useMemo } from "react";
+import type { StepType } from "@/types";
 
 interface KeyboardNavigationOptions {
   onNext?: () => void;
@@ -31,47 +31,47 @@ export function useKeyboardNavigation({
       // Don't handle keyboard events when user is typing in inputs
       const target = event.target as HTMLElement;
       const isInputElement =
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
         target.isContentEditable ||
-        target.closest('.CodeMirror');
+        target.closest(".CodeMirror");
 
-      if (isInputElement && !['Escape'].includes(event.key)) {
+      if (isInputElement && !["Escape"].includes(event.key)) {
         return;
       }
 
       switch (event.key) {
-        case 'ArrowRight':
-        case 'ArrowDown':
+        case "ArrowRight":
+        case "ArrowDown":
           if (canGoNext && onNext) {
             event.preventDefault();
             onNext();
           }
           break;
 
-        case 'ArrowLeft':
-        case 'ArrowUp':
+        case "ArrowLeft":
+        case "ArrowUp":
           if (canGoPrevious && onPrevious) {
             event.preventDefault();
             onPrevious();
           }
           break;
 
-        case 'Escape':
+        case "Escape":
           if (onEscape) {
             event.preventDefault();
             onEscape();
           }
           break;
 
-        case 'Enter':
+        case "Enter":
           if (onEnter && !event.ctrlKey && !event.metaKey) {
             event.preventDefault();
             onEnter();
           }
           break;
 
-        case ' ':
+        case " ":
           if (onSpace) {
             event.preventDefault();
             onSpace();
@@ -88,14 +88,14 @@ export function useKeyboardNavigation({
       onEscape,
       onEnter,
       onSpace,
-    ]
+    ],
   );
 
   useEffect(() => {
     if (disabled) return;
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown, disabled]);
 
   return {
@@ -122,13 +122,13 @@ export function useStepNavigation({
 }: StepNavigationOptions) {
   const stepOrder = useMemo<StepType[]>(
     () => [
-      'template-selection',
-      'template-editor',
-      'data-editor',
-      'docx-editor',
-      'pdf-viewer',
+      "template-selection",
+      "template-editor",
+      "data-editor",
+      "docx-editor",
+      "pdf-viewer",
     ],
-    []
+    [],
   );
 
   const currentIndex = stepOrder.indexOf(currentStep);

@@ -1,22 +1,21 @@
-'use client';
+"use client";
 
-import { useState, useCallback, useEffect } from 'react';
-import type { AppState, StepType, AppError } from '@/types';
-import { TRANSITION_MESSAGES } from '@/lib/constants';
-import { useToast } from '@/hooks/useToast';
-import { ToastContainer } from './toast';
-import { useStepNavigation } from '@/hooks/useKeyboardNavigation';
-import { useStepFocus } from '@/hooks/useFocusManagement';
-
+import { useCallback, useEffect, useState } from "react";
+import { useStepFocus } from "@/hooks/useFocusManagement";
+import { useStepNavigation } from "@/hooks/useKeyboardNavigation";
+import { useToast } from "@/hooks/useToast";
+import { TRANSITION_MESSAGES } from "@/lib/constants";
+import type { AppError, AppState, StepType } from "@/types";
+import ErrorBoundary from "./error-boundary";
+import KeyboardShortcuts from "./keyboard-shortcuts";
+import DataEditor from "./steps/data-editor";
+import DocxEditor from "./steps/docx-editor";
+import PdfViewer from "./steps/pdf-viewer";
+import TemplateEditor from "./steps/template-editor";
 // Import step components
-import TemplateSelection from './steps/template-selection';
-import TemplateEditor from './steps/template-editor';
-import DataEditor from './steps/data-editor';
-import DocxEditor from './steps/docx-editor';
-import PdfViewer from './steps/pdf-viewer';
-import Transition from './transition';
-import ErrorBoundary from './error-boundary';
-import KeyboardShortcuts from './keyboard-shortcuts';
+import TemplateSelection from "./steps/template-selection";
+import { ToastContainer } from "./toast";
+import Transition from "./transition";
 
 const initialAppState: AppState = {
   docAuthSystem: null,
@@ -35,9 +34,9 @@ const initialAppState: AppState = {
 export default function DocumentGenerator() {
   const [appState, setAppState] = useState<AppState>(initialAppState);
   const [currentStep, setCurrentStep] =
-    useState<StepType>('template-selection');
+    useState<StepType>("template-selection");
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [transitionMessage, setTransitionMessage] = useState('');
+  const [transitionMessage, setTransitionMessage] = useState("");
   const [error, setError] = useState<AppError | null>(null);
   const { toasts, showError, showSuccess, showWarning, removeToast } =
     useToast();
@@ -45,11 +44,11 @@ export default function DocumentGenerator() {
 
   const getStepNumber = useCallback((step: StepType): number => {
     const stepOrder: StepType[] = [
-      'template-selection',
-      'template-editor',
-      'data-editor',
-      'docx-editor',
-      'pdf-viewer',
+      "template-selection",
+      "template-editor",
+      "data-editor",
+      "docx-editor",
+      "pdf-viewer",
     ];
     return stepOrder.indexOf(step) + 1;
   }, []);
@@ -67,22 +66,22 @@ export default function DocumentGenerator() {
     (step: StepType) => {
       setCurrentStep(step);
       setIsTransitioning(false);
-      setTransitionMessage('');
+      setTransitionMessage("");
 
       // Focus management and announcement for accessibility
       setTimeout(() => {
         focusStepContent();
         const stepTitles = {
-          'template-selection': 'Select Template',
-          'template-editor': 'Edit DocJSON Template',
-          'data-editor': 'Prepare JSON Data',
-          'docx-editor': 'Edit Generated DOCX',
-          'pdf-viewer': 'Final PDF',
+          "template-selection": "Select Template",
+          "template-editor": "Edit DocJSON Template",
+          "data-editor": "Prepare JSON Data",
+          "docx-editor": "Edit Generated DOCX",
+          "pdf-viewer": "Final PDF",
         };
         announceStepChange(stepTitles[step], getStepNumber(step), 5);
       }, 100);
     },
-    [focusStepContent, announceStepChange, getStepNumber]
+    [focusStepContent, announceStepChange, getStepNumber],
   );
 
   const navigateToStep = useCallback(
@@ -98,23 +97,23 @@ export default function DocumentGenerator() {
       } catch (err) {
         setError({
           message:
-            err instanceof Error ? err.message : 'An unexpected error occurred',
+            err instanceof Error ? err.message : "An unexpected error occurred",
           step,
           details: err,
         });
         setIsTransitioning(false);
       }
     },
-    [startTransition, endTransition]
+    [startTransition, endTransition],
   );
 
   const handleNext = useCallback(() => {
     const stepOrder: StepType[] = [
-      'template-selection',
-      'template-editor',
-      'data-editor',
-      'docx-editor',
-      'pdf-viewer',
+      "template-selection",
+      "template-editor",
+      "data-editor",
+      "docx-editor",
+      "pdf-viewer",
     ];
 
     const currentIndex = stepOrder.indexOf(currentStep);
@@ -125,11 +124,11 @@ export default function DocumentGenerator() {
 
   const handlePrevious = useCallback(() => {
     const stepOrder: StepType[] = [
-      'template-selection',
-      'template-editor',
-      'data-editor',
-      'docx-editor',
-      'pdf-viewer',
+      "template-selection",
+      "template-editor",
+      "data-editor",
+      "docx-editor",
+      "pdf-viewer",
     ];
 
     const currentIndex = stepOrder.indexOf(currentStep);
@@ -154,14 +153,14 @@ export default function DocumentGenerator() {
     }
 
     setAppState(initialAppState);
-    navigateToStep('template-selection');
+    navigateToStep("template-selection");
     setError(null);
   }, [appState, navigateToStep]);
 
   // Set up keyboard navigation for steps
-  const canGoNext = currentStep !== 'pdf-viewer' && !isTransitioning;
+  const canGoNext = currentStep !== "pdf-viewer" && !isTransitioning;
   const canGoPrevious =
-    currentStep !== 'template-selection' && !isTransitioning;
+    currentStep !== "template-selection" && !isTransitioning;
 
   useStepNavigation({
     currentStep,
@@ -173,7 +172,7 @@ export default function DocumentGenerator() {
 
   // Focus management on initial load
   useEffect(() => {
-    announceStepChange('Select Template', 1, 5);
+    announceStepChange("Select Template", 1, 5);
   }, [announceStepChange]);
 
   if (error) {
@@ -185,7 +184,11 @@ export default function DocumentGenerator() {
           </div>
           <div className="nutri-card-content">
             <p className="text-red-600 mb-4">{error.message}</p>
-            <button onClick={handleReset} className="nutri-button-primary">
+            <button
+              type="button"
+              onClick={handleReset}
+              className="nutri-button-primary"
+            >
               Start Over
             </button>
           </div>
@@ -203,14 +206,14 @@ export default function DocumentGenerator() {
 
         {!isTransitioning && (
           <>
-            {currentStep === 'template-selection' && (
+            {currentStep === "template-selection" && (
               <TemplateSelection
                 isActive={true}
                 onNext={handleNext}
                 onPrevious={handlePrevious}
                 appState={appState}
                 updateAppState={updateAppState}
-                navigateToStep={(step: 'template-editor') =>
+                navigateToStep={(step: "template-editor") =>
                   navigateToStep(step)
                 }
                 showError={showError}
@@ -219,53 +222,53 @@ export default function DocumentGenerator() {
               />
             )}
 
-            {currentStep === 'template-editor' && (
+            {currentStep === "template-editor" && (
               <TemplateEditor
                 isActive={true}
                 onNext={handleNext}
                 onPrevious={handlePrevious}
                 appState={appState}
                 updateAppState={updateAppState}
-                navigateToStep={(step: 'template-selection' | 'data-editor') =>
+                navigateToStep={(step: "template-selection" | "data-editor") =>
                   navigateToStep(step)
                 }
               />
             )}
 
-            {currentStep === 'data-editor' && (
+            {currentStep === "data-editor" && (
               <DataEditor
                 isActive={true}
                 onNext={handleNext}
                 onPrevious={handlePrevious}
                 appState={appState}
                 updateAppState={updateAppState}
-                navigateToStep={(step: 'template-editor' | 'docx-editor') =>
+                navigateToStep={(step: "template-editor" | "docx-editor") =>
                   navigateToStep(step)
                 }
               />
             )}
 
-            {currentStep === 'docx-editor' && (
+            {currentStep === "docx-editor" && (
               <DocxEditor
                 isActive={true}
                 onNext={handleNext}
                 onPrevious={handlePrevious}
                 appState={appState}
                 updateAppState={updateAppState}
-                navigateToStep={(step: 'data-editor' | 'pdf-viewer') =>
+                navigateToStep={(step: "data-editor" | "pdf-viewer") =>
                   navigateToStep(step)
                 }
               />
             )}
 
-            {currentStep === 'pdf-viewer' && (
+            {currentStep === "pdf-viewer" && (
               <PdfViewer
                 isActive={true}
                 onNext={handleNext}
                 onPrevious={handlePrevious}
                 appState={appState}
                 updateAppState={updateAppState}
-                navigateToStep={(step: 'docx-editor') => navigateToStep(step)}
+                navigateToStep={(step: "docx-editor") => navigateToStep(step)}
               />
             )}
           </>

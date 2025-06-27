@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useCallback } from 'react';
-import type { AppState } from '@/types';
-import { STEP_TITLES } from '@/lib/constants';
-import { downloadPdf } from '@/lib/utils';
+import React, { useCallback, useEffect, useRef } from "react";
+import { STEP_TITLES } from "@/lib/constants";
+import { downloadPdf } from "@/lib/utils";
+import type { AppState } from "@/types";
 
 interface PdfViewerProps {
   isActive: boolean;
@@ -11,7 +11,7 @@ interface PdfViewerProps {
   onPrevious: () => void;
   appState: AppState;
   updateAppState: (updates: Partial<AppState>) => void;
-  navigateToStep: (step: 'docx-editor') => Promise<void>;
+  navigateToStep: (step: "docx-editor") => Promise<void>;
 }
 
 export default function PdfViewer({
@@ -34,7 +34,7 @@ export default function PdfViewer({
       // Load the PDF into Web SDK viewer
       if (window.NutrientViewer && viewerRef.current) {
         // Give the container a unique ID for NutrientViewer
-        const containerId = 'pdf-viewer-container';
+        const containerId = "pdf-viewer-container";
         viewerRef.current.id = containerId;
 
         const viewerConfig: {
@@ -51,7 +51,7 @@ export default function PdfViewer({
         updateAppState({ pdfViewer: viewer });
       }
     } catch (error) {
-      console.error('Error initializing PDF viewer:', error);
+      console.error("Error initializing PDF viewer:", error);
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +74,7 @@ export default function PdfViewer({
       await window.PSPDFKit.unload(appState.pdfViewer);
     }
     updateAppState({ pdfViewer: null });
-    await navigateToStep('docx-editor');
+    await navigateToStep("docx-editor");
   }, [appState.pdfViewer, updateAppState, navigateToStep]);
 
   const handleDownloadPdf = useCallback(async () => {
@@ -83,10 +83,10 @@ export default function PdfViewer({
     setIsDownloading(true);
     try {
       const buffer = await appState.pdfViewer.exportPDF();
-      const blob = new Blob([buffer], { type: 'application/pdf' });
-      downloadPdf(blob, 'generated-document.pdf');
+      const blob = new Blob([buffer], { type: "application/pdf" });
+      downloadPdf(blob, "generated-document.pdf");
     } catch (error) {
-      console.error('Error downloading PDF:', error);
+      console.error("Error downloading PDF:", error);
     } finally {
       setIsDownloading(false);
     }
@@ -95,7 +95,7 @@ export default function PdfViewer({
   return (
     <div className="nutri-card">
       <div className="nutri-card-header">
-        <h2 className="text-2xl font-bold">{STEP_TITLES['pdf-viewer']}</h2>
+        <h2 className="text-2xl font-bold">{STEP_TITLES["pdf-viewer"]}</h2>
       </div>
 
       <div className="nutri-card-content">
@@ -125,7 +125,7 @@ export default function PdfViewer({
             className="nutri-button-primary"
             disabled={isLoading || isDownloading || !appState.pdfViewer}
           >
-            {isDownloading ? 'Downloading...' : 'Download PDF →'}
+            {isDownloading ? "Downloading..." : "Download PDF →"}
           </button>
         </div>
       </div>

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useCallback, useState } from 'react';
-import { useWizard } from '../../context/wizard-context';
-import StepNavigation from '../step-navigation';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useWizard } from "../../context/wizard-context";
+import StepNavigation from "../step-navigation";
 
 export default function PreviewStep() {
   const { state, dispatch, completeCurrentStep, nextStep } = useWizard();
@@ -15,16 +15,16 @@ export default function PreviewStep() {
   useEffect(() => {
     const handleSDKError = (event: ErrorEvent): boolean | undefined => {
       const error = event.error;
-      const message = event.message || '';
+      const message = event.message || "";
 
       // Check if this is the known IntersectionObserver SDK error
       if (
-        message.includes('docauth-impl') ||
-        (error?.stack?.includes('IntersectionObserver'))
+        message.includes("docauth-impl") ||
+        error?.stack?.includes("IntersectionObserver")
       ) {
         console.warn(
-          '⚠️ Document Authoring SDK IntersectionObserver error caught and handled:',
-          error
+          "⚠️ Document Authoring SDK IntersectionObserver error caught and handled:",
+          error,
         );
         event.preventDefault(); // Prevent the error from propagating
         return true;
@@ -32,33 +32,33 @@ export default function PreviewStep() {
       return false;
     };
 
-    window.addEventListener('error', handleSDKError);
+    window.addEventListener("error", handleSDKError);
     return () => {
-      window.removeEventListener('error', handleSDKError);
+      window.removeEventListener("error", handleSDKError);
     };
   }, []);
 
   const initializeDocxEditor = useCallback(async () => {
-    console.log('🔄 PreviewStep: Initializing DOCX editor');
+    console.log("🔄 PreviewStep: Initializing DOCX editor");
 
     if (isInitializing.current) {
-      console.log('⏸️ Initialization already in progress, skipping');
+      console.log("⏸️ Initialization already in progress, skipping");
       return;
     }
 
     // Clean up any existing editor first
     if (state.docxEditor) {
       console.log(
-        '🧹 Cleaning up existing DOCX editor before initializing new one'
+        "🧹 Cleaning up existing DOCX editor before initializing new one",
       );
       try {
         state.docxEditor.destroy();
       } catch (error) {
-        console.warn('⚠️ DOCX editor cleanup error:', error);
+        console.warn("⚠️ DOCX editor cleanup error:", error);
       }
-      dispatch({ type: 'SET_DOCX_EDITOR', payload: null });
-      dispatch({ type: 'SET_DOCX_DOCUMENT', payload: null });
-      dispatch({ type: 'SET_PDF_DOCUMENT', payload: null });
+      dispatch({ type: "SET_DOCX_EDITOR", payload: null });
+      dispatch({ type: "SET_DOCX_DOCUMENT", payload: null });
+      dispatch({ type: "SET_PDF_DOCUMENT", payload: null });
     }
 
     // Wait for ref to be available
@@ -66,44 +66,44 @@ export default function PreviewStep() {
     const maxAttempts = 20;
     while (!editorRef.current && attempts < maxAttempts) {
       console.log(
-        `🔄 Waiting for DOCX editor ref (attempt ${attempts + 1}/${maxAttempts})...`
+        `🔄 Waiting for DOCX editor ref (attempt ${attempts + 1}/${maxAttempts})...`,
       );
       await new Promise((resolve) => setTimeout(resolve, 100));
       attempts++;
     }
 
     if (!editorRef.current) {
-      console.warn('❌ No DOCX editor ref available after waiting');
+      console.warn("❌ No DOCX editor ref available after waiting");
       return;
     }
 
     // Validate DOM connection and dimensions
     if (!editorRef.current.isConnected) {
-      console.warn('❌ DOCX editor ref element is not connected to DOM');
+      console.warn("❌ DOCX editor ref element is not connected to DOM");
       return;
     }
 
     const rect = editorRef.current.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) {
-      console.warn('❌ DOCX editor ref element has zero dimensions:', rect);
+      console.warn("❌ DOCX editor ref element has zero dimensions:", rect);
       await new Promise((resolve) => setTimeout(resolve, 200));
       const newRect = editorRef.current.getBoundingClientRect();
       if (newRect.width === 0 || newRect.height === 0) {
         console.warn(
-          '❌ DOCX editor ref element still has zero dimensions after waiting:',
-          newRect
+          "❌ DOCX editor ref element still has zero dimensions after waiting:",
+          newRect,
         );
         return;
       }
     }
 
     if (!state.templateDocument) {
-      console.warn('❌ No template document available');
+      console.warn("❌ No template document available");
       return;
     }
 
     if (!state.dataJson) {
-      console.warn('❌ No data JSON available');
+      console.warn("❌ No data JSON available");
       return;
     }
 
@@ -116,51 +116,51 @@ export default function PreviewStep() {
       const docAuthSystem = state.docAuthSystem;
 
       if (!docxDocument) {
-        console.log('📄 Generating DOCX document from template and data...');
+        console.log("📄 Generating DOCX document from template and data...");
 
         if (!docAuthSystem) {
-          console.error('❌ Document Authoring system not available');
-          throw new Error('Document Authoring system not available');
+          console.error("❌ Document Authoring system not available");
+          throw new Error("Document Authoring system not available");
         }
 
         if (!window.PSPDFKit) {
-          console.error('❌ PSPDFKit not available - SDK may not be loaded');
-          throw new Error('PSPDFKit not loaded');
+          console.error("❌ PSPDFKit not available - SDK may not be loaded");
+          throw new Error("PSPDFKit not loaded");
         }
 
-        console.log('🔧 Exporting template to DOCX buffer...');
+        console.log("🔧 Exporting template to DOCX buffer...");
         const templateBuffer = await state.templateDocument.exportDOCX();
         console.log(
-          '✅ Template exported to buffer, size:',
-          templateBuffer.byteLength
+          "✅ Template exported to buffer, size:",
+          templateBuffer.byteLength,
         );
 
-        console.log('🔧 Populating template with data...');
-        console.log('Data to populate:', state.dataJson);
+        console.log("🔧 Populating template with data...");
+        console.log("Data to populate:", state.dataJson);
         const docxBuffer = await window.PSPDFKit.populateDocumentTemplate(
           { document: templateBuffer },
-          state.dataJson
+          state.dataJson,
         );
         console.log(
-          '✅ Template populated, result size:',
-          docxBuffer.byteLength
+          "✅ Template populated, result size:",
+          docxBuffer.byteLength,
         );
 
-        console.log('🔧 Importing populated DOCX into Document Authoring...');
+        console.log("🔧 Importing populated DOCX into Document Authoring...");
         docxDocument = await docAuthSystem.importDOCX(docxBuffer);
-        console.log('✅ DOCX document imported:', docxDocument);
+        console.log("✅ DOCX document imported:", docxDocument);
 
-        dispatch({ type: 'SET_DOCX_DOCUMENT', payload: docxDocument });
+        dispatch({ type: "SET_DOCX_DOCUMENT", payload: docxDocument });
       } else {
-        console.log('✅ DOCX document already exists');
+        console.log("✅ DOCX document already exists");
       }
 
       // Initialize editor
-      console.log('🖊️ Creating Document Authoring editor for DOCX...');
+      console.log("🖊️ Creating Document Authoring editor for DOCX...");
 
       const container = editorRef.current;
       if (!container) {
-        console.warn('❌ Container became null during initialization');
+        console.warn("❌ Container became null during initialization");
         return;
       }
 
@@ -175,16 +175,16 @@ export default function PreviewStep() {
       }
 
       console.log(
-        '📝 Container cleared, creating DOCX editor with dimensions:',
+        "📝 Container cleared, creating DOCX editor with dimensions:",
         {
           width: container.getBoundingClientRect().width,
           height: container.getBoundingClientRect().height,
-        }
+        },
       );
 
       // Ensure container is still valid
       if (!container.isConnected) {
-        console.warn('❌ Container lost DOM connection before editor creation');
+        console.warn("❌ Container lost DOM connection before editor creation");
         return;
       }
 
@@ -192,10 +192,10 @@ export default function PreviewStep() {
       if (!container.id) {
         container.id = `docx-editor-${Date.now()}`;
       }
-      container.style.position = 'relative';
-      container.style.overflow = 'hidden';
-      container.style.minHeight = '500px';
-      container.style.minWidth = '100%';
+      container.style.position = "relative";
+      container.style.overflow = "hidden";
+      container.style.minHeight = "500px";
+      container.style.minWidth = "100%";
 
       // Wait multiple frames to ensure DOM is completely settled
       await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -204,7 +204,7 @@ export default function PreviewStep() {
 
       // Final validation
       if (!container.isConnected || !container.parentElement) {
-        console.warn('❌ Container became disconnected before editor creation');
+        console.warn("❌ Container became disconnected before editor creation");
         return;
       }
 
@@ -212,7 +212,7 @@ export default function PreviewStep() {
         // Wrap SDK creation in additional error handling
         const createEditorSafely = async () => {
           if (!docxDocument) {
-            throw new Error('DOCX document not available');
+            throw new Error("DOCX document not available");
           }
           try {
             return await docAuthSystem?.createEditor(container, {
@@ -222,16 +222,16 @@ export default function PreviewStep() {
             // Check if this is an IntersectionObserver error
             if (
               error instanceof Error &&
-              (error.message.includes('IntersectionObserver') ||
-                error.stack?.includes('IntersectionObserver'))
+              (error.message.includes("IntersectionObserver") ||
+                error.stack?.includes("IntersectionObserver"))
             ) {
               console.warn(
-                '⚠️ IntersectionObserver error during editor creation, retrying...'
+                "⚠️ IntersectionObserver error during editor creation, retrying...",
               );
               // Wait longer and retry
               await new Promise((resolve) => setTimeout(resolve, 1000));
               if (!docxDocument) {
-                throw new Error('DOCX document not available for retry');
+                throw new Error("DOCX document not available for retry");
               }
               return await docAuthSystem?.createEditor(container, {
                 document: docxDocument,
@@ -242,58 +242,62 @@ export default function PreviewStep() {
         };
 
         const editor = await createEditorSafely();
-        console.log('✅ DOCX editor created successfully');
-        dispatch({ type: 'SET_DOCX_EDITOR', payload: editor ?? null });
+        console.log("✅ DOCX editor created successfully");
+        dispatch({ type: "SET_DOCX_EDITOR", payload: editor ?? null });
       } catch (sdkError) {
-        console.error('❌ Document Authoring SDK error:', sdkError);
+        console.error("❌ Document Authoring SDK error:", sdkError);
 
         // Only retry if container is still valid and error is not IntersectionObserver related
         const isIntersectionError =
           sdkError instanceof Error &&
-          (sdkError.message.includes('IntersectionObserver') ||
-            sdkError.stack?.includes('IntersectionObserver'));
+          (sdkError.message.includes("IntersectionObserver") ||
+            sdkError.stack?.includes("IntersectionObserver"));
 
         if (
           !isIntersectionError &&
           container.isConnected &&
           container.parentElement
         ) {
-          console.log('🔄 Retrying SDK initialization...');
+          console.log("🔄 Retrying SDK initialization...");
           await new Promise((resolve) => setTimeout(resolve, 1000));
 
           try {
             const editor = await docAuthSystem?.createEditor(container, {
-              document: docxDocument ?? (() => { throw new Error('DOCX document not available'); })(),
+              document:
+                docxDocument ??
+                (() => {
+                  throw new Error("DOCX document not available");
+                })(),
             });
-            console.log('✅ DOCX editor created on retry');
-            dispatch({ type: 'SET_DOCX_EDITOR', payload: editor ?? null });
+            console.log("✅ DOCX editor created on retry");
+            dispatch({ type: "SET_DOCX_EDITOR", payload: editor ?? null });
           } catch (retryError) {
             console.error(
-              '❌ Document Authoring SDK retry failed:',
-              retryError
+              "❌ Document Authoring SDK retry failed:",
+              retryError,
             );
             throw retryError;
           }
         } else {
           console.error(
-            '❌ Container no longer available for retry or IntersectionObserver error'
+            "❌ Container no longer available for retry or IntersectionObserver error",
           );
           if (isIntersectionError) {
             // For IntersectionObserver errors, don't fail completely
-            console.warn('⚠️ Continuing despite IntersectionObserver error');
+            console.warn("⚠️ Continuing despite IntersectionObserver error");
             return;
           }
           throw sdkError;
         }
       }
     } catch (error) {
-      console.error('❌ Error initializing DOCX editor:', error);
+      console.error("❌ Error initializing DOCX editor:", error);
       dispatch({
-        type: 'SET_ERROR',
+        type: "SET_ERROR",
         payload:
           error instanceof Error
             ? error.message
-            : 'DOCX editor initialization failed',
+            : "DOCX editor initialization failed",
       });
     } finally {
       setIsLoading(false);
@@ -303,53 +307,51 @@ export default function PreviewStep() {
 
   // Effect to handle template/data changes and editor initialization
   useEffect(() => {
-    console.log('📍 PreviewStep useEffect triggered with:', {
+    console.log("📍 PreviewStep useEffect triggered with:", {
       templateDocument: !!state.templateDocument,
       dataJson: !!state.dataJson,
       docxEditor: !!state.docxEditor,
     });
 
     // Check if we need to initialize or reconnect editor
-    if (
-      state.templateDocument &&
-      state.dataJson &&
-      !isInitializing.current
-    ) {
+    if (state.templateDocument && state.dataJson && !isInitializing.current) {
       if (!state.docxEditor) {
-        console.log('🎆 Initializing DOCX editor for preview');
+        console.log("🎆 Initializing DOCX editor for preview");
         // Wrap initialization in try-catch to handle any SDK errors
         try {
           initializeDocxEditor();
         } catch (error) {
-          console.warn('⚠️ Error in initializeDocxEditor:', error);
+          console.warn("⚠️ Error in initializeDocxEditor:", error);
           // Don't let this error break the component
         }
       } else {
         // Editor exists but might need reconnection to DOM
-        console.log('🔄 Checking if existing DOCX editor needs reconnection...');
-        
+        console.log(
+          "🔄 Checking if existing DOCX editor needs reconnection...",
+        );
+
         // Check if the current container is empty or if we need to reinitialize
         const currentContainer = editorRef.current;
-        
+
         if (!currentContainer || currentContainer.children.length === 0) {
-          console.log('🔄 DOCX editor container is empty, reinitializing...');
+          console.log("🔄 DOCX editor container is empty, reinitializing...");
           // Clear the disconnected editor from state and reinitialize
-          dispatch({ type: 'SET_DOCX_EDITOR', payload: null });
+          dispatch({ type: "SET_DOCX_EDITOR", payload: null });
           setTimeout(() => {
             if (!isInitializing.current) {
               try {
                 initializeDocxEditor();
               } catch (error) {
-                console.warn('⚠️ Error in reinitializeDocxEditor:', error);
+                console.warn("⚠️ Error in reinitializeDocxEditor:", error);
               }
             }
           }, 100);
         } else {
-          console.log('✅ DOCX editor container has content, assuming ready');
+          console.log("✅ DOCX editor container has content, assuming ready");
         }
       }
     } else {
-      console.log('🚫 Not initializing DOCX editor:', {
+      console.log("🚫 Not initializing DOCX editor:", {
         hasTemplateDocument: !!state.templateDocument,
         hasDataJson: !!state.dataJson,
         hasEditor: !!state.docxEditor,
@@ -363,11 +365,11 @@ export default function PreviewStep() {
   useEffect(() => {
     return () => {
       if (state.docxEditor) {
-        console.log('🧹 Cleaning up DOCX editor on template/data change');
+        console.log("🧹 Cleaning up DOCX editor on template/data change");
         try {
           state.docxEditor.destroy();
         } catch (error) {
-          console.warn('⚠️ DOCX editor cleanup error:', error);
+          console.warn("⚠️ DOCX editor cleanup error:", error);
         }
       }
     };
@@ -378,11 +380,11 @@ export default function PreviewStep() {
   useEffect(() => {
     return () => {
       if (state.docxEditor) {
-        console.log('🧹 Final cleanup on unmount');
+        console.log("🧹 Final cleanup on unmount");
         try {
           state.docxEditor.destroy();
         } catch (error) {
-          console.warn('⚠️ Final cleanup error:', error);
+          console.warn("⚠️ Final cleanup error:", error);
         }
       }
     };
@@ -391,35 +393,35 @@ export default function PreviewStep() {
 
   const handleGenerateDocument = useCallback(async () => {
     if (!state.docxDocument) {
-      console.warn('❌ No DOCX document available for generation');
+      console.warn("❌ No DOCX document available for generation");
       return;
     }
 
     setIsGenerating(true);
     try {
-      console.log('📄 Generating PDF from DOCX document...');
+      console.log("📄 Generating PDF from DOCX document...");
       const pdfBuffer = await state.docxDocument.exportPDF();
-      console.log('✅ PDF generated, size:', pdfBuffer.byteLength);
+      console.log("✅ PDF generated, size:", pdfBuffer.byteLength);
 
       // Create a copy of the ArrayBuffer to prevent detachment
       const pdfBufferCopy = pdfBuffer.slice();
       console.log(
-        '📋 Created PDF buffer copy, size:',
-        pdfBufferCopy.byteLength
+        "📋 Created PDF buffer copy, size:",
+        pdfBufferCopy.byteLength,
       );
 
       // Store the PDF buffer copy for the download step
-      dispatch({ type: 'SET_PDF_DOCUMENT', payload: pdfBufferCopy });
+      dispatch({ type: "SET_PDF_DOCUMENT", payload: pdfBufferCopy });
 
       // Mark step as complete and proceed
       completeCurrentStep();
       nextStep();
     } catch (error) {
-      console.error('❌ Error generating PDF:', error);
+      console.error("❌ Error generating PDF:", error);
       dispatch({
-        type: 'SET_ERROR',
+        type: "SET_ERROR",
         payload:
-          error instanceof Error ? error.message : 'PDF generation failed',
+          error instanceof Error ? error.message : "PDF generation failed",
       });
     } finally {
       setIsGenerating(false);
@@ -451,7 +453,7 @@ export default function PreviewStep() {
       {/* Document Editor */}
       <div
         className="bg-white border border-gray-200 rounded-xl flex-1 relative overflow-hidden"
-        style={{ minHeight: 'calc(100vh - 400px)' }}
+        style={{ minHeight: "calc(100vh - 400px)" }}
       >
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center z-10 bg-white bg-opacity-75">
@@ -498,8 +500,8 @@ export default function PreviewStep() {
           ref={editorRef}
           className="w-full h-full"
           style={{
-            height: 'calc(100vh - 400px)',
-            minHeight: '500px',
+            height: "calc(100vh - 400px)",
+            minHeight: "500px",
           }}
         />
       </div>

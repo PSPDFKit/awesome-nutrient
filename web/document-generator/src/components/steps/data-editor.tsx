@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useCallback } from 'react';
-import type { AppState } from '@/types';
-import { STEP_TITLES } from '@/lib/constants';
-import { fetchTemplateData, validateJsonString } from '@/lib/utils';
+import React, { useCallback, useEffect, useRef } from "react";
+import { STEP_TITLES } from "@/lib/constants";
+import { fetchTemplateData, validateJsonString } from "@/lib/utils";
+import type { AppState } from "@/types";
 
 interface DataEditorProps {
   isActive: boolean;
@@ -11,7 +11,7 @@ interface DataEditorProps {
   onPrevious: () => void;
   appState: AppState;
   updateAppState: (updates: Partial<AppState>) => void;
-  navigateToStep: (step: 'template-editor' | 'docx-editor') => Promise<void>;
+  navigateToStep: (step: "template-editor" | "docx-editor") => Promise<void>;
 }
 
 export default function DataEditor({
@@ -24,8 +24,8 @@ export default function DataEditor({
   const [jsonError, setJsonError] = React.useState<string | null>(null);
 
   const initializeDataEditor = useCallback(async () => {
-    console.log('🔄 DataEditor: initializeDataEditor called');
-    console.log('📋 Current state:', {
+    console.log("🔄 DataEditor: initializeDataEditor called");
+    console.log("📋 Current state:", {
       hasEditorRef: !!editorContainerRef.current,
       template: appState.template,
       hasDataJson: !!appState.dataJson,
@@ -38,20 +38,20 @@ export default function DataEditor({
     const maxAttempts = 20;
     while (!editorContainerRef.current && attempts < maxAttempts) {
       console.log(
-        `🔄 Waiting for editor container ref (attempt ${attempts + 1}/${maxAttempts})...`
+        `🔄 Waiting for editor container ref (attempt ${attempts + 1}/${maxAttempts})...`,
       );
       await new Promise((resolve) => setTimeout(resolve, 100));
       attempts++;
     }
 
     if (!editorContainerRef.current) {
-      console.warn('❌ No editor container ref available after waiting');
+      console.warn("❌ No editor container ref available after waiting");
       return;
     }
 
     // Additional validation: ensure the element is properly attached to DOM
     if (!editorContainerRef.current.isConnected) {
-      console.warn('❌ Editor container ref element is not connected to DOM');
+      console.warn("❌ Editor container ref element is not connected to DOM");
       return;
     }
 
@@ -59,23 +59,23 @@ export default function DataEditor({
     const rect = editorContainerRef.current.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) {
       console.warn(
-        '❌ Editor container ref element has zero dimensions:',
-        rect
+        "❌ Editor container ref element has zero dimensions:",
+        rect,
       );
       // Wait a bit more for layout to complete
       await new Promise((resolve) => setTimeout(resolve, 200));
       const newRect = editorContainerRef.current.getBoundingClientRect();
       if (newRect.width === 0 || newRect.height === 0) {
         console.warn(
-          '❌ Editor container ref element still has zero dimensions after waiting:',
-          newRect
+          "❌ Editor container ref element still has zero dimensions after waiting:",
+          newRect,
         );
         return;
       }
     }
 
     if (!appState.template) {
-      console.warn('❌ No template selected');
+      console.warn("❌ No template selected");
       return;
     }
 
@@ -84,34 +84,34 @@ export default function DataEditor({
       // Get the template JSON data
       let dataJson = appState.dataJson;
       if (!dataJson) {
-        console.log('📄 Fetching template data for:', appState.template);
+        console.log("📄 Fetching template data for:", appState.template);
         try {
           dataJson = await fetchTemplateData(appState.template);
-          console.log('✅ Template data fetched:', dataJson);
+          console.log("✅ Template data fetched:", dataJson);
           updateAppState({ dataJson });
         } catch (fetchError) {
-          console.error('❌ Error fetching template data:', fetchError);
+          console.error("❌ Error fetching template data:", fetchError);
           throw fetchError;
         }
       } else {
-        console.log('✅ Template data already exists');
+        console.log("✅ Template data already exists");
       }
 
       // Create textarea and initialize CodeMirror
       if (!window.CodeMirror) {
-        console.error('❌ CodeMirror not available - may not be loaded');
-        throw new Error('CodeMirror not loaded');
+        console.error("❌ CodeMirror not available - may not be loaded");
+        throw new Error("CodeMirror not loaded");
       }
 
       if (dataJson) {
-        console.log('🖊️ Creating CodeMirror editor...');
-        console.log('Editor container:', editorContainerRef.current);
+        console.log("🖊️ Creating CodeMirror editor...");
+        console.log("Editor container:", editorContainerRef.current);
 
-        const textarea = document.createElement('textarea');
+        const textarea = document.createElement("textarea");
         textarea.value = JSON.stringify(dataJson, null, 2);
         console.log(
-          '📝 JSON data to edit:',
-          `${JSON.stringify(dataJson, null, 2).substring(0, 200)}...`
+          "📝 JSON data to edit:",
+          `${JSON.stringify(dataJson, null, 2).substring(0, 200)}...`,
         );
 
         // Clear container and add textarea safely
@@ -131,42 +131,42 @@ export default function DataEditor({
         }
 
         container.appendChild(textarea);
-        console.log('📝 Textarea added to container, dimensions:', {
+        console.log("📝 Textarea added to container, dimensions:", {
           width: container.getBoundingClientRect().width,
           height: container.getBoundingClientRect().height,
         });
 
         // Initialize CodeMirror
         const editor = window.CodeMirror.fromTextArea(textarea, {
-          mode: { name: 'javascript', json: true },
-          theme: 'default',
+          mode: { name: "javascript", json: true },
+          theme: "default",
           tabSize: 2,
           lineNumbers: true,
           lineWrapping: true,
           foldGutter: true,
-          gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+          gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         });
-        console.log('✅ CodeMirror editor created:', editor);
+        console.log("✅ CodeMirror editor created:", editor);
 
         // Validate JSON on change
-        editor.on('change', (instance: any) => {
+        editor.on("change", (instance: any) => {
           const value = instance.getValue();
           if (validateJsonString(value)) {
             setJsonError(null);
           } else {
-            setJsonError('Invalid JSON format');
+            setJsonError("Invalid JSON format");
           }
         });
 
         updateAppState({ dataEditor: editor });
-        console.log('✅ Data editor ready');
+        console.log("✅ Data editor ready");
       } else {
-        console.warn('❌ Cannot create editor - no data JSON available');
+        console.warn("❌ Cannot create editor - no data JSON available");
       }
     } catch (error) {
-      console.error('❌ Error initializing data editor:', error);
-      console.error('Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
+      console.error("❌ Error initializing data editor:", error);
+      console.error("Error details:", {
+        message: error instanceof Error ? error.message : "Unknown error",
         stack: error instanceof Error ? error.stack : undefined,
         appState: {
           template: appState.template,
@@ -176,7 +176,7 @@ export default function DataEditor({
       });
     } finally {
       setIsLoading(false);
-      console.log('🏁 DataEditor initialization finished');
+      console.log("🏁 DataEditor initialization finished");
     }
   }, [
     appState.template,
@@ -186,7 +186,7 @@ export default function DataEditor({
   ]);
 
   useEffect(() => {
-    console.log('🔄 DataEditor useEffect mounted');
+    console.log("🔄 DataEditor useEffect mounted");
     // Only initialize if we have a template and don't already have an editor
     if (appState.template && !appState.dataEditor) {
       initializeDataEditor();
@@ -194,15 +194,15 @@ export default function DataEditor({
 
     // Cleanup function
     return () => {
-      console.log('🧹 DataEditor cleanup called');
+      console.log("🧹 DataEditor cleanup called");
       if (appState.dataEditor) {
-        console.log('🗑️ Destroying existing data editor');
+        console.log("🗑️ Destroying existing data editor");
         try {
           appState.dataEditor.toTextArea();
         } catch (error) {
           console.warn(
-            '⚠️ CodeMirror cleanup failed (likely due to missing DOM elements):',
-            error
+            "⚠️ CodeMirror cleanup failed (likely due to missing DOM elements):",
+            error,
           );
           // Continue with cleanup even if toTextArea fails
         }
@@ -217,51 +217,51 @@ export default function DataEditor({
   ]);
 
   const handleBackToTemplate = useCallback(async () => {
-    console.log('⬅️ Navigating back to template editor');
+    console.log("⬅️ Navigating back to template editor");
     if (appState.dataEditor) {
-      console.log('🗑️ Destroying data editor before navigation');
+      console.log("🗑️ Destroying data editor before navigation");
       try {
         appState.dataEditor.toTextArea();
       } catch (error) {
-        console.warn('⚠️ CodeMirror cleanup failed during navigation:', error);
+        console.warn("⚠️ CodeMirror cleanup failed during navigation:", error);
       }
     }
     updateAppState({
       dataEditor: null,
       dataJson: null,
     });
-    await navigateToStep('template-editor');
+    await navigateToStep("template-editor");
   }, [appState.dataEditor, updateAppState, navigateToStep]);
 
   const handleProceedToDocx = useCallback(async () => {
-    console.log('➡️ Proceeding to DOCX editor');
+    console.log("➡️ Proceeding to DOCX editor");
     if (!appState.dataEditor) {
-      console.warn('❌ No data editor available');
+      console.warn("❌ No data editor available");
       return;
     }
 
     try {
       const jsonString = appState.dataEditor.getValue();
-      console.log('📝 Current JSON string length:', jsonString.length);
+      console.log("📝 Current JSON string length:", jsonString.length);
 
       if (!validateJsonString(jsonString)) {
-        console.warn('❌ JSON validation failed');
-        setJsonError('Please fix JSON errors before proceeding');
+        console.warn("❌ JSON validation failed");
+        setJsonError("Please fix JSON errors before proceeding");
         return;
       }
 
       const dataJson = JSON.parse(jsonString);
-      console.log('✅ JSON parsed successfully:', dataJson);
+      console.log("✅ JSON parsed successfully:", dataJson);
       updateAppState({ dataJson });
 
-      await navigateToStep('docx-editor');
+      await navigateToStep("docx-editor");
     } catch (error) {
-      console.error('❌ Error processing JSON:', error);
-      setJsonError('Failed to parse JSON data');
+      console.error("❌ Error processing JSON:", error);
+      setJsonError("Failed to parse JSON data");
     }
   }, [appState.dataEditor, updateAppState, navigateToStep]);
 
-  console.log('🎨 DataEditor rendering with state:', {
+  console.log("🎨 DataEditor rendering with state:", {
     isLoading,
     template: appState.template,
     hasDataJson: !!appState.dataJson,
@@ -272,7 +272,7 @@ export default function DataEditor({
   return (
     <div className="nutri-card flex flex-col h-screen">
       <div className="nutri-card-header flex-shrink-0">
-        <h2 className="text-2xl font-bold">{STEP_TITLES['data-editor']}</h2>
+        <h2 className="text-2xl font-bold">{STEP_TITLES["data-editor"]}</h2>
       </div>
 
       <div className="nutri-card-content flex-1 min-h-0 flex flex-col p-6 relative">
@@ -292,7 +292,7 @@ export default function DataEditor({
         <div
           ref={editorContainerRef}
           className="w-full flex-1 min-h-0"
-          style={{ minHeight: '300px' }}
+          style={{ minHeight: "300px" }}
         />
       </div>
 

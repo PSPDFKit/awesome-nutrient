@@ -2,11 +2,11 @@
 export interface DocAuthSystem {
   createEditor: (
     element: HTMLElement,
-    options: { document: DocAuthDocument }
+    options: { document: DocAuthDocument },
   ) => Promise<DocAuthEditor>;
   createViewer: (
     element: HTMLElement,
-    options: { document: DocAuthDocument }
+    options: { document: DocAuthDocument },
   ) => Promise<DocAuthViewer>;
   importDOCX: (buffer: ArrayBuffer) => Promise<DocAuthDocument>;
   loadDocument: (docJson: unknown) => Promise<DocAuthDocument>;
@@ -35,7 +35,7 @@ export interface PSPDFKitViewer {
 export interface PSPDFKit {
   populateDocumentTemplate: (
     options: { document: ArrayBuffer },
-    data: TemplateData
+    data: TemplateData,
   ) => Promise<ArrayBuffer>;
   unload: (container: HTMLElement | PSPDFKitViewer) => Promise<void>;
 }
@@ -65,7 +65,7 @@ export interface AppState {
 }
 
 // Template Types
-export type TemplateType = 'checklist' | 'invoice' | 'menu' | 'custom';
+export type TemplateType = "checklist" | "invoice" | "menu" | "custom";
 
 export interface TemplateConfig {
   delimiter: {
@@ -81,11 +81,11 @@ export interface TemplateData {
 
 // Step Management Types
 export type StepType =
-  | 'template-selection'
-  | 'template-editor'
-  | 'data-editor'
-  | 'docx-editor'
-  | 'pdf-viewer';
+  | "template-selection"
+  | "template-editor"
+  | "data-editor"
+  | "docx-editor"
+  | "pdf-viewer";
 
 export interface StepState {
   currentStep: StepType;
@@ -142,7 +142,7 @@ declare global {
     CodeMirror: {
       fromTextArea: (
         textarea: HTMLTextAreaElement,
-        options: Record<string, unknown>
+        options: Record<string, unknown>,
       ) => CodeMirrorInstance;
     };
   }

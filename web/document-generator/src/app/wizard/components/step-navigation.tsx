@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useWizard } from '../context/wizard-context';
+import { useWizard } from "../context/wizard-context";
 
 interface StepNavigationProps {
   canProceed?: boolean;
@@ -15,8 +15,8 @@ export default function StepNavigation({
   canProceed = true,
   onNext,
   onPrevious,
-  nextLabel = 'Next',
-  previousLabel = 'Previous',
+  nextLabel = "Next",
+  previousLabel = "Previous",
   isLastStep = false,
 }: StepNavigationProps) {
   const { state, nextStep, prevStep } = useWizard();
@@ -82,11 +82,11 @@ export default function StepNavigation({
             disabled={!canProceed}
             className={`inline-flex items-center px-6 py-2 shadow-sm text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors ${
               canProceed
-                ? 'text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer'
-                : 'text-gray-400 bg-gray-200 cursor-not-allowed'
+                ? "text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                : "text-gray-400 bg-gray-200 cursor-not-allowed"
             }`}
           >
-            {isLastStep ? 'Finish' : nextLabel}
+            {isLastStep ? "Finish" : nextLabel}
             {!isLastStep && (
               <svg
                 className="ml-2 h-4 w-4"

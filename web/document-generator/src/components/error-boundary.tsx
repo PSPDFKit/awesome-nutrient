@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import type React from 'react';
-import { Component, type ErrorInfo, type ReactNode } from 'react';
+import type React from "react";
+import { Component, type ErrorInfo, type ReactNode } from "react";
 import {
   type AppError,
-  handleError,
   getRetryMessage,
+  handleError,
   shouldShowDetails,
-} from '@/lib/error-handler';
+} from "@/lib/error-handler";
 
 interface Props {
   children: ReactNode;
@@ -26,26 +26,26 @@ export default class ErrorBoundary extends Component<Props, State> {
     this.state = { hasError: false };
 
     // Handle unhandled promise rejections
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.addEventListener(
-        'unhandledrejection',
-        this.handlePromiseRejection
+        "unhandledrejection",
+        this.handlePromiseRejection,
       );
     }
   }
 
   componentWillUnmount() {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.removeEventListener(
-        'unhandledrejection',
-        this.handlePromiseRejection
+        "unhandledrejection",
+        this.handlePromiseRejection,
       );
     }
   }
 
   handlePromiseRejection = (event: PromiseRejectionEvent) => {
-    console.error('Unhandled promise rejection:', event.reason);
-    const appError = handleError(event.reason, 'Promise rejection');
+    console.error("Unhandled promise rejection:", event.reason);
+    const appError = handleError(event.reason, "Promise rejection");
     this.setState({
       hasError: true,
       error: appError,
@@ -54,15 +54,15 @@ export default class ErrorBoundary extends Component<Props, State> {
   };
 
   static getDerivedStateFromError(error: Error): State {
-    const appError = handleError(error, 'Component error');
+    const appError = handleError(error, "Component error");
     return { hasError: true, error: appError };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
-    const _appError = handleError(error, 'Error boundary', undefined);
+    console.error("Error caught by boundary:", error, errorInfo);
+    const _appError = handleError(error, "Error boundary", undefined);
     // Log additional context for debugging
-    console.error('Component stack:', errorInfo.componentStack);
+    console.error("Component stack:", errorInfo.componentStack);
   }
 
   handleReset = () => {
@@ -92,8 +92,8 @@ export default class ErrorBoundary extends Component<Props, State> {
             <div className="nutri-card-header">
               <h2 className="text-xl font-semibold text-red-700">
                 {this.state.error.recoverable
-                  ? 'Something went wrong'
-                  : 'Critical Error'}
+                  ? "Something went wrong"
+                  : "Critical Error"}
               </h2>
             </div>
             <div className="nutri-card-content">
@@ -111,9 +111,9 @@ export default class ErrorBoundary extends Component<Props, State> {
                   </summary>
                   <pre className="text-xs text-gray-600 overflow-auto max-h-32">
                     {String(
-                      typeof this.state.error.details === 'string'
+                      typeof this.state.error.details === "string"
                         ? this.state.error.details
-                        : JSON.stringify(this.state.error.details, null, 2)
+                        : JSON.stringify(this.state.error.details, null, 2),
                     )}
                   </pre>
                 </details>
@@ -122,6 +122,7 @@ export default class ErrorBoundary extends Component<Props, State> {
               <div className="flex flex-wrap gap-3">
                 {this.state.error.recoverable && (
                   <button
+                    type="button"
                     onClick={this.handleReset}
                     className="nutri-button-primary"
                   >
@@ -129,6 +130,7 @@ export default class ErrorBoundary extends Component<Props, State> {
                   </button>
                 )}
                 <button
+                  type="button"
                   onClick={() => window.location.reload()}
                   className="nutri-button-secondary"
                 >
