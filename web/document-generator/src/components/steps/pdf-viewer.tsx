@@ -114,6 +114,7 @@ export default function PdfViewer({
       <div className="nutri-card-footer">
         <div className="flex justify-between">
           <button
+            type="button"
             onClick={handleBackToDocx}
             className="nutri-button-secondary"
             disabled={isLoading}
@@ -121,6 +122,7 @@ export default function PdfViewer({
             ← Edit DOCX
           </button>
           <button
+            type="button"
             onClick={handleDownloadPdf}
             className="nutri-button-primary"
             disabled={isLoading || isDownloading || !appState.pdfViewer}

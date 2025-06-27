@@ -56,7 +56,12 @@ export function ProgressBar({
     <div className={`w-full ${className}`}>
       {label && (
         <div className="flex justify-between items-center mb-1">
-          <label className="text-sm font-medium text-gray-700">{label}</label>
+          <span
+            className="text-sm font-medium text-gray-700"
+            id={`progress-label-${Math.random().toString(36).substr(2, 9)}`}
+          >
+            {label}
+          </span>
           {showPercentage && (
             <span className="text-sm text-gray-500">{percentage}%</span>
           )}

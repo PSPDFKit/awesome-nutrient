@@ -60,6 +60,7 @@ function StepErrorFallback({
             </button>
             {onNavigateBack && (
               <button
+                type="button"
                 onClick={onNavigateBack}
                 className="nutri-button-secondary"
               >
@@ -67,6 +68,7 @@ function StepErrorFallback({
               </button>
             )}
             <button
+              type="button"
               onClick={() => window.location.reload()}
               className="nutri-button-secondary"
             >

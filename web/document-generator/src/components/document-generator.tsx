@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useStepFocus } from "@/hooks/useFocusManagement";
-import { useStepNavigation } from "@/hooks/useKeyboardNavigation";
-import { useToast } from "@/hooks/useToast";
+import { useStepFocus } from "@/hooks/use-focus-management";
+import { useStepNavigation } from "@/hooks/use-keyboard-navigation";
+import { useToast } from "@/hooks/use-toast";
 import { TRANSITION_MESSAGES } from "@/lib/constants";
 import type { AppError, AppState, StepType } from "@/types";
 import ErrorBoundary from "./error-boundary";

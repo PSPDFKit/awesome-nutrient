@@ -281,6 +281,7 @@ export default function TemplateEditor({
       <div className="nutri-card-footer flex-shrink-0 relative z-10">
         <div className="flex justify-between">
           <button
+            type="button"
             onClick={handleBackToSelection}
             className="nutri-button-secondary"
             disabled={isLoading}
@@ -288,6 +289,7 @@ export default function TemplateEditor({
             ← Select Template
           </button>
           <button
+            type="button"
             onClick={handleProceedToData}
             className="nutri-button-primary"
             disabled={isLoading}

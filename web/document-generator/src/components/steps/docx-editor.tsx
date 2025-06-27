@@ -345,6 +345,7 @@ export default function DocxEditor({
       <div className="nutri-card-footer flex-shrink-0 relative z-10">
         <div className="flex justify-between">
           <button
+            type="button"
             onClick={handleBackToData}
             className="nutri-button-secondary"
             disabled={isLoading}
@@ -352,6 +353,7 @@ export default function DocxEditor({
             ← Edit Data
           </button>
           <button
+            type="button"
             onClick={handleGeneratePdf}
             className="nutri-button-primary"
             disabled={isLoading}

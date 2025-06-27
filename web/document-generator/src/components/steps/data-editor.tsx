@@ -299,6 +299,7 @@ export default function DataEditor({
       <div className="nutri-card-footer flex-shrink-0 relative z-10">
         <div className="flex justify-between">
           <button
+            type="button"
             onClick={handleBackToTemplate}
             className="nutri-button-secondary"
             disabled={isLoading}
@@ -306,6 +307,7 @@ export default function DataEditor({
             ← Edit Template
           </button>
           <button
+            type="button"
             onClick={handleProceedToDocx}
             className="nutri-button-primary"
             disabled={isLoading || !!jsonError}

@@ -126,6 +126,7 @@ export default function TemplateSelection({
                 <div className="nutri-card-footer">
                   <div className="text-right">
                     <button
+                      type="button"
                       onClick={() => handleTemplateSelect(option.id)}
                       disabled={isLoading}
                       className="nutri-button-primary disabled:opacity-50 disabled:cursor-not-allowed"
@@ -169,6 +170,7 @@ export default function TemplateSelection({
               <div className="nutri-card-footer">
                 <div className="text-right">
                   <button
+                    type="button"
                     onClick={() => handleTemplateSelect("custom")}
                     disabled={!selectedFile || isLoading}
                     className="nutri-button-primary disabled:opacity-50 disabled:cursor-not-allowed"

@@ -58,6 +58,7 @@ export default function KeyboardShortcuts({
       {/* Help trigger */}
       <div className="fixed bottom-4 right-4 z-40">
         <button
+          type="button"
           onClick={() => setShowHelp(!showHelp)}
           className="bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           aria-label="Show keyboard shortcuts"
@@ -83,6 +84,7 @@ export default function KeyboardShortcuts({
                   Keyboard Shortcuts
                 </h3>
                 <button
+                  type="button"
                   onClick={() => setShowHelp(false)}
                   className="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
                   aria-label="Close keyboard shortcuts"

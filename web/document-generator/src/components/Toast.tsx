@@ -95,6 +95,7 @@ export function ToastComponent({
       </div>
 
       <button
+        type="button"
         onClick={() => onClose(toast.id)}
         className="ml-3 flex-shrink-0 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 rounded"
         aria-label="Close notification"
@@ -125,11 +126,7 @@ export function ToastContainer({
   }
 
   return (
-    <div
-      className="fixed top-4 right-4 z-50 space-y-3"
-      aria-live="polite"
-      aria-label="Notifications"
-    >
+    <div className="fixed top-4 right-4 z-50 space-y-3" aria-live="polite">
       {toasts.map((toast) => (
         <ToastComponent key={toast.id} toast={toast} onClose={onClose} />
       ))}

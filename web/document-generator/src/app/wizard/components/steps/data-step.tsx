@@ -608,6 +608,16 @@ export default function DataStep() {
             <div
               className="flex items-center cursor-pointer hover:bg-gray-50 rounded py-0.5 transition-colors text-sm"
               onClick={toggleExpansion}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleExpansion();
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isExpanded}
+              aria-label={`${isExpanded ? "Collapse" : "Expand"} ${toTitleCase(keyName)}`}
             >
               <span className="text-green-600 mr-2 w-4 text-center inline-block select-none">
                 {isExpanded ? "▼" : "▶"}
@@ -620,7 +630,7 @@ export default function DataStep() {
             <div className={keyName ? "mt-0.5" : ""}>
               {data.map((item, index) => (
                 <DataPreview
-                  key={index}
+                  key={`item-${index}-${JSON.stringify(item).slice(0, 20)}`}
                   data={item}
                   level={keyName ? level + 1 : level}
                   keyName={`[${index}]`}
@@ -666,6 +676,16 @@ export default function DataStep() {
             <div
               className="flex items-center cursor-pointer hover:bg-gray-50 rounded py-0.5 transition-colors text-sm"
               onClick={toggleExpansion}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleExpansion();
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isExpanded}
+              aria-label={`${isExpanded ? "Collapse" : "Expand"} ${toTitleCase(keyName)}`}
             >
               <span className="text-green-600 mr-2 w-4 text-center inline-block select-none">
                 {isExpanded ? "▼" : "▶"}
@@ -752,6 +772,7 @@ export default function DataStep() {
               style={{ minHeight: "400px" }}
               id="json-editor"
               role="textbox"
+              tabIndex={0}
               aria-label="JSON data editor for template variables"
               aria-describedby="json-editor-help json-editor-instructions"
               aria-multiline="true"
@@ -866,9 +887,9 @@ export default function DataStep() {
         {/* Preview */}
         <div className="flex flex-col min-h-0">
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <h3 className="block text-sm font-medium text-gray-700">
               Data Preview
-            </label>
+            </h3>
             <div
               className="flex rounded-md shadow-sm"
               role="group"
