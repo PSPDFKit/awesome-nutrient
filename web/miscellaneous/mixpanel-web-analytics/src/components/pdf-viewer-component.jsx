@@ -1,5 +1,5 @@
 // src/components/pdf-viewer-component.jsx
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import mixpanelService from "../services/mixpanel.js";
 
 export default function PdfViewerComponent({
@@ -12,120 +12,56 @@ export default function PdfViewerComponent({
   const [documentInfo, setDocumentInfo] = useState(null);
   const startTimeRef = useRef(Date.now());
   const sessionId = useRef(
-    `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
   );
 
-  // Main effect for loading PDF viewer
-  useEffect(() => {
-    const container = containerRef.current;
-    const { NutrientViewer } = window;
-
-    if (container && NutrientViewer) {
-      const loadStartTime = Date.now();
-
-      NutrientViewer.load({
-        licenseKey: import.meta.env.VITE_lkey,
-        container,
-        document: document,
-        toolbarItems: [
-          ...NutrientViewer.defaultToolbarItems,
-          { type: "content-editor" },
-        ],
-      })
-        .then(async (instance) => {
-          const loadTime = Date.now() - loadStartTime;
-
-          setViewerInstance(instance);
-
-          const docInfo = await getDocumentInfoFromNutrient(instance, fileName);
-          setDocumentInfo(docInfo);
-
-          if (onViewerReady) {
-            onViewerReady();
-          }
-
-          mixpanelService.track("PDF Viewer Loaded", {
-            load_time_ms: loadTime,
-            file_name: fileName,
-            session_id: sessionId.current,
-            ...docInfo,
-          });
-
-          setupNutrientSDKEvents(instance, docInfo);
-        })
-        .catch((error) => {
-          console.error("PDF Viewer Load Error:", error);
-          mixpanelService.track("PDF Viewer Load Error", {
-            error_message: error.message,
-            file_name: fileName,
-            session_id: sessionId.current,
-          });
-        });
-    }
-
-    return () => {
-      const { NutrientViewer } = window;
-      NutrientViewer?.unload(container);
-    };
-  }, [document, fileName, onViewerReady]);
-
-  // Separate effect for session cleanup
-  useEffect(() => {
-    return () => {
-      if (viewerInstance && documentInfo) {
-        const sessionDuration = (Date.now() - startTimeRef.current) / 1000;
-        mixpanelService.track("PDF Session End", {
-          session_duration_seconds: sessionDuration,
-          file_name: fileName,
-          session_id: sessionId.current,
-          ...documentInfo,
-        });
-      }
-    };
-  }, [viewerInstance, documentInfo, fileName]);
-
-  const getDocumentInfoFromNutrient = async (instance, currentFileName) => {
-    try {
-      const info = {
-        file_name: currentFileName,
-        session_id: sessionId.current,
-      };
-
-      if (instance.totalPageCount !== undefined) {
-        info.total_pages = instance.totalPageCount;
-      }
-
-      if (instance.viewState) {
-        if (instance.viewState.currentPageIndex !== undefined) {
-          info.initial_page = instance.viewState.currentPageIndex + 1;
-        }
-        if (
-          instance.viewState.zoom !== undefined &&
-          !Number.isNaN(instance.viewState.zoom)
-        ) {
-          info.initial_zoom = Math.round(instance.viewState.zoom * 100);
-        }
-      }
-
+  // Memoize functions to avoid dependency issues
+  const getDocumentInfoFromNutrient = useCallback(
+    async (instance, currentFileName) => {
       try {
-        const annotations = await instance.getAnnotations(0);
-        info.initial_annotation_count = annotations.length;
-      } catch (e) {
-        info.initial_annotation_count = 0;
+        const info = {
+          file_name: currentFileName,
+          session_id: sessionId.current,
+        };
+
+        if (instance.totalPageCount !== undefined) {
+          info.total_pages = instance.totalPageCount;
+        }
+
+        if (instance.viewState) {
+          if (instance.viewState.currentPageIndex !== undefined) {
+            info.initial_page = instance.viewState.currentPageIndex + 1;
+          }
+          if (
+            instance.viewState.zoom !== undefined &&
+            !isNaN(instance.viewState.zoom)
+          ) {
+            info.initial_zoom = Math.round(instance.viewState.zoom * 100);
+          }
+        }
+
+        try {
+          const annotations = await instance.getAnnotations(0);
+          info.initial_annotation_count = annotations.length;
+        } catch (_e) {
+          // Error getting annotations - set to 0
+          info.initial_annotation_count = 0;
+        }
+
+        return info;
+      } catch (error) {
+        console.error("Error getting document info:", error);
+        return {
+          file_name: currentFileName,
+          session_id: sessionId.current,
+          total_pages: "unknown",
+        };
       }
+    },
+    []
+  );
 
-      return info;
-    } catch (error) {
-      console.error("Error getting document info:", error);
-      return {
-        file_name: currentFileName,
-        session_id: sessionId.current,
-        total_pages: "unknown",
-      };
-    }
-  };
-
-  const setupNutrientSDKEvents = (instance, docInfo) => {
+  const setupNutrientSDKEvents = useCallback((instance, docInfo) => {
     const baseEventData = {
       session_id: sessionId.current,
       ...docInfo,
@@ -141,7 +77,7 @@ export default function PdfViewerComponent({
             page_number: pageIndex + 1,
             event_source: "nutrient_sdk",
           });
-        },
+        }
       );
 
       // Zoom changes
@@ -240,7 +176,7 @@ export default function PdfViewerComponent({
 
       // Text selection
       instance.addEventListener("textSelection.change", (selection) => {
-        if (selection?.text && selection.text.trim().length > 0) {
+        if (selection && selection.text && selection.text.trim().length > 0) {
           mixpanelService.track("Text Selection", {
             ...baseEventData,
             text_length: selection.text.length,
@@ -275,7 +211,7 @@ export default function PdfViewerComponent({
 
       // Search state changes
       instance.addEventListener("search.stateChange", (searchState) => {
-        if (searchState.query?.trim()) {
+        if (searchState.query && searchState.query.trim()) {
           mixpanelService.track("Search Performed", {
             ...baseEventData,
             query_length: searchState.query.length,
@@ -375,7 +311,82 @@ export default function PdfViewerComponent({
         event_source: "setup_error",
       });
     }
-  };
+  }, []);
+
+  // Main effect for loading PDF viewer
+  useEffect(() => {
+    const container = containerRef.current;
+    const { NutrientViewer } = window;
+
+    if (container && NutrientViewer) {
+      const loadStartTime = Date.now();
+
+      NutrientViewer.load({
+        licenseKey: import.meta.env.VITE_lkey,
+        container,
+        document: document,
+        toolbarItems: [
+          ...NutrientViewer.defaultToolbarItems,
+          { type: "content-editor" },
+        ],
+      })
+        .then(async (instance) => {
+          const loadTime = Date.now() - loadStartTime;
+
+          setViewerInstance(instance);
+
+          const docInfo = await getDocumentInfoFromNutrient(instance, fileName);
+          setDocumentInfo(docInfo);
+
+          if (onViewerReady) {
+            onViewerReady();
+          }
+
+          mixpanelService.track("PDF Viewer Loaded", {
+            load_time_ms: loadTime,
+            file_name: fileName,
+            session_id: sessionId.current,
+            ...docInfo,
+          });
+
+          setupNutrientSDKEvents(instance, docInfo);
+        })
+        .catch((error) => {
+          console.error("PDF Viewer Load Error:", error);
+          mixpanelService.track("PDF Viewer Load Error", {
+            error_message: error.message,
+            file_name: fileName,
+            session_id: sessionId.current,
+          });
+        });
+    }
+
+    return () => {
+      const { NutrientViewer } = window;
+      NutrientViewer?.unload(container);
+    };
+  }, [
+    document,
+    fileName,
+    onViewerReady,
+    getDocumentInfoFromNutrient,
+    setupNutrientSDKEvents,
+  ]);
+
+  // Separate effect for session cleanup
+  useEffect(() => {
+    return () => {
+      if (viewerInstance && documentInfo) {
+        const sessionDuration = (Date.now() - startTimeRef.current) / 1000;
+        mixpanelService.track("PDF Session End", {
+          session_duration_seconds: sessionDuration,
+          file_name: fileName,
+          session_id: sessionId.current,
+          ...documentInfo,
+        });
+      }
+    };
+  }, [viewerInstance, documentInfo, fileName]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
 }
