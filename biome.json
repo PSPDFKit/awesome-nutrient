@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -7,20 +7,21 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "**/pspdfkit.js",
-      "**/pspdfkit-lib/**",
-      "./web/annotation/comment-annotations/**",
-      "./web/annotation/comments-status/**",
-      "./web/annotation/create-annotation-from-clipboard/**",
-      "./web/annotation/speech-2-text/**",
-      "./web/annotation/customise-annotation-sidebar/**",
-      "./web/annotation/get-all-annotations-boundingBox/**",
-      "./web/annotation/redact-one-by-one/**",
-      "./web/annotation/snipping-annotation/**",
-      "./web/document-editor/save-selected-page-from-document-editor/**",
-      "./web/signing/signing-demo-complete/**",
-      "./web/signing/sign-here-upgraded"
+    "includes": [
+      "**",
+      "!**/pspdfkit.js",
+      "!**/pspdfkit-lib/**",
+      "!web/annotation/comment-annotations/**",
+      "!web/annotation/comments-status/**",
+      "!web/annotation/create-annotation-from-clipboard/**",
+      "!web/annotation/speech-2-text/**",
+      "!web/annotation/customise-annotation-sidebar/**",
+      "!web/annotation/get-all-annotations-boundingBox/**",
+      "!web/annotation/redact-one-by-one/**",
+      "!web/annotation/snipping-annotation/**",
+      "!web/document-editor/save-selected-page-from-document-editor/**",
+      "!web/signing/signing-demo-complete/**",
+      "!web/signing/sign-here-upgraded"
     ]
   },
   "formatter": {
@@ -37,7 +38,17 @@
           "options": {
             "filenameCases": ["kebab-case"]
           }
-        }
+        },
+        "noParameterAssign": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error"
       },
       "recommended": true,
       "complexity": {
