@@ -6,7 +6,7 @@ export default function PdfViewerComponent(props) {
   const containerRef = useRef(null);
 
   // State to track whether text-to-speech is currently active
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [_isSpeaking, setIsSpeaking] = useState(false);
 
   // useEffect hook to load PSPDFKit when the component mounts
   useEffect(() => {
@@ -31,8 +31,8 @@ export default function PdfViewerComponent(props) {
         }`, // Base URL for loading assets
         toolbarItems: PSPDFKit.defaultToolbarItems, // Default toolbar settings
         inlineTextSelectionToolbarItems: (
-          { defaultItems, hasDesktopLayout },
-          selection,
+          { defaultItems: _defaultItems, hasDesktopLayout: _hasDesktopLayout },
+          _selection,
         ) => {
           return [];
         }, // To remove in the inline toolbar when text is selection
