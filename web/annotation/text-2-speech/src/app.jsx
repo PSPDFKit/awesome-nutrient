@@ -1,5 +1,5 @@
 //App.jsx
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import PdfViewerComponent from "./components/PdfViewerComponent.jsx";
 import "./App.css";

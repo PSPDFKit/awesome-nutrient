@@ -46,7 +46,7 @@ function initTemplatesSelection() {
   const buttons = selectTemplateSection.getElementsByTagName("button");
 
   // auto-upload file when selected
-  const selectFileAction = (e) => {
+  const selectFileAction = (_e) => {
     const file = fileInput.files[0];
     if (!file) return;
 
@@ -388,7 +388,7 @@ function goPdfViewer() {
 // On Load
 (() => {
   // Clicking the title or logo reloads the generator
-  document.getElementById("theTitle").addEventListener("click", (e) => {
+  document.getElementById("theTitle").addEventListener("click", (_e) => {
     window.location.reload();
   });
 
