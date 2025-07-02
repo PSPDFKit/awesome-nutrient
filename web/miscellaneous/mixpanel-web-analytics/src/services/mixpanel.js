@@ -1,7 +1,7 @@
 // src/services/mixpanel.js
 import mixpanel from "mixpanel-browser";
 
-const MIXPANEL_TOKEN = 
+const MIXPANEL_TOKEN =
   import.meta.env.VITE_MIXPANEL_TOKEN || "your-mixpanel-token-here";
 
 class MixpanelService {
@@ -67,11 +67,11 @@ class MixpanelService {
           url: window.location.href,
           debug_session: Date.now(),
           client_time: new Date().toISOString(),
-        }
+        },
       };
 
       console.log("Tracking Event:", eventName, eventData.properties);
-      
+
       this.eventQueue.push({
         timestamp: new Date(),
         event: eventName,
@@ -79,9 +79,9 @@ class MixpanelService {
       });
 
       mixpanel.track(eventName, eventData.properties);
-      
+
       console.log("Event sent to Mixpanel successfully (sync):", eventName);
-      
+
     } catch (error) {
       console.error("Mixpanel tracking error:", error);
     }
@@ -89,7 +89,7 @@ class MixpanelService {
 
   identify(userId, properties = {}) {
     if (!this.isInitialized) return;
-    
+
     try {
       console.log("Identifying user:", userId, properties);
       mixpanel.identify(userId);
@@ -145,8 +145,8 @@ if (typeof window !== "undefined") {
     service: mixpanelService,
     getEvents: () => mixpanelService.getTrackedEvents(),
     clearEvents: () => mixpanelService.clearEventQueue(),
-    testEvent: () => 
-      mixpanelService.track("Test Event", { 
+    testEvent: () =>
+      mixpanelService.track("Test Event", {
         test: true,
         timestamp: Date.now(),
       }),
