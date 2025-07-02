@@ -26,7 +26,6 @@ class MixpanelService {
       await this.testConnectivity();
 
       this.track("Mixpanel Initialized", { test: true });
-
     } catch (error) {
       console.error("Failed to initialize Mixpanel:", error);
     }
@@ -81,7 +80,6 @@ class MixpanelService {
       mixpanel.track(eventName, eventData.properties);
 
       console.log("Event sent to Mixpanel successfully (sync):", eventName);
-
     } catch (error) {
       console.error("Mixpanel tracking error:", error);
     }
