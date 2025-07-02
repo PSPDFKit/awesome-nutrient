@@ -12,7 +12,7 @@ export default function PdfViewerComponent({
   const [documentInfo, setDocumentInfo] = useState(null);
   const startTimeRef = useRef(Date.now());
   const sessionId = useRef(
-    `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
   );
 
   // Memoize functions to avoid dependency issues
@@ -176,7 +176,7 @@ export default function PdfViewerComponent({
 
       // Text selection
       instance.addEventListener("textSelection.change", (selection) => {
-        if (selection?.text && selection.text.trim().length > 0){
+        if (selection?.text && selection.text.trim().length > 0) {
           mixpanelService.track("Text Selection", {
             ...baseEventData,
             text_length: selection.text.length,

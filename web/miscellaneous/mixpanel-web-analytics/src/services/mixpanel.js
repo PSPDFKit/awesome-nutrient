@@ -1,7 +1,8 @@
 // src/services/mixpanel.js
 import mixpanel from "mixpanel-browser";
 
-const MIXPANEL_TOKEN = import.meta.env.VITE_MIXPANEL_TOKEN || "your-mixpanel-token-here";
+const MIXPANEL_TOKEN = 
+  import.meta.env.VITE_MIXPANEL_TOKEN || "your-mixpanel-token-here";
 
 class MixpanelService {
   constructor() {
@@ -33,9 +34,9 @@ class MixpanelService {
 
   async testConnectivity() {
     try {
-      await fetch("https://api.mixpanel.com/track", { 
+      await fetch("https://api.mixpanel.com/track", {
         method: "POST",
-        mode: "no-cors"
+        mode: "no-cors",
       });
       console.log("Mixpanel API is reachable");
     } catch (_error) {
@@ -74,7 +75,7 @@ class MixpanelService {
       this.eventQueue.push({
         timestamp: new Date(),
         event: eventName,
-        properties: eventData.properties
+        properties: eventData.properties,
       });
 
       mixpanel.track(eventName, eventData.properties);
@@ -145,11 +146,11 @@ if (typeof window !== "undefined") {
     getEvents: () => mixpanelService.getTrackedEvents(),
     clearEvents: () => mixpanelService.clearEventQueue(),
     testEvent: () => 
-      mixpanelService.track("Test Event",{ 
-          test: true, 
-          timestamp: Date.now(),
-        }),
+      mixpanelService.track("Test Event", { 
+        test: true,
+        timestamp: Date.now(),
+      }),
   };
 }
 
-export default mixpanelService;
+export·default·mixpanelService;
