@@ -20,13 +20,13 @@ class MixpanelService {
         api_host: "https://api.mixpanel.com",
       });
       this.isInitialized = true;
-      
+
       console.log("Mixpanel initialized successfully");
-      
+
       await this.testConnectivity();
-      
+
       this.track("Mixpanel Initialized", { test: true });
-      
+
     } catch (error) {
       console.error("Failed to initialize Mixpanel:", error);
     }
@@ -56,7 +56,7 @@ class MixpanelService {
       console.warn("Mixpanel not initialized, queuing event:", eventName);
       return;
     }
-    
+
     try {
       const eventData = {
         event: eventName,
@@ -152,5 +152,4 @@ if (typeof window !== "undefined") {
       }),
   };
 }
-
 export·default·mixpanelService;
