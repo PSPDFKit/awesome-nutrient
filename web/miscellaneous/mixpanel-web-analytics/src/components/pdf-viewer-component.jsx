@@ -1,5 +1,5 @@
 // src/components/pdf-viewer-component.jsx
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import mixpanelService from "../services/mixpanel.js";
 
 export default function PdfViewerComponent({
@@ -34,7 +34,7 @@ export default function PdfViewerComponent({
           }
           if (
             instance.viewState.zoom !== undefined &&
-            !isNaN(instance.viewState.zoom)
+            !Number.isNaN(instance.viewState.zoom)
           ) {
             info.initial_zoom = Math.round(instance.viewState.zoom * 100);
           }
@@ -58,7 +58,7 @@ export default function PdfViewerComponent({
         };
       }
     },
-    []
+    [],
   );
 
   const setupNutrientSDKEvents = useCallback((instance, docInfo) => {
@@ -77,7 +77,7 @@ export default function PdfViewerComponent({
             page_number: pageIndex + 1,
             event_source: "nutrient_sdk",
           });
-        }
+        },
       );
 
       // Zoom changes
@@ -176,7 +176,7 @@ export default function PdfViewerComponent({
 
       // Text selection
       instance.addEventListener("textSelection.change", (selection) => {
-        if (selection && selection.text && selection.text.trim().length > 0) {
+        if (selection?.text && selection.text.trim().length > 0){
           mixpanelService.track("Text Selection", {
             ...baseEventData,
             text_length: selection.text.length,
@@ -211,7 +211,7 @@ export default function PdfViewerComponent({
 
       // Search state changes
       instance.addEventListener("search.stateChange", (searchState) => {
-        if (searchState.query && searchState.query.trim()) {
+        if (searchState.query?.trim()) {
           mixpanelService.track("Search Performed", {
             ...baseEventData,
             query_length: searchState.query.length,
