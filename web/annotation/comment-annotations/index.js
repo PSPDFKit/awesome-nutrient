@@ -1,158 +1,121 @@
-import "./assets/pspdfkit.js";
+// Wait for NutrientViewer to load from CDN
+window.addEventListener('load', () => {
+  if (!window.NutrientViewer) {
+    console.error('NutrientViewer not found. Make sure the CDN script is loaded.');
+    return;
+  }
 
-// We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
-const baseUrl = `${window.location.protocol}//${window.location.host}/assets/`;
+  const NutrientViewer = window.NutrientViewer;
 
-let _instance = null;
+  let _instance = null;
 
-const createCommentAnnotation = async (instance, annotation) => {
-  // Get the first created annotation
-  const commentID = PSPDFKit.generateInstantId();
-  // Create a new comment annotation
-  const parentCom = new PSPDFKit.Annotations.CommentMarkerAnnotation({
-    id: commentID,
-    isCommentThreadRoot: true,
-    pageIndex: 0,
-    // Set the bounding box of the comment annotation
-    boundingBox: annotation.boundingBox,
-    customData: { parentAnnotation: annotation },
-  });
-  // Add the first comment to the document
-  const firstCom = new PSPDFKit.Comment({
-    rootId: commentID,
-    // Configure pageIndex
-    pageIndex: 0,
-    // Set the text of the first comment
-    text: { format: "plain", value: "New Annotation Comment" },
-  });
-  const commentAnnots = await instance.create([parentCom, firstCom]);
-  // Add the comment id to the annotation customData
-  const customData = {
-    commentAnnotationID: commentID,
-    commentAnnotation: commentAnnots[0],
-  };
-  const updatedAnnotation = annotation.set("customData", customData);
-  const updatedAnnot = await instance.update(updatedAnnotation);
-  return updatedAnnot[0];
-};
+NutrientViewer.load({
+    container: "#nutrient-viewer",
+    document: "document.pdf",
+    toolbarItems: [...NutrientViewer.defaultToolbarItems, { type: "comment" }],
+    initialViewState: new NutrientViewer.ViewState({
+      sidebarOptions: {
+        [NutrientViewer.SidebarMode.ANNOTATIONS]: {
+          includeContent: [NutrientViewer.Comment],
+        },
+      },
+    }),
+  styleSheets: ["index.css"],
+  annotationToolbarItems: (annotation, { defaultAnnotationToolbarItems }) => {
+      const isHighlight = annotation instanceof NutrientViewer.Annotations.HighlightAnnotation;
+      const isStrikeOut = annotation instanceof NutrientViewer.Annotations.StrikeOutAnnotation;
+      const isUnderline = annotation instanceof NutrientViewer.Annotations.UnderlineAnnotation;
+      const isSquiggly = annotation instanceof NutrientViewer.Annotations.SquiggleAnnotation;
 
-const duplicateAnnotationTooltipCallback = (annotation) => {
-  // If the annotation is a comment marker, dont show the tooltip
-  if (annotation instanceof PSPDFKit.Annotations.CommentMarkerAnnotation)
-    return [];
-  // Create a custom tooltip item with title "Comment"
-  const duplicateItem = {
-    type: "custom",
-    title: "Comment",
-    id: "tooltip-duplicate-annotation",
-    className: "TooltipItem-Duplication",
-    onPress: async () => {
-      //console.log("Annotation pressed", annotation);
-      if (_instance) {
-        if (
-          !(annotation instanceof PSPDFKit.Annotations.CommentMarkerAnnotation)
-        ) {
-          // Create a new comment annotation if it does not exist
-          if (!annotation.customData?.commentAnnotationID)
-            annotation = await createCommentAnnotation(_instance, annotation);
+      if (!isHighlight && !isStrikeOut && !isUnderline && !isSquiggly) {
+        return defaultAnnotationToolbarItems.filter(item => item.type !== 'annotation-note');
+      }
 
-          const parentAnnotationID = annotation.customData.commentAnnotationID;
+      // My workaround now is to simply create a dummy comment, select it and immediately hide it so user never sees it.
+      // As long as it is selected it will show the UI to create a reply comment (looks exactly like the "new comment form").
+      // Once user unselects it, it will delete the dummy comment and the reply will become the first comment in the thread.
+      const addCommentItem = {
+        id: 'add-comment',
+        type: 'custom',
+        title: 'Add Comment',
+        icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" size="24"><path fill-rule="evenodd" d="M5 3.25A2.75 2.75 0 0 0 2.25 6v10A2.75 2.75 0 0 0 5 18.75h1.25V22a.75.75 0 0 0 1.248.56l4.287-3.81H19A2.75 2.75 0 0 0 21.75 16V6A2.75 2.75 0 0 0 19 3.25zM3.75 6c0-.69.56-1.25 1.25-1.25h14c.69 0 1.25.56 1.25 1.25v10c0 .69-.56 1.25-1.25 1.25h-7.5a.75.75 0 0 0-.498.19L7.75 20.33V18a.75.75 0 0 0-.75-.75H5c-.69 0-1.25-.56-1.25-1.25zM8 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2m9-1a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-5 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" clip-rule="evenodd"></path></svg>\n',
+        onPress: async () => {
+          const updated = await _instance.update(annotation.set('isCommentThreadRoot', true));
+          annotation = updated[0];
+
+          // Always hidden via CSS --> [data-comment-id="dummy_comment"] { display: none !important; }
+          const dummyComment = new NutrientViewer.Comment({
+            id: 'dummy_comment',
+            rootId: annotation.id,
+            pageIndex: annotation.pageIndex,
+            creatorName: 'System',
+            text: { format: 'plain', value: 'dummy_comment' },
+          });
+
+          await _instance.create([dummyComment]);
+          _instance.setSelectedAnnotations(NutrientViewer.Immutable.List([annotation]));
+
+          // CLEANUP DUMMY COMMENT
+          const handleUnselect = async (annotations) => {
+            console.log('Deleting dummy comment');
+            await _instance.delete([dummyComment]);
+
+            const comments = await _instance.getComments();
+            const numCommentsInThread = comments.filter(c => c.rootId === annotation.id).size;
+            if (numCommentsInThread === 0) {
+              // I think `isCommentThreadRoot` is usually reset automatically, but not always?
+              console.log('User did not add a comment, setting isCommentThreadRoot to false');
+              annotation = annotation.set('isCommentThreadRoot', false);
+              await _instance.update([annotation]);
+            }
+
+            _instance.removeEventListener('annotationSelection.change', handleUnselect);
+          };
+          _instance.addEventListener('annotationSelection.change', handleUnselect);
+        }
+      };
+
+      const items = defaultAnnotationToolbarItems.filter(item => item.type !== 'annotation-note');
+      items.push(addCommentItem);
+      return items;
+    },
+  })
+    .then((instance) => {
+      _instance = instance;
+      instance.addEventListener("annotations.update", async (event) => {
+        const annotation = event.toArray()[0];
+        if (annotation?.customData?.commentAnnotationID) {
           try {
-            await _instance.setSelectedAnnotations(
-              PSPDFKit.Immutable.List([parentAnnotationID]),
+            // Update the comment annotation when the parent annotation is updated
+            let commentAnnotation = annotation.customData.commentAnnotation;
+            commentAnnotation = commentAnnotation.set(
+              "boundingBox",
+              annotation.boundingBox,
             );
+            const update = await instance.update(commentAnnotation);
+            console.log("Annotation updated", update);
           } catch (error) {
             console.warn(error);
           }
         }
-      }
-    },
-  };
-  return [duplicateItem];
-};
-
-const {
-  UI: { createBlock, Recipes, Interfaces },
-} = PSPDFKit;
-
-PSPDFKit.load({
-  ui: {
-    [Interfaces.CommentThread]: ({ props }) => {
-      //console.log("Comment thread props", props);
-      // Set the comment reactions here
-      props.comments.forEach(
-        (obj) =>
-          (obj.reactions = [
-            {
-              id: "like",
-              "aria-label": "Like",
-              count: 2,
-              size: "md",
-            },
-            {
-              id: "dislike",
-              "aria-label": "Dislike",
-              count: 1,
-              size: "md",
-              icon: "m",
-            },
-          ]),
-      );
-      return {
-        content: createBlock(Recipes.CommentThread, props, ({ ui }) => {
-          return ui.createComponent();
-        }).createComponent(),
-      };
-    },
-  },
-  baseUrl,
-  container: "#pspdfkit",
-  document: "document.pdf",
-  toolbarItems: [...PSPDFKit.defaultToolbarItems, { type: "comment" }],
-  initialViewState: new PSPDFKit.ViewState({
-    sidebarOptions: {
-      [PSPDFKit.SidebarMode.ANNOTATIONS]: {
-        includeContent: [PSPDFKit.Comment],
-      },
-    },
-  }),
-  annotationTooltipCallback: duplicateAnnotationTooltipCallback,
-})
-  .then((instance) => {
-    _instance = instance;
-    instance.addEventListener("annotations.update", async (event) => {
-      const annotation = event.toArray()[0];
-      if (annotation?.customData?.commentAnnotationID) {
-        try {
-          // Update the comment annotation when the parent annotation is updated
-          let commentAnnotation = annotation.customData.commentAnnotation;
-          commentAnnotation = commentAnnotation.set(
-            "boundingBox",
-            annotation.boundingBox,
+      });
+      // When a comment is pressed, select the parent annotation
+      instance.addEventListener("annotations.press", async (event) => {
+        if (
+          event.annotation instanceof
+          NutrientViewer.Annotations.CommentMarkerAnnotation &&
+          event.annotation.customData.parentAnnotation
+        ) {
+          event.preventDefault();
+          const parentAnnotationID =
+            event.annotation.customData.parentAnnotation.id;
+          await instance.setSelectedAnnotations(
+            NutrientViewer.Immutable.List([parentAnnotationID]),
           );
-          const update = await instance.update(commentAnnotation);
-          console.log("Annotation updated", update);
-        } catch (error) {
-          console.warn(error);
         }
-      }
+      });
+    })
+    .catch((error) => {
+      console.error(error.message);
     });
-    // When a comment is pressed, select the parent annotation
-    instance.addEventListener("annotations.press", async (event) => {
-      if (
-        event.annotation instanceof
-          PSPDFKit.Annotations.CommentMarkerAnnotation &&
-        event.annotation.customData.parentAnnotation
-      ) {
-        event.preventDefault();
-        const parentAnnotationID =
-          event.annotation.customData.parentAnnotation.id;
-        await instance.setSelectedAnnotations(
-          PSPDFKit.Immutable.List([parentAnnotationID]),
-        );
-      }
-    });
-  })
-  .catch((error) => {
-    console.error(error.message);
-  });
+})
