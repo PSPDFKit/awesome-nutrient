@@ -9,10 +9,10 @@ window.addEventListener('load', () => {
 
   let globalInstance = null;
 
-NutrientViewer.load({
+  NutrientViewer.load({
     container: "#nutrient-viewer",
     document: "document.pdf",
-    toolbarItems: [...NutrientViewer.defaultToolbarItems, { type: "comment" }],
+    toolbarItems: [...NutrientViewer.defaultToolbarItems, {type: "comment"}],
     initialViewState: new NutrientViewer.ViewState({
       sidebarOptions: {
         [NutrientViewer.SidebarMode.ANNOTATIONS]: {
@@ -20,8 +20,8 @@ NutrientViewer.load({
         },
       },
     }),
-  styleSheets: ["index.css"],
-  annotationToolbarItems: (annotation, { defaultAnnotationToolbarItems }) => {
+    styleSheets: ["index.css"],
+    annotationToolbarItems: (annotation, {defaultAnnotationToolbarItems}) => {
       const isHighlight = annotation instanceof NutrientViewer.Annotations.HighlightAnnotation;
       const isStrikeOut = annotation instanceof NutrientViewer.Annotations.StrikeOutAnnotation;
       const isUnderline = annotation instanceof NutrientViewer.Annotations.UnderlineAnnotation;
@@ -49,7 +49,7 @@ NutrientViewer.load({
             rootId: annotation.id,
             pageIndex: annotation.pageIndex,
             creatorName: 'System',
-            text: { format: 'plain', value: 'dummy_comment' },
+            text: {format: 'plain', value: 'dummy_comment'},
           });
 
           await globalInstance.create([dummyComment]);
