@@ -3,7 +3,7 @@
     "serve": "^14.2.4"
   },
   "scripts": {
-    "update-nutrient-version": "VERSION=$(npm view @nutrient-sdk/viewer version) && sed -i.bak \"s|https://cdn\\.cloud\\.pspdfkit\\.com/pspdfkit-web@[^/]*/nutrient-viewer\\.js|https://cdn.cloud.pspdfkit.com/pspdfkit-web@$VERSION/nutrient-viewer.js|g\" index.html && rm index.html.bak && echo \"Updated to version $VERSION\"",
+    "update-nutrient-CDN-version": "VERSION=$(npm view @nutrient-sdk/viewer version) && sed -i.bak \"s|https://cdn\\.cloud\\.pspdfkit\\.com/pspdfkit-web@[^/]*/nutrient-viewer\\.js|https://cdn.cloud.pspdfkit.com/pspdfkit-web@$VERSION/nutrient-viewer.js|g\" index.html && rm index.html.bak && echo \"Updated to version $VERSION\"",
     "start": "serve -l 8080 ."
   }
 }

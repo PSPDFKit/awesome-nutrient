@@ -1,6 +1,7 @@
 # Annotation Comments POC
 
 This is a proof-of-concept project showcasing the usage of comment linked to annotations automatically with Nutrient. Please note that this project is built using our latest Nutrient Web SDK CDN.
+Please note that this is a more of a hacky workaround, and it's not a11y friendly.
 
 To get started with this project, follow the instructions below:
 
@@ -20,7 +21,7 @@ npm install
 4. Add the latest CDN version to your index.html
 
 ```bash
-npm run update-nutrient-version
+npm run update-nutrient-CDN-version
 ```
 
 5. Start the development server:
