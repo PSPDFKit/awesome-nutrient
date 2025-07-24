@@ -13,18 +13,7 @@ To get started with this project, follow the instructions below:
 cd annotation-comments
 ```
 
-3. Install the project dependencies:
-
-```bash
-npm install
-```
-4. Add the latest CDN version to your index.html
-
-```bash
-npm run update-nutrient-CDN-version
-```
-
-5. Start the development server:
+2. Start the development server:
 
 ```bash
 npm run start
