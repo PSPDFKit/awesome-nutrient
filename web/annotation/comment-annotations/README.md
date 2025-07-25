@@ -1,14 +1,11 @@
 # Annotation Comments POC
 
-This is a proof-of-concept project showcasing the usage of comment linked to annotations automatically with Nutrient. Please note that this project is built using a [nightly build](https://pspdfkit.com/guides/web/troubleshooting/nightlies/) version of Nutrient Web SDK. For production applications, we recommend using the official stable version.
+This is a proof-of-concept project showcasing the usage of comment linked to annotations automatically with Nutrient. Please note that this project is built using our latest Nutrient Web SDK CDN.
+Please note that this is a more of a hacky workaround, and it's not a11y friendly.
 
 To get started with this project, follow the instructions below:
 
-1. Clone this repository to your local machine:
-
-```bash
-git clone https://github.com/Siddharth2001-July/annotation-comments
-```
+1. Clone this repository to your local machine
 
 2. Navigate to the project directory:
 
@@ -16,19 +13,7 @@ git clone https://github.com/Siddharth2001-July/annotation-comments
 cd annotation-comments
 ```
 
-3. Install the project dependencies:
-
-```bash
-npm install
-```
-
-4. Add the required assets:
-
-```bash
-npm run add-assets
-```
-
-5. Start the development server:
+2. Start the development server:
 
 ```bash
 npm run start
