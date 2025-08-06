@@ -150,4 +150,5 @@ if (typeof window !== "undefined") {
       }),
   };
 }
-export·default·mixpanelService;
+
+export default mixpanelService;

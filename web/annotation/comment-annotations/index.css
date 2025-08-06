@@ -1,0 +1,4 @@
+/*to hide the dummy comment*/
+[data-comment-id="dummy_comment"]{
+  display: none !important;
+}
