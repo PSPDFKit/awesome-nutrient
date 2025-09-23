@@ -385,7 +385,3 @@ A wide variety of examples showcasing what Nutrient Web SDK can do can be found 
   
 - [.NET for iOS sample](https://github.com/PSPDFKit/dotnet-pdf-library-for-ios/tree/main/Samples)
   - Learn how to use C# bindings for Nutrient iOS SDK.
-
-
-
-
