@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import PdfViewerComponent from "./components/pdf-viewer-component.jsx";
 import TabBar from "./components/tab-bar.jsx";
 import "./app.css";
@@ -19,6 +19,15 @@ export default function App() {
   const viewerRefs = useRef({});
   const [tabs, setTabs] = useState([]);
   const [activeTabId, setActiveTabId] = useState(null);
+
+  const createRefCallback = useCallback(
+    (tabId) => (el) => {
+      if (el) {
+        viewerRefs.current[tabId] = el;
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     const storedIds = Object.keys(localStorage)
@@ -158,9 +167,7 @@ export default function App() {
                 className={`tab-content ${tab.id === activeTabId ? "active" : ""}`}
               >
                 <PdfViewerComponent
-                  ref={(el) => {
-                    if (el) viewerRefs.current[tab.id] = el;
-                  }}
+                  ref={createRefCallback(tab.id)}
                   id={tab.id}
                   document={tab.url}
                 />

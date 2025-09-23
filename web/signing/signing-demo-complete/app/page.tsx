@@ -1,10 +1,9 @@
 "use client";
-import { chatBotSVG } from "@/utils/helpers";
 import { ChatDialog } from "@baseline-ui/recipes";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import type { User } from "../utils/types";
-import type { AIMessage } from "../utils/types";
+import { chatBotSVG } from "@/utils/helpers";
+import type { AIMessage, User } from "../utils/types";
 import askAI from "./api/askAI";
 
 // Dynamic imports for components that are not needed during SSR
@@ -17,7 +16,7 @@ const ThemeProvider = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.ThemeProvider),
   { ssr: false },
 );
-const Drawer = dynamic(
+const _Drawer = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.Drawer),
   { ssr: false },
 );
@@ -37,7 +36,7 @@ const App: React.FC = () => {
       role: "Signer",
     },
   ];
-  const [currUser, setCurrUser] = useState(allUsers[0]);
+  const [currUser, _setCurrUser] = useState(allUsers[0]);
 
   const aiName = "AI";
   const initMessages = [
@@ -141,7 +140,7 @@ const App: React.FC = () => {
               style={{ height: "62vh", width: "100%", overflow: "auto" }}
               //@ts-ignore
               messages={messages}
-              onInputChanged={async function Da(inp) {
+              onInputChanged={async function Da(_inp) {
                 //console.log("Input Changed : ",inp);
               }}
               onMessageSubmit={async function Da(inp) {

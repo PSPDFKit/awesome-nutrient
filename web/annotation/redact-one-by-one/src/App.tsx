@@ -2,7 +2,6 @@ import { useState } from "react";
 import PdfViewerComponent from "./components/PdfViewerComponent";
 import "./App.css";
 import {
-  Avatar,
   FileUpload,
   I18nProvider,
   Link,
@@ -22,41 +21,39 @@ function App() {
   };
 
   return (
-    <>
-      <ThemeProvider>
-        <I18nProvider locale="en-US">
-          <header>
-            <Link
-              href="https://pspdfkit.com"
-              target="_blank"
-              size="lg"
-              style={{ color: "white", width: "50px" }}
-            >
-              <h1>Redact one by one on Marked Annotation</h1>
-            </Link>
-          </header>
-          <div className="container">
-            <div className="left-column">
-              <FileUpload
-                label="Click here to Upload"
-                onChange={handleFileSelected}
-                variant="inline"
-                className="btnstyle"
-                onValueChange={(files) => handleFileSelected(files)}
-              />
-              <br />
-            </div>
-            <div className="right-column">
-              <PdfViewerComponent document={document} toolbar={toolbar} />
-            </div>
+    <ThemeProvider>
+      <I18nProvider locale="en-US">
+        <header>
+          <Link
+            href="https://pspdfkit.com"
+            target="_blank"
+            size="lg"
+            style={{ color: "white", width: "50px" }}
+          >
+            <h1>Redact one by one on Marked Annotation</h1>
+          </Link>
+        </header>
+        <div className="container">
+          <div className="left-column">
+            <FileUpload
+              label="Click here to Upload"
+              onChange={handleFileSelected}
+              variant="inline"
+              className="btnstyle"
+              onValueChange={(files) => handleFileSelected(files)}
+            />
+            <br />
           </div>
-          <footer>
-            <p>© Copyright ® 2010-2024 PSPDFKit GmbH. All Rights Reserved</p>
-            <p> Solution Engineer : Narashiman</p>
-          </footer>
-        </I18nProvider>
-      </ThemeProvider>
-    </>
+          <div className="right-column">
+            <PdfViewerComponent document={document} toolbar={toolbar} />
+          </div>
+        </div>
+        <footer>
+          <p>© Copyright ® 2010-2024 PSPDFKit GmbH. All Rights Reserved</p>
+          <p> Solution Engineer : Narashiman</p>
+        </footer>
+      </I18nProvider>
+    </ThemeProvider>
   );
 }
 

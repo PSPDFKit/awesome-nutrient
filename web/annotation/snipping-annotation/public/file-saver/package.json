@@ -20,7 +20,11 @@
     "type": "git",
     "url": "https://github.com/eligrey/FileSaver.js"
   },
-  "keywords": ["filesaver", "saveas", "blob"],
+  "keywords": [
+    "filesaver",
+    "saveas",
+    "blob"
+  ],
   "author": "Eli Grey <me@eligrey.com>",
   "license": "MIT",
   "bugs": {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import "pspdfkit";
 import "../App.css";
 
@@ -9,7 +9,7 @@ interface PdfViewerProps {
 
 let PSPDFKit: any;
 let instance: any;
-let totalPageCount_;
+let _totalPageCount_;
 
 export default function PdfViewerComponent(props: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);

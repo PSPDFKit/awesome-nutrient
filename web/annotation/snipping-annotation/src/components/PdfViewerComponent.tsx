@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "pspdfkit";
-import html2canvas from "html2canvas";
 
 interface PdfViewerProps {
   document: string;
@@ -71,7 +70,8 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
               // When the temporary image is loaded, crop it using canvas
               tempImage.onload = () => {
                 const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d")!;
+                const ctx = canvas.getContext("2d");
+                if (!ctx) return;
                 canvas.width = width;
                 canvas.height = height;
                 ctx.drawImage(
@@ -107,7 +107,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
   return (
     <>
-      <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
+      <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />
       {annotationImage && (
         <img
           src={annotationImage}

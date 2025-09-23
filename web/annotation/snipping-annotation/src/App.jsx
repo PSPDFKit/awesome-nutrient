@@ -6,7 +6,7 @@ import {
   Link,
   ThemeProvider,
 } from "@baseline-ui/core";
-import React, { useState } from "react";
+import { useState } from "react";
 import PdfViewerComponent from "./components/PdfViewerComponent";
 import "./App.css";
 

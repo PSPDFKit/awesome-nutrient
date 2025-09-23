@@ -58,7 +58,7 @@ function corsEnabled(url) {
   xhr.open("HEAD", url, false);
   try {
     xhr.send();
-  } catch (e) {}
+  } catch (_e) {}
   return xhr.status >= 200 && xhr.status <= 299;
 }
 
@@ -66,7 +66,7 @@ function corsEnabled(url) {
 function click(node) {
   try {
     node.dispatchEvent(new MouseEvent("click"));
-  } catch (e) {
+  } catch (_e) {
     const evt = document.createEvent("MouseEvents");
     evt.initMouseEvent(
       "click",

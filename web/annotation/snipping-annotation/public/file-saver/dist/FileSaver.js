@@ -81,7 +81,7 @@
 
     try {
       xhr.send();
-    } catch (e) {}
+    } catch (_e) {}
 
     return xhr.status >= 200 && xhr.status <= 299;
   } // `a.click()` doesn't work for all browsers (#465)
@@ -89,7 +89,7 @@
   function click(node) {
     try {
       node.dispatchEvent(new MouseEvent("click"));
-    } catch (e) {
+    } catch (_e) {
       const evt = document.createEvent("MouseEvents");
       evt.initMouseEvent(
         "click",

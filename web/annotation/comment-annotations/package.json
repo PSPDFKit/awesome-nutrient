@@ -1,6 +1,5 @@
 {
-  "dependencies": {
-  },
+  "dependencies": {},
   "scripts": {
     "start": "serve -l 8080 ."
   }

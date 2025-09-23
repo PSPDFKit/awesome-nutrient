@@ -5,7 +5,7 @@ import "./App.css";
 function App() {
   const [document, setDocument] = useState("document_1.pdf");
   const [handleAnnotation, setHandleAnnotation] = useState("");
-  const [nextAnnotation, setNextAnnotation] = useState(0);
+  const [_nextAnnotation, _setNextAnnotation] = useState(0);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];

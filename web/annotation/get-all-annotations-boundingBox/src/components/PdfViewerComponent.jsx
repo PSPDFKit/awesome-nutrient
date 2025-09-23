@@ -151,7 +151,7 @@ export default function PdfViewerComponent(props) {
         PSPDFKit.unload(container);
       };
     })();
-  }, [props.document]);
+  }, [props.document, handleNextAnnotation]);
 
   // Fetched all annotations
   useEffect(() => {
@@ -159,7 +159,7 @@ export default function PdfViewerComponent(props) {
       allAnnotations = [];
       fetchAnnotationCoordinates();
     }
-  }, [props.handleAnnotation]);
+  }, [props.handleAnnotation, fetchAnnotationCoordinates]);
 
   const fetchAnnotationCoordinates = async () => {
     const tpage = instance.totalPageCount;
@@ -206,7 +206,7 @@ export default function PdfViewerComponent(props) {
     if (allAnnotations.length > 0) {
       const annotation = allAnnotations[currentAnnotationIndex];
       console.log("Current Annotation: ", annotation);
-      const bBox = new PSPDFKit.Geometry.Rect({
+      const _bBox = new PSPDFKit.Geometry.Rect({
         left: annotation.left, // you calculation goes here for level of zoom needed
         top: annotation.top, // you calculation goes here for level of zoom needed
         width: annotation.width + 100, // you calculation goes here for level of zoom needed
@@ -235,9 +235,5 @@ export default function PdfViewerComponent(props) {
     }
   };
   //End of Get the next annotation - button available on the tool bar right corner
-  return (
-    <>
-      <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />
-    </>
-  );
+  return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
 }

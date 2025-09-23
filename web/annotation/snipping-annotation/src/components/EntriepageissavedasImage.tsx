@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "pspdfkit";
-import html2canvas from "html2canvas";
 
 interface PdfViewerProps {
   document: string;
@@ -42,8 +41,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
         const annotations = await instance.getAnnotations(0); // Assuming pageIndex is 0
         annotations.forEach((annotation: any) => {
           console.log(annotation.boundingBox);
-          const { bottom, height, left, right, top, width } =
-            annotation.boundingBox;
+          const { left, right } = annotation.boundingBox;
           // Rendering the bounding box area as an image
           instance
             .renderPageAsImageURL(
@@ -68,7 +66,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
   return (
     <>
-      <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
+      <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />
       {annotationImage && (
         <img
           src={annotationImage}

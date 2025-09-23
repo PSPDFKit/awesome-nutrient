@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function PdfViewerComponent(props) {
   const containerRef = useRef(null);
@@ -276,8 +276,8 @@ export default function PdfViewerComponent(props) {
             ],
           },
         }),
-      ),
-        console.log("Nutrient Web SDK successfully loaded!", instance);
+      );
+      console.log("Nutrient Web SDK successfully loaded!", instance);
 
       instance.addEventListener(
         "textSelection.change",

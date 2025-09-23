@@ -1,6 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnnotationTypeEnum, type User } from "../utils/types";
+
 const ActionButton = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.ActionButton),
   { ssr: false },
@@ -12,7 +13,6 @@ const Select = dynamic(
 
 import dynamic from "next/dynamic";
 import {
-  TOOLBAR_ITEMS,
   dateSVG,
   getAnnotationRenderers,
   handleAnnotatitonCreation,
@@ -21,6 +21,7 @@ import {
   initialsSVG,
   personSVG,
   signSVG,
+  TOOLBAR_ITEMS,
 } from "../utils/helpers";
 
 /**
@@ -57,6 +58,82 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   const currUserRef = useRef(currUser);
   currUserRef.current = currUser;
 
+  // Function to get random color for the signee
+  const randomColor = useCallback(
+    (PSPDFKit: any) => {
+      const colors: any = [
+        PSPDFKit.Color.LIGHT_GREY,
+        PSPDFKit.Color.LIGHT_GREEN,
+        PSPDFKit.Color.LIGHT_YELLOW,
+        PSPDFKit.Color.LIGHT_ORANGE,
+        PSPDFKit.Color.LIGHT_RED,
+        PSPDFKit.Color.LIGHT_BLUE,
+        PSPDFKit.Color.fromHex("#0ffcf1"),
+      ];
+      const usedColors = users.map((signee) => signee.color);
+      const availableColors = colors.filter(
+        (color: any) => !usedColors.includes(color as any),
+      );
+      const randomIndex = Math.floor(Math.random() * availableColors.length);
+      return availableColors[randomIndex];
+    },
+    [users],
+  );
+
+  // Function to handle user change
+  const userChange = useCallback(
+    async (user: User, PSPDFKit: any) => {
+      setCurrUser(user);
+      if (instance) {
+        const formFields = await instance.getFormFields();
+        const signatureFormFields = formFields.filter(
+          (field: any) =>
+            field instanceof PSPDFKit.FormFields.SignatureFormField,
+        );
+        const signatureAnnotations = async () => {
+          const annotations: any[] = [];
+          for (let i = 0; i < instance.totalPageCount; i++) {
+            const ann = await instance.getAnnotations(i);
+            ann.forEach((annotation: any) => {
+              if (
+                annotation.customData &&
+                annotation.customData.signerID === user.id
+              ) {
+                annotations.push(annotation.id);
+              }
+            });
+          }
+          return annotations;
+        };
+        const userFieldIds = await signatureAnnotations();
+        const readOnlyFormFields = signatureFormFields
+          .map((it: any) => {
+            if (userFieldIds.includes(it.id)) {
+              return it.set("readOnly", false);
+            }
+            return it.set("readOnly", true);
+          })
+          .filter(Boolean); // Filter out undefined values
+        await instance.update(readOnlyFormFields);
+        // User with role Editor can edit the document
+        if (user.role === "Editor") {
+          instance.setViewState((viewState: any) =>
+            viewState.set("showToolbar", true),
+          );
+          setIsVisible(true);
+          onChangeReadyToSign(false, user, PSPDFKit);
+        } else {
+          instance.setViewState((viewState: any) =>
+            viewState.set("showToolbar", false),
+          );
+          setIsVisible(false);
+          onChangeReadyToSign(true, user, PSPDFKit);
+        }
+      }
+    },
+    [instance, onChangeReadyToSign],
+  );
+
   useEffect(() => {
     if (PSPDFKit) {
       allUsers.forEach((user) => {
@@ -66,18 +143,18 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     setUsers(allUsers);
     setCurrUser(user);
     userChange(user, PSPDFKit);
-  }, [user]);
+  }, [user, PSPDFKit, allUsers, randomColor, userChange]);
 
   // State to store the current page index
   const [onPageIndex, setOnPageIndex] = useState<number>(0);
   const onPageIndexRef = useRef(onPageIndex);
   onPageIndexRef.current = onPageIndex;
 
-  const [readyToSign, setReadyToSign] = useState<boolean>(false);
+  const [_readyToSign, setReadyToSign] = useState<boolean>(false);
 
   // For Custom signature / initial field appearance
   const mySignatureIdsRef = useRef([]);
-  const [signatureAnnotationIds, setSignatureAnnotationIds] = useState<
+  const [_signatureAnnotationIds, setSignatureAnnotationIds] = useState<
     string[]
   >([]);
 
@@ -276,75 +353,6 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     }
   };
 
-  // Function to get random color for the signee
-  const randomColor = (PSPDFKit: any) => {
-    const colors: any = [
-      PSPDFKit.Color.LIGHT_GREY,
-      PSPDFKit.Color.LIGHT_GREEN,
-      PSPDFKit.Color.LIGHT_YELLOW,
-      PSPDFKit.Color.LIGHT_ORANGE,
-      PSPDFKit.Color.LIGHT_RED,
-      PSPDFKit.Color.LIGHT_BLUE,
-      PSPDFKit.Color.fromHex("#0ffcf1"),
-    ];
-    const usedColors = users.map((signee) => signee.color);
-    const availableColors = colors.filter(
-      (color: any) => !usedColors.includes(color as any),
-    );
-    const randomIndex = Math.floor(Math.random() * availableColors.length);
-    return availableColors[randomIndex];
-  };
-
-  // Function to handle user change
-  const userChange = async (user: User, PSPDFKit: any) => {
-    setCurrUser(user);
-    if (instance) {
-      const formFields = await instance.getFormFields();
-      const signatureFormFields = formFields.filter(
-        (field: any) => field instanceof PSPDFKit.FormFields.SignatureFormField,
-      );
-      const signatureAnnotations = async () => {
-        const annotations: any[] = [];
-        for (let i = 0; i < instance.totalPageCount; i++) {
-          const ann = await instance.getAnnotations(i);
-          ann.forEach((annotation: any) => {
-            if (
-              annotation.customData &&
-              annotation.customData.signerID === user.id
-            ) {
-              annotations.push(annotation.id);
-            }
-          });
-        }
-        return annotations;
-      };
-      const userFieldIds = await signatureAnnotations();
-      const readOnlyFormFields = signatureFormFields
-        .map((it: any) => {
-          if (userFieldIds.includes(it.id)) {
-            return it.set("readOnly", false);
-          }
-          return it.set("readOnly", true);
-        })
-        .filter(Boolean); // Filter out undefined values
-      await instance.update(readOnlyFormFields);
-      // User with role Editor can edit the document
-      if (user.role === "Editor") {
-        instance.setViewState((viewState: any) =>
-          viewState.set("showToolbar", true),
-        );
-        setIsVisible(true);
-        onChangeReadyToSign(false, user, PSPDFKit);
-      } else {
-        instance.setViewState((viewState: any) =>
-          viewState.set("showToolbar", false),
-        );
-        setIsVisible(false);
-        onChangeReadyToSign(true, user, PSPDFKit);
-      }
-    }
-  };
-
   // Tracking whether add Signature/Initial UI
   let isCreateInitial = false;
 
@@ -360,7 +368,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
           PSPDFKit.unload(container);
         }
         const {
-          UI: { createBlock, Recipes, Interfaces, Core },
+          UI: { createBlock, Recipes, Interfaces },
         } = PSPDFKit;
         PSPDFKit.load({
           licenseKey: process.env.NEXT_PUBLIC_LICENSE_KEY as string,
@@ -441,7 +449,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
           inst.addEventListener("annotations.press", (event: any) => {
             const lastFormFieldClicked = event.annotation;
 
-            let annotationsToLoad;
+            let annotationsToLoad: any;
             if (
               lastFormFieldClicked.customData &&
               lastFormFieldClicked.customData.isInitial === true
@@ -466,14 +474,14 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
               event.preventDefault();
             }
           });
-          let formDesignMode = !1;
+          let _formDesignMode = !1;
 
           inst.setToolbarItems((items: any) => [
             ...items,
             { type: "form-creator" },
           ]);
           inst.addEventListener("viewState.change", (viewState: any) => {
-            formDesignMode = viewState.formDesignMode === true;
+            _formDesignMode = viewState.formDesignMode === true;
           });
 
           inst.addEventListener(
@@ -558,7 +566,13 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
         });
       }
     })();
-  }, []);
+  }, [
+    currUser.email,
+    handleDrop,
+    isCreateInitial,
+    sessionInitials,
+    sessionSignatures,
+  ]);
 
   const signeeChanged = (signee: User) => {
     setCurrSignee(signee);
@@ -584,7 +598,8 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       const colorObject = JSON.parse(jsonString);
       //console.log("Color: ", colorObject);
       return (
-        <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+        <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-label="User color indicator">
+          <title>User color indicator</title>
           <circle
             cx="10"
             cy="10"
@@ -593,7 +608,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
           />
         </svg>
       );
-    } catch (error) {}
+    } catch (_error) {}
   };
 
   const [selectedSignee, setSelectedSignee] = useState(currSigneeRef.current);
@@ -714,8 +729,16 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
                               isLastClicked ? "highlight-signee" : ""
                             }`}
                             key={user?.id}
-                            onClick={(e) => {
+                            role="button"
+                            tabIndex={0}
+                            onClick={(_e) => {
                               signeeChanged(user);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                signeeChanged(user);
+                              }
                             }}
                           >
                             <RedCircleIcon color={user.color?.toString()} />
@@ -724,9 +747,18 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
                               : user?.name}
                             <span
                               className="cross"
+                              role="button"
+                              tabIndex={0}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 deleteUser(user);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  deleteUser(user);
+                                }
                               }}
                             >
                               <svg
@@ -735,7 +767,9 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
                                 viewBox="0 0 10 9"
                                 fill="none"
                                 xmlns="http://www.w3.org/2000/svg"
+                                aria-label="Delete user"
                               >
+                                <title>Delete user</title>
                                 <path
                                   d="M4.99991 5.43337L1.73324 8.70003C1.61102 8.82225 1.45547 8.88337 1.26658 8.88337C1.07769 8.88337 0.922133 8.82225 0.79991 8.70003C0.677688 8.57781 0.616577 8.42225 0.616577 8.23337C0.616577 8.04448 0.677688 7.88892 0.79991 7.7667L4.06658 4.50003L0.79991 1.23337C0.677688 1.11114 0.616577 0.955588 0.616577 0.766699C0.616577 0.57781 0.677688 0.422255 0.79991 0.300033C0.922133 0.17781 1.07769 0.116699 1.26658 0.116699C1.45547 0.116699 1.61102 0.17781 1.73324 0.300033L4.99991 3.5667L8.26658 0.300033C8.3888 0.17781 8.54435 0.116699 8.73324 0.116699C8.92213 0.116699 9.07769 0.17781 9.19991 0.300033C9.32213 0.422255 9.38324 0.57781 9.38324 0.766699C9.38324 0.955588 9.32213 1.11114 9.19991 1.23337L5.93324 4.50003L9.19991 7.7667C9.32213 7.88892 9.38324 8.04448 9.38324 8.23337C9.38324 8.42225 9.32213 8.57781 9.19991 8.70003C9.07769 8.82225 8.92213 8.88337 8.73324 8.88337C8.54435 8.88337 8.3888 8.82225 8.26658 8.70003L4.99991 5.43337Z"
                                   fill="#EF4444"
@@ -821,6 +855,8 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
         <div
           onDragOver={handleDragOver}
           ref={containerRef}
+          role="application"
+          aria-label="PDF document viewer"
           style={{
             height: "90vh",
             width: "calc(100% - 256px)",
@@ -837,7 +873,6 @@ export default dynamic(() => Promise.resolve(SignDemo), { ssr: false });
 // Red circle SVG icon as a React component
 
 const DraggableAnnotation = ({
-  className,
   type,
   label,
   onDragStart,
@@ -851,7 +886,7 @@ const DraggableAnnotation = ({
   onDragEnd: any;
   userColor: any;
 }) => {
-  const id = `${type}-icon`;
+  const _id = `${type}-icon`;
   let icon = signSVG;
   switch (type) {
     case AnnotationTypeEnum.NAME:
@@ -874,6 +909,8 @@ const DraggableAnnotation = ({
   return (
     <div
       draggable={true}
+      role="button"
+      aria-label={`Draggable ${label} annotation`}
       onDragStart={async (e) => await onDragStart(e, type)}
       onDragEnd={(e) => onDragEnd(e, type)}
       style={{

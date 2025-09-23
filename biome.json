@@ -11,18 +11,13 @@
       "**",
       "!**/pspdfkit.js",
       "!**/pspdfkit-lib/**",
+      "!**/dist/**",
+      "!**/*.min.js",
+      "!**/*.d.ts",
+      "!**/node_modules/**",
       "!web/annotation/comment-annotations/**",
       "!web/annotation/comments-status/**",
-      "!web/annotation/create-annotation-from-clipboard/**",
-      "!web/annotation/speech-2-text/**",
-      "!web/annotation/customise-annotation-sidebar/**",
-      "!web/annotation/get-all-annotations-boundingBox/**",
-      "!web/annotation/redact-one-by-one/**",
-      "!web/annotation/snipping-annotation/**",
-      "!web/document-editor/save-selected-page-from-document-editor/**",
-      "!web/signing/signing-demo-complete/**",
-      "!web/signing/sign-here-upgraded/**",
-      "!web/viewer/multi-tab/**"
+      "!web/signing/sign-here-upgraded/**"
     ]
   },
   "formatter": {

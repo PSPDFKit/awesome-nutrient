@@ -1,11 +1,10 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import logo from "@/public/android-chrome-512x512.png";
 import ImageComponent from "next/image";
+import logo from "@/public/android-chrome-512x512.png";
 
-const inter = Inter({ subsets: ["latin"] });
+const _inter = Inter({ subsets: ["latin"] });
 
 const NEXT_PUBLIC_BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH;
 

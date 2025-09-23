@@ -1469,10 +1469,9 @@ declare function OrderedMap<K, V>(
 declare function OrderedMap<T>(
   collection: Iterable<Iterable<T>>,
 ): OrderedMap<T, T>;
-declare function OrderedMap<V>(obj: { [key: string]: V }): OrderedMap<
-  string,
-  V
->;
+declare function OrderedMap<V>(obj: {
+  [key: string]: V;
+}): OrderedMap<string, V>;
 declare function OrderedMap<K, V>(): OrderedMap<K, V>;
 declare function OrderedMap(): OrderedMap<any, any>;
 
@@ -3259,10 +3258,9 @@ declare namespace Collection$1 {
   export function Keyed<K, V>(
     collection: Iterable<[K, V]>,
   ): Collection$1.Keyed<K, V>;
-  export function Keyed<V>(obj: { [key: string]: V }): Collection$1.Keyed<
-    string,
-    V
-  >;
+  export function Keyed<V>(obj: {
+    [key: string]: V;
+  }): Collection$1.Keyed<string, V>;
 
   export interface Keyed<K, V> extends Collection$1<K, V> {
     /**
@@ -3827,10 +3825,9 @@ declare function Collection$1<I extends Collection$1<any, any>>(
 declare function Collection$1<T>(
   collection: Iterable<T>,
 ): Collection$1.Indexed<T>;
-declare function Collection$1<V>(obj: { [key: string]: V }): Collection$1.Keyed<
-  string,
-  V
->;
+declare function Collection$1<V>(obj: {
+  [key: string]: V;
+}): Collection$1.Keyed<string, V>;
 
 interface Collection$1<K, V> extends ValueObject {
   // Value equality
@@ -4181,7 +4178,7 @@ interface Collection$1<K, V> extends ValueObject {
    *
    * @ignore
    */
-  map<M>(...args: never[]): any;
+  map<_M>(...args: never[]): any;
 
   /**
    * Returns a new Collection of the same type with only the entries for which
@@ -4799,13 +4796,7 @@ declare class TransformationMatrix extends TransformationMatrix_base {
   f: number;
   static defaultValues: IObject$1;
   static IDENTITY: TransformationMatrix;
-  translate({
-    x: tx,
-    y: ty,
-  }: {
-    x: number;
-    y: number;
-  }): TransformationMatrix;
+  translate({ x: tx, y: ty }: { x: number; y: number }): TransformationMatrix;
   translateX(tx: number): TransformationMatrix;
   translateY(ty: number): TransformationMatrix;
   scale(sx: number, sy?: number): TransformationMatrix;
@@ -4837,13 +4828,7 @@ declare class Point extends Point_base {
   static defaultValues: IObject$1;
   constructor(options?: PointCtorProps);
   scale(sx: number, sy?: number): this;
-  translate({
-    x: tx,
-    y: ty,
-  }: {
-    x: number;
-    y: number;
-  }): this;
+  translate({ x: tx, y: ty }: { x: number; y: number }): this;
   translateX(tx: number): this;
   translateY(ty: number): this;
   distance(other: this): number;
@@ -7483,12 +7468,8 @@ interface EventMap {
     response: Response;
     error: Error;
   }) => void;
-  "forms.willSubmit": (event: {
-    preventDefault: () => void;
-  }) => void;
-  "forms.didSubmit": (event: {
-    preventDefault: () => void;
-  }) => void;
+  "forms.willSubmit": (event: { preventDefault: () => void }) => void;
+  "forms.didSubmit": (event: { preventDefault: () => void }) => void;
   "formFields.change": () => void;
   "formFields.create": (formFields: List<FormField>) => void;
   "formFields.delete": (formFields: List<FormField>) => void;
@@ -17679,9 +17660,7 @@ interface ModalContentProps
    */
   children:
     | React__default.ReactNode
-    | ((props: {
-        close: () => void;
-      }) => React__default.ReactNode);
+    | ((props: { close: () => void }) => React__default.ReactNode);
   /**
    * The container element for the modal. By default, the modal is rendered as a
    * child of the body element.
@@ -18216,13 +18195,7 @@ interface ResizeObserverOptions {
  *   image hasn't loaded yet.
  * @returns {string} ImgProps.alt - The image alt text.
  */
-declare function useImage({
-  src,
-  alt,
-}: {
-  src?: string;
-  alt: string;
-}): {
+declare function useImage({ src, alt }: { src?: string; alt: string }): {
   isLoaded: boolean;
   hasError: boolean;
   isLoading: boolean;

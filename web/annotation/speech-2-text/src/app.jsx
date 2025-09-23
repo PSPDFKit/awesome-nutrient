@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import PdfViewerComponent from "./components/pdf-viewer-component.jsx";
 import "./app.css";

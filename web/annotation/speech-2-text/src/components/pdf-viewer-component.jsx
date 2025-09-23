@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 let linecount = 0;
 let add = 0;
 let currentPage;
-let pageHeight;
+let _pageHeight;
 let pageWidth;
 
 // Define the main PDF viewer component
@@ -20,7 +20,7 @@ export default function PdfViewerComponent(props) {
     return text
       .replace(
         /(\.\s+|^)([a-z])/g,
-        (match, prefix, letter) => prefix + letter.toUpperCase(),
+        (_match, prefix, letter) => prefix + letter.toUpperCase(),
       ) // Capitalize first letter
       .replace(/\bi\b/g, "I") // Capitalize 'I'
       .trim();
@@ -52,7 +52,7 @@ export default function PdfViewerComponent(props) {
       currentPage = instance.viewState.currentPageIndex;
       const pageInfo = instance.pageInfoForIndex(currentPage);
       pageWidth = pageInfo.width;
-      pageHeight = pageInfo.height;
+      _pageHeight = pageInfo.height;
 
       // Cleanup on component unmount
       return () => {
