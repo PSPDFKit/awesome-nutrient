@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import './app.css'
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Function to upload document from URL and get session token
-  const uploadFromUrl = async (url: string) => {
+  const uploadFromUrl = useCallback(async (url: string) => {
     try {
       setStatus("Uploading document from URL...")
 
@@ -33,7 +33,7 @@ function App() {
       console.error('Upload error:', error)
       throw error
     }
-  }
+  }, [])
 
   // Function to upload local file and get session token
   const uploadFile = async (file: File) => {
@@ -64,7 +64,7 @@ function App() {
   }
 
   // Function to load PDF using session token
-  const loadPDFWithSession = async (token: string) => {
+  const loadPDFWithSession = useCallback(async (token: string) => {
     try {
       const container = containerRef.current
 
@@ -110,7 +110,7 @@ function App() {
       setStatus(`Error: ${error instanceof Error ? error.message : String(error)}`)
       throw error
     }
-  }
+  }, [])
 
   // Handle file selection
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
