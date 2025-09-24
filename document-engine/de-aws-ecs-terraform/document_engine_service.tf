@@ -10,6 +10,18 @@ locals {
     }] : [],
     [
       {
+        name  = "API_AUTH_TOKEN"
+        value = var.document_engine_api_auth_token
+      },
+      {
+        name  = "DASHBOARD_USERNAME"
+        value = var.document_engine_dashboard_username
+      },
+      {
+        name  = "DASHBOARD_PASSWORD"
+        value = var.document_engine_dashboard_password
+      },
+      {
         name  = "LOG_LEVEL"
         value = var.document_engine_parameters.logging_level
       },
@@ -71,8 +83,11 @@ module "ecs_document_engine_service" {
   name        = "document-engine"
   cluster_arn = module.ecs_cluster.arn
 
-  cpu    = var.document_engine_parameters.cpu
-  memory = var.document_engine_parameters.memory
+  cpu                      = var.document_engine_parameters.cpu
+  memory                   = var.document_engine_parameters.memory
+  autoscaling_min_capacity = var.document_engine_parameters.desired_count
+  autoscaling_max_capacity = var.document_engine_parameters.desired_count
+  desired_count            = var.document_engine_parameters.desired_count
 
   container_definitions = {
 

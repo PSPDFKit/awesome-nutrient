@@ -20,12 +20,31 @@ variable "document_engine_activation_key" {
   sensitive   = true
 }
 
+variable "document_engine_api_auth_token" {
+  description = "Document Engine auth token for the API"
+  type        = string
+  sensitive   = true
+}
+
+variable "document_engine_dashboard_username" {
+  description = "Document Engine dashboard username"
+  type        = string
+  sensitive   = true
+}
+
+variable "document_engine_dashboard_password" {
+  description = "Document Engine dashboard password"
+  type        = string
+  sensitive   = true
+}
+
 variable "document_engine_parameters" {
   description = "Document Engine parameters"
   type = object({
     image_tag     = string
     cpu           = number
     memory        = number
+    desired_count = number
     logging_level = string
     port          = number
     extra_env     = map(string)
