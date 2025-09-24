@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import PropTypes from 'prop-types'
 
 const PDFViewer = ({ sessionToken }) => {
   const containerRef = useRef(null)
@@ -152,6 +153,10 @@ const PDFViewer = ({ sessionToken }) => {
       }}
     />
   )
+}
+
+PDFViewer.propTypes = {
+  sessionToken: PropTypes.string.isRequired
 }
 
 export default PDFViewer
