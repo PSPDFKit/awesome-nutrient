@@ -14,6 +14,14 @@ locals {
         value = var.document_engine_api_auth_token
       },
       {
+        name  = "JWT_ALGORITHM"
+        value = var.document_engine_parameters.jwt_algorithm
+      },
+      {
+        name  = "JWT_PUBLIC_KEY"
+        value = file(var.document_engine_parameters.jwt_public_key_path)
+      },
+      {
         name  = "DASHBOARD_USERNAME"
         value = var.document_engine_dashboard_username
       },

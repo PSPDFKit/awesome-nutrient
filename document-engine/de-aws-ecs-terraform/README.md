@@ -76,7 +76,7 @@ Next, generate a JWT key pair using the `generate-jwt-pair.sh` script
 ```shell
 # Run from within examples/de-aws-eks
 
-../../scripts/generate-jwt-pair.sh
+./generate-jwt-pair.sh
 ```
 
 Finally, examine the plan and apply it:

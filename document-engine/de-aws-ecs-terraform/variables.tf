@@ -41,13 +41,15 @@ variable "document_engine_dashboard_password" {
 variable "document_engine_parameters" {
   description = "Document Engine parameters"
   type = object({
-    image_tag     = string
-    cpu           = number
-    memory        = number
-    desired_count = number
-    logging_level = string
-    port          = number
-    extra_env     = map(string)
+    image_tag           = string
+    cpu                 = number
+    memory              = number
+    desired_count       = number
+    logging_level       = string
+    port                = number
+    jwt_algorithm       = string
+    jwt_public_key_path = string
+    extra_env           = map(string)
   })
 }
 

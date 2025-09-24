@@ -10,12 +10,14 @@ document_engine_dashboard_username = "admin"
 document_engine_dashboard_password = "nutrientAdmin!"
 
 document_engine_parameters = {
-  image_tag     = "1.11.0"
-  logging_level = "info"
-  cpu           = 2048
-  memory        = 4096
-  desired_count = 2
-  port          = 5000
+  image_tag           = "1.11.0"
+  logging_level       = "info"
+  cpu                 = 2048
+  memory              = 4096
+  desired_count       = 2
+  port                = 5000
+  jwt_algorithm       = "RS256"
+  jwt_public_key_path = "./JWT_PUBLIC_KEY.pem"
   extra_env = {
     PSPDFKIT_WORKER_POOL_SIZE = "8"
   }
