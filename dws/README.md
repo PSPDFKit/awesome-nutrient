@@ -5,7 +5,6 @@ A modern React application built with Vite that demonstrates secure PDF viewing 
 ## Features
 
 - **Secure PDF viewing** — Server-side API key management with session tokens
-- **Multiple upload methods** — Upload files directly or from URLs
 - **Table extraction** — Convert PDF tables to Excel format using Nutrient Processor API
 - **Real-time processing** — Job status tracking and progress updates
 - **Modern UI** — Clean, responsive interface built with React
@@ -66,7 +65,7 @@ NUTRIENT_DWS_PROCESSOR_API_KEY=your_processor_api_key_here
 PORT=3001
 ```
 
-⚠️ **Important** — Never commit your `.env` file to version control. API keys should be kept secret.
+**Important** — Never commit your `.env` file to version control. API keys should be kept secret.
 
 ### 4. Run the application
 
@@ -86,8 +85,7 @@ The application will automatically open in your browser.
 
 ### Uploading documents
 
-1. **File upload** — Click "Choose File to Upload" and select a document from your computer
-2. **URL upload** — Enter a document URL in the input field and click "Upload from URL"
+Click "Upload File" and select a document from your computer.
 
 Supported formats: PDF, DOCX, PPTX, XLSX
 
@@ -102,9 +100,9 @@ Once uploaded, documents will appear in the viewer with full functionality:
 
 ### Extracting tables
 
-1. After uploading a PDF document, click "Extract Tables to Excel"
+1. After uploading a PDF document, click "Export to Excel"
 2. Monitor the job progress in the status panel
-3. When complete, click "Download Excel File" to get the extracted tables
+3. Once completed, the extracted Excel file downloads automatically.
 
 ## Additional resources
 
