@@ -13,6 +13,8 @@ locals {
     skip_final_snapshot          = true
     apply_immediately            = true
   }
+
+  database_ca_certificates = data.http.aws_certificates_rds.response_body
 }
 
 resource "random_password" "document_engine_db_password" {
@@ -68,4 +70,8 @@ resource "aws_vpc_security_group_ingress_rule" "document_engine_db_access" {
   ip_protocol                  = "tcp"
   from_port                    = aws_db_instance.document_engine.port
   to_port                      = aws_db_instance.document_engine.port
+}
+
+data "http" "aws_certificates_rds" {
+  url = "https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem"
 }

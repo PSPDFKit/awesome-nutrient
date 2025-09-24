@@ -27,6 +27,7 @@ The resources deployed will include:
 
 * No HTTPS (requires a domain available)
 * No secret management (plain environment variables)
+* Unverified TLS with RDS (because need to provide AWS CA certificates)
 
 ## Prerequisites
 
