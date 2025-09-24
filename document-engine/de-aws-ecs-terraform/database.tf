@@ -11,6 +11,7 @@ locals {
     postgres_parameter_family    = "postgres17"
     preferred_maintenance_window = "sun:05:00-sun:06:00"
     skip_final_snapshot          = true
+    apply_immediately            = true
   }
 }
 
@@ -38,6 +39,7 @@ resource "aws_db_instance" "document_engine" {
   instance_class       = local.database_properties.ec2_instance_type
   allocated_storage    = 10
   engine               = "postgres"
+  ca_cert_identifier   = "rds-ca-rsa4096-g1"
   engine_version       = local.database_properties.postgres_engine_version
   username             = local.database_properties.username
   password             = local.document_engine_db_password
@@ -50,6 +52,7 @@ resource "aws_db_instance" "document_engine" {
   parameter_group_name = aws_db_parameter_group.document_engine.name
   publicly_accessible  = false
   skip_final_snapshot  = local.database_properties.skip_final_snapshot
+  apply_immediately    = local.database_properties.apply_immediately
 }
 
 resource "aws_security_group" "document_engine_db_access" {

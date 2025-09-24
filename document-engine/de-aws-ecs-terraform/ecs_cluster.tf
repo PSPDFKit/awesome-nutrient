@@ -68,6 +68,46 @@ locals {
   ]
 }
 
+# KMS key policy document
+data "aws_iam_policy_document" "ecs_kms_key" {
+  statement {
+    sid    = "Enable IAM User Permissions"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+    }
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "Allow Fargate service principal for ephemeral storage encryption"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["fargate.amazonaws.com"]
+    }
+    actions = [
+      "kms:GenerateDataKeyWithoutPlaintext",
+      "kms:CreateGrant",
+      "kms:DescribeKey",
+      "kms:Decrypt"
+    ]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "kms:EncryptionContext:aws:ecs:clusterAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "kms:EncryptionContext:aws:ecs:clusterName"
+      values   = [local.environment_name]
+    }
+  }
+}
+
 resource "aws_kms_key" "ecs_cluster" {
   for_each = toset(local.ecs_kms_key_keys)
 
@@ -81,4 +121,11 @@ resource "aws_kms_alias" "ecs_cluster" {
 
   name_prefix   = "alias/${local.environment_name}-${each.key}-"
   target_key_id = aws_kms_key.ecs_cluster[each.key].id
+}
+
+resource "aws_kms_key_policy" "ecs_cluster" {
+  for_each = toset(local.ecs_kms_key_keys)
+
+  key_id = aws_kms_key.ecs_cluster[each.key].id
+  policy = data.aws_iam_policy_document.ecs_kms_key.json
 }
