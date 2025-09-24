@@ -103,7 +103,7 @@ const PDFViewer = ({ sessionToken }) => {
         instance.unload().catch(console.error)
       }
     }
-  }, [sessionToken])
+  }, [sessionToken, viewerInstance])
 
   if (loading) {
     return (

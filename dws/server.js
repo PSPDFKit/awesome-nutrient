@@ -46,7 +46,7 @@ const createSessionToken = async (documentId, apiKey) => {
 };
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
@@ -314,7 +314,7 @@ app.post('/api/convert-to-excel', async (req, res) => {
 });
 
 // Document management endpoints for cleanup
-app.get('/api/documents', async (req, res) => {
+app.get('/api/documents', async (_req, res) => {
   try {
     const apiKey = process.env.NUTRIENT_DWS_VIEWER_API_KEY;
 
@@ -355,7 +355,7 @@ app.get('/api/documents', async (req, res) => {
   }
 });
 
-app.post('/api/cleanup-documents', async (req, res) => {
+app.post('/api/cleanup-documents', async (_req, res) => {
   try {
     const apiKey = process.env.NUTRIENT_DWS_VIEWER_API_KEY;
 

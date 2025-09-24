@@ -223,7 +223,7 @@ function App() {
     initializePDF()
 
     return cleanup
-  }, [])
+  }, [uploadFromUrl, loadPDFWithSession])
 
   return (
     <div>
@@ -255,6 +255,7 @@ function App() {
             style={{ display: "none" }}
           />
           <button
+            type="button"
             onClick={() => fileInputRef.current?.click()}
             style={{
               padding: "5px 10px",
@@ -269,6 +270,7 @@ function App() {
             Upload File
           </button>
           <button
+            type="button"
             onClick={convertToExcel}
             style={{
               padding: "5px 10px",
@@ -283,6 +285,7 @@ function App() {
             Export to Excel
           </button>
           <button
+            type="button"
             onClick={cleanupDocuments}
             style={{
               padding: "5px 10px",
