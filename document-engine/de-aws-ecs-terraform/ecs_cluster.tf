@@ -34,7 +34,7 @@ module "ecs_cluster" {
       }
     }
     managed_storage_configuration = {
-      fargate_ephemeral_storage_kms_key_id = aws_kms_key.ecs_cluster["fargate_ephemeral_storage"].key_id
+      fargate_ephemeral_storage_kms_key_id = aws_kms_key.ecs_cluster["fargate_ephemeral_storage"].arn
       kms_key_id                           = aws_kms_key.ecs_cluster["managed_storage"].key_id
     }
   }
@@ -55,8 +55,6 @@ module "ecs_cluster" {
       weight = 50
     }
   }
-
-  tags = var.tags
 }
 
 # 

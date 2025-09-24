@@ -86,7 +86,7 @@ module "ecs_document_engine_service" {
         }
       ]
 
-      readonlyRootFilesystem = true
+      readonlyRootFilesystem = false
 
       enable_cloudwatch_logging        = true
       cloudwatch_log_group_name        = local.document_engine_cloudwatch_log_group_name

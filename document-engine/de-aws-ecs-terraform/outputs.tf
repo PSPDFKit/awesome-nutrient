@@ -32,3 +32,11 @@ output "cluster_name" {
   description = "Name of the ECS cluster"
   value       = module.ecs_cluster.name
 }
+
+output "document_engine_endpoint" {
+  description = "Endpoint of the Document Engine service"
+  value = format(
+    "http://%s:80",
+    module.alb.dns_name
+  )
+}

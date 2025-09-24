@@ -22,7 +22,7 @@ provider "aws" {
   region  = var.aws_region
 
   default_tags {
-    tags = var.tags
+    tags = local.tags
   }
 }
 
@@ -32,7 +32,7 @@ provider "aws" {
   alias   = "virginia"
 
   default_tags {
-    tags = var.tags
+    tags = local.tags
   }
 }
 
@@ -50,6 +50,14 @@ data "aws_ecrpublic_authorization_token" "token" {
 }
 
 locals {
+  tags = merge(
+    {
+      MadeBy    = "Nutrient"
+      ManagedBy = "Terraform"
+    },
+    var.additional_tags
+  )
+
   azs             = slice(data.aws_availability_zones.available.names, 0, 3)
   aws_region_name = data.aws_region.current.region
   aws_account_id  = data.aws_caller_identity.current.account_id

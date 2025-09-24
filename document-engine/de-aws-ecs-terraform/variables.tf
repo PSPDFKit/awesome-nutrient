@@ -51,11 +51,8 @@ variable "log_retention_days" {
   default     = 7
 }
 
-variable "tags" {
+variable "additional_tags" {
   description = "A map of tags to assign to all resources"
   type        = map(string)
-  default = {
-    MadeBy    = "Nutrient"
-    ManagedBy = "Terraform"
-  }
+  default     = {}
 }
