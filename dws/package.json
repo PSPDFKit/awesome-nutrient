@@ -24,6 +24,8 @@
     "@types/multer": "^2.0.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.44.1",
+    "@typescript-eslint/parser": "^8.44.1",
     "@vitejs/plugin-react": "^4.4.1",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
@@ -37,6 +39,8 @@
     "globals": "^16.0.0",
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^3.3.2",
+    "rollup-plugin-copy": "^3.5.0",
+    "typescript": "^5.9.2",
     "vite": "^6.3.5"
   }
 }

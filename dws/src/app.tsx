@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./app.css";
 
 function App() {
@@ -6,36 +6,6 @@ function App() {
   const [status, setStatus] = useState("Initializing...");
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Function to upload document from URL and get session token
-  const uploadFromUrl = useCallback(async (url: string) => {
-    try {
-      setStatus("Uploading document from URL...");
-
-      const response = await fetch(
-        "http://localhost:3001/api/upload-from-url",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ url }),
-        },
-      );
-
-      const result = await response.json();
-
-      if (!result.success) {
-        throw new Error(result.error || "Upload failed");
-      }
-
-      setSessionToken(result.sessionToken);
-      return result.sessionToken;
-    } catch (error) {
-      console.error("Upload error:", error);
-      throw error;
-    }
-  }, []);
 
   // Function to upload local file and get session token
   const uploadFile = async (file: File) => {
@@ -139,11 +109,16 @@ function App() {
   // Function to convert PDF to Excel
   const convertToExcel = async () => {
     try {
+      if (!sessionToken) {
+        setStatus("Error: Please upload a document first");
+        return;
+      }
+
       setStatus("Converting PDF to Excel...");
 
-      // Use a sample PDF URL for demonstration
+      // Use a smaller sample PDF that fits within storage limits
       const documentUrl =
-        "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+        "https://www.nutrient.io/downloads/nutrient-web-demo.pdf";
 
       const response = await fetch(
         "http://localhost:3001/api/convert-to-excel",
@@ -225,29 +200,10 @@ function App() {
     }
   };
 
-  // Load document from URL on component mount
+  // Initialize component without auto-loading any document
   useEffect(() => {
-    let cleanup = () => {};
-
-    const initializePDF = async () => {
-      try {
-        // Use a sample PDF URL for demonstration
-        const documentUrl =
-          "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
-        const token = await uploadFromUrl(documentUrl);
-        cleanup = await loadPDFWithSession(token);
-      } catch (error) {
-        console.error("PDF loading failed:", error);
-        setStatus(
-          `Error: ${error instanceof Error ? error.message : String(error)}`,
-        );
-      }
-    };
-
-    initializePDF();
-
-    return cleanup;
-  }, [uploadFromUrl, loadPDFWithSession]);
+    setStatus("Ready - Upload a file to get started");
+  }, []);
 
   return (
     <div>

@@ -425,23 +425,17 @@ app.post("/api/cleanup-documents", async (_req, res) => {
     const documentsResult = await listResponse.json();
     const documents = documentsResult.data || documentsResult;
 
-    if (documents.length <= 5) {
+    if (documents.length === 0) {
       return res.json({
         success: true,
-        message: `Only ${documents.length} documents found, no cleanup needed`,
+        message: "No documents found to delete",
         deleted: [],
-        remaining: documents.length,
+        remaining: 0,
       });
     }
 
-    // Sort by creation date, keep 5 most recent, delete the rest
-    const sortedDocs = documents.sort((a, b) => {
-      const dateA = new Date(a.created_at || a.createdAt || a.timestamp || 0);
-      const dateB = new Date(b.created_at || b.createdAt || b.timestamp || 0);
-      return dateB - dateA;
-    });
-
-    const docsToDelete = sortedDocs.slice(5);
+    // Delete ALL documents to free up storage space
+    const docsToDelete = documents;
     const deleted = [];
 
     // Delete old documents
@@ -469,9 +463,9 @@ app.post("/api/cleanup-documents", async (_req, res) => {
 
     res.json({
       success: true,
-      message: `Cleanup completed. Deleted ${deleted.length} documents, kept 5 recent ones.`,
+      message: `Cleanup completed. Deleted ${deleted.length} documents to free up storage space.`,
       deleted: deleted,
-      remaining: 5,
+      remaining: 0,
       totalDeleted: deleted.length,
     });
   } catch (error) {
