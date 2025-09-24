@@ -90,35 +90,15 @@ Output should include deployment information:
 
 ```
 ...
-environment_name = "pspdfkit-de-demo-fE0JX8Bf"
-cluster_vpc_id = "vpc-0d00dfe0eee0641e4"
-...
-document_engine_url = "http://k8s-pspdfkit-document-1828531825-23172973189273.eu-north-1.elb.amazonaws.com"
-kubeconfig_command = "aws eks update-kubeconfig --region eu-north-1 --name pspdfkit-de-demo-fsd797d --kubeconfig .kubeconfig"
+document_engine_endpoint = "http://nutrient-de-demo-905380917.eu-north-1.elb.amazonaws.com:80"
 ```
-
-Note `kubeconfig_command` output, it contains AWS CLI command to retrieve Kubernetes configuration file. It can then be used by setting `KUBECONFIG` environment variable: 
-
-```shell
-aws eks update-kubeconfig --region eu-north-1 --name pspdfkit-de-demo-fsd797d --kubeconfig .kubeconfig
-export KUBECONFIG="$(pwd)/.kubeconfig"
-```
-
-This allows all range of `kubectl` and `helm` commands: 
-
-```shell
-kubectl get namespaces
-helm status -n pspdfkit-document-engine document-engine
-```
-
-We will need the URL from 
 
 ## Accessing Document Engine
 
-Terraform deployment output from the previous subsection should contain `document_engine_url` string. 
+Terraform deployment output from the previous subsection should contain `document_engine_endpoint` string. 
 It corresponds to [AWS Application Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html) that exposes Document Engine. 
 
-Dashboard is accessible by `/dashboard` path, with default username `admin` and password `admin`.
+Dashboard is accessible by `/dashboard` path, with default username `admin` and password `nutrientAdmin!`, unless you changed it.
 
 ## Cleanup
 
@@ -134,7 +114,6 @@ This software is licensed under a [modified BSD license](LICENSE).
 
 ## Support, Issues and License Questions
 
-PSPDFKit offers support for customers with an active SDK license via https://pspdfkit.com/support/request/
+Nutrient offers support via https://support.nutrient.io/hc/en-us/requests/new
 
-Are you [evaluating our SDK](https://pspdfkit.com/try/)? That's great, we're happy to help out! To make sure this is fast, please use a work email and have someone from your company fill out our sales form: https://pspdfkit.com/sales/
-
+Are you [evaluating our SDK](https://www.nutrient.io/sdk/try)? That's great, we're happy to help out! To make sure this is fast, please use a work email and have someone from your company fill out our sales form: https://www.nutrient.io/contact-sales?=sdk
