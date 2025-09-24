@@ -1,90 +1,96 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import './app.css'
+import { useCallback, useEffect, useRef, useState } from "react";
+import "./app.css";
 
 function App() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [status, setStatus] = useState("Initializing...")
-  const [sessionToken, setSessionToken] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [status, setStatus] = useState("Initializing...");
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Function to upload document from URL and get session token
   const uploadFromUrl = useCallback(async (url: string) => {
     try {
-      setStatus("Uploading document from URL...")
+      setStatus("Uploading document from URL...");
 
-      const response = await fetch('http://localhost:3001/api/upload-from-url', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        "http://localhost:3001/api/upload-from-url",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url }),
         },
-        body: JSON.stringify({ url }),
-      })
+      );
 
-      const result = await response.json()
+      const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.error || 'Upload failed')
+        throw new Error(result.error || "Upload failed");
       }
 
-      setSessionToken(result.sessionToken)
-      return result.sessionToken
-
+      setSessionToken(result.sessionToken);
+      return result.sessionToken;
     } catch (error) {
-      console.error('Upload error:', error)
-      throw error
+      console.error("Upload error:", error);
+      throw error;
     }
-  }, [])
+  }, []);
 
   // Function to upload local file and get session token
   const uploadFile = async (file: File) => {
     try {
-      setStatus("Uploading file...")
+      setStatus("Uploading file...");
 
-      const formData = new FormData()
-      formData.append('file', file)
+      const formData = new FormData();
+      formData.append("file", file);
 
-      const response = await fetch('http://localhost:3001/api/upload-and-create-session', {
-        method: 'POST',
-        body: formData,
-      })
+      const response = await fetch(
+        "http://localhost:3001/api/upload-and-create-session",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
 
-      const result = await response.json()
+      const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.error || 'Upload failed')
+        throw new Error(result.error || "Upload failed");
       }
 
-      setSessionToken(result.sessionToken)
-      return result.sessionToken
-
+      setSessionToken(result.sessionToken);
+      return result.sessionToken;
     } catch (error) {
-      console.error('Upload error:', error)
-      throw error
+      console.error("Upload error:", error);
+      throw error;
     }
-  }
+  };
 
   // Function to load PDF using session token
   const loadPDFWithSession = useCallback(async (token: string) => {
     try {
-      const container = containerRef.current
+      const container = containerRef.current;
 
       // Load SDK using local installation
-      const NutrientViewer = (await import("@nutrient-sdk/viewer")).default
+      const NutrientViewer = (await import("@nutrient-sdk/viewer")).default;
 
       // Ensure there's only one NutrientViewer instance
-      NutrientViewer.unload(container)
+      NutrientViewer.unload(container);
 
       // Verify container has dimensions
       if (!container) {
-        throw new Error("Container ref is not available")
+        throw new Error("Container ref is not available");
       }
 
-      const rect = container.getBoundingClientRect()
+      const rect = container.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) {
-        throw new Error(`Container has no dimensions: ${rect.width}x${rect.height}. Check your CSS.`)
+        throw new Error(
+          `Container has no dimensions: ${rect.width}x${rect.height}. Check your CSS.`,
+        );
       }
 
-      setStatus("Loading PDF with session token...")
+      setStatus("Loading PDF with session token...");
 
       // Load PDF using DWS Viewer API session token
       if (container && NutrientViewer) {
@@ -96,154 +102,176 @@ function App() {
           baseUrl: `${window.location.protocol}//${window.location.host}/${
             import.meta.env.PUBLIC_URL ?? ""
           }`,
-        })
+        });
       }
 
-      setStatus("PDF loaded successfully via DWS Viewer API!")
+      setStatus("PDF loaded successfully via DWS Viewer API!");
 
       return () => {
-        NutrientViewer.unload(container)
-      }
-
+        NutrientViewer.unload(container);
+      };
     } catch (error) {
-      console.error("PDF loading failed:", error)
-      setStatus(`Error: ${error instanceof Error ? error.message : String(error)}`)
-      throw error
+      console.error("PDF loading failed:", error);
+      setStatus(
+        `Error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      throw error;
     }
-  }, [])
+  }, []);
 
   // Handle file selection
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
     if (file) {
       try {
-        const token = await uploadFile(file)
-        await loadPDFWithSession(token)
+        const token = await uploadFile(file);
+        await loadPDFWithSession(token);
       } catch (error) {
-        setStatus(`Error: ${error instanceof Error ? error.message : String(error)}`)
+        setStatus(
+          `Error: ${error instanceof Error ? error.message : String(error)}`,
+        );
       }
     }
-  }
+  };
 
   // Function to convert PDF to Excel
   const convertToExcel = async () => {
     try {
-      setStatus("Converting PDF to Excel...")
+      setStatus("Converting PDF to Excel...");
 
       // Use a sample PDF URL for demonstration
-      const documentUrl = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+      const documentUrl =
+        "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
 
-      const response = await fetch('http://localhost:3001/api/convert-to-excel', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        "http://localhost:3001/api/convert-to-excel",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url: documentUrl }),
         },
-        body: JSON.stringify({ url: documentUrl }),
-      })
+      );
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Conversion failed' }))
-        throw new Error(errorData.error || 'Failed to convert PDF to Excel')
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: "Conversion failed" }));
+        throw new Error(errorData.error || "Failed to convert PDF to Excel");
       }
 
       // Get the Excel file as blob
-      const excelBlob = await response.blob()
+      const excelBlob = await response.blob();
 
       // Create download link
-      const downloadUrl = window.URL.createObjectURL(excelBlob)
-      const link = document.createElement('a')
-      link.href = downloadUrl
-      link.download = 'extracted_tables.xlsx'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(downloadUrl)
+      const downloadUrl = window.URL.createObjectURL(excelBlob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = "extracted_tables.xlsx";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
 
-      setStatus("Excel file downloaded successfully!")
+      setStatus("Excel file downloaded successfully!");
 
       // Reset status after a few seconds
       setTimeout(() => {
-        setStatus("PDF loaded successfully via DWS Viewer API!")
-      }, 3000)
-
+        setStatus("PDF loaded successfully via DWS Viewer API!");
+      }, 3000);
     } catch (error) {
-      console.error('Excel conversion error:', error)
-      setStatus(`Error converting to Excel: ${error instanceof Error ? error.message : String(error)}`)
+      console.error("Excel conversion error:", error);
+      setStatus(
+        `Error converting to Excel: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
-  }
+  };
 
   // Function to cleanup old documents
   const cleanupDocuments = async () => {
     try {
-      setStatus("Cleaning up old documents...")
+      setStatus("Cleaning up old documents...");
 
-      const response = await fetch('http://localhost:3001/api/cleanup-documents', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        "http://localhost:3001/api/cleanup-documents",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      })
+      );
 
-      const result = await response.json()
+      const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.error || 'Cleanup failed')
+        throw new Error(result.error || "Cleanup failed");
       }
 
-      setStatus(`Cleanup successful: ${result.message}`)
+      setStatus(`Cleanup successful: ${result.message}`);
 
       // Reset status after a few seconds
       setTimeout(() => {
-        setStatus("Ready - documents cleaned up!")
-      }, 4000)
-
+        setStatus("Ready - documents cleaned up!");
+      }, 4000);
     } catch (error) {
-      console.error('Cleanup error:', error)
-      setStatus(`Error cleaning up documents: ${error instanceof Error ? error.message : String(error)}`)
+      console.error("Cleanup error:", error);
+      setStatus(
+        `Error cleaning up documents: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
-  }
+  };
 
   // Load document from URL on component mount
   useEffect(() => {
-    let cleanup = () => {}
+    let cleanup = () => {};
 
     const initializePDF = async () => {
       try {
         // Use a sample PDF URL for demonstration
-        const documentUrl = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-        const token = await uploadFromUrl(documentUrl)
-        cleanup = await loadPDFWithSession(token)
-
+        const documentUrl =
+          "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+        const token = await uploadFromUrl(documentUrl);
+        cleanup = await loadPDFWithSession(token);
       } catch (error) {
-        console.error("PDF loading failed:", error)
-        setStatus(`Error: ${error instanceof Error ? error.message : String(error)}`)
+        console.error("PDF loading failed:", error);
+        setStatus(
+          `Error: ${error instanceof Error ? error.message : String(error)}`,
+        );
       }
-    }
+    };
 
-    initializePDF()
+    initializePDF();
 
-    return cleanup
-  }, [uploadFromUrl, loadPDFWithSession])
+    return cleanup;
+  }, [uploadFromUrl, loadPDFWithSession]);
 
   return (
     <div>
-      <div style={{
-        padding: "10px",
-        background: "#f0f0f0",
-        borderBottom: "1px solid #ccc",
-        fontSize: "14px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center"
-      }}>
-        <span style={{
-          color: "#000000",
-          backgroundColor: "#ffffff",
-          padding: "4px 8px",
-          borderRadius: "4px",
-          border: "1px solid #ddd",
-          fontWeight: "500"
-        }}>
+      <div
+        style={{
+          padding: "10px",
+          background: "#f0f0f0",
+          borderBottom: "1px solid #ccc",
+          fontSize: "14px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <span
+          style={{
+            color: "#000000",
+            backgroundColor: "#ffffff",
+            padding: "4px 8px",
+            borderRadius: "4px",
+            border: "1px solid #ddd",
+            fontWeight: "500",
+          }}
+        >
           Status: {status}
         </span>
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
@@ -264,7 +292,7 @@ function App() {
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
-              fontSize: "12px"
+              fontSize: "12px",
             }}
           >
             Upload File
@@ -279,7 +307,7 @@ function App() {
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
-              fontSize: "12px"
+              fontSize: "12px",
             }}
           >
             Export to Excel
@@ -294,19 +322,21 @@ function App() {
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
-              fontSize: "12px"
+              fontSize: "12px",
             }}
           >
             Cleanup Documents
           </button>
           {sessionToken && (
-            <span style={{
-              fontSize: "10px",
-              color: "#666",
-              maxWidth: "200px",
-              overflow: "hidden",
-              textOverflow: "ellipsis"
-            }}>
+            <span
+              style={{
+                fontSize: "10px",
+                color: "#666",
+                maxWidth: "200px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
               Session: {sessionToken.substring(0, 20)}...
             </span>
           )}
@@ -317,11 +347,11 @@ function App() {
         style={{
           height: "calc(100vh - 60px)",
           width: "100vw",
-          background: "#e0e0e0"
+          background: "#e0e0e0",
         }}
       />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
