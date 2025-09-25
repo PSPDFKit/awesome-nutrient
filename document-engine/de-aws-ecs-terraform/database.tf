@@ -4,6 +4,7 @@ locals {
 
   database_properties = {
     identifier                   = "${local.environment_name}-db"
+    ca_cert_identifier           = "rds-ca-rsa4096-g1"
     username                     = "nutrient"
     db_name                      = "nutrient"
     ec2_instance_type            = "db.m8g.large"
@@ -36,12 +37,24 @@ resource "aws_db_parameter_group" "document_engine" {
   }
 }
 
+resource "aws_kms_key" "document_engine_db" {
+  description             = "Document Engine database encryption: ${local.database_properties.identifier}"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+}
+
+resource "aws_kms_alias" "document_engine_db" {
+  name          = "alias/MDE/${local.database_properties.identifier}"
+  target_key_id = aws_kms_key.document_engine_db.id
+}
+
 resource "aws_db_instance" "document_engine" {
   identifier           = local.database_properties.identifier
   instance_class       = local.database_properties.ec2_instance_type
   allocated_storage    = 10
   engine               = "postgres"
-  ca_cert_identifier   = "rds-ca-rsa4096-g1"
+  ca_cert_identifier   = local.database_properties.ca_cert_identifier
+  kms_key_id           = aws_kms_key.document_engine_db.arn
   engine_version       = local.database_properties.postgres_engine_version
   username             = local.database_properties.username
   password             = local.document_engine_db_password
@@ -73,5 +86,5 @@ resource "aws_vpc_security_group_ingress_rule" "document_engine_db_access" {
 }
 
 data "http" "aws_certificates_rds" {
-  url = "https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem"
+  url = "https://truststore.pki.rds.amazonaws.com/${local.aws_region_name}/${local.aws_region_name}-bundle.pem"
 }

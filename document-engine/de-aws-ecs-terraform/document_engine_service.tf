@@ -61,14 +61,14 @@ locals {
         name  = "PGSSL"
         value = "true"
       },
-      {
-        name  = "PGSSL_DISABLE_VERIFY"
-        value = "true"
-      },
       # {
-      #   name  = "PGSSL_CA_CERTS"
-      #   value = local.database_ca_certificates
+      #   name  = "PGSSL_DISABLE_VERIFY"
+      #   value = "true"
       # },
+      {
+        name  = "PGSSL_CA_CERTS"
+        value = local.database_ca_certificates
+      },
       {
         name  = "ASSET_STORAGE_BACKEND"
         value = "built-in"
@@ -79,6 +79,7 @@ locals {
       value = v
     }]
   )
+  document_engine_secrets = []
 }
 
 module "ecs_document_engine_service" {
@@ -108,6 +109,7 @@ module "ecs_document_engine_service" {
       memoryReservation = 100
 
       environment = local.document_engine_environment
+      secrets     = local.document_engine_secrets
 
       portMappings = [
         {

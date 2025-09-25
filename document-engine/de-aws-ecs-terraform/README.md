@@ -25,9 +25,9 @@ The resources deployed will include:
 
 ## Notable limitations
 
+* No S3 bucket, using `built-in` storage
 * No HTTPS (requires a domain available)
-* No secret management (plain environment variables)
-* Unverified TLS with RDS (because need to provide AWS CA certificates)
+* No proper secret management (plain environment variables)
 
 ## Prerequisites
 
