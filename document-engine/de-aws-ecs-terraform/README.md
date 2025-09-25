@@ -6,6 +6,7 @@
     - [Tools](#tools)
     - [Resources](#resources)
   - [Setup](#setup)
+    - [Required Variables](#required-variables)
   - [Accessing Document Engine](#accessing-document-engine)
   - [Cleanup](#cleanup)
   - [License](#license)
@@ -49,7 +50,7 @@ This entails something like this in `~/.aws/credentials`:
 ```
 [document-engine-example]
 aws_access_key_id = ...
-aws_secret_access_ke = ...
+aws_secret_access_key = ...
 ```
 
 ## Setup
@@ -63,7 +64,35 @@ export TF_VAR_aws_profile_name="document-engine-example"
 export TF_VAR_aws_region="eu-north-1" # Remove or change the default in `terraform.tfvars` file if setting this variable
 ```
 
-Alternatively, prepare to provide AWS profile name for interactive input during the following commands. 
+Alternatively, prepare to provide AWS profile name for interactive input during the following commands.
+
+### Required Variables
+
+Edit `terraform.tfvars` file if necessary:
+
+```hcl
+environment_name_prefix = "your-unique-prefix"
+
+document_engine_api_auth_token      = "your-api-auth-token"
+document_engine_dashboard_username  = "admin"
+document_engine_dashboard_password  = "your-secure-password"
+
+document_engine_parameters = {
+  image_tag           = "2024.9.0"
+  cpu                 = 1024
+  memory              = 2048
+  desired_count       = 1
+  logging_level       = "info"
+  port                = 5000
+  jwt_algorithm       = "RS256"
+  jwt_public_key_path = "./JWT_PUBLIC_KEY.pem"
+  extra_env           = {}
+}
+```
+
+> [!NOTE]
+> **Estimated monthly cost: ~$150-200** (RDS db.m8g.large + ALB + NAT Gateway)
+> Consider using smaller instance types like `db.t4g.micro` for testing.
 
 Put dependencies in place:
 
@@ -74,7 +103,7 @@ terraform init -upgrade
 Next, generate a JWT key pair using the `generate-jwt-pair.sh` script
 
 ```shell
-# Run from within examples/de-aws-eks
+# Run from within this directory
 
 ./generate-jwt-pair.sh
 ```
