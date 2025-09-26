@@ -234,6 +234,70 @@
   padding: 2rem;
 }
 
+.status-bar {
+  padding: 10px;
+  background: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-text {
+  color: #000000;
+  background-color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-weight: 500;
+}
+
+.controls-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.control-button {
+  padding: 5px 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.control-button-upload {
+  background-color: #007bff;
+}
+
+.control-button-export {
+  background-color: #28a745;
+}
+
+.control-button-cleanup {
+  background-color: #dc3545;
+}
+
+.session-token {
+  font-size: 10px;
+  color: #666;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdf-container {
+  height: calc(100vh - 60px);
+  width: 100vw;
+  background: #e0e0e0;
+}
+
 @media (max-width: 768px) {
   .main-content {
     flex-direction: column;

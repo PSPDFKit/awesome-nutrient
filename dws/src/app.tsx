@@ -53,13 +53,6 @@ function App() {
         throw new Error("Container ref is not available");
       }
 
-      const rect = container.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) {
-        throw new Error(
-          `Container has no dimensions: ${rect.width}x${rect.height}. Check your CSS.`,
-        );
-      }
-
       setStatus("Loading PDF with session token...");
 
       // Load PDF using DWS Viewer API session token
@@ -207,105 +200,45 @@ function App() {
 
   return (
     <div>
-      <div
-        style={{
-          padding: "10px",
-          background: "#f0f0f0",
-          borderBottom: "1px solid #ccc",
-          fontSize: "14px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <span
-          style={{
-            color: "#000000",
-            backgroundColor: "#ffffff",
-            padding: "4px 8px",
-            borderRadius: "4px",
-            border: "1px solid #ddd",
-            fontWeight: "500",
-          }}
-        >
-          Status: {status}
-        </span>
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+      <div className="status-bar">
+        <span className="status-text">Status: {status}</span>
+        <div className="controls-group">
           <input
             ref={fileInputRef}
             type="file"
             accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
             onChange={handleFileSelect}
-            style={{ display: "none" }}
+            className="file-input-hidden"
           />
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            style={{
-              padding: "5px 10px",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "12px",
-            }}
+            className="control-button control-button-upload"
           >
             Upload File
           </button>
           <button
             type="button"
             onClick={convertToExcel}
-            style={{
-              padding: "5px 10px",
-              backgroundColor: "#28a745",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "12px",
-            }}
+            className="control-button control-button-export"
           >
             Export to Excel
           </button>
           <button
             type="button"
             onClick={cleanupDocuments}
-            style={{
-              padding: "5px 10px",
-              backgroundColor: "#dc3545",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "12px",
-            }}
+            className="control-button control-button-cleanup"
           >
             Cleanup Documents
           </button>
           {sessionToken && (
-            <span
-              style={{
-                fontSize: "10px",
-                color: "#666",
-                maxWidth: "200px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
+            <span className="session-token">
               Session: {sessionToken.substring(0, 20)}...
             </span>
           )}
         </div>
       </div>
-      <div
-        ref={containerRef}
-        style={{
-          height: "calc(100vh - 60px)",
-          width: "100vw",
-          background: "#e0e0e0",
-        }}
-      />
+      <div ref={containerRef} className="pdf-container" />
     </div>
   );
 }
