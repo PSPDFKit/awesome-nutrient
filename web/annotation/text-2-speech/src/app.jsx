@@ -1,11 +1,12 @@
-//App.jsx
-import { useState } from "react";
+// App.jsx
+import { useId, useState } from "react";
 
 import PdfViewerComponent from "./components/PdfViewerComponent.jsx";
 import "./App.css";
 
 function App() {
   const [document, setDocument] = useState("document.pdf");
+  const fileInputId = useId(); // generate unique ID
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -16,11 +17,11 @@ function App() {
 
   return (
     <div className="App">
-      <label htmlFor="file-input" className="App-input">
+      <label htmlFor={fileInputId} className="App-input">
         Open another document
       </label>
       <input
-        id="file-input"
+        id={fileInputId}
         type="file"
         onChange={handleFileChange}
         className="chooseFile"
