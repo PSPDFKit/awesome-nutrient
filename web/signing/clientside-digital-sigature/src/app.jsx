@@ -1,25 +1,26 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 
 import NutrientPdfViewer from "./components/nutrient-pdf-viewer";
 import "./app.css";
 
 function App() {
   const [document, setDocument] = useState("download.pdf");
+  const fileInputId = useId(); // unique ID for the input
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    if (!file) return;
     const objectUrl = URL.createObjectURL(file);
-
     setDocument(objectUrl);
   };
 
   return (
     <div className="App">
-      <label htmlFor="file-input" className="App-input">
+      <label htmlFor={fileInputId} className="App-input">
         Open another document
       </label>
       <input
-        id="file-input"
+        id={fileInputId}
         type="file"
         onChange={handleFileChange}
         className="chooseFile"

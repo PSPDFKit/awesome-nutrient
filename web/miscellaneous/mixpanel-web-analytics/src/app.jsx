@@ -1,5 +1,5 @@
-// src/app.jsx - Fixed accessibility issues
-import { useEffect, useState } from "react";
+// src/app.jsx - Fixed accessibility issues with useId and ref
+import { useEffect, useId, useRef, useState } from "react";
 import DebugPanel from "./components/debug-panel.jsx";
 import PdfViewerComponent from "./components/pdf-viewer-component.jsx";
 import mixpanelService from "./services/mixpanel.js";
@@ -9,12 +9,11 @@ function App() {
   const [document, setDocument] = useState("document.pdf");
   const [isLoading, setIsLoading] = useState(false);
   const [fileName, setFileName] = useState("document.pdf");
+  const fileInputId = useId(); // unique ID for input
+  const fileInputRef = useRef(null); // ref for programmatic click
 
   useEffect(() => {
-    // Track app initialization
     mixpanelService.trackPageView("PDF Viewer App");
-
-    // Track initial document load
     mixpanelService.trackPDFLoaded("document.pdf", "unknown");
   }, []);
 
@@ -29,14 +28,12 @@ function App() {
       setDocument(objectUrl);
       setFileName(file.name);
 
-      // Track file upload
       mixpanelService.track("File Upload Started", {
         file_name: file.name,
         file_size: file.size,
         file_type: file.type,
       });
 
-      // Track PDF loaded
       mixpanelService.trackPDFLoaded(file.name, file.size);
     } catch (error) {
       mixpanelService.track("File Upload Error", {
@@ -50,14 +47,13 @@ function App() {
 
   const handleFileInputClick = () => {
     mixpanelService.track("File Input Clicked");
+    fileInputRef.current?.click(); // safer programmatic click
   };
 
-  // Handle keyboard navigation for file input
   const handleKeyDown = (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       handleFileInputClick();
-      document.getElementById("file-input").click();
     }
   };
 
@@ -68,7 +64,7 @@ function App() {
           <h1 className="app-title">PDF Viewer</h1>
           <div className="file-upload-section">
             <label
-              htmlFor="file-input"
+              htmlFor={fileInputId}
               className="App-input"
               onClick={handleFileInputClick}
               onKeyDown={handleKeyDown}
@@ -86,7 +82,8 @@ function App() {
               {isLoading ? "Loading..." : "Choose PDF Document"}
             </label>
             <input
-              id="file-input"
+              id={fileInputId}
+              ref={fileInputRef}
               type="file"
               onChange={handleFileChange}
               className="chooseFile"
