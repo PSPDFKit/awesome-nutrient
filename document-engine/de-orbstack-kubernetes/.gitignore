@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Kubernetes
+.kubeconfig
+*.kubeconfig
+
+# Downloaded files
+downloaded-*.pdf

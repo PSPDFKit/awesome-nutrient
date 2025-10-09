@@ -1,0 +1,102 @@
+# Document Engine Helm Chart Values for OrbStack Kubernetes
+# This configuration is optimized for local development on OrbStack
+
+# License configuration
+# Leave empty to run in trial mode, or provide your activation key
+documentEngineLicense:
+  activationKey: ""
+
+# API Authentication
+# Default token for API requests: use 'Authorization: Token token=secret'
+apiAuth:
+  apiToken: secret
+
+# Network configuration
+config:
+  trustedProxies: default
+
+# Digital Signature Service (optional)
+documentSigningService:
+  enabled: false
+  url: http://signing-service:6000/sign
+  timeoutSeconds: 10
+
+# Database configuration
+database:
+  enabled: true
+  engine: postgres
+  migrationJob:
+    enabled: false
+  postgres:
+    port: 5432
+    username: postgres
+    tls:
+      enabled: false
+
+# Asset storage configuration
+# Using built-in storage (no external S3 required)
+assetStorage:
+  backendType: built-in
+  backendFallback:
+    enabled: false
+
+# Dashboard configuration
+dashboard:
+  auth:
+    username: admin
+    password: admin
+
+# Observability and monitoring
+observability:
+  log:
+    level: info
+  opentelemetry:
+    enabled: false
+  metrics:
+    prometheusEndpoint:
+      enabled: true
+
+# Deployment configuration
+replicaCount: 1
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+
+# Resource limits and requests
+# Tuned for local development
+resources:
+  limits:
+    cpu: "2"
+    memory: 4Gi
+  requests:
+    cpu: "500m"
+    memory: 512Mi
+
+# Service configuration
+service:
+  internalTrafficPolicy: Local
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "180"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
+    nginx.ingress.kubernetes.io/large-client-header-buffers: "4 16k"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+  hosts:
+    - paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+# CloudNative-PG PostgreSQL configuration
+cloudNativePG:
+  enabled: true
+  # Note: Storage class is set via --set flag in setup.sh for OrbStack compatibility
