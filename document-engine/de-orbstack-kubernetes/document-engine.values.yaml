@@ -66,13 +66,14 @@ updateStrategy:
     maxSurge: 0
 
 # Resource limits and requests
+# Tuned for local development
 resources:
   limits:
-    cpu: "4"
-    memory: 8Gi
+    cpu: "2"
+    memory: 4Gi
   requests:
-    cpu: "1"
-    memory: 1Gi
+    cpu: "500m"
+    memory: 512Mi
 
 # Service configuration
 service:
@@ -96,8 +97,6 @@ ingress:
           pathType: ImplementationSpecific
 
 # CloudNative-PG PostgreSQL configuration
-# IMPORTANT: OrbStack requires 'local-path' storage class
 cloudNativePG:
   enabled: true
-  storage:
-    storageClass: local-path
+  # Note: Storage class is set via --set flag in setup.sh for OrbStack compatibility

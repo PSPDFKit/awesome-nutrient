@@ -112,6 +112,10 @@ install_document_engine() {
     helm repo update
 
     print_info "Installing Document Engine with Helm..."
+    # OrbStack-specific settings:
+    # - storageClass=local-path (OrbStack's default storage class)
+    # - host=document-engine.k8s.orb.local (OrbStack's DNS domain)
+    # - storage.size=128Mi (minimal size for local development)
     helm upgrade --install \
         --namespace document-engine \
         --create-namespace \

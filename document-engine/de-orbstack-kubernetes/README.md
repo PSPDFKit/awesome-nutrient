@@ -34,10 +34,8 @@ brew install kubectl helm
 ## Getting started
 
 1. **Install OrbStack and enable Kubernetes** (one-time setup)
-   ```bash
-   brew install --cask orbstack
-   ```
-   After installation, open the OrbStack app and enable Kubernetes from the settings panel. To verify Kubernetes is running:
+
+   [Install OrbStack](https://docs.orbstack.dev/quick-start) for macOS, then open the OrbStack app and enable Kubernetes from the settings panel. To verify Kubernetes is running:
    ```bash
    kubectl version
    ```
