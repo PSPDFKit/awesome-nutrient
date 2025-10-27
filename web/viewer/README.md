@@ -9,8 +9,6 @@ These examples showcase advanced PDF viewing capabilities and custom viewer conf
 ## Available Examples
 
 ### multi-tab
-**Path**: `./multi-tab/`
-**Tech Stack**: Plain JavaScript
 **Description**: Multi-tab PDF viewer allowing users to open and switch between multiple documents.
 
 **Quick start**:
@@ -27,7 +25,6 @@ npm start
 All examples require:
 - **Node.js** (v16 or higher recommended)
 - **npm** or **yarn**
-- A valid **Nutrient license key** (see individual READMEs for configuration)
 
 ## Need Help?
 

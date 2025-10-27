@@ -11,8 +11,6 @@ These examples demonstrate various integrations, analytics, and specialized use 
 ## Available Examples
 
 ### mixpanel-web-analytics
-**Path**: `./mixpanel-web-analytics/`
-**Tech Stack**: Plain JavaScript
 **Description**: Integration with Mixpanel for tracking PDF viewer analytics and user interactions.
 
 **Quick start**:
@@ -29,7 +27,6 @@ npm start
 All examples require:
 - **Node.js** (v16 or higher recommended)
 - **npm** or **yarn**
-- A valid **Nutrient license key** (see individual READMEs for configuration)
 - Additional service credentials where applicable (e.g., Mixpanel API key)
 
 ## Need Help?

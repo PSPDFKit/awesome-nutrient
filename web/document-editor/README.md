@@ -9,8 +9,6 @@ These examples demonstrate document editing capabilities including page manipula
 ## Available Examples
 
 ### save-selected-page-from-document-editor
-**Path**: `./save-selected-page-from-document-editor/`
-**Tech Stack**: Plain JavaScript
 **Description**: Extract and save individual pages from the document editor interface.
 
 **Quick start**:
@@ -27,7 +25,6 @@ npm start
 All examples require:
 - **Node.js** (v16 or higher recommended)
 - **npm** or **yarn**
-- A valid **Nutrient license key** (see individual READMEs for configuration)
 
 ## Need Help?
 
