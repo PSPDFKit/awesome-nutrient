@@ -2,7 +2,7 @@
 
 These examples demonstrate document editing capabilities including page manipulation, content editing, and document assembly.
 
-> For interactive playground examples, see [Document Editor Playground Examples](../../docs/examples/web-document-editor.md).
+> For interactive playground examples, see [Document Editor Playground Examples](../../playground/web-document-editor.md).
 
 ---
 
