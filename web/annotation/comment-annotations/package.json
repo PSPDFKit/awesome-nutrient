@@ -1,7 +1,13 @@
 {
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "@nutrient-sdk/viewer": "^1.0.0",
+    "typescript": "^5.3.3"
   },
   "scripts": {
-    "start": "serve -l 8080 ."
+    "start": "serve -l 8080 .",
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit"
   }
 }

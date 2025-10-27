@@ -2,14 +2,14 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "pspdfkit": "^2024.8.1"
+    "express": "^4.21.2"
   },
   "scripts": {
-    "postinstall": "echo 'Copying Web SDK files...' && shx mkdir -p ./web-sdk && shx cp -R ./node_modules/pspdfkit/dist/* ./web-sdk/"
+    "start": "node server.js",
+    "typecheck": "tsc --noEmit"
   },
-  "start": "node server.js",
   "devDependencies": {
-    "shx": "^0.3.4"
+    "@nutrient-sdk/viewer": "^1.0.0",
+    "typescript": "^5.3.3"
   }
 }

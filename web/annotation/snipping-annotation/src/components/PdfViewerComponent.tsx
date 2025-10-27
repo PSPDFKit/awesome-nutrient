@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import "pspdfkit";
-import html2canvas from "html2canvas";
+import { useEffect, useRef, useState } from "react";
 
 interface PdfViewerProps {
   document: string;
@@ -8,7 +6,6 @@ interface PdfViewerProps {
 }
 
 let instance: any;
-let PSPDFKit: any;
 
 export default function PdfViewerComponent(props: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,10 +13,15 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
   useEffect(() => {
     const container = containerRef.current;
+    if (!container) return;
+
+    const PSPDFKit = window.PSPDFKit;
+    if (!PSPDFKit) {
+      console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
+      return;
+    }
 
     (async function loadPdf() {
-      PSPDFKit = await import("pspdfkit");
-
       if (PSPDFKit) {
         PSPDFKit.unload(container);
       }
@@ -29,11 +31,11 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
         licenseKey: "Your License Key goes here",
         container,
         document: props.document,
-        baseUrl: `${window.location.protocol}//${window.location.host}/`,
+        baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/",
         toolbarItems: toolbarItemsDefault,
       });
     })();
-    return () => PSPDFKit?.unload(container);
+    return () => window.PSPDFKit?.unload(container);
   }, [props.document]);
 
   useEffect(() => {
