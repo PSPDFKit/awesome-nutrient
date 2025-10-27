@@ -2,7 +2,7 @@
 
 > These are interactive Nutrient Playground examples. Click any link to try the code in your browser.
 > 
-> For local runnable examples, see [web/miscellaneous/INDEX.md](../../web/miscellaneous/INDEX.md).
+> For local runnable examples, see [web/miscellaneous/README.md](../web/miscellaneous/README.md).
 
 ---
 
