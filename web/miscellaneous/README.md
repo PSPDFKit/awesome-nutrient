@@ -3,8 +3,8 @@
 These examples demonstrate various integrations, analytics, and specialized use cases with Nutrient Web SDK.
 
 > For related playground examples, see:
-> - [Toolbars & Menus Examples](../../docs/examples/web-toolbars-menus.md)
-> - [Text Comparison Examples](../../docs/examples/web-text-comparison.md)
+> - [Toolbars & Menus Examples](../../playground/web-toolbars-menus.md)
+> - [Text Comparison Examples](../../playground/web-text-comparison.md)
 
 ---
 

@@ -2,7 +2,7 @@
 
 These examples showcase advanced PDF viewing capabilities and custom viewer configurations.
 
-> For interactive playground examples, see [Viewer Playground Examples](../../docs/examples/web-viewer.md).
+> For interactive playground examples, see [Viewer Playground Examples](../../playground/web-viewer.md).
 
 ---
 

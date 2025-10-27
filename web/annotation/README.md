@@ -2,7 +2,7 @@
 
 These are runnable examples you can clone and run locally. Each demonstrates specific annotation features in Nutrient Web SDK.
 
-> For interactive playground examples, see [Annotations Playground Examples](../../docs/examples/web-annotations.md).
+> For interactive playground examples, see [Annotations Playground Examples](../../playground/web-annotations.md).
 
 ---
 

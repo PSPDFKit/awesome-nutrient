@@ -2,7 +2,7 @@
 
 These are runnable examples demonstrating electronic and digital signature capabilities with Nutrient Web SDK.
 
-> For interactive playground examples, see [Signing Playground Examples](../../docs/examples/web-signing.md).
+> For interactive playground examples, see [Signing Playground Examples](../../playground/web-signing.md).
 
 ---
 

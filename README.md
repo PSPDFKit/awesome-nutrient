@@ -4,6 +4,7 @@
 
 [![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)
 [![Chat](https://img.shields.io/badge/chat-on_discord-7289da.svg)](https://discord.gg/Z754Pfb8bD)
+[![Playground](https://img.shields.io/badge/Try-Interactive_Playground-0066FF?style=flat&logo=codesandbox&logoColor=white)](./playground/)
 
 This repository contains examples built with [Nutrient](https://www.nutrient.io/). These examples are provided for inspiration and learning. Read [the disclaimer](./DISCLAIMER.md) or [reach out if you have questions](https://support.nutrient.io/hc/en-us/requests/new).
 
@@ -31,22 +32,22 @@ The [Example Catalog](https://github.com/PSPDFKit/pspdfkit-web-examples-catalog)
 - [Next.js](https://github.com/PSPDFKit/nutrient-web-examples/tree/main/examples/nextjs)
 - [Nuxt.js](https://github.com/PSPDFKit/nutrient-web-examples/tree/main/examples/nuxtjs)
 
-### Playground Examples (Interactive)
-Code snippet examples you can try directly in the Nutrient Playground:
+### Interactive Playground Snippets
+Try these code snippets directly in your browser — [Browse All →](./playground/README.md)
 
 | Category | Description | Link |
 |----------|-------------|------|
-| **Annotations** | Add, customize, and manage PDF annotations | [View Examples](./docs/examples/web-annotations.md) |
-| **Redaction** | Permanently remove sensitive content | [View Examples](./docs/examples/web-redaction.md) |
-| **Signing** | Electronic and digital signatures | [View Examples](./docs/examples/web-signing.md) |
-| **Forms** | PDF form filling and management | [View Examples](./docs/examples/web-forms.md) |
-| **Form Creator** | Create and customize PDF forms | [View Examples](./docs/examples/web-form-creator.md) |
-| **Viewer** | PDF viewing and navigation | [View Examples](./docs/examples/web-viewer.md) |
-| **Document Editor** | Page manipulation and editing | [View Examples](./docs/examples/web-document-editor.md) |
-| **Comments** | Collaborative commenting workflows | [View Examples](./docs/examples/web-comments.md) |
-| **Content Editor** | Direct PDF content editing | [View Examples](./docs/examples/web-content-editor.md) |
-| **Toolbars & Menus** | UI customization and toolbar configuration | [View Examples](./docs/examples/web-toolbars-menus.md) |
-| **Text Comparison** | Compare document versions | [View Examples](./docs/examples/web-text-comparison.md) |
+| **Annotations** | Add, customize, and manage PDF annotations | [View Examples](./playground/web-annotations.md) |
+| **Redaction** | Permanently remove sensitive content | [View Examples](./playground/web-redaction.md) |
+| **Signing** | Electronic and digital signatures | [View Examples](./playground/web-signing.md) |
+| **Forms** | PDF form filling and management | [View Examples](./playground/web-forms.md) |
+| **Form Creator** | Create and customize PDF forms | [View Examples](./playground/web-form-creator.md) |
+| **Viewer** | PDF viewing and navigation | [View Examples](./playground/web-viewer.md) |
+| **Document Editor** | Page manipulation and editing | [View Examples](./playground/web-document-editor.md) |
+| **Comments** | Collaborative commenting workflows | [View Examples](./playground/web-comments.md) |
+| **Content Editor** | Direct PDF content editing | [View Examples](./playground/web-content-editor.md) |
+| **Toolbars & Menus** | UI customization and toolbar configuration | [View Examples](./playground/web-toolbars-menus.md) |
+| **Text Comparison** | Compare document versions | [View Examples](./playground/web-text-comparison.md) |
 
 ### Local Runnable Examples
 Clone and run these complete examples on your machine:
