@@ -11,7 +11,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const PSPDFKit = window.PSPDFKit;
+    const NutrientViewer = window.NutrientViewer;
     if (!PSPDFKit) {
       console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
       return;
@@ -20,9 +20,9 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     let instance: any;
 
     (async () => {
-      PSPDFKit.unload(container); // Ensure that there's only one PSPDFKit instance.
+      NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
 
-      const defaultToolbarItems = PSPDFKit.defaultDocumentEditorToolbarItems;
+      const defaultToolbarItems = NutrientViewer.defaultDocumentEditorToolbarItems;
 
       // Custom toolbar item
       const customToolbarItem = {
@@ -81,7 +81,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       // Insert custom item at the desired position
       const toolbarItems = [...defaultToolbarItems, customToolbarItem];
 
-      instance = await PSPDFKit.load({
+      instance = await NutrientViewer.load({
         container,
         document: props.document,
         baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/",

@@ -21,12 +21,12 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
       try {
         PSPDFKit = await import("pspdfkit");
         if (PSPDFKit) {
-          PSPDFKit.unload(container);
+          NutrientViewer.unload(container);
         }
 
-        const toolbarItemsDefault = PSPDFKit.defaultToolbarItems;
+        const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
         const redactionAnnotationsHandlerCallback = (annotation) => {
-          return annotation instanceof PSPDFKit.Annotations.RedactionAnnotation
+          return annotation instanceof NutrientViewer.Annotations.RedactionAnnotation
             ? [
                 {
                   type: "custom",
@@ -56,24 +56,24 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
         };
 
         const getAllAnnotations = async () => {
-          let annotationsList = PSPDFKit.Immutable.List();
+          let annotationsList = NutrientViewer.Immutable.List();
           for (let i = 0; i < instance.totalPageCount - 1; i++) {
             const anns = (await instance.getAnnotations(i)).filter(
-              (a) => a instanceof PSPDFKit.Annotations.RedactionAnnotation,
+              (a) => a instanceof NutrientViewer.Annotations.RedactionAnnotation,
             );
             annotationsList = annotationsList.concat(anns);
           }
           return annotationsList;
         };
-        instance = await PSPDFKit.load({
+        instance = await NutrientViewer.load({
           container,
           document: props.document,
           baseUrl: `${window.location.protocol}//${window.location.host}/`,
           toolbarItems: toolbarItemsDefault,
-          theme: PSPDFKit.Theme.DARK,
+          theme: NutrientViewer.Theme.DARK,
           annotationTooltipCallback: redactionAnnotationsHandlerCallback,
           styleSheets: ["/mypspdfkit.css"],
-          toolbarPlacement: PSPDFKit.ToolbarPlacement.TOP,
+          toolbarPlacement: NutrientViewer.ToolbarPlacement.TOP,
         });
         console.log("Instance:", instance);
         // Create redactions once PSPDFKit is loaded
@@ -97,7 +97,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
         if (instance) {
           const options = {
-            searchType: PSPDFKit.SearchType.TEXT,
+            searchType: NutrientViewer.SearchType.TEXT,
             searchInAnnotations: true,
           };
           console.log("Options:", options);

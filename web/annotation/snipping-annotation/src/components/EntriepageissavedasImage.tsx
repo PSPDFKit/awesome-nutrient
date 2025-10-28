@@ -21,11 +21,11 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
       PSPDFKit = await import("pspdfkit");
 
       if (PSPDFKit) {
-        PSPDFKit.unload(container);
+        NutrientViewer.unload(container);
       }
 
-      const toolbarItemsDefault = PSPDFKit.defaultToolbarItems;
-      instance = await PSPDFKit.load({
+      const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
+      instance = await NutrientViewer.load({
         licenseKey: "Your License key goes here",
         container,
         document: props.document,

@@ -57,7 +57,7 @@ const App: React.FC = () => {
     (async () => {
       PSPDFKit = await import("pspdfkit");
       allUsers.forEach((user: any) => {
-        user.color = PSPDFKit.Color.LIGHT_BLUE;
+        user.color = NutrientViewer.Color.LIGHT_BLUE;
       });
     })();
     setTimeout(() => {

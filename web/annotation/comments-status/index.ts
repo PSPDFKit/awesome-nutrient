@@ -1,15 +1,15 @@
-const PSPDFKit = window.PSPDFKit;
+const NutrientViewer = window.NutrientViewer;
 
-// We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
-const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/";
+// We need to inform NutrientViewer where to look for its library assets
+const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.5.0/";
 
 let _instance: any = null;
 
 const createCommentAnnotation = async (instance: any, annotation: any) => {
   // Get the first created annotation
-  const commentID = PSPDFKit.generateInstantId();
+  const commentID = NutrientViewer.generateInstantId();
   // Create a new comment annotation
-  const parentCom = new PSPDFKit.Annotations.CommentMarkerAnnotation({
+  const parentCom = new NutrientViewer.Annotations.CommentMarkerAnnotation({
     id: commentID,
     isCommentThreadRoot: true,
     pageIndex: 0,
@@ -18,7 +18,7 @@ const createCommentAnnotation = async (instance: any, annotation: any) => {
     customData: { parentAnnotation: annotation },
   });
   // Add the first comment to the document
-  const firstCom = new PSPDFKit.Comment({
+  const firstCom = new NutrientViewer.Comment({
     rootId: commentID,
     // Configure pageIndex
     pageIndex: 0,
@@ -38,7 +38,7 @@ const createCommentAnnotation = async (instance: any, annotation: any) => {
 
 const duplicateAnnotationTooltipCallback = (annotation: any) => {
   // If the annotation is a comment marker, dont show the tooltip
-  if (annotation instanceof PSPDFKit.Annotations.CommentMarkerAnnotation)
+  if (annotation instanceof NutrientViewer.Annotations.CommentMarkerAnnotation)
     return [];
   // Create a custom tooltip item with title "Comment"
   const duplicateItem = {
@@ -50,7 +50,7 @@ const duplicateAnnotationTooltipCallback = (annotation: any) => {
       //console.log("Annotation pressed", annotation);
       if (_instance) {
         if (
-          !(annotation instanceof PSPDFKit.Annotations.CommentMarkerAnnotation)
+          !(annotation instanceof NutrientViewer.Annotations.CommentMarkerAnnotation)
         ) {
           // Create a new comment annotation if it does not exist
           if (!annotation.customData?.commentAnnotationID)
@@ -59,7 +59,7 @@ const duplicateAnnotationTooltipCallback = (annotation: any) => {
           const parentAnnotationID = annotation.customData.commentAnnotationID;
           try {
             await _instance.setSelectedAnnotations(
-              PSPDFKit.Immutable.List([parentAnnotationID]),
+              NutrientViewer.Immutable.List([parentAnnotationID]),
             );
           } catch (error) {
             console.warn(error);
@@ -86,9 +86,9 @@ const setCommentColor = (ele: any, currStatus: string) => {
 
 const {
   UI: { createBlock, Recipes, Interfaces },
-} = PSPDFKit;
+} = NutrientViewer;
 
-PSPDFKit.load({
+NutrientViewer.load({
   ui: {
     [Interfaces.CommentThread]: ({ props }: any) => ({
       content: createBlock(Recipes.CommentThread, props, ({ ui }: any) => {
@@ -126,11 +126,11 @@ PSPDFKit.load({
   baseUrl,
   container: "#pspdfkit",
   document: "document.pdf",
-  toolbarItems: [...PSPDFKit.defaultToolbarItems, { type: "comment" }],
-  initialViewState: new PSPDFKit.ViewState({
+  toolbarItems: [...NutrientViewer.defaultToolbarItems, { type: "comment" }],
+  initialViewState: new NutrientViewer.ViewState({
     sidebarOptions: {
-      [PSPDFKit.SidebarMode.ANNOTATIONS]: {
-        includeContent: [PSPDFKit.Comment],
+      [NutrientViewer.SidebarMode.ANNOTATIONS]: {
+        includeContent: [NutrientViewer.Comment],
       },
     },
   }),
@@ -159,14 +159,14 @@ PSPDFKit.load({
     instance.addEventListener("annotations.press", async (event: any) => {
       if (
         event.annotation instanceof
-          PSPDFKit.Annotations.CommentMarkerAnnotation &&
+          NutrientViewer.Annotations.CommentMarkerAnnotation &&
         event.annotation.customData.parentAnnotation
       ) {
         event.preventDefault();
         const parentAnnotationID =
           event.annotation.customData.parentAnnotation.id;
         await instance.setSelectedAnnotations(
-          PSPDFKit.Immutable.List([parentAnnotationID]),
+          NutrientViewer.Immutable.List([parentAnnotationID]),
         );
         //,console.log("Annotation pressed", event);
       }

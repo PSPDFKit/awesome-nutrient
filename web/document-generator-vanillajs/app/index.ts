@@ -299,7 +299,7 @@ function goDocxEditor() {
     // get template & resolve to DOCX
     if (APP.docxDocument == null) {
       const templateBuffer = await APP.templateDocument.exportDOCX();
-      const docxBuffer = await window.PSPDFKit.populateDocumentTemplate(
+      const docxBuffer = await window.NutrientViewer.populateDocumentTemplate(
         { document: templateBuffer },
         APP.dataJson
       );
@@ -348,7 +348,7 @@ function initPdfViewer() {
   const doButtonAction = (e: Event) => {
     const action = (e.target as HTMLElement).dataset.action;
     if (action === "back-to-edit-docx") {
-      window.PSPDFKit.unload(APP.pdfViewer);
+      window.NutrientViewer.unload(APP.pdfViewer);
       APP.pdfViewer = null;
       goDocxEditor();
     } else if (action === "download-pdf") {
@@ -385,8 +385,8 @@ function goPdfViewer() {
     const pdfBuffer = await APP.docxDocument.exportPDF();
 
     // load the PDF into Web SDK viewer
-    const viewer = await window.PSPDFKit.load({
-      baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.8.1/",
+    const viewer = await window.NutrientViewer.load({
+      baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.5.0/",
       container: "#pspdfkit",
       document: pdfBuffer,
     });

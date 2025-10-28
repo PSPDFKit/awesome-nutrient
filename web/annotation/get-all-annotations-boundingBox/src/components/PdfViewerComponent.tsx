@@ -30,19 +30,19 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const PSPDFKit = window.PSPDFKit;
+    const NutrientViewer = window.NutrientViewer;
     if (!PSPDFKit) {
       console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
       return;
     }
 
     (async () => {
-      PSPDFKit.unload(container); // Ensure that there's only one PSPDFKit instance.
+      NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
 
-      const defaultToolbarItems = PSPDFKit.defaultDocumentEditorToolbarItems;
+      const defaultToolbarItems = NutrientViewer.defaultDocumentEditorToolbarItems;
       const toolbarItems = [...defaultToolbarItems];
 
-      instance = await PSPDFKit.load({
+      instance = await NutrientViewer.load({
         licenseKey: lkey,
         container,
         document: props.document,
@@ -124,12 +124,12 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
             if (!file) return;
             
             const imageAttachmentId = await instance.createAttachment(file);
-            const annotation = new PSPDFKit.Annotations.ImageAnnotation({
+            const annotation = new NutrientViewer.Annotations.ImageAnnotation({
               pageIndex: currentPage,
               contentType: content_Type,
               imageAttachmentId,
               description: "Pasted Image Annotation",
-              boundingBox: new PSPDFKit.Geometry.Rect({
+              boundingBox: new NutrientViewer.Geometry.Rect({
                 left: 10,
                 top: 50,
                 width: 150,
@@ -139,13 +139,13 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
             await instance.create(annotation);
           } else if (item.kind === "string") {
             item.getAsString(async (pastedText: string) => {
-              const textAnnotation = new PSPDFKit.Annotations.TextAnnotation({
+              const textAnnotation = new NutrientViewer.Annotations.TextAnnotation({
                 pageIndex: currentPage,
                 text: {
                   format: "plain",
                   value: pastedText,
                 },
-                boundingBox: new PSPDFKit.Geometry.Rect({
+                boundingBox: new NutrientViewer.Geometry.Rect({
                   left: 10,
                   top: 50,
                   width: 150,
@@ -168,7 +168,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
       return () => {
         document.removeEventListener("paste", handlePaste);
-        PSPDFKit.unload(container);
+        NutrientViewer.unload(container);
       };
     })();
   }, [props.document]);
@@ -215,8 +215,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     console.log("All Annotations", allAnnotations);
     console.log("currentAnnotationIndex is : ", currentAnnotationIndex);
     let highlightannotID;
-    const PSPDFKit = window.PSPDFKit;
-    const light_red = new PSPDFKit.Color({ r: 247, g: 141, b: 138 });
+    const NutrientViewer = window.NutrientViewer;
+    const light_red = new NutrientViewer.Color({ r: 247, g: 141, b: 138 });
     if (allAnnotations === undefined || allAnnotations.length === 0) {
       fetchAnnotationCoordinates();
       currentAnnotationIndex = 0;
@@ -227,20 +227,20 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     if (allAnnotations.length > 0) {
       const annotation = allAnnotations[currentAnnotationIndex];
       console.log("Current Annotation: ", annotation);
-      const bBox = new PSPDFKit.Geometry.Rect({
+      const bBox = new NutrientViewer.Geometry.Rect({
         left: annotation.left, // you calculation goes here for level of zoom needed
         top: annotation.top, // you calculation goes here for level of zoom needed
         width: annotation.width + 100, // you calculation goes here for level of zoom needed
         height: annotation.height + 100, // you calculation goes here for level of zoom needed
       });
-      const bBoxhighlight = new PSPDFKit.Geometry.Rect({
+      const bBoxhighlight = new NutrientViewer.Geometry.Rect({
         left: annotation.left,
         top: annotation.top,
         width: annotation.width,
         height: annotation.height,
       });
       highlightannotID = await instance.create(
-        new PSPDFKit.Annotations.RectangleAnnotation({
+        new NutrientViewer.Annotations.RectangleAnnotation({
           pageIndex: annotation.pageIndex,
           boundingBox: bBoxhighlight,
           strokeWidth: 1,

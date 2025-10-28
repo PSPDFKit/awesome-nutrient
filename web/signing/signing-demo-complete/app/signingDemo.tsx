@@ -86,7 +86,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   const [sessionInitials, setSessionInitials] = useState<any>([]);
 
   function onDragStart(event: React.DragEvent<HTMLDivElement>, type: string) {
-    const instantId = "PSPDFKit.generateInstantId()";
+    const instantId = "NutrientViewer.generateInstantId()";
     const data = `${currSignee.name}%${currSignee.email}%${instantId}%${type}`;
 
     (event.target as HTMLDivElement).style.opacity = "0.8";
@@ -111,7 +111,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     e.stopPropagation();
     const dataArray = e.dataTransfer.getData("text").split("%");
     let [name, email, instantId, annotationType] = dataArray;
-    instantId = PSPDFKit.generateInstantId();
+    instantId = NutrientViewer.generateInstantId();
     const signee = currSigneeRef.current;
     const user = currUserRef.current;
     const pageIndex = onPageIndexRef.current;
@@ -121,7 +121,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       annotationType === AnnotationTypeEnum.INITIAL
         ? 60
         : 40;
-    const clientRect = new PSPDFKit.Geometry.Rect({
+    const clientRect = new NutrientViewer.Geometry.Rect({
       left: e.clientX - rectWidth / 2,
       top: e.clientY - rectHeight / 2,
       height: rectHeight,
@@ -135,7 +135,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       annotationType === AnnotationTypeEnum.SIGNATURE ||
       annotationType === AnnotationTypeEnum.INITIAL
     ) {
-      const widget = new PSPDFKit.Annotations.WidgetAnnotation({
+      const widget = new NutrientViewer.Annotations.WidgetAnnotation({
         boundingBox: pageRect,
         formFieldName: instantId,
         id: instantId,
@@ -151,15 +151,15 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
         },
         //backgroundColor: signee.color,
       });
-      const formField = new PSPDFKit.FormFields.SignatureFormField({
-        annotationIds: PSPDFKit.Immutable.List([widget.id]),
+      const formField = new NutrientViewer.FormFields.SignatureFormField({
+        annotationIds: NutrientViewer.Immutable.List([widget.id]),
         name: instantId,
         id: instantId,
         readOnly: signee.id !== user.id,
       });
       await inst.create([widget, formField]);
     } else {
-      const text = new PSPDFKit.Annotations.TextAnnotation({
+      const text = new NutrientViewer.Annotations.TextAnnotation({
         pageIndex,
         boundingBox: pageRect,
         text: {
@@ -183,12 +183,12 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     }
     // set the viewer to form creator mode so that the user can place the field
     // inst.setViewState((viewState) =>
-    //   viewState.set("interactionMode", PSPDFKit.InteractionMode.FORM_CREATOR)
+    //   viewState.set("interactionMode", NutrientViewer.InteractionMode.FORM_CREATOR)
     // );
 
     // @ts-ignore
     inst.setOnAnnotationResizeStart((eve) => {
-      if (eve.annotation instanceof PSPDFKit.Annotations.WidgetAnnotation) {
+      if (eve.annotation instanceof NutrientViewer.Annotations.WidgetAnnotation) {
         return {
           //maintainAspectRatio: true,
           //responsive: false,
@@ -198,7 +198,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
           minHeight: 30,
         };
       }
-      if (eve.annotation instanceof PSPDFKit.Annotations.TextAnnotation) {
+      if (eve.annotation instanceof NutrientViewer.Annotations.TextAnnotation) {
         return {
           //maintainAspectRatio: true,
           //responsive: false,
@@ -225,21 +225,21 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       if (user.role === "Editor") {
         if (value) {
           instance.setViewState((viewState: any) =>
-            viewState.set("interactionMode", PSPDFKit.InteractionMode.PAN),
+            viewState.set("interactionMode", NutrientViewer.InteractionMode.PAN),
           );
           setIsTextAnnotationMovable(false);
         } else {
           instance.setViewState((viewState: any) =>
             viewState.set(
               "interactionMode",
-              PSPDFKit.InteractionMode.FORM_CREATOR,
+              NutrientViewer.InteractionMode.FORM_CREATOR,
             ),
           );
           setIsTextAnnotationMovable(true);
         }
       } else {
         instance.setViewState((viewState: any) =>
-          viewState.set("interactionMode", PSPDFKit.InteractionMode.PAN),
+          viewState.set("interactionMode", NutrientViewer.InteractionMode.PAN),
         );
         setIsTextAnnotationMovable(false);
       }
@@ -279,13 +279,13 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   // Function to get random color for the signee
   const randomColor = (PSPDFKit: any) => {
     const colors: any = [
-      PSPDFKit.Color.LIGHT_GREY,
-      PSPDFKit.Color.LIGHT_GREEN,
-      PSPDFKit.Color.LIGHT_YELLOW,
-      PSPDFKit.Color.LIGHT_ORANGE,
-      PSPDFKit.Color.LIGHT_RED,
-      PSPDFKit.Color.LIGHT_BLUE,
-      PSPDFKit.Color.fromHex("#0ffcf1"),
+      NutrientViewer.Color.LIGHT_GREY,
+      NutrientViewer.Color.LIGHT_GREEN,
+      NutrientViewer.Color.LIGHT_YELLOW,
+      NutrientViewer.Color.LIGHT_ORANGE,
+      NutrientViewer.Color.LIGHT_RED,
+      NutrientViewer.Color.LIGHT_BLUE,
+      NutrientViewer.Color.fromHex("#0ffcf1"),
     ];
     const usedColors = users.map((signee) => signee.color);
     const availableColors = colors.filter(
@@ -301,7 +301,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     if (instance) {
       const formFields = await instance.getFormFields();
       const signatureFormFields = formFields.filter(
-        (field: any) => field instanceof PSPDFKit.FormFields.SignatureFormField,
+        (field: any) => field instanceof NutrientViewer.FormFields.SignatureFormField,
       );
       const signatureAnnotations = async () => {
         const annotations: any[] = [];
@@ -357,12 +357,12 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       setPSPDFKit(PSPDFKit);
       if (container) {
         if (PSPDFKit) {
-          PSPDFKit.unload(container);
+          NutrientViewer.unload(container);
         }
         const {
           UI: { createBlock, Recipes, Interfaces, Core },
         } = PSPDFKit;
-        PSPDFKit.load({
+        NutrientViewer.load({
           licenseKey: process.env.NEXT_PUBLIC_LICENSE_KEY as string,
           // @ts-ignore
           ui: {
@@ -455,12 +455,12 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
               isCreateInitial = false;
             }
             inst.setStoredSignatures(
-              PSPDFKit.Immutable.List(annotationsToLoad),
+              NutrientViewer.Immutable.List(annotationsToLoad),
             );
 
             if (
               !isTextAnnotationMovableRef.current &&
-              event.annotation instanceof PSPDFKit.Annotations.TextAnnotation
+              event.annotation instanceof NutrientViewer.Annotations.TextAnnotation
             ) {
               //@ts-ignore
               event.preventDefault();
@@ -534,7 +534,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
           inst.setViewState((viewState: any) =>
             viewState.set(
               "interactionMode",
-              PSPDFKit.InteractionMode.FORM_CREATOR,
+              NutrientViewer.InteractionMode.FORM_CREATOR,
             ),
           );
           setIsTextAnnotationMovable(true);

@@ -1,7 +1,7 @@
-// We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
-const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/";
+// We need to inform NutrientViewer where to look for its library assets
+const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.5.0/";
 
-window.PSPDFKit.load({
+window.NutrientViewer.load({
   baseUrl,
   container: "#pspdfkit",
   document:
@@ -26,7 +26,7 @@ window.PSPDFKit.load({
             .then((annotations: any[]) =>
               annotations.filter(
                 (annotation) =>
-                  annotation instanceof window.PSPDFKit.Annotations.WidgetAnnotation,
+                  annotation instanceof window.NutrientViewer.Annotations.WidgetAnnotation,
               ),
             ),
         ),

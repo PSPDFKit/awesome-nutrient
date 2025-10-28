@@ -17,7 +17,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const PSPDFKit = window.PSPDFKit;
+    const NutrientViewer = window.NutrientViewer;
     if (!PSPDFKit) {
       console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
       return;
@@ -27,15 +27,15 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
     (async () => {
       // Unload any existing instance to prevent memory leaks
-      PSPDFKit.unload(container);
+      NutrientViewer.unload(container);
 
       // Load PSPDFKit instance
-      instance = await PSPDFKit.load({
+      instance = await NutrientViewer.load({
         //licenseKey: import.meta.env.VITE_lkey, // Uncomment and update the .env with License key for Nutrient web sdk
         container, // The container where PSPDFKit will be rendered
         document: props.document, // The document to be displayed
         baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/", // Base URL for loading assets
-        toolbarItems: PSPDFKit.defaultToolbarItems, // Default toolbar settings
+        toolbarItems: NutrientViewer.defaultToolbarItems, // Default toolbar settings
         inlineTextSelectionToolbarItems: (
           { defaultItems: _defaultItems, hasDesktopLayout: _hasDesktopLayout }: any,
           _selection: any,
@@ -72,10 +72,10 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
             // Create highlight annotations for search results
             const annotations = results.map((result: any) => {
-              return new PSPDFKit.Annotations.HighlightAnnotation({
+              return new NutrientViewer.Annotations.HighlightAnnotation({
                 pageIndex: result.pageIndex, // Page where text was found
                 rects: result.rectsOnPage, // Bounding rectangles of text
-                boundingBox: PSPDFKit.Geometry.Rect.union(result.rectsOnPage), // Overall bounding box
+                boundingBox: NutrientViewer.Geometry.Rect.union(result.rectsOnPage), // Overall bounding box
               });
             });
 
@@ -89,7 +89,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
       // Cleanup function: unload PSPDFKit when the component unmounts
       return () => {
-        PSPDFKit.unload(container);
+        NutrientViewer.unload(container);
       };
     })();
   }, [props.document]); // Runs whenever `props.document` changes

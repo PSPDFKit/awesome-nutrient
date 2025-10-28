@@ -312,7 +312,7 @@ export const dateSVG = (
 //             .then((annotations) =>
 //               annotations.filter(
 //                 (annotation) =>
-//                   annotation instanceof PSPDFKit.Annotations.WidgetAnnotation
+//                   annotation instanceof NutrientViewer.Annotations.WidgetAnnotation
 //               )
 //             )
 //         )

@@ -9,7 +9,7 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
 
   useEffect(() => {
     const container = containerRef.current;
-    const PSPDFKit = window.PSPDFKit;
+    const NutrientViewer = window.NutrientViewer;
 
     // Helper: Convert an ArrayBuffer to a hex (base16) string.
     function bufferToHex(buffer: ArrayBuffer): string {
@@ -30,11 +30,11 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
     }
 
     async function initializeSDK() {
-      if (!PSPDFKit || !container) return;
+      if (!NutrientViewer || !container) return;
 
-      PSPDFKit.unload(container);
+      NutrientViewer.unload(container);
 
-      const instance = await PSPDFKit.load({
+      const instance = await NutrientViewer.load({
         //licenseKey: import.meta.env.VITE_lkey,
         container,
         document: props.document,
@@ -46,7 +46,7 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
       instance.setViewState((viewState: any) =>
         viewState.set(
           "showSignatureValidationStatus",
-          PSPDFKit.ShowSignatureValidationStatusMode.IF_SIGNED,
+          NutrientViewer.ShowSignatureValidationStatusMode.IF_SIGNED,
         ),
       );
 
@@ -94,7 +94,7 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
       };
 
       // Build toolbar items using default items if available.
-      const toolbarItems = [PSPDFKit.defaultToolbarItems];
+      const toolbarItems = [NutrientViewer.defaultToolbarItems];
 
       // Add our custom "Digitally Sign" button.
       toolbarItems.push({
@@ -117,7 +117,7 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
 
     initializeSDK();
 
-    return () => PSPDFKit?.unload(container);
+    return () => NutrientViewer?.unload(container);
   }, [props.document]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;

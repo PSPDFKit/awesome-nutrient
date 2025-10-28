@@ -12,21 +12,21 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const PSPDFKit = window.PSPDFKit;
+    const NutrientViewer = window.NutrientViewer;
     if (!PSPDFKit) {
       console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
       return;
     }
 
     (async () => {
-      PSPDFKit.unload(container); // Ensure that there's only one PSPDFKit instance.
+      NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
 
-      const defaultToolbarItems = PSPDFKit.defaultDocumentEditorToolbarItems;
+      const defaultToolbarItems = NutrientViewer.defaultDocumentEditorToolbarItems;
 
       // Insert custom item at the desired position
       const toolbarItems = [...defaultToolbarItems];
 
-      instance = await PSPDFKit.load({
+      instance = await NutrientViewer.load({
         container,
         document: props.document,
         baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/",
@@ -53,12 +53,12 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
             if (!file) return;
             
             const imageAttachmentId = await instance.createAttachment(file);
-            const annotation = new PSPDFKit.Annotations.ImageAnnotation({
+            const annotation = new NutrientViewer.Annotations.ImageAnnotation({
               pageIndex: currentPage,
               contentType: content_Type,
               imageAttachmentId,
               description: "Pasted Image Annotation",
-              boundingBox: new PSPDFKit.Geometry.Rect({
+              boundingBox: new NutrientViewer.Geometry.Rect({
                 left: 10,
                 top: 50,
                 width: 150,
@@ -69,13 +69,13 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
           } else if (item.kind === "string") {
             item.getAsString(async (pastedText: string) => {
               // Here you can create a text annotation if needed
-              const textAnnotation = new PSPDFKit.Annotations.TextAnnotation({
+              const textAnnotation = new NutrientViewer.Annotations.TextAnnotation({
                 pageIndex: currentPage,
                 text: {
                   format: "plain",
                   value: pastedText,
                 },
-                boundingBox: new PSPDFKit.Geometry.Rect({
+                boundingBox: new NutrientViewer.Geometry.Rect({
                   left: 10,
                   top: 50,
                   width: 150,
@@ -97,7 +97,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       // Cleanup event listener on component unmount
       return () => {
         document.removeEventListener("paste", handlePaste);
-        PSPDFKit.unload(container);
+        NutrientViewer.unload(container);
       };
     })();
   }, [props.document]);

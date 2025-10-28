@@ -34,22 +34,22 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const PSPDFKit = window.PSPDFKit;
+    const NutrientViewer = window.NutrientViewer;
     if (!PSPDFKit) {
       console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
       return;
     }
 
     (async () => {
-      PSPDFKit.unload(container); // Ensure only one instance exists
+      NutrientViewer.unload(container); // Ensure only one instance exists
 
       // Load PSPDFKit instance
-      const instance = await PSPDFKit.load({
+      const instance = await NutrientViewer.load({
         licenseKey: import.meta.env.VITE_lkey,
         container,
         document: props.document,
         baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.5.2/",
-        toolbarItems: PSPDFKit.defaultToolbarItems,
+        toolbarItems: NutrientViewer.defaultToolbarItems,
       });
 
       instanceRef.current = instance; // Store instance in ref
@@ -62,7 +62,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
       // Cleanup on component unmount
       return () => {
-        PSPDFKit.unload(container);
+        NutrientViewer.unload(container);
       };
     })();
   }, [props.document]);
@@ -85,20 +85,20 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         return;
       }
 
-      const PSPDFKit = window.PSPDFKit; // Access PSPDFKit module
+      const NutrientViewer = window.NutrientViewer; // Access PSPDFKit module
 
       // To track annotation position place them correctly
       linecount += 1;
       add = linecount > 1 ? add + 25 : 0;
 
-      const bbox = new PSPDFKit.Geometry.Rect({
+      const bbox = new NutrientViewer.Geometry.Rect({
         left: 10,
         top: 50 + add,
         width: pageWidth - 20,
         height: 25,
       });
 
-      const textAnnotation = new PSPDFKit.Annotations.TextAnnotation({
+      const textAnnotation = new NutrientViewer.Annotations.TextAnnotation({
         pageIndex: currentPage,
         text: {
           format: "plain",

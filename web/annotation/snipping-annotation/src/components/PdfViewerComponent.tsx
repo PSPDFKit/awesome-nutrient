@@ -15,7 +15,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const PSPDFKit = window.PSPDFKit;
+    const NutrientViewer = window.NutrientViewer;
     if (!PSPDFKit) {
       console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
       return;
@@ -23,11 +23,11 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
     (async function loadPdf() {
       if (PSPDFKit) {
-        PSPDFKit.unload(container);
+        NutrientViewer.unload(container);
       }
 
-      const toolbarItemsDefault = PSPDFKit.defaultToolbarItems;
-      instance = await PSPDFKit.load({
+      const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
+      instance = await NutrientViewer.load({
         licenseKey: "Your License Key goes here",
         container,
         document: props.document,
@@ -35,7 +35,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
         toolbarItems: toolbarItemsDefault,
       });
     })();
-    return () => window.PSPDFKit?.unload(container);
+    return () => window.NutrientViewer?.unload(container);
   }, [props.document]);
 
   useEffect(() => {

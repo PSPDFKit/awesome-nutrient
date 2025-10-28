@@ -1,7 +1,10 @@
-// Wait for NutrientViewer to load from CDN
-window.addEventListener('load', () => {
+// Module scripts automatically wait for the page to load
+// Execute immediately since NutrientViewer is loaded via script tag in HTML
+(function () {
   if (!window.NutrientViewer) {
-    console.error('NutrientViewer not found. Make sure the CDN script is loaded.');
+    console.error(
+      "NutrientViewer not found. Make sure the CDN script is loaded."
+    );
     return;
   }
 
@@ -12,7 +15,7 @@ window.addEventListener('load', () => {
   NutrientViewer.load({
     container: "#nutrient-viewer",
     document: "document.pdf",
-    toolbarItems: [...NutrientViewer.defaultToolbarItems, {type: "comment"}],
+    toolbarItems: [...NutrientViewer.defaultToolbarItems, { type: "comment" }],
     initialViewState: new NutrientViewer.ViewState({
       sidebarOptions: {
         [NutrientViewer.SidebarMode.ANNOTATIONS]: {
@@ -21,58 +24,81 @@ window.addEventListener('load', () => {
       },
     }),
     styleSheets: ["index.css"],
-    annotationToolbarItems: (annotation: any, {defaultAnnotationToolbarItems}: any) => {
-      const isHighlight = annotation instanceof NutrientViewer.Annotations.HighlightAnnotation;
-      const isStrikeOut = annotation instanceof NutrientViewer.Annotations.StrikeOutAnnotation;
-      const isUnderline = annotation instanceof NutrientViewer.Annotations.UnderlineAnnotation;
-      const isSquiggly = annotation instanceof NutrientViewer.Annotations.SquiggleAnnotation;
+    annotationToolbarItems: (
+      annotation: any,
+      { defaultAnnotationToolbarItems }: any
+    ) => {
+      const isHighlight =
+        annotation instanceof NutrientViewer.Annotations.HighlightAnnotation;
+      const isStrikeOut =
+        annotation instanceof NutrientViewer.Annotations.StrikeOutAnnotation;
+      const isUnderline =
+        annotation instanceof NutrientViewer.Annotations.UnderlineAnnotation;
+      const isSquiggly =
+        annotation instanceof NutrientViewer.Annotations.SquiggleAnnotation;
 
       if (!isHighlight && !isStrikeOut && !isUnderline && !isSquiggly) {
-        return defaultAnnotationToolbarItems.filter((item: any) => item.type !== 'annotation-note');
+        return defaultAnnotationToolbarItems.filter(
+          (item: any) => item.type !== "annotation-note"
+        );
       }
 
       // This workaround (provided by https://github.com/andreas-schoch) is to simply create a dummy comment, select it and immediately hide it so user never sees it.
       // As long as it is selected it will show the UI to create a reply comment (looks exactly like the "new comment form").
       // Once user unselects it, it will delete the dummy comment and the reply will become the first comment in the thread.
       const addCommentItem = {
-        id: 'add-comment',
-        type: 'custom',
-        title: 'Add Comment',
+        id: "add-comment",
+        type: "custom",
+        title: "Add Comment",
         icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" size="24"><path fill-rule="evenodd" d="M5 3.25A2.75 2.75 0 0 0 2.25 6v10A2.75 2.75 0 0 0 5 18.75h1.25V22a.75.75 0 0 0 1.248.56l4.287-3.81H19A2.75 2.75 0 0 0 21.75 16V6A2.75 2.75 0 0 0 19 3.25zM3.75 6c0-.69.56-1.25 1.25-1.25h14c.69 0 1.25.56 1.25 1.25v10c0 .69-.56 1.25-1.25 1.25h-7.5a.75.75 0 0 0-.498.19L7.75 20.33V18a.75.75 0 0 0-.75-.75H5c-.69 0-1.25-.56-1.25-1.25zM8 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2m9-1a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-5 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" clip-rule="evenodd"></path></svg>\n',
         onPress: async () => {
-          const updated = await globalInstance.update(annotation.set('isCommentThreadRoot', true));
+          const updated = await globalInstance.update(
+            annotation.set("isCommentThreadRoot", true)
+          );
           annotation = updated[0];
 
           // Always hidden via CSS --> [data-comment-id="dummy_comment"] { display: none !important; }
           const dummyComment = new NutrientViewer.Comment({
-            id: 'dummy_comment',
+            id: "dummy_comment",
             rootId: annotation.id,
             pageIndex: annotation.pageIndex,
-            creatorName: 'System',
-            text: {format: 'plain', value: 'dummy_comment'},
+            creatorName: "System",
+            text: { format: "plain", value: "dummy_comment" },
           });
 
           await globalInstance.create([dummyComment]);
-          globalInstance.setSelectedAnnotations(NutrientViewer.Immutable.List([annotation]));
+          globalInstance.setSelectedAnnotations(
+            NutrientViewer.Immutable.List([annotation])
+          );
 
           // CLEANUP DUMMY COMMENT
           const handleUnselect = async (annotations: any) => {
             await globalInstance.delete([dummyComment]);
 
             const comments = await globalInstance.getComments();
-            const numCommentsInThread = comments.filter((c: any) => c.rootId === annotation.id).size;
+            const numCommentsInThread = comments.filter(
+              (c: any) => c.rootId === annotation.id
+            ).size;
             if (numCommentsInThread === 0) {
-              annotation = annotation.set('isCommentThreadRoot', false);
+              annotation = annotation.set("isCommentThreadRoot", false);
               await globalInstance.update([annotation]);
             }
 
-            globalInstance.removeEventListener('annotationSelection.change', handleUnselect);
+            globalInstance.removeEventListener(
+              "annotationSelection.change",
+              handleUnselect
+            );
           };
-          globalInstance.addEventListener('annotationSelection.change', handleUnselect);
-        }
+          globalInstance.addEventListener(
+            "annotationSelection.change",
+            handleUnselect
+          );
+        },
       };
 
-      const items = defaultAnnotationToolbarItems.filter((item: any) => item.type !== 'annotation-note');
+      const items = defaultAnnotationToolbarItems.filter(
+        (item: any) => item.type !== "annotation-note"
+      );
       items.push(addCommentItem);
       return items;
     },
@@ -87,7 +113,7 @@ window.addEventListener('load', () => {
             let commentAnnotation = annotation.customData.commentAnnotation;
             commentAnnotation = commentAnnotation.set(
               "boundingBox",
-              annotation.boundingBox,
+              annotation.boundingBox
             );
             const update = await instance.update(commentAnnotation);
           } catch (error) {
@@ -99,14 +125,14 @@ window.addEventListener('load', () => {
       instance.addEventListener("annotations.press", async (event: any) => {
         if (
           event.annotation instanceof
-          NutrientViewer.Annotations.CommentMarkerAnnotation &&
+            NutrientViewer.Annotations.CommentMarkerAnnotation &&
           event.annotation.customData.parentAnnotation
         ) {
           event.preventDefault();
           const parentAnnotationID =
             event.annotation.customData.parentAnnotation.id;
           await instance.setSelectedAnnotations(
-            NutrientViewer.Immutable.List([parentAnnotationID]),
+            NutrientViewer.Immutable.List([parentAnnotationID])
           );
         }
       });
@@ -114,5 +140,4 @@ window.addEventListener('load', () => {
     .catch((error: Error) => {
       console.error(error.message);
     });
-})
-
+})();
