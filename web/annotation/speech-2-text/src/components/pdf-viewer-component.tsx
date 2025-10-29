@@ -1,6 +1,8 @@
 // Import necessary React hooks
 import { useEffect, useRef } from "react";
 
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+
 interface PdfViewerComponentProps {
   document: string;
 }
@@ -9,21 +11,20 @@ interface PdfViewerComponentProps {
 let linecount = 0;
 let add = 0;
 let currentPage: number;
-let pageHeight: number;
 let pageWidth: number;
 
 // Define the main PDF viewer component
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   // Create references for the PDF container and PSPDFKit instance
   const containerRef = useRef<HTMLDivElement>(null);
-  const instanceRef = useRef<any>(null); // Store PSPDFKit instance
+  const instanceRef = useRef<NutrientViewerInstance | null>(null); // Store PSPDFKit instance
 
   // Function to enhance text with first letter to uppercase
   const correctText = (text: string): string => {
     return text
       .replace(
         /(\.\s+|^)([a-z])/g,
-        (match, prefix, letter) => prefix + letter.toUpperCase(),
+        (_match, prefix, letter) => prefix + letter.toUpperCase()
       ) // Capitalize first letter
       .replace(/\bi\b/g, "I") // Capitalize 'I'
       .trim();
@@ -34,9 +35,10 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const NutrientViewer = window.NutrientViewer;
-    if (!PSPDFKit) {
-      console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
+    if (!NutrientViewer) {
+      console.error(
+        "NutrientViewer not loaded. Make sure the CDN script is included."
+      );
       return;
     }
 
@@ -58,7 +60,6 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       currentPage = instance.viewState.currentPageIndex;
       const pageInfo = instance.pageInfoForIndex(currentPage);
       pageWidth = pageInfo.width;
-      pageHeight = pageInfo.height;
 
       // Cleanup on component unmount
       return () => {
@@ -69,14 +70,12 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
   // Function to handle speech-to-text and create annotation with text enhancements
   const handleSpeechToText = async () => {
-    const recognition = new (
-      window.SpeechRecognition || window.webkitSpeechRecognition
-    )();
+    const recognition = new (window.SpeechRecognition ||
+      window.webkitSpeechRecognition)();
     recognition.lang = "en-US";
     recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
 
-    recognition.onresult = async (event: any) => {
+    recognition.onresult = async (event) => {
       let transcript = event.results[0][0].transcript;
       transcript = correctText(transcript); // Apply text corrections
 
@@ -131,4 +130,3 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     </div>
   );
 }
-

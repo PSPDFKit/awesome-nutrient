@@ -1,12 +1,18 @@
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
+type WidgetAnnotation = InstanceType<
+  typeof NutrientViewer.Annotations.WidgetAnnotation
+>;
+
 // We need to inform NutrientViewer where to look for its library assets
 const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.5.0/";
 
-window.NutrientViewer.load({
+NutrientViewer.load({
   baseUrl,
   container: "#pspdfkit",
   document:
     "https://pj-document-bucket.s3.ca-central-1.amazonaws.com/The+Magnificent+Agreement+Regarding+the+History+of+the+Portable+Document+Format.pdf",
-}).then(async (instance: any) => {
+}).then(async (instance: NutrientViewerInstance) => {
   // Create and append the "Sign Here" widget to the document.
   const signHereWidget = document.createElement("div");
   signHereWidget.innerHTML =
@@ -20,67 +26,86 @@ window.NutrientViewer.load({
   const updateSignHereWidget = async () => {
     const widgetAnnotations = (
       await Promise.all(
-        Array.from({ length: instance.totalPageCount }).map((_: any, pageIndex: number) =>
-          instance
-            .getAnnotations(pageIndex)
-            .then((annotations: any[]) =>
-              annotations.filter(
-                (annotation) =>
-                  annotation instanceof window.NutrientViewer.Annotations.WidgetAnnotation,
-              ),
-            ),
-        ),
+        Array.from({ length: instance.totalPageCount }).map(
+          (_item, pageIndex: number) =>
+            instance
+              .getAnnotations(pageIndex)
+              .then(
+                (
+                  annotations: InstanceType<
+                    typeof NutrientViewer.Immutable.List<Annotation>
+                  >
+                ) =>
+                  annotations.filter(
+                    (annotation): annotation is WidgetAnnotation =>
+                      annotation instanceof
+                      window.NutrientViewer.Annotations.WidgetAnnotation
+                  )
+              )
+        )
       )
     )
       .flat()
-      .flatMap((annotation: any) =>
-        annotation._tail ? annotation._tail.array : [],
-      );
+      .flatMap((annotation: WidgetAnnotation) =>
+        (annotation as any)._tail ? (annotation as any)._tail.array : []
+      ) as WidgetAnnotation[];
     const signatures = (
       await Promise.all(
-        Array.from({ length: instance.totalPageCount }).map((_: any, pageIndex: number) =>
-          instance
-            .getAnnotations(pageIndex)
-            .then((annotations: any[]) =>
-              annotations.filter((annotation: any) => annotation.isSignature),
-            ),
-        ),
+        Array.from({ length: instance.totalPageCount }).map(
+          (_item, pageIndex: number) =>
+            instance
+              .getAnnotations(pageIndex)
+              .then(
+                (
+                  annotations: InstanceType<
+                    typeof NutrientViewer.Immutable.List<Annotation>
+                  >
+                ) =>
+                  annotations.filter(
+                    (annotation: Annotation) => (annotation as any).isSignature
+                  )
+              )
+        )
       )
     )
       .flat()
-      .flatMap((signature: any) => (signature._tail ? signature._tail.array : []));
+      .flatMap((signature: Annotation) =>
+        (signature as any)._tail ? (signature as any)._tail.array : []
+      ) as Annotation[];
 
     // Flatten widgetAnnotationsUnFlattened to a single dimensional array
     // Move the "Sign Here" widget.
-    const firstWidget = widgetAnnotations.filter((annotation: any) => {
-      let signatureSet = false;
-      return (
-        signatures.length > 0 &&
-          (signatureSet = signatures.some((signature: any) => {
-            const box1 = signature.boundingBox;
-            const box2 = annotation.boundingBox;
-            return (
-              box1.left >= box2.left &&
-              box1.top >= box2.top &&
-              box1.left + box1.width <= box2.left + box2.width &&
-              box1.top + box1.height <= box2.top + box2.height
-            );
-          })),
-        !signatureSet
-      );
-    })[0];
+    const firstWidget = widgetAnnotations.filter(
+      (annotation: WidgetAnnotation) => {
+        let signatureSet = false;
+        return (
+          signatures.length > 0 &&
+            (signatureSet = signatures.some((signature: Annotation) => {
+              const box1 = signature.boundingBox;
+              const box2 = annotation.boundingBox;
+              return (
+                box1.left >= box2.left &&
+                box1.top >= box2.top &&
+                box1.left + box1.width <= box2.left + box2.width &&
+                box1.top + box1.height <= box2.top + box2.height
+              );
+            })),
+          !signatureSet
+        );
+      }
+    )[0];
 
     if (firstWidget) {
       const element = instance.contentDocument.querySelector(
-        `.PSPDFKit-Annotation[data-annotation-id="${firstWidget.id}"]`,
+        `.PSPDFKit-Annotation[data-annotation-id="${firstWidget.id}"]`
       );
       const state = instance.viewState;
       // Switch to the page of the current signature widget.
       instance.setViewState(
-        state.set("currentPageIndex", firstWidget.pageIndex),
+        state.set("currentPageIndex", firstWidget.pageIndex)
       );
       const spreadElement = instance.contentDocument.querySelector(
-        `.PSPDFKit-Spread[data-spread-index="${firstWidget.pageIndex}"]`,
+        `.PSPDFKit-Spread[data-spread-index="${firstWidget.pageIndex}"]`
       );
 
       // Remove the widget from its current parent if it has one
@@ -111,4 +136,3 @@ window.NutrientViewer.load({
   // Update widget with delay to make it visually pop
   window.setTimeout(updateSignHereWidget, 1000);
 });
-

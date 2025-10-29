@@ -4,12 +4,13 @@ interface NutrientPdfViewerProps {
   document: string;
 }
 
+type ViewState = InstanceType<typeof NutrientViewer.ViewState>;
+
 export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = containerRef.current;
-    const NutrientViewer = window.NutrientViewer;
 
     // Helper: Convert an ArrayBuffer to a hex (base16) string.
     function bufferToHex(buffer: ArrayBuffer): string {
@@ -30,7 +31,13 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
     }
 
     async function initializeSDK() {
-      if (!NutrientViewer || !container) return;
+      if (!container) return;
+      if (!NutrientViewer) {
+        console.error(
+          "NutrientViewer not loaded. Make sure the CDN script is included."
+        );
+        return;
+      }
 
       NutrientViewer.unload(container);
 
@@ -43,19 +50,25 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
         }`,
       });
 
-      instance.setViewState((viewState: any) =>
+      instance.setViewState((viewState: ViewState) =>
         viewState.set(
           "showSignatureValidationStatus",
-          NutrientViewer.ShowSignatureValidationStatusMode.IF_SIGNED,
-        ),
+          NutrientViewer.ShowSignatureValidationStatusMode.IF_SIGNED
+        )
       );
 
       // Define the signing callback.
-      const signCallback = async ({ dataToBeSigned, fileContents }: { dataToBeSigned: ArrayBuffer; fileContents: ArrayBuffer }) => {
+      const signCallback = async ({
+        dataToBeSigned,
+        fileContents,
+      }: {
+        dataToBeSigned: ArrayBuffer;
+        fileContents: ArrayBuffer;
+      }) => {
         try {
           const hashBuffer = await crypto.subtle.digest(
             "SHA-256",
-            dataToBeSigned,
+            dataToBeSigned
           );
           const digestHex = bufferToHex(hashBuffer);
           const encodedContents = arrayBufferToBase64(fileContents);
@@ -122,4 +135,3 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
 }
-

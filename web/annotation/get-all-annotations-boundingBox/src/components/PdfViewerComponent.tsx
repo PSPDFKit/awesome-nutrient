@@ -17,7 +17,14 @@ interface AnnotationData {
   i: number;
 }
 
-let instance: any;
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+type ToolbarItem = {
+  type: string;
+  title?: string;
+  onPress?: () => Promise<void>;
+};
+
+let instance: NutrientViewerInstance;
 let allAnnotations: AnnotationData[] = []; // push all the annotation bounding box and pageindex and annotation numbers
 let pageIndex: number; // store the page index
 let currentAnnotationIndex = 0; // know the current annotation and scroll to next annotation
@@ -31,15 +38,18 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     if (!container) return;
 
     const NutrientViewer = window.NutrientViewer;
-    if (!PSPDFKit) {
-      console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
+    if (!NutrientViewer) {
+      console.error(
+        "NutrientViewer not loaded. Make sure the CDN script is included."
+      );
       return;
     }
 
     (async () => {
       NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
 
-      const defaultToolbarItems = NutrientViewer.defaultDocumentEditorToolbarItems;
+      const defaultToolbarItems =
+        NutrientViewer.defaultDocumentEditorToolbarItems;
       const toolbarItems = [...defaultToolbarItems];
 
       instance = await NutrientViewer.load({
@@ -95,7 +105,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         },
       };
 
-      instance.setToolbarItems((items: any[]) => {
+      instance.setToolbarItems((items: ToolbarItem[]) => {
         items.push(cut);
         items.push(paste);
         items.push(copy);
@@ -122,7 +132,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
           if (item.kind === "file" && item.type.startsWith("image")) {
             const file = item.getAsFile();
             if (!file) return;
-            
+
             const imageAttachmentId = await instance.createAttachment(file);
             const annotation = new NutrientViewer.Annotations.ImageAnnotation({
               pageIndex: currentPage,
@@ -139,19 +149,20 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
             await instance.create(annotation);
           } else if (item.kind === "string") {
             item.getAsString(async (pastedText: string) => {
-              const textAnnotation = new NutrientViewer.Annotations.TextAnnotation({
-                pageIndex: currentPage,
-                text: {
-                  format: "plain",
-                  value: pastedText,
-                },
-                boundingBox: new NutrientViewer.Geometry.Rect({
-                  left: 10,
-                  top: 50,
-                  width: 150,
-                  height: 50,
-                }),
-              });
+              const textAnnotation =
+                new NutrientViewer.Annotations.TextAnnotation({
+                  pageIndex: currentPage,
+                  text: {
+                    format: "plain",
+                    value: pastedText,
+                  },
+                  boundingBox: new NutrientViewer.Geometry.Rect({
+                    left: 10,
+                    top: 50,
+                    width: 150,
+                    height: 50,
+                  }),
+                });
               await instance.create(textAnnotation);
             });
           } else {
@@ -214,8 +225,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     console.log("All Annotation length", allAnnotations.length);
     console.log("All Annotations", allAnnotations);
     console.log("currentAnnotationIndex is : ", currentAnnotationIndex);
-    let highlightannotID;
-    const NutrientViewer = window.NutrientViewer;
+    let highlightannotID: string;
     const light_red = new NutrientViewer.Color({ r: 247, g: 141, b: 138 });
     if (allAnnotations === undefined || allAnnotations.length === 0) {
       fetchAnnotationCoordinates();
@@ -227,12 +237,6 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     if (allAnnotations.length > 0) {
       const annotation = allAnnotations[currentAnnotationIndex];
       console.log("Current Annotation: ", annotation);
-      const bBox = new NutrientViewer.Geometry.Rect({
-        left: annotation.left, // you calculation goes here for level of zoom needed
-        top: annotation.top, // you calculation goes here for level of zoom needed
-        width: annotation.width + 100, // you calculation goes here for level of zoom needed
-        height: annotation.height + 100, // you calculation goes here for level of zoom needed
-      });
       const bBoxhighlight = new NutrientViewer.Geometry.Rect({
         left: annotation.left,
         top: annotation.top,
@@ -246,7 +250,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
           strokeWidth: 1,
           strokeColor: light_red,
           opacity: 1,
-        }),
+        })
       );
       //instance.jumpAndZoomToRect(annotation.pageIndex, bBoxhighlight); // This will zoom to the annotation.
       instance.jumpToRect(annotation.pageIndex, bBoxhighlight); // you can use this if you don't want to zoom and just focus on the annotation.
@@ -262,4 +266,3 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     </>
   );
 }
-

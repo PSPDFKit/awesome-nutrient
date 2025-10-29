@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import "pspdfkit";
-import html2canvas from "html2canvas";
+import { useEffect, useRef, useState } from "react";
 
 interface PdfViewerProps {
   document: string;
   handleAnnotation: string;
 }
 
-let instance: any;
-let PSPDFKit: any;
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
+
+let instance: NutrientViewerInstance;
 
 export default function PdfViewerComponent(props: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,13 +16,17 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
   useEffect(() => {
     const container = containerRef.current;
+    if (!container) return;
 
     (async function loadPdf() {
-      PSPDFKit = await import("pspdfkit");
-
-      if (PSPDFKit) {
-        NutrientViewer.unload(container);
+      if (!NutrientViewer) {
+        console.error(
+          "NutrientViewer not loaded. Make sure the CDN script is included."
+        );
+        return;
       }
+
+      NutrientViewer.unload(container);
 
       const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
       instance = await NutrientViewer.load({
@@ -33,22 +37,21 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
         toolbarItems: toolbarItemsDefault,
       });
     })();
-    return () => PSPDFKit?.unload(container);
+    return () => window.NutrientViewer?.unload(container);
   }, [props.document]);
 
   useEffect(() => {
     if (props.handleAnnotation === "get") {
       const fetchAnnotationCoordinates = async () => {
         const annotations = await instance.getAnnotations(0); // Assuming pageIndex is 0
-        annotations.forEach((annotation: any) => {
+        annotations.forEach((annotation: Annotation) => {
           console.log(annotation.boundingBox);
-          const { bottom, height, left, right, top, width } =
-            annotation.boundingBox;
+          const { left, right } = annotation.boundingBox;
           // Rendering the bounding box area as an image
           instance
             .renderPageAsImageURL(
               { width: right - left },
-              0, // Assuming pageIndex is 0
+              0 // Assuming pageIndex is 0
             )
             .then((imageUrl: string) => {
               // Display or save the image as needed

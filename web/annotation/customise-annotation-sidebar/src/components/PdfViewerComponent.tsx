@@ -4,6 +4,10 @@ interface PdfViewerComponentProps {
   document: string;
 }
 
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
+type ViewState = InstanceType<typeof NutrientViewer.ViewState>;
+
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -11,13 +15,14 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const NutrientViewer = window.NutrientViewer;
-    if (!PSPDFKit) {
-      console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
+    if (!NutrientViewer) {
+      console.error(
+        "NutrientViewer not loaded. Make sure the CDN script is included."
+      );
       return;
     }
 
-    let instance: any = null;
+    let instance: NutrientViewerInstance | null = null;
 
     (async () => {
       if (container) {
@@ -28,9 +33,19 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
       const customUIConfiguration = {
         [NutrientViewer.UIElement.Sidebar]: {
-          [NutrientViewer.SidebarMode.ANNOTATIONS]: ({ containerNode }: any) => ({
+          [NutrientViewer.SidebarMode.ANNOTATIONS]: ({
+            containerNode,
+          }: {
+            containerNode: HTMLElement;
+          }) => ({
             node: containerNode,
-            onRenderItem: ({ item: annotation, itemContainerNode }: any) => {
+            onRenderItem: ({
+              item: annotation,
+              itemContainerNode,
+            }: {
+              item: Annotation;
+              itemContainerNode: HTMLElement;
+            }) => {
               if (
                 annotation instanceof
                   NutrientViewer.Annotations.HighlightAnnotation &&
@@ -39,8 +54,10 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
@@ -51,98 +68,124 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.InkAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.InkAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.MarkupAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.MarkupAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
                     console.log("Text from Squiggle Annotation", text);
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               //link Annotation cannot give the text of the Rect.
               if (
-                annotation instanceof NutrientViewer.Annotations.LineAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.LineAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.MarkupAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.MarkupAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.MediaAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.MediaAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.NoteAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.NoteAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.MarkupAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.MarkupAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.PolygonAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.PolygonAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
@@ -153,8 +196,10 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
@@ -165,41 +210,52 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.ShapeAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.ShapeAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.SquiggleAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.SquiggleAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.StampAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.StampAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
@@ -210,19 +266,24 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.TextAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.TextAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
@@ -233,30 +294,38 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.UnknownAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.UnknownAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
               if (
-                annotation instanceof NutrientViewer.Annotations.WidgetAnnotation &&
+                annotation instanceof
+                  NutrientViewer.Annotations.WidgetAnnotation &&
                 instance
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    itemContainerNode.querySelector("button").textContent =
-                      text;
+                    const button = itemContainerNode.querySelector("button");
+                    if (button) {
+                      button.textContent = text;
+                    }
                   });
               }
             },
@@ -275,7 +344,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         }),
       });
 
-      instance.setViewState((viewState: any) =>
+      instance.setViewState((viewState: ViewState) =>
         viewState.set("sidebarOptions", {
           [NutrientViewer.SidebarMode.ANNOTATIONS]: {
             includeContent: [
@@ -283,13 +352,17 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               NutrientViewer.Comment,
             ],
           },
-        }),
+        })
       ),
         console.log("Nutrient Web SDK successfully loaded!", instance);
 
       instance.addEventListener(
         "textSelection.change",
-        async (textSelection: any) => {
+        async (
+          textSelection: InstanceType<
+            typeof NutrientViewer.TextSelection
+          > | null
+        ) => {
           if (textSelection) {
             const text = await textSelection.getText();
             console.log("Selected text:", text);
@@ -297,7 +370,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
           } else {
             console.log("No text is selected");
           }
-        },
+        }
       );
 
       // Cleanup event listener and unload PSPDFKit on component unmount
@@ -312,4 +385,3 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
   return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
 }
-

@@ -5,7 +5,10 @@ interface PdfViewerProps {
   handleAnnotation: string;
 }
 
-let instance: any;
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
+
+let instance: NutrientViewerInstance;
 
 export default function PdfViewerComponent(props: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -15,16 +18,15 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const NutrientViewer = window.NutrientViewer;
-    if (!PSPDFKit) {
-      console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
+    if (!NutrientViewer) {
+      console.error(
+        "NutrientViewer not loaded. Make sure the CDN script is included."
+      );
       return;
     }
 
     (async function loadPdf() {
-      if (PSPDFKit) {
-        NutrientViewer.unload(container);
-      }
+      NutrientViewer.unload(container);
 
       const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
       instance = await NutrientViewer.load({
@@ -42,7 +44,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
     if (props.handleAnnotation === "get") {
       const fetchAnnotationCoordinates = async () => {
         const annotations = await instance.getAnnotations(0); // Assuming pageIndex is 0
-        annotations.forEach(async (annotation: any) => {
+        annotations.forEach(async (annotation: Annotation) => {
           const { bottom, left, right, top } = annotation.boundingBox;
           const width = right - left;
           const height = bottom - top;
@@ -56,14 +58,14 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
             " Width: ",
             width,
             " Height: ",
-            height,
+            height
           );
           console.log("Annotation Bounding Box: ", annotation.boundingBox);
           // Render the full page as an image URL
           instance
             .renderPageAsImageURL(
               { width: instance.pageInfoForIndex(0).width },
-              0, // Assuming pageIndex is 0
+              0 // Assuming pageIndex is 0
             )
             .then(async (imageUrl: string) => {
               // Create a temporary image element to load the full page image
@@ -85,7 +87,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
                   0,
                   0,
                   width,
-                  height,
+                  height
                 );
 
                 // Convert the cropped canvas to a data URL (JPEG)

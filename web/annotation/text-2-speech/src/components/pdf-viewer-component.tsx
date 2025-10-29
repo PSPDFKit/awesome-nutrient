@@ -4,6 +4,8 @@ interface PdfViewerComponentProps {
   document: string;
 }
 
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+
 // PDF Viewer Component
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   // Reference to the container where PSPDFKit will be loaded
@@ -12,18 +14,20 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   // State to track whether text-to-speech is currently active
   const [_isSpeaking, setIsSpeaking] = useState<boolean>(false);
 
-  // useEffect hook to load PSPDFKit when the component mounts
+  // useEffect hook to load NutrientViewer when the component mounts
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const NutrientViewer = window.NutrientViewer;
-    if (!PSPDFKit) {
-      console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
+    if (!NutrientViewer) {
+      console.error(
+        "NutrientViewer not loaded. Make sure the CDN script is included."
+      );
       return;
     }
 
-    let instance: any; // Declared here to ensure accessibility in cleanup
+    let instance: NutrientViewerInstance; // Declared here to ensure accessibility in cleanup
 
     (async () => {
       // Unload any existing instance to prevent memory leaks
@@ -36,10 +40,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         document: props.document, // The document to be displayed
         baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/", // Base URL for loading assets
         toolbarItems: NutrientViewer.defaultToolbarItems, // Default toolbar settings
-        inlineTextSelectionToolbarItems: (
-          { defaultItems: _defaultItems, hasDesktopLayout: _hasDesktopLayout }: any,
-          _selection: any,
-        ) => {
+        inlineTextSelectionToolbarItems: () => {
           return [];
         }, // To remove in the inline toolbar when text is selection
       });
@@ -47,7 +48,11 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       // Add event listener to detect text selection changes
       instance.addEventListener(
         "textSelection.change",
-        async (textSelection: any) => {
+        async (
+          textSelection: InstanceType<
+            typeof NutrientViewer.TextSelection
+          > | null
+        ) => {
           if (textSelection) {
             // Stop any currently playing speech
             window.speechSynthesis.cancel();
@@ -71,20 +76,29 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
             const results = await instance.search(text);
 
             // Create highlight annotations for search results
-            const annotations = results.map((result: any) => {
-              return new NutrientViewer.Annotations.HighlightAnnotation({
-                pageIndex: result.pageIndex, // Page where text was found
-                rects: result.rectsOnPage, // Bounding rectangles of text
-                boundingBox: NutrientViewer.Geometry.Rect.union(result.rectsOnPage), // Overall bounding box
-              });
-            });
+            const annotations = results.map(
+              (result: {
+                pageIndex: number;
+                rectsOnPage: InstanceType<
+                  typeof NutrientViewer.Geometry.Rect
+                >[];
+              }) => {
+                return new NutrientViewer.Annotations.HighlightAnnotation({
+                  pageIndex: result.pageIndex, // Page where text was found
+                  rects: result.rectsOnPage, // Bounding rectangles of text
+                  boundingBox: NutrientViewer.Geometry.Rect.union(
+                    result.rectsOnPage
+                  ), // Overall bounding box
+                });
+              }
+            );
 
             // Add the highlight annotations to the document
             instance.create(annotations);
           } else {
             console.log("No text is selected");
           }
-        },
+        }
       );
 
       // Cleanup function: unload PSPDFKit when the component unmounts
@@ -123,4 +137,3 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     </div>
   );
 }
-

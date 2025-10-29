@@ -3,17 +3,37 @@ const backendUrl = new URL(
   `${window.location.protocol}//${window.location.host}/../`
 ).href;
 
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+
+// Type definitions for DocAuth (loaded via CDN, no official types available)
+interface DocAuthSystem {
+  createEditor: (
+    element: Element,
+    options: { document: unknown }
+  ) => Promise<unknown>;
+  importDOCX: (buffer: ArrayBuffer) => Promise<unknown>;
+  loadDocument: (json: unknown) => Promise<unknown>;
+}
+
+// Type definitions for CodeMirror (loaded via CDN)
+interface CodeMirrorEditor {
+  getValue: () => string;
+  setValue: (value: string) => void;
+  getTextArea: () => HTMLTextAreaElement;
+  toTextArea: () => void;
+}
+
 interface AppState {
-  docAuthSystem: any;
+  docAuthSystem: DocAuthSystem | null;
   template: string | null;
   customTemplateBinary: ArrayBuffer | null;
-  templateEditor: any;
-  templateDocument: any;
-  dataEditor: any;
-  dataJson: any;
-  docxEditor: any;
-  docxDocument: any;
-  pdfViewer: any;
+  templateEditor: unknown | null;
+  templateDocument: unknown | null;
+  dataEditor: CodeMirrorEditor | null;
+  dataJson: Record<string, unknown> | null;
+  docxEditor: unknown | null;
+  docxDocument: unknown | null;
+  pdfViewer: NutrientViewerInstance | null;
 }
 
 const APP: AppState = {
@@ -127,7 +147,13 @@ const editTemplateSection = document.getElementById("Step2_EditTemplate")!;
 function initTemplateEditor() {
   const doButtonAction = (e: Event) => {
     const action = (e.target as HTMLElement).dataset.action;
-    APP.templateEditor.destroy();
+    if (
+      APP.templateEditor &&
+      typeof APP.templateEditor === "object" &&
+      "destroy" in APP.templateEditor
+    ) {
+      (APP.templateEditor as { destroy: () => void }).destroy();
+    }
     if (action === "back-to-template-selection") {
       APP.templateDocument = null;
       goTemplatesSelection();

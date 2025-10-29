@@ -11,7 +11,6 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["app/**/*.ts"],
+  "include": ["app/**/*.ts", "global.d.ts"],
   "exclude": ["node_modules"]
 }
-

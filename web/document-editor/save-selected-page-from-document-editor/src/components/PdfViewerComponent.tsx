@@ -4,6 +4,8 @@ interface PdfViewerComponentProps {
   document: string;
 }
 
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -11,18 +13,20 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const NutrientViewer = window.NutrientViewer;
-    if (!PSPDFKit) {
-      console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
+    if (!NutrientViewer) {
+      console.error(
+        "NutrientViewer not loaded. Make sure the CDN script is included."
+      );
       return;
     }
 
-    let instance: any;
+    let instance: NutrientViewerInstance;
 
     (async () => {
       NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
 
-      const defaultToolbarItems = NutrientViewer.defaultDocumentEditorToolbarItems;
+      const defaultToolbarItems =
+        NutrientViewer.defaultDocumentEditorToolbarItems;
 
       // Custom toolbar item
       const customToolbarItem = {
@@ -35,12 +39,12 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
           // Select pages marked as selected
           const selectedPages = Array.from(
             instance.contentDocument.querySelectorAll(
-              ".PSPDFKit-DocumentEditor-Thumbnails-Page-Selected",
-            ),
+              ".PSPDFKit-DocumentEditor-Thumbnails-Page-Selected"
+            )
           );
 
           const selectedPagesIndex = selectedPages.map((e: Element) =>
-            Number.parseInt(e.getAttribute("data-page-index") || "0", 10),
+            Number.parseInt(e.getAttribute("data-page-index") || "0", 10)
           );
 
           console.log("Selected pages indices: ", selectedPagesIndex);
@@ -89,9 +93,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       });
     })();
 
-    return () => PSPDFKit?.unload(container);
+    return () => NutrientViewer?.unload(container);
   }, [props.document]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
 }
-

@@ -13,7 +13,7 @@ import "./App.css";
 function App() {
   const [document, setDocument] = useState<string>("document1.pdf");
   const [handleAnnotation, setHandleAnnotation] = useState<string>("");
-  
+
   const handleAnnotationCoordinates = () => {
     setHandleAnnotation("get");
     reset();
@@ -24,10 +24,11 @@ function App() {
       setHandleAnnotation("");
     }, 1000);
   };
-  
-  const handleFileSelected = (files: FileList | null) => {
+
+  const handleFileSelected = (files: FileList | File[] | null) => {
     if (files && files.length > 0) {
-      const fileUrl = URL.createObjectURL(files[0]);
+      const file = files instanceof FileList ? files[0] : files[0];
+      const fileUrl = URL.createObjectURL(file);
       setDocument(fileUrl);
     }
   };
@@ -59,7 +60,6 @@ function App() {
               <FileUpload
                 description="Drag and drop the file here"
                 label="Click here to Upload or "
-                onChange={handleFileSelected}
                 variant="inline"
                 onValueChange={(files) => handleFileSelected(files)}
                 className="btnstyleUpload"
@@ -91,4 +91,3 @@ function App() {
 }
 
 export default App;
-

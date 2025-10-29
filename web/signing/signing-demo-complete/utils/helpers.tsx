@@ -1,6 +1,13 @@
+import type NutrientViewer from "@nutrient-sdk/viewer";
 import { AnnotationTypeEnum, User } from "../utils/types";
 
-const renderConfigurations: any = {};
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
+
+const renderConfigurations: Record<
+  string,
+  { node: HTMLElement; append: boolean }
+> = {};
 
 export const TOOLBAR_ITEMS = [
   { type: "sidebar-thumbnails" },
@@ -18,7 +25,18 @@ export const TOOLBAR_ITEMS = [
   { type: "export-pdf" },
 ];
 
-function createCustomSignatureNode({ annotation, type }: any) {
+function createCustomSignatureNode({
+  annotation,
+  type,
+}: {
+  annotation: Annotation & {
+    customData?: {
+      signerColor?: { r: number; g: number; b: number };
+      type?: string;
+    };
+  };
+  type: string;
+}) {
   const container = document.createElement("div");
 
   if (type === AnnotationTypeEnum.SIGNATURE) {
@@ -50,19 +68,29 @@ function createCustomSignatureNode({ annotation, type }: any) {
   return container;
 }
 
-export const getAnnotationRenderers = ({ annotation }: any) => {
+export const getAnnotationRenderers = ({
+  annotation,
+}: {
+  annotation: Annotation & {
+    isSignature?: boolean;
+    name?: string;
+    customData?: { type?: string };
+  };
+}) => {
   if (annotation.isSignature) {
     // Create a new div element
     const box = document.createElement("div");
 
     // Apply box styles
     box.className = "signature-box-demo";
-    box.innerHTML = `<span class="signature-label-demo">By PSPDFKit</span><span class="signature-id-demo">${annotation.id.substring(0, 15) + (annotation.id.length > 15 ? "..." : "")}</span>`;
+    box.innerHTML = `<span class="signature-label-demo">By PSPDFKit</span><span class="signature-id-demo">${
+      annotation.id.substring(0, 15) + (annotation.id.length > 15 ? "..." : "")
+    }</span>`;
     box.style.height = `${annotation.boundingBox.height / 16}rem`;
     box.style.width = `${annotation.boundingBox.width / 16}rem`;
     box.style.setProperty(
       "--box-height",
-      `${annotation.boundingBox.height / 16}rem`,
+      `${annotation.boundingBox.height / 16}rem`
     );
     //box.style.margin = '0px';
     box.id = annotation.id;
@@ -93,11 +121,11 @@ export const getAnnotationRenderers = ({ annotation }: any) => {
 };
 
 export const handleAnnotatitonCreation = async (
-  instance: any,
-  annotation: any,
-  mySignatureIdsRef: any,
-  setSignatureAnnotationIds: any,
-  myEmail: string,
+  instance: NutrientViewerInstance,
+  annotation: Annotation & { isSignature?: boolean },
+  mySignatureIdsRef: React.MutableRefObject<string[]>,
+  setSignatureAnnotationIds: (ids: string[]) => void,
+  myEmail: string
 ) => {
   if (annotation.isSignature) {
     for (let i = 0; i < instance.totalPageCount; i++) {
@@ -105,7 +133,7 @@ export const handleAnnotatitonCreation = async (
       for await (const maybeCorrectAnnotation of annotations) {
         if (
           annotation.boundingBox.isRectOverlapping(
-            maybeCorrectAnnotation.boundingBox,
+            maybeCorrectAnnotation.boundingBox
           )
         ) {
           const newAnnotation = getAnnotationRenderers({
@@ -124,9 +152,9 @@ export const handleAnnotatitonCreation = async (
 };
 
 export const handleAnnotatitonDelete = async (
-  instance: any,
-  annotation: any,
-  myEmail: string,
+  instance: NutrientViewerInstance,
+  annotation: Annotation,
+  myEmail: string
 ) => {
   if (annotation.isSignature) {
     for (let i = 0; i < instance.totalPageCount; i++) {
@@ -134,7 +162,7 @@ export const handleAnnotatitonDelete = async (
       for await (const maybeCorrectAnnotation of annotations) {
         if (
           annotation.boundingBox.isRectOverlapping(
-            maybeCorrectAnnotation.boundingBox,
+            maybeCorrectAnnotation.boundingBox
           )
         ) {
           const newAnnotation = getAnnotationRenderers({

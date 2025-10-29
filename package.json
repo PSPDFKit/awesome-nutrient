@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "install-web-examples": "./install-web-examples.sh",
+    "typecheck": "./typecheck-web-examples.sh",
+    "typecheck:web": "./typecheck-web-examples.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

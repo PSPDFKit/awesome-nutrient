@@ -9,9 +9,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": []
   },
-  "include": ["index.ts"],
+  "include": ["index.ts", "global.d.ts"],
   "exclude": ["node_modules"]
 }
-

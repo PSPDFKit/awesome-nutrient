@@ -4,24 +4,29 @@ interface PdfViewerComponentProps {
   document: string;
 }
 
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  let instance: any;
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const NutrientViewer = window.NutrientViewer;
-    if (!PSPDFKit) {
-      console.error('PSPDFKit not loaded. Make sure the CDN script is included.');
+    if (!NutrientViewer) {
+      console.error(
+        "NutrientViewer not loaded. Make sure the CDN script is included."
+      );
       return;
     }
+
+    let instance: NutrientViewerInstance;
 
     (async () => {
       NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
 
-      const defaultToolbarItems = NutrientViewer.defaultDocumentEditorToolbarItems;
+      const defaultToolbarItems =
+        NutrientViewer.defaultDocumentEditorToolbarItems;
 
       // Insert custom item at the desired position
       const toolbarItems = [...defaultToolbarItems];
@@ -42,7 +47,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         try {
           const items = event.clipboardData?.items;
           if (!items || items.length === 0) return;
-          
+
           const item = items[0]; // this will get only the last copied data from clipboard
 
           const content_Type = item.type;
@@ -51,7 +56,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
           if (item.kind === "file" && item.type.startsWith("image")) {
             const file = item.getAsFile();
             if (!file) return;
-            
+
             const imageAttachmentId = await instance.createAttachment(file);
             const annotation = new NutrientViewer.Annotations.ImageAnnotation({
               pageIndex: currentPage,
@@ -69,19 +74,20 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
           } else if (item.kind === "string") {
             item.getAsString(async (pastedText: string) => {
               // Here you can create a text annotation if needed
-              const textAnnotation = new NutrientViewer.Annotations.TextAnnotation({
-                pageIndex: currentPage,
-                text: {
-                  format: "plain",
-                  value: pastedText,
-                },
-                boundingBox: new NutrientViewer.Geometry.Rect({
-                  left: 10,
-                  top: 50,
-                  width: 150,
-                  height: 50,
-                }),
-              });
+              const textAnnotation =
+                new NutrientViewer.Annotations.TextAnnotation({
+                  pageIndex: currentPage,
+                  text: {
+                    format: "plain",
+                    value: pastedText,
+                  },
+                  boundingBox: new NutrientViewer.Geometry.Rect({
+                    left: 10,
+                    top: 50,
+                    width: 150,
+                    height: 50,
+                  }),
+                });
               await instance.create(textAnnotation);
             });
           } else {
@@ -104,4 +110,3 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
 }
-

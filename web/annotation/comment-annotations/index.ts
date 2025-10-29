@@ -1,16 +1,27 @@
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
+type AnnotationsList = InstanceType<
+  typeof NutrientViewer.Immutable.List<Annotation>
+>;
+type ToolbarItem = {
+  type: string;
+  id?: string;
+  title?: string;
+  icon?: string;
+  onPress?: () => Promise<void>;
+};
+
 // Module scripts automatically wait for the page to load
 // Execute immediately since NutrientViewer is loaded via script tag in HTML
 (function () {
-  if (!window.NutrientViewer) {
+  if (!NutrientViewer) {
     console.error(
       "NutrientViewer not found. Make sure the CDN script is loaded."
     );
     return;
   }
 
-  const NutrientViewer = window.NutrientViewer;
-
-  let globalInstance: any = null;
+  let globalInstance: NutrientViewerInstance | null = null;
 
   NutrientViewer.load({
     container: "#nutrient-viewer",
@@ -25,8 +36,10 @@
     }),
     styleSheets: ["index.css"],
     annotationToolbarItems: (
-      annotation: any,
-      { defaultAnnotationToolbarItems }: any
+      annotation: Annotation,
+      {
+        defaultAnnotationToolbarItems,
+      }: { defaultAnnotationToolbarItems: ToolbarItem[] }
     ) => {
       const isHighlight =
         annotation instanceof NutrientViewer.Annotations.HighlightAnnotation;
@@ -39,7 +52,7 @@
 
       if (!isHighlight && !isStrikeOut && !isUnderline && !isSquiggly) {
         return defaultAnnotationToolbarItems.filter(
-          (item: any) => item.type !== "annotation-note"
+          (item: ToolbarItem) => item.type !== "annotation-note"
         );
       }
 
@@ -72,12 +85,14 @@
           );
 
           // CLEANUP DUMMY COMMENT
-          const handleUnselect = async (annotations: any) => {
+          const handleUnselect = async (annotations: AnnotationsList) => {
+            if (!globalInstance) return;
             await globalInstance.delete([dummyComment]);
 
             const comments = await globalInstance.getComments();
             const numCommentsInThread = comments.filter(
-              (c: any) => c.rootId === annotation.id
+              (c: InstanceType<typeof NutrientViewer.Comment>) =>
+                c.rootId === annotation.id
             ).size;
             if (numCommentsInThread === 0) {
               annotation = annotation.set("isCommentThreadRoot", false);
@@ -97,45 +112,54 @@
       };
 
       const items = defaultAnnotationToolbarItems.filter(
-        (item: any) => item.type !== "annotation-note"
+        (item: ToolbarItem) => item.type !== "annotation-note"
       );
       items.push(addCommentItem);
       return items;
     },
   })
-    .then((instance: any) => {
+    .then((instance: NutrientViewerInstance) => {
       globalInstance = instance;
-      instance.addEventListener("annotations.update", async (event: any) => {
-        const annotation = event.toArray()[0];
-        if (annotation?.customData?.commentAnnotationID) {
-          try {
-            // Update the comment annotation when the parent annotation is updated
-            let commentAnnotation = annotation.customData.commentAnnotation;
-            commentAnnotation = commentAnnotation.set(
-              "boundingBox",
-              annotation.boundingBox
-            );
-            const update = await instance.update(commentAnnotation);
-          } catch (error) {
-            console.warn(error);
+      instance.addEventListener(
+        "annotations.update",
+        async (event: AnnotationsList) => {
+          const annotation = event.toArray()[0];
+          if (annotation?.customData?.commentAnnotationID) {
+            try {
+              // Update the comment annotation when the parent annotation is updated
+              let commentAnnotation = annotation.customData.commentAnnotation;
+              commentAnnotation = commentAnnotation.set(
+                "boundingBox",
+                annotation.boundingBox
+              );
+              const update = await instance.update(commentAnnotation);
+            } catch (error) {
+              console.warn(error);
+            }
           }
         }
-      });
+      );
       // When a comment is pressed, select the parent annotation
-      instance.addEventListener("annotations.press", async (event: any) => {
-        if (
-          event.annotation instanceof
-            NutrientViewer.Annotations.CommentMarkerAnnotation &&
-          event.annotation.customData.parentAnnotation
-        ) {
-          event.preventDefault();
-          const parentAnnotationID =
-            event.annotation.customData.parentAnnotation.id;
-          await instance.setSelectedAnnotations(
-            NutrientViewer.Immutable.List([parentAnnotationID])
-          );
+      instance.addEventListener(
+        "annotations.press",
+        async (event: {
+          annotation: Annotation;
+          preventDefault: () => void;
+        }) => {
+          if (
+            event.annotation instanceof
+              NutrientViewer.Annotations.CommentMarkerAnnotation &&
+            event.annotation.customData.parentAnnotation
+          ) {
+            event.preventDefault();
+            const parentAnnotationID =
+              event.annotation.customData.parentAnnotation.id;
+            await instance.setSelectedAnnotations(
+              NutrientViewer.Immutable.List([parentAnnotationID])
+            );
+          }
         }
-      });
+      );
     })
     .catch((error: Error) => {
       console.error(error.message);

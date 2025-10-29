@@ -5,7 +5,14 @@ const MIXPANEL_TOKEN =
   import.meta.env.VITE_MIXPANEL_TOKEN || "your-mixpanel-token-here";
 
 interface EventProperties {
-  [key: string]: any;
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | string[]
+    | number[];
 }
 
 interface TrackedEvent {
@@ -130,7 +137,11 @@ class MixpanelService {
     });
   }
 
-  trackUserEngagement(engagementType: string, duration: number, details: EventProperties = {}) {
+  trackUserEngagement(
+    engagementType: string,
+    duration: number,
+    details: EventProperties = {}
+  ) {
     this.track("User Engagement", {
       engagement_type: engagementType,
       duration_seconds: duration,
@@ -163,4 +174,3 @@ if (typeof window !== "undefined") {
 }
 
 export default mixpanelService;
-

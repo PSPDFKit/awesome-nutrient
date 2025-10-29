@@ -1,11 +1,18 @@
-const NutrientViewer = window.NutrientViewer;
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
+type AnnotationsList = InstanceType<
+  typeof NutrientViewer.Immutable.List<Annotation>
+>;
 
 // We need to inform NutrientViewer where to look for its library assets
 const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.5.0/";
 
-let _instance: any = null;
+let _instance: NutrientViewerInstance | null = null;
 
-const createCommentAnnotation = async (instance: any, annotation: any) => {
+const createCommentAnnotation = async (
+  instance: NutrientViewerInstance,
+  annotation: Annotation
+): Promise<Annotation> => {
   // Get the first created annotation
   const commentID = NutrientViewer.generateInstantId();
   // Create a new comment annotation
@@ -36,7 +43,7 @@ const createCommentAnnotation = async (instance: any, annotation: any) => {
   return updatedAnnot[0];
 };
 
-const duplicateAnnotationTooltipCallback = (annotation: any) => {
+const duplicateAnnotationTooltipCallback = (annotation: Annotation) => {
   // If the annotation is a comment marker, dont show the tooltip
   if (annotation instanceof NutrientViewer.Annotations.CommentMarkerAnnotation)
     return [];
@@ -50,7 +57,10 @@ const duplicateAnnotationTooltipCallback = (annotation: any) => {
       //console.log("Annotation pressed", annotation);
       if (_instance) {
         if (
-          !(annotation instanceof NutrientViewer.Annotations.CommentMarkerAnnotation)
+          !(
+            annotation instanceof
+            NutrientViewer.Annotations.CommentMarkerAnnotation
+          )
         ) {
           // Create a new comment annotation if it does not exist
           if (!annotation.customData?.commentAnnotationID)
@@ -59,7 +69,7 @@ const duplicateAnnotationTooltipCallback = (annotation: any) => {
           const parentAnnotationID = annotation.customData.commentAnnotationID;
           try {
             await _instance.setSelectedAnnotations(
-              NutrientViewer.Immutable.List([parentAnnotationID]),
+              NutrientViewer.Immutable.List([parentAnnotationID])
             );
           } catch (error) {
             console.warn(error);
@@ -71,7 +81,10 @@ const duplicateAnnotationTooltipCallback = (annotation: any) => {
   return [duplicateItem];
 };
 
-const setCommentColor = (ele: any, currStatus: string) => {
+const setCommentColor = (
+  ele: { current?: HTMLElement | null },
+  currStatus: string
+) => {
   if (_instance?.contentDocument) {
     const commentDiv = ele.current;
     if (commentDiv) {
@@ -90,37 +103,65 @@ const {
 
 NutrientViewer.load({
   ui: {
-    [Interfaces.CommentThread]: ({ props }: any) => ({
-      content: createBlock(Recipes.CommentThread, props, ({ ui }: any) => {
-        const comment = ui.getBlockById("comment");
-        if (comment?.props) {
-          const { menuProps } = comment.props;
-          menuProps &&
-            comment.setProp("menuProps", {
-              ...menuProps,
-              onAction: (id: string) => {
-                if ("approve" === id) {
-                  setCommentColor(props.ref, "approved");
-                  window.alert(`Approved ${props.comments[0].id}`);
-                } else if ("reject" === id) {
-                  setCommentColor(props.ref, "rejected");
-                  window.alert(`Rejected ${props.comments[0].id}`);
+    [Interfaces.CommentThread]: ({
+      props,
+    }: {
+      props: {
+        ref: { current?: HTMLElement | null };
+        comments: Array<{ id: string }>;
+      };
+    }) => ({
+      content: createBlock(
+        Recipes.CommentThread,
+        props,
+        ({
+          ui,
+        }: {
+          ui: {
+            getBlockById: (id: string) =>
+              | {
+                  props?: {
+                    menuProps?: {
+                      onAction: (id: string) => void;
+                      items: Array<{ id: string; label: string }>;
+                    };
+                  };
+                  setProp: (key: string, value: unknown) => void;
                 }
-                // Add more status as needed
-                else {
-                  menuProps.onAction(id);
-                }
-              },
-              // Also add status here
-              items: [
-                ...menuProps.items,
-                { id: "approve", label: "Approve" },
-                { id: "reject", label: "Reject" },
-              ],
-            });
+              | undefined;
+            createComponent: () => unknown;
+          };
+        }) => {
+          const comment = ui.getBlockById("comment");
+          if (comment?.props) {
+            const { menuProps } = comment.props;
+            menuProps &&
+              comment.setProp("menuProps", {
+                ...menuProps,
+                onAction: (id: string) => {
+                  if ("approve" === id) {
+                    setCommentColor(props.ref, "approved");
+                    window.alert(`Approved ${props.comments[0].id}`);
+                  } else if ("reject" === id) {
+                    setCommentColor(props.ref, "rejected");
+                    window.alert(`Rejected ${props.comments[0].id}`);
+                  }
+                  // Add more status as needed
+                  else {
+                    menuProps.onAction(id);
+                  }
+                },
+                // Also add status here
+                items: [
+                  ...menuProps.items,
+                  { id: "approve", label: "Approve" },
+                  { id: "reject", label: "Reject" },
+                ],
+              });
+          }
+          return ui.createComponent();
         }
-        return ui.createComponent();
-      }).createComponent(),
+      ).createComponent(),
     }),
   },
   baseUrl,
@@ -136,43 +177,48 @@ NutrientViewer.load({
   }),
   annotationTooltipCallback: duplicateAnnotationTooltipCallback,
 })
-  .then((instance: any) => {
+  .then((instance: NutrientViewerInstance) => {
     _instance = instance;
-    instance.addEventListener("annotations.update", async (event: any) => {
-      const annotation = event.toArray()[0];
-      if (annotation?.customData?.commentAnnotationID) {
-        try {
-          // Update the comment annotation when the parent annotation is updated
-          let commentAnnotation = annotation.customData.commentAnnotation;
-          commentAnnotation = commentAnnotation.set(
-            "boundingBox",
-            annotation.boundingBox,
-          );
-          const update = await instance.update(commentAnnotation);
-          console.log("Annotation updated", update);
-        } catch (error) {
-          console.warn(error);
+    instance.addEventListener(
+      "annotations.update",
+      async (event: AnnotationsList) => {
+        const annotation = event.toArray()[0];
+        if (annotation?.customData?.commentAnnotationID) {
+          try {
+            // Update the comment annotation when the parent annotation is updated
+            let commentAnnotation = annotation.customData.commentAnnotation;
+            commentAnnotation = commentAnnotation.set(
+              "boundingBox",
+              annotation.boundingBox
+            );
+            const update = await instance.update(commentAnnotation);
+            console.log("Annotation updated", update);
+          } catch (error) {
+            console.warn(error);
+          }
         }
       }
-    });
+    );
     // When a comment is pressed, select the parent annotation
-    instance.addEventListener("annotations.press", async (event: any) => {
-      if (
-        event.annotation instanceof
-          NutrientViewer.Annotations.CommentMarkerAnnotation &&
-        event.annotation.customData.parentAnnotation
-      ) {
-        event.preventDefault();
-        const parentAnnotationID =
-          event.annotation.customData.parentAnnotation.id;
-        await instance.setSelectedAnnotations(
-          NutrientViewer.Immutable.List([parentAnnotationID]),
-        );
-        //,console.log("Annotation pressed", event);
+    instance.addEventListener(
+      "annotations.press",
+      async (event: { annotation: Annotation; preventDefault: () => void }) => {
+        if (
+          event.annotation instanceof
+            NutrientViewer.Annotations.CommentMarkerAnnotation &&
+          event.annotation.customData.parentAnnotation
+        ) {
+          event.preventDefault();
+          const parentAnnotationID =
+            event.annotation.customData.parentAnnotation.id;
+          await instance.setSelectedAnnotations(
+            NutrientViewer.Immutable.List([parentAnnotationID])
+          );
+          //,console.log("Annotation pressed", event);
+        }
       }
-    });
+    );
   })
   .catch((error: Error) => {
     console.error(error.message);
   });
-

@@ -2,26 +2,49 @@
 import { useEffect, useRef, useState } from "react";
 import mixpanelService from "../services/mixpanel.ts";
 
+interface TrackedEvent {
+  timestamp: Date;
+  event: string;
+  properties: {
+    event_source?: string;
+    [key: string]:
+      | string
+      | number
+      | boolean
+      | null
+      | undefined
+      | string[]
+      | number[];
+  };
+}
+
 export default function DebugPanel() {
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<TrackedEvent[]>([]);
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [sdkEventStats, setSdkEventStats] = useState<Record<string, number>>({});
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const [sdkEventStats, setSdkEventStats] = useState<Record<string, number>>(
+    {}
+  );
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
+    const interval = setInterval(() => {
       const allEvents = mixpanelService.getTrackedEvents();
       setEvents([...allEvents]);
 
       const sdkEvents = allEvents.filter(
-        (e: any) => e.properties.event_source === "nutrient_sdk",
+        (e: TrackedEvent) => e.properties.event_source === "nutrient_sdk"
       );
-      const stats = sdkEvents.reduce((acc: Record<string, number>, event: any) => {
-        acc[event.event] = (acc[event.event] || 0) + 1;
-        return acc;
-      }, {});
+      const stats = sdkEvents.reduce(
+        (acc: Record<string, number>, event: TrackedEvent) => {
+          acc[event.event] = (acc[event.event] || 0) + 1;
+          return acc;
+        },
+        {}
+      );
       setSdkEventStats(stats);
     }, 1000);
+
+    intervalRef.current = interval;
 
     return () => {
       if (intervalRef.current) {
@@ -67,7 +90,7 @@ export default function DebugPanel() {
   if (!import.meta.env.DEV) return null;
 
   const sdkEventCount = events.filter(
-    (e: any) => e.properties.event_source === "nutrient_sdk",
+    (e: TrackedEvent) => e.properties.event_source === "nutrient_sdk"
   ).length;
   const totalEvents = events.length;
 
@@ -148,10 +171,13 @@ export default function DebugPanel() {
               <h4>Recent SDK Events (Last 10)</h4>
               <div className="events-list">
                 {events
-                  .filter((e: any) => e.properties.event_source === "nutrient_sdk")
+                  .filter(
+                    (e: TrackedEvent) =>
+                      e.properties.event_source === "nutrient_sdk"
+                  )
                   .slice(-10)
                   .reverse()
-                  .map((event: any) => (
+                  .map((event: TrackedEvent) => (
                     <div
                       key={`${event.timestamp.getTime()}-${
                         event.event

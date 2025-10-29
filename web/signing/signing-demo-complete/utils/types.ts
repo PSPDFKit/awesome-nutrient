@@ -5,11 +5,13 @@ export enum AnnotationTypeEnum {
   INITIAL = "initial",
 }
 
+import type NutrientViewer from "@nutrient-sdk/viewer";
+
 export interface User {
   id: number;
   name: string;
   email: string;
-  color?: any;
+  color?: InstanceType<typeof NutrientViewer.Color>;
   role: string;
 }
 

@@ -2,7 +2,6 @@ import { useState } from "react";
 import PdfViewerComponent from "./components/PdfViewerComponent";
 import "./App.css";
 import {
-  Avatar,
   FileUpload,
   I18nProvider,
   Link,
@@ -13,9 +12,10 @@ function App() {
   const [document, setDocument] = useState<string>("document1.pdf");
   const [toolbar, setToolbar] = useState<string>("default");
 
-  const handleFileSelected = (files) => {
+  const handleFileSelected = (files: FileList | File[] | null) => {
     if (files && files.length > 0) {
-      const fileUrl = URL.createObjectURL(files[0]);
+      const file = files instanceof FileList ? files[0] : files[0];
+      const fileUrl = URL.createObjectURL(file);
       setDocument(fileUrl);
       setToolbar("default");
     }
@@ -39,7 +39,6 @@ function App() {
             <div className="left-column">
               <FileUpload
                 label="Click here to Upload"
-                onChange={handleFileSelected}
                 variant="inline"
                 className="btnstyle"
                 onValueChange={(files) => handleFileSelected(files)}

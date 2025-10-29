@@ -14,10 +14,9 @@ export default async function askAI(messagesArr: AIMessage[]) {
   let res;
   await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
-    //@ts-ignore
     headers: {
       "Content-Type": "application/json",
-      Authorization: process.env.NEXT_PUBLIC_OPEN_AI_KEY,
+      Authorization: process.env.NEXT_PUBLIC_OPEN_AI_KEY || "",
     },
     body: JSON.stringify({
       model: "gpt-3.5-turbo",

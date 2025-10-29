@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import "pspdfkit";
+import { useEffect, useRef } from "react";
 import "../App.css";
 
 interface PdfViewerProps {
@@ -7,26 +6,35 @@ interface PdfViewerProps {
   toolbar: string;
 }
 
-let PSPDFKit: any;
-let instance: any;
-let totalPageCount_;
+type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
+
+let instance: NutrientViewerInstance;
 
 export default function PdfViewerComponent(props: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = containerRef.current;
+    if (!container) return;
 
-    const initializePSPDFKit = async () => {
+    const initializeNutrientViewer = async () => {
+      if (!NutrientViewer) {
+        console.error(
+          "NutrientViewer not loaded. Make sure the CDN script is included."
+        );
+        return;
+      }
+
       try {
-        PSPDFKit = await import("pspdfkit");
-        if (PSPDFKit) {
-          NutrientViewer.unload(container);
-        }
+        NutrientViewer.unload(container);
 
         const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
-        const redactionAnnotationsHandlerCallback = (annotation) => {
-          return annotation instanceof NutrientViewer.Annotations.RedactionAnnotation
+        const redactionAnnotationsHandlerCallback = (
+          annotation: Annotation
+        ) => {
+          return annotation instanceof
+            NutrientViewer.Annotations.RedactionAnnotation
             ? [
                 {
                   type: "custom",
@@ -36,7 +44,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
                   onPress: async () => {
                     const allRedactionAnnotations = (
                       await getAllAnnotations()
-                    ).filter((a) => a.id !== annotation.id);
+                    ).filter((a: Annotation) => a.id !== annotation.id);
                     await instance.delete(allRedactionAnnotations);
                     await instance.applyRedactions();
                     await instance.create(allRedactionAnnotations);
@@ -55,11 +63,14 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
             : [];
         };
 
-        const getAllAnnotations = async () => {
+        const getAllAnnotations = async (): Promise<
+          typeof NutrientViewer.Immutable.List
+        > => {
           let annotationsList = NutrientViewer.Immutable.List();
           for (let i = 0; i < instance.totalPageCount - 1; i++) {
             const anns = (await instance.getAnnotations(i)).filter(
-              (a) => a instanceof NutrientViewer.Annotations.RedactionAnnotation,
+              (a: Annotation) =>
+                a instanceof NutrientViewer.Annotations.RedactionAnnotation
             );
             annotationsList = annotationsList.concat(anns);
           }
@@ -76,15 +87,18 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
           toolbarPlacement: NutrientViewer.ToolbarPlacement.TOP,
         });
         console.log("Instance:", instance);
-        // Create redactions once PSPDFKit is loaded
+        // Create redactions once NutrientViewer is loaded
         createRedactions();
       } catch (error) {
-        console.error("Error initializing PSPDFKit:", error);
+        console.error("Error initializing NutrientViewer:", error);
       }
     };
 
-    initializePSPDFKit();
-    const createRedactions = async () => {
+    initializeNutrientViewer();
+    const createRedactions = async (): Promise<void> => {
+      const NutrientViewer = window.NutrientViewer;
+      if (!NutrientViewer) return;
+
       const terms = ["summarize", "trees", "Learning", "Forests"];
 
       for (const term of terms) {
@@ -107,7 +121,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
             console.log(
               "The following annotations have been added for term:",
               term,
-              ids,
+              ids
             );
             // Apply redactions if needed
             // await instance.applyRedactions();
@@ -120,7 +134,9 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
       console.log("All redactions have been created.");
     };
 
-    return () => PSPDFKit?.unload(container);
+    return () => {
+      NutrientViewer?.unload(container);
+    };
   }, [props.document]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;

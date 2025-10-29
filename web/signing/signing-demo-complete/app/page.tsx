@@ -11,15 +11,15 @@ import askAI from "./api/askAI";
 const DynamicSignComp = dynamic(() => import("./signingDemo"), { ssr: false });
 const I18nProvider = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.I18nProvider),
-  { ssr: false },
+  { ssr: false }
 );
 const ThemeProvider = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.ThemeProvider),
-  { ssr: false },
+  { ssr: false }
 );
 const Drawer = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.Drawer),
-  { ssr: false },
+  { ssr: false }
 );
 
 const App: React.FC = () => {
@@ -53,11 +53,10 @@ const App: React.FC = () => {
   const [messages, setMessages] = useState([...initMessages]);
   const [aiMessages, setAiMessages] = useState<AIMessage[]>([]);
   useEffect(() => {
-    let PSPDFKit: any;
     (async () => {
-      PSPDFKit = await import("pspdfkit");
-      allUsers.forEach((user: any) => {
-        user.color = NutrientViewer.Color.LIGHT_BLUE;
+      await import("pspdfkit");
+      allUsers.forEach((user: User) => {
+        user.color = window.NutrientViewer.Color.LIGHT_BLUE;
       });
     })();
     setTimeout(() => {
