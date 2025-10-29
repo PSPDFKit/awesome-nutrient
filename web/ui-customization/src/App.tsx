@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
+import { createRoot } from "react-dom/client";
+
 import "./App.css";
+import CommentThread from "./CommentThread";
 
 function App() {
   const containerRef = useRef(null);
@@ -14,24 +17,33 @@ function App() {
       // Ensure there’s only one `NutrientViewer` instance.
       NutrientViewer.unload(container);
 
+      const baseUrl = `${window.location.protocol}//${window.location.host}/${
+        import.meta.env.PUBLIC_URL ?? ""
+      }`;
+
       if (container && NutrientViewer) {
         NutrientViewer.load({
           container,
-          // You can also specify a file in public directory, for example /nutrient-web-demo.pdf.
           document: "https://www.nutrient.io/downloads/nutrient-web-demo.pdf",
-          // baseUrl: where SDK should load its assets from (copied by rollup-plugin-copy).
-          baseUrl: `${window.location.protocol}//${window.location.host}/${
-            import.meta.env.PUBLIC_URL ?? "" // Usually empty for Vite, but supports custom deployments.
-          }`,
+          baseUrl,
+          styleSheets: [`${baseUrl}comment-thread.css`],
           ui: {
-            commentThread: (instance, id) => {
-              const container = document.createElement("div");
+            commentThread: {
+              header: (instance, id) => {
+                const container = document.createElement("div");
+                const root = createRoot(container);
 
-              return {
-                render: () => container,
-                onMount: () => {},
-                onUnmount: () => {},
-              };
+                return {
+                  render: () => container,
+                  onMount: () => {
+                    root.render(<CommentThread instance={instance} id={id} />);
+                  },
+                  onUnmount: () => {
+                    root.unmount();
+                  },
+                };
+              },
+              comment: () => ({ render: () => null }), // Disable default comment rendering.
             },
           },
         });
