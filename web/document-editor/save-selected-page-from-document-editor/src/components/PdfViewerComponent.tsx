@@ -4,7 +4,9 @@ interface PdfViewerComponentProps {
   document: string;
 }
 
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+type NutrientViewerInstance = Awaited<
+  ReturnType<typeof window.NutrientViewer.load>
+>;
 
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,7 +15,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    if (!NutrientViewer) {
+    if (!window.NutrientViewer) {
       console.error(
         "NutrientViewer not loaded. Make sure the CDN script is included."
       );
@@ -23,14 +25,14 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     let instance: NutrientViewerInstance;
 
     (async () => {
-      NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
+      window.NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
 
       const defaultToolbarItems =
-        NutrientViewer.defaultDocumentEditorToolbarItems;
+        window.NutrientViewer.defaultDocumentEditorToolbarItems;
 
       // Custom toolbar item
       const customToolbarItem = {
-        type: "custom",
+        type: "custom" as const,
         id: "custom-save-as",
         title: "My Save as",
         onPress: async () => {
@@ -66,26 +68,22 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
           const blob = new Blob([file], { type: "application/pdf" });
 
           // Download the file
-          if (window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveOrOpenBlob(blob, fileName);
-          } else {
-            const objectUrl = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = objectUrl;
-            a.style.display = "none";
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            URL.revokeObjectURL(objectUrl);
-            document.body.removeChild(a);
-          }
+          const objectUrl = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = objectUrl;
+          a.style.display = "none";
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          URL.revokeObjectURL(objectUrl);
+          document.body.removeChild(a);
         },
       };
 
       // Insert custom item at the desired position
       const toolbarItems = [...defaultToolbarItems, customToolbarItem];
 
-      instance = await NutrientViewer.load({
+      instance = await window.NutrientViewer.load({
         container,
         document: props.document,
         baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/",
@@ -93,7 +91,9 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       });
     })();
 
-    return () => NutrientViewer?.unload(container);
+    return () => {
+      window.NutrientViewer?.unload(container);
+    };
   }, [props.document]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;

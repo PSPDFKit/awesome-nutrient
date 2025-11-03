@@ -443,14 +443,12 @@ export default function PdfViewerComponent({
 
           mixpanelService.track("PDF Viewer Loaded", {
             load_time_ms: loadTime,
-            file_name: fileName,
-            session_id: sessionId.current,
             ...docInfo,
           });
 
           setupNutrientSDKEvents(instance, docInfo);
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           console.error("PDF Viewer Load Error:", error);
           mixpanelService.track("PDF Viewer Load Error", {
             error_message: error.message,
@@ -479,8 +477,6 @@ export default function PdfViewerComponent({
         const sessionDuration = (Date.now() - startTimeRef.current) / 1000;
         mixpanelService.track("PDF Session End", {
           session_duration_seconds: sessionDuration,
-          file_name: fileName,
-          session_id: sessionId.current,
           ...documentInfo,
         });
       }

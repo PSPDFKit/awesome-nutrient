@@ -4,9 +4,13 @@ interface PdfViewerComponentProps {
   document: string;
 }
 
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
-type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
-type ViewState = InstanceType<typeof NutrientViewer.ViewState>;
+type NutrientViewerInstance = Awaited<
+  ReturnType<typeof window.NutrientViewer.load>
+>;
+type Annotation = InstanceType<
+  typeof window.NutrientViewer.Annotations.Annotation
+>;
+type ViewState = InstanceType<typeof window.NutrientViewer.ViewState>;
 
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -15,7 +19,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    if (!NutrientViewer) {
+    if (!window.NutrientViewer) {
       console.error(
         "NutrientViewer not loaded. Make sure the CDN script is included."
       );
@@ -26,14 +30,14 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
     (async () => {
       if (container) {
-        NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
+        window.NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
       }
 
-      const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
+      const toolbarItemsDefault = window.NutrientViewer.defaultToolbarItems;
 
       const customUIConfiguration = {
-        [NutrientViewer.UIElement.Sidebar]: {
-          [NutrientViewer.SidebarMode.ANNOTATIONS]: ({
+        [window.NutrientViewer.UIElement.Sidebar]: {
+          [window.NutrientViewer.SidebarMode.ANNOTATIONS]: ({
             containerNode,
           }: {
             containerNode: HTMLElement;
@@ -48,7 +52,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
             }) => {
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.HighlightAnnotation &&
+                  window.NutrientViewer.Annotations.HighlightAnnotation &&
                 instance
               ) {
                 instance
@@ -62,7 +66,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.CommentMarkerAnnotation &&
+                  window.NutrientViewer.Annotations.CommentMarkerAnnotation &&
                 instance
               ) {
                 instance
@@ -76,7 +80,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.InkAnnotation &&
+                  window.NutrientViewer.Annotations.InkAnnotation &&
                 instance
               ) {
                 instance
@@ -90,7 +94,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.MarkupAnnotation &&
+                  window.NutrientViewer.Annotations.MarkupAnnotation &&
                 instance
               ) {
                 instance
@@ -106,7 +110,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               //link Annotation cannot give the text of the Rect.
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.LineAnnotation &&
+                  window.NutrientViewer.Annotations.LineAnnotation &&
                 instance
               ) {
                 instance
@@ -120,7 +124,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.MarkupAnnotation &&
+                  window.NutrientViewer.Annotations.MarkupAnnotation &&
                 instance
               ) {
                 instance
@@ -134,7 +138,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.MediaAnnotation &&
+                  window.NutrientViewer.Annotations.MediaAnnotation &&
                 instance
               ) {
                 instance
@@ -148,7 +152,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.NoteAnnotation &&
+                  window.NutrientViewer.Annotations.NoteAnnotation &&
                 instance
               ) {
                 instance
@@ -162,7 +166,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.MarkupAnnotation &&
+                  window.NutrientViewer.Annotations.MarkupAnnotation &&
                 instance
               ) {
                 instance
@@ -176,7 +180,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.PolygonAnnotation &&
+                  window.NutrientViewer.Annotations.PolygonAnnotation &&
                 instance
               ) {
                 instance
@@ -190,7 +194,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.RectangleAnnotation &&
+                  window.NutrientViewer.Annotations.RectangleAnnotation &&
                 instance
               ) {
                 instance
@@ -204,7 +208,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.RedactionAnnotation &&
+                  window.NutrientViewer.Annotations.RedactionAnnotation &&
                 instance
               ) {
                 instance
@@ -218,7 +222,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.ShapeAnnotation &&
+                  window.NutrientViewer.Annotations.ShapeAnnotation &&
                 instance
               ) {
                 instance
@@ -232,7 +236,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.SquiggleAnnotation &&
+                  window.NutrientViewer.Annotations.SquiggleAnnotation &&
                 instance
               ) {
                 instance
@@ -246,7 +250,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.StampAnnotation &&
+                  window.NutrientViewer.Annotations.StampAnnotation &&
                 instance
               ) {
                 instance
@@ -260,7 +264,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.StrikeOutAnnotation &&
+                  window.NutrientViewer.Annotations.StrikeOutAnnotation &&
                 instance
               ) {
                 instance
@@ -274,7 +278,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.TextAnnotation &&
+                  window.NutrientViewer.Annotations.TextAnnotation &&
                 instance
               ) {
                 instance
@@ -288,7 +292,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.UnderlineAnnotation &&
+                  window.NutrientViewer.Annotations.UnderlineAnnotation &&
                 instance
               ) {
                 instance
@@ -302,7 +306,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.UnknownAnnotation &&
+                  window.NutrientViewer.Annotations.UnknownAnnotation &&
                 instance
               ) {
                 instance
@@ -316,7 +320,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               }
               if (
                 annotation instanceof
-                  NutrientViewer.Annotations.WidgetAnnotation &&
+                  window.NutrientViewer.Annotations.WidgetAnnotation &&
                 instance
               ) {
                 instance
@@ -333,23 +337,23 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         },
       };
 
-      instance = await NutrientViewer.load({
+      instance = await window.NutrientViewer.load({
         container,
         document: props.document,
         customUI: customUIConfiguration,
         baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.7.0/",
         toolbarItems: [...toolbarItemsDefault, { type: "comment" }],
-        initialViewState: new NutrientViewer.ViewState({
-          sidebarMode: NutrientViewer.SidebarMode.ANNOTATIONS,
+        initialViewState: new window.NutrientViewer.ViewState({
+          sidebarMode: window.NutrientViewer.SidebarMode.ANNOTATIONS,
         }),
       });
 
       instance.setViewState((viewState: ViewState) =>
         viewState.set("sidebarOptions", {
-          [NutrientViewer.SidebarMode.ANNOTATIONS]: {
+          [window.NutrientViewer.SidebarMode.ANNOTATIONS]: {
             includeContent: [
-              ...NutrientViewer.defaultAnnotationsSidebarContent,
-              NutrientViewer.Comment,
+              ...window.NutrientViewer.defaultAnnotationsSidebarContent,
+              window.NutrientViewer.Comment,
             ],
           },
         })
@@ -360,7 +364,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         "textSelection.change",
         async (
           textSelection: InstanceType<
-            typeof NutrientViewer.TextSelection
+            typeof window.NutrientViewer.TextSelection
           > | null
         ) => {
           if (textSelection) {
@@ -377,7 +381,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       return () => {
         if (instance) {
           instance.removeEventListener("textSelection.change");
-          NutrientViewer.unload(container);
+          window.NutrientViewer.unload(container);
         }
       };
     })();

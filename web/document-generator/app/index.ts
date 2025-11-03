@@ -1,38 +1,29 @@
+import type {
+  DocAuthSystem,
+  DocAuthEditor,
+  DocAuthDocument,
+  CodeMirrorEditor,
+} from "../global";
+
 const backendUrl = new URL(
   "",
   `${window.location.protocol}//${window.location.host}/../`
 ).href;
 
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
-
-// Type definitions for DocAuth (loaded via CDN, no official types available)
-interface DocAuthSystem {
-  createEditor: (
-    element: Element,
-    options: { document: unknown }
-  ) => Promise<unknown>;
-  importDOCX: (buffer: ArrayBuffer) => Promise<unknown>;
-  loadDocument: (json: unknown) => Promise<unknown>;
-}
-
-// Type definitions for CodeMirror (loaded via CDN)
-interface CodeMirrorEditor {
-  getValue: () => string;
-  setValue: (value: string) => void;
-  getTextArea: () => HTMLTextAreaElement;
-  toTextArea: () => void;
-}
+type NutrientViewerInstance = Awaited<
+  ReturnType<typeof window.NutrientViewer.load>
+>;
 
 interface AppState {
   docAuthSystem: DocAuthSystem | null;
   template: string | null;
   customTemplateBinary: ArrayBuffer | null;
-  templateEditor: unknown | null;
-  templateDocument: unknown | null;
+  templateEditor: DocAuthEditor | null;
+  templateDocument: DocAuthDocument | null;
   dataEditor: CodeMirrorEditor | null;
   dataJson: Record<string, unknown> | null;
-  docxEditor: unknown | null;
-  docxDocument: unknown | null;
+  docxEditor: DocAuthEditor | null;
+  docxDocument: DocAuthDocument | null;
   pdfViewer: NutrientViewerInstance | null;
 }
 
@@ -147,12 +138,8 @@ const editTemplateSection = document.getElementById("Step2_EditTemplate")!;
 function initTemplateEditor() {
   const doButtonAction = (e: Event) => {
     const action = (e.target as HTMLElement).dataset.action;
-    if (
-      APP.templateEditor &&
-      typeof APP.templateEditor === "object" &&
-      "destroy" in APP.templateEditor
-    ) {
-      (APP.templateEditor as { destroy: () => void }).destroy();
+    if (APP.templateEditor) {
+      APP.templateEditor.destroy();
     }
     if (action === "back-to-template-selection") {
       APP.templateDocument = null;
@@ -184,12 +171,14 @@ function goTemplateEditor() {
       APP.docAuthSystem = await window.DocAuth.createDocAuthSystem();
     }
 
+    const docAuthSystem = APP.docAuthSystem;
+
     // prepare the template document
     if (APP.templateDocument === null) {
       const templateDocument =
         APP.template === "custom"
-          ? await APP.docAuthSystem.importDOCX(APP.customTemplateBinary) // import custom template DOCX
-          : await APP.docAuthSystem.loadDocument(
+          ? await docAuthSystem.importDOCX(APP.customTemplateBinary!) // import custom template DOCX
+          : await docAuthSystem.loadDocument(
               await fetch(`${backendUrl}templates/${APP.template}.json`).then(
                 (response) => response.json()
               )
@@ -198,7 +187,7 @@ function goTemplateEditor() {
     }
 
     // initialize editor
-    const editor = await APP.docAuthSystem.createEditor(editorElement, {
+    const editor = await docAuthSystem.createEditor(editorElement, {
       document: APP.templateDocument,
     });
     APP.templateEditor = editor;
@@ -219,6 +208,9 @@ const editDataSection = document.getElementById("Step3_EditData")!;
 
 function initoDataEditor() {
   const doButtonAction = (e: Event) => {
+    if (!APP.dataEditor) {
+      throw new Error("Data editor not initialized");
+    }
     const textarea = APP.dataEditor.getTextArea();
     APP.dataEditor.toTextArea();
     APP.dataJson = JSON.parse(textarea.value);
@@ -293,7 +285,9 @@ const editGeneratedDocxSection = document.getElementById(
 
 function initDocxEditor() {
   const doButtonAction = (e: Event) => {
-    APP.docxEditor.destroy();
+    if (APP.docxEditor) {
+      APP.docxEditor.destroy();
+    }
 
     const action = (e.target as HTMLElement).dataset.action;
     if (action === "back-to-edit-data") {
@@ -322,19 +316,24 @@ function goDocxEditor() {
   const editorElement =
     editGeneratedDocxSection.getElementsByClassName("nutri-editor")[0];
   (async () => {
+    if (!APP.docAuthSystem) {
+      throw new Error("DocAuth system not initialized");
+    }
+    const docAuthSystem = APP.docAuthSystem;
+
     // get template & resolve to DOCX
     if (APP.docxDocument == null) {
-      const templateBuffer = await APP.templateDocument.exportDOCX();
+      const templateBuffer = await APP.templateDocument!.exportDOCX();
       const docxBuffer = await window.NutrientViewer.populateDocumentTemplate(
         { document: templateBuffer },
         APP.dataJson
       );
-      const docxDocument = await APP.docAuthSystem.importDOCX(docxBuffer);
+      const docxDocument = await docAuthSystem.importDOCX(docxBuffer);
       APP.docxDocument = docxDocument;
     }
 
     // initialize editor
-    const editor = await APP.docAuthSystem.createEditor(editorElement, {
+    const editor = await docAuthSystem.createEditor(editorElement, {
       document: APP.docxDocument,
     });
     APP.docxEditor = editor;
@@ -374,13 +373,18 @@ function initPdfViewer() {
   const doButtonAction = (e: Event) => {
     const action = (e.target as HTMLElement).dataset.action;
     if (action === "back-to-edit-docx") {
-      window.NutrientViewer.unload(APP.pdfViewer);
+      if (APP.pdfViewer) {
+        window.NutrientViewer.unload(APP.pdfViewer);
+      }
       APP.pdfViewer = null;
       goDocxEditor();
     } else if (action === "download-pdf") {
+      if (!APP.pdfViewer) {
+        throw new Error("PDF viewer not initialized");
+      }
       startTransition("Preparing PDF...");
       (async () => {
-        const buffer = await APP.pdfViewer.exportPDF();
+        const buffer = await APP.pdfViewer!.exportPDF();
         const blob = new Blob([buffer], { type: "application/pdf" });
         const objectUrl = window.URL.createObjectURL(blob);
 
@@ -407,6 +411,9 @@ function goPdfViewer() {
   startTransition("Opening generated PDF file...");
 
   (async () => {
+    if (!APP.docxDocument) {
+      throw new Error("DOCX document not initialized");
+    }
     // resolve DOCX as PDF
     const pdfBuffer = await APP.docxDocument.exportPDF();
 

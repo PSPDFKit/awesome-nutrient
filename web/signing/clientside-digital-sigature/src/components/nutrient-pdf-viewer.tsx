@@ -63,9 +63,13 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
         fileContents,
       }: {
         dataToBeSigned: ArrayBuffer;
-        fileContents: ArrayBuffer;
+        fileContents: ArrayBuffer | null;
       }) => {
         try {
+          if (!fileContents) {
+            throw new Error("File contents are required for signing");
+          }
+
           const hashBuffer = await crypto.subtle.digest(
             "SHA-256",
             dataToBeSigned
@@ -107,22 +111,22 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
       };
 
       // Build toolbar items using default items if available.
-      const toolbarItems = [NutrientViewer.defaultToolbarItems];
-
-      // Add our custom "Digitally Sign" button.
-      toolbarItems.push({
-        type: "custom",
-        id: "digitally-sign",
-        title: "Digitally Sign",
-        onPress: async () => {
-          try {
-            await instance.signDocument(null, signCallback);
-            console.log("Document signed!");
-          } catch (error) {
-            console.error("Error signing document via custom button:", error);
-          }
+      const toolbarItems = [
+        ...NutrientViewer.defaultToolbarItems,
+        {
+          type: "custom" as const,
+          id: "digitally-sign",
+          title: "Digitally Sign",
+          onPress: async () => {
+            try {
+              await instance.signDocument(null, signCallback);
+              console.log("Document signed!");
+            } catch (error) {
+              console.error("Error signing document via custom button:", error);
+            }
+          },
         },
-      });
+      ];
 
       // Update the toolbar with our new items.
       instance.setToolbarItems(toolbarItems);
@@ -130,7 +134,9 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
 
     initializeSDK();
 
-    return () => NutrientViewer?.unload(container);
+    return () => {
+      NutrientViewer?.unload(container);
+    };
   }, [props.document]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;

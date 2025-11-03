@@ -37,7 +37,7 @@ const App: React.FC = () => {
       role: "Signer",
     },
   ];
-  const [currUser, setCurrUser] = useState(allUsers[0]);
+  const [currUser, _setCurrUser] = useState(allUsers[0]);
 
   const aiName = "AI";
   const initMessages = [

@@ -30,13 +30,15 @@ import {
  * @param user - The currently logged-in user.
  * @returns The rendered SignDemo component.
  */
-import type NutrientViewer from "@nutrient-sdk/viewer";
-
-type NutrientViewerType = typeof NutrientViewer;
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
-type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
+type NutrientViewerType = typeof window.NutrientViewer;
+type NutrientViewerInstance = Awaited<
+  ReturnType<typeof window.NutrientViewer.load>
+>;
+type Annotation = InstanceType<
+  typeof window.NutrientViewer.Annotations.Annotation
+>;
 type StoredSignature = InstanceType<
-  typeof NutrientViewer.Annotations.InkAnnotation
+  typeof window.NutrientViewer.Annotations.InkAnnotation
 >;
 
 const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
@@ -54,9 +56,8 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   const [isVisible, setIsVisible] = useState(user.role === "Editor");
 
   // State to store the current signee i.e the user who is currently selected for which the field will be added
-  //@ts-ignore
   const [currSignee, setCurrSignee] = useState<User>(
-    users.find((user) => user.role !== "Editor")
+    users.find((user) => user.role !== "Editor") || users[0]
   );
   const currSigneeRef = useRef(currSignee);
   currSigneeRef.current = currSignee;
@@ -97,7 +98,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   const [sessionInitials, setSessionInitials] = useState<StoredSignature[]>([]);
 
   function onDragStart(event: React.DragEvent<HTMLDivElement>, type: string) {
-    const instantId = "NutrientViewer.generateInstantId()";
+    const instantId = "window.NutrientViewer.generateInstantId()";
     const data = `${currSignee.name}%${currSignee.email}%${instantId}%${type}`;
 
     (event.target as HTMLDivElement).style.opacity = "0.8";
@@ -126,7 +127,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     e.stopPropagation();
     const dataArray = e.dataTransfer.getData("text").split("%");
     let [name, email, instantId, annotationType] = dataArray;
-    instantId = NutrientViewer.generateInstantId();
+    instantId = window.NutrientViewer.generateInstantId();
     const signee = currSigneeRef.current;
     const user = currUserRef.current;
     const pageIndex = onPageIndexRef.current;
@@ -136,7 +137,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       annotationType === AnnotationTypeEnum.INITIAL
         ? 60
         : 40;
-    const clientRect = new NutrientViewer.Geometry.Rect({
+    const clientRect = new window.NutrientViewer.Geometry.Rect({
       left: e.clientX - rectWidth / 2,
       top: e.clientY - rectHeight / 2,
       height: rectHeight,
@@ -150,7 +151,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       annotationType === AnnotationTypeEnum.SIGNATURE ||
       annotationType === AnnotationTypeEnum.INITIAL
     ) {
-      const widget = new NutrientViewer.Annotations.WidgetAnnotation({
+      const widget = new window.NutrientViewer.Annotations.WidgetAnnotation({
         boundingBox: pageRect,
         formFieldName: instantId,
         id: instantId,
@@ -166,15 +167,17 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
         },
         //backgroundColor: signee.color,
       });
-      const formField = new NutrientViewer.FormFields.SignatureFormField({
-        annotationIds: NutrientViewer.Immutable.List([widget.id]),
-        name: instantId,
-        id: instantId,
-        readOnly: signee.id !== user.id,
-      });
+      const formField = new window.NutrientViewer.FormFields.SignatureFormField(
+        {
+          annotationIds: window.NutrientViewer.Immutable.List([widget.id]),
+          name: instantId,
+          id: instantId,
+          readOnly: signee.id !== user.id,
+        }
+      );
       await inst.create([widget, formField]);
     } else {
-      const text = new NutrientViewer.Annotations.TextAnnotation({
+      const text = new window.NutrientViewer.Annotations.TextAnnotation({
         pageIndex,
         boundingBox: pageRect,
         text: {
@@ -198,13 +201,14 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     }
     // set the viewer to form creator mode so that the user can place the field
     // inst.setViewState((viewState) =>
-    //   viewState.set("interactionMode", NutrientViewer.InteractionMode.FORM_CREATOR)
+    //   viewState.set("interactionMode", window.NutrientViewer.InteractionMode.FORM_CREATOR)
     // );
 
     // @ts-ignore
     inst.setOnAnnotationResizeStart((eve) => {
       if (
-        eve.annotation instanceof NutrientViewer.Annotations.WidgetAnnotation
+        eve.annotation instanceof
+        window.NutrientViewer.Annotations.WidgetAnnotation
       ) {
         return {
           //maintainAspectRatio: true,
@@ -215,7 +219,10 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
           minHeight: 30,
         };
       }
-      if (eve.annotation instanceof NutrientViewer.Annotations.TextAnnotation) {
+      if (
+        eve.annotation instanceof
+        window.NutrientViewer.Annotations.TextAnnotation
+      ) {
         return {
           //maintainAspectRatio: true,
           //responsive: false,
@@ -242,27 +249,30 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       if (user.role === "Editor") {
         if (value) {
           instance.setViewState(
-            (viewState: InstanceType<typeof NutrientViewer.ViewState>) =>
+            (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
               viewState.set(
                 "interactionMode",
-                NutrientViewer.InteractionMode.PAN
+                window.NutrientViewer.InteractionMode.PAN
               )
           );
           setIsTextAnnotationMovable(false);
         } else {
           instance.setViewState(
-            (viewState: InstanceType<typeof NutrientViewer.ViewState>) =>
+            (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
               viewState.set(
                 "interactionMode",
-                NutrientViewer.InteractionMode.FORM_CREATOR
+                window.NutrientViewer.InteractionMode.FORM_CREATOR
               )
           );
           setIsTextAnnotationMovable(true);
         }
       } else {
         instance.setViewState(
-          (viewState: InstanceType<typeof NutrientViewer.ViewState>) =>
-            viewState.set("interactionMode", NutrientViewer.InteractionMode.PAN)
+          (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
+            viewState.set(
+              "interactionMode",
+              window.NutrientViewer.InteractionMode.PAN
+            )
         );
         setIsTextAnnotationMovable(false);
       }
@@ -301,18 +311,18 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
 
   // Function to get random color for the signee
   const randomColor = (PSPDFKit: NutrientViewerType) => {
-    const colors: InstanceType<typeof NutrientViewer.Color>[] = [
-      NutrientViewer.Color.LIGHT_GREY,
-      NutrientViewer.Color.LIGHT_GREEN,
-      NutrientViewer.Color.LIGHT_YELLOW,
-      NutrientViewer.Color.LIGHT_ORANGE,
-      NutrientViewer.Color.LIGHT_RED,
-      NutrientViewer.Color.LIGHT_BLUE,
-      NutrientViewer.Color.fromHex("#0ffcf1"),
+    const colors: InstanceType<typeof window.NutrientViewer.Color>[] = [
+      window.NutrientViewer.Color.LIGHT_GREY,
+      window.NutrientViewer.Color.LIGHT_GREEN,
+      window.NutrientViewer.Color.LIGHT_YELLOW,
+      window.NutrientViewer.Color.LIGHT_ORANGE,
+      window.NutrientViewer.Color.LIGHT_RED,
+      window.NutrientViewer.Color.LIGHT_BLUE,
+      window.NutrientViewer.Color.fromHex("#0ffcf1"),
     ];
     const usedColors = users.map((signee) => signee.color);
     const availableColors = colors.filter(
-      (color: InstanceType<typeof NutrientViewer.Color>) =>
+      (color: InstanceType<typeof window.NutrientViewer.Color>) =>
         !usedColors.includes(color)
     );
     const randomIndex = Math.floor(Math.random() * availableColors.length);
@@ -328,8 +338,8 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     if (instance) {
       const formFields = await instance.getFormFields();
       const signatureFormFields = formFields.filter(
-        (field: InstanceType<typeof NutrientViewer.FormField>) =>
-          field instanceof NutrientViewer.FormFields.SignatureFormField
+        (field: InstanceType<typeof window.NutrientViewer.FormField>) =>
+          field instanceof window.NutrientViewer.FormFields.SignatureFormField
       );
       const signatureAnnotations = async () => {
         const annotations: string[] = [];
@@ -351,7 +361,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
         .map(
           (
             it: InstanceType<
-              typeof NutrientViewer.FormFields.SignatureFormField
+              typeof window.NutrientViewer.FormFields.SignatureFormField
             >
           ) => {
             if (userFieldIds.includes(it.id)) {
@@ -365,14 +375,14 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       // User with role Editor can edit the document
       if (user.role === "Editor") {
         instance.setViewState(
-          (viewState: InstanceType<typeof NutrientViewer.ViewState>) =>
+          (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
             viewState.set("showToolbar", true)
         );
         setIsVisible(true);
         onChangeReadyToSign(false, user, PSPDFKit);
       } else {
         instance.setViewState(
-          (viewState: InstanceType<typeof NutrientViewer.ViewState>) =>
+          (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
             viewState.set("showToolbar", false)
         );
         setIsVisible(false);
@@ -393,12 +403,12 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       setPSPDFKit(PSPDFKit);
       if (container) {
         if (PSPDFKit) {
-          NutrientViewer.unload(container);
+          window.NutrientViewer.unload(container);
         }
         const {
           UI: { createBlock, Recipes, Interfaces, Core },
         } = PSPDFKit;
-        NutrientViewer.load({
+        window.NutrientViewer.load({
           licenseKey: process.env.NEXT_PUBLIC_LICENSE_KEY as string,
           // @ts-ignore
           ui: {
@@ -434,15 +444,18 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
                       freehand._props.clearLabel = "Clear initial";
 
                       const fontselect = ui.getBlockById("font-selector");
-                      if (fontselect._props.items[0].label === "Signature") {
-                        fontselect._props.items = (
-                          fontselect._props.items as Array<{
+                      const items = fontselect._props.items as
+                        | Array<{
                             id: string;
                             label: string;
                           }>
-                        ).map((item: { id: string; label: string }) => {
-                          return { id: item.id, label: "Initial" };
-                        });
+                        | undefined;
+                      if (items && items[0]?.label === "Signature") {
+                        fontselect._props.items = items.map(
+                          (item: { id: string; label: string }) => {
+                            return { id: item.id, label: "Initial" };
+                          }
+                        );
                       }
                     }
                     return ui.createComponent();
@@ -482,7 +495,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
           //@ts-ignore
           const cont = inst.contentDocument.host as HTMLElement;
           cont.ondrop = async (e: DragEvent) => {
-            await handleDrop(e, inst, PSPDFKit);
+            await handleDrop(e as unknown as React.DragEvent, inst, PSPDFKit);
           };
 
           // **** Handling Add Signature / Initial UI ****
@@ -510,13 +523,13 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
                 isCreateInitial = false;
               }
               inst.setStoredSignatures(
-                NutrientViewer.Immutable.List(annotationsToLoad)
+                window.NutrientViewer.Immutable.List(annotationsToLoad)
               );
 
               if (
                 !isTextAnnotationMovableRef.current &&
                 event.annotation instanceof
-                  NutrientViewer.Annotations.TextAnnotation
+                  window.NutrientViewer.Annotations.TextAnnotation
               ) {
                 //@ts-ignore
                 event.preventDefault();
@@ -532,7 +545,9 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
           inst.addEventListener(
             "viewState.change",
             (
-              viewState: InstanceType<typeof NutrientViewer.ViewState> & {
+              viewState: InstanceType<
+                typeof window.NutrientViewer.ViewState
+              > & {
                 formDesignMode?: boolean;
               }
             ) => {
@@ -558,7 +573,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
             "annotations.load",
             async (
               loadedAnnotations: InstanceType<
-                typeof NutrientViewer.Immutable.List<Annotation>
+                typeof window.NutrientViewer.Immutable.List<Annotation>
               >
             ) => {
               for await (const annotation of loadedAnnotations) {
@@ -577,7 +592,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
             "annotations.create",
             async (
               createdAnnotations: InstanceType<
-                typeof NutrientViewer.Immutable.List<Annotation>
+                typeof window.NutrientViewer.Immutable.List<Annotation>
               >
             ) => {
               const annotation = createdAnnotations.get(0);
@@ -595,7 +610,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
             "annotations.delete",
             async (
               deletedAnnotations: InstanceType<
-                typeof NutrientViewer.Immutable.List<Annotation>
+                typeof window.NutrientViewer.Immutable.List<Annotation>
               >
             ) => {
               const annotation = deletedAnnotations.get(0);
@@ -608,10 +623,10 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
             }
           );
           inst.setViewState(
-            (viewState: InstanceType<typeof NutrientViewer.ViewState>) =>
+            (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
               viewState.set(
                 "interactionMode",
-                NutrientViewer.InteractionMode.FORM_CREATOR
+                window.NutrientViewer.InteractionMode.FORM_CREATOR
               )
           );
           setIsTextAnnotationMovable(true);
@@ -926,7 +941,7 @@ const DraggableAnnotation = ({
   label: string;
   onDragStart: (e: React.DragEvent<HTMLDivElement>, type: string) => void;
   onDragEnd: (e: React.DragEvent<HTMLDivElement>, type: string) => void;
-  userColor: InstanceType<typeof NutrientViewer.Color> | undefined;
+  userColor: InstanceType<typeof window.NutrientViewer.Color> | undefined;
 }) => {
   const id = `${type}-icon`;
   let icon = signSVG;

@@ -1,8 +1,11 @@
-import type NutrientViewer from "@nutrient-sdk/viewer";
 import { AnnotationTypeEnum, User } from "../utils/types";
 
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
-type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
+type NutrientViewerInstance = Awaited<
+  ReturnType<typeof window.NutrientViewer.load>
+>;
+type Annotation = InstanceType<
+  typeof window.NutrientViewer.Annotations.Annotation
+>;
 
 const renderConfigurations: Record<
   string,

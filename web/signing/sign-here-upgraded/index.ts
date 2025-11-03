@@ -4,6 +4,10 @@ type WidgetAnnotation = InstanceType<
   typeof NutrientViewer.Annotations.WidgetAnnotation
 >;
 
+interface AnnotationWithSignature extends Annotation {
+  isSignature?: boolean;
+}
+
 // We need to inform NutrientViewer where to look for its library assets
 const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.5.0/";
 
@@ -18,9 +22,12 @@ NutrientViewer.load({
   signHereWidget.innerHTML =
     '\n<svg viewBox="193.583 215.541 113.747 40.714" width="113.747" height="40.714">\n  <path d="M 193.709 216.256 H 287.206 L 287.206 216.256 L 307.206 236.256 L 287.206 256.256 L 287.206 256.256 H 193.709 V 216.256 Z" data-bx-shape="arrow 193.709 216.256 113.497 40 40 20 0 1@f3ec9ecd" style="fill: rgb(90, 120, 255); stroke: rgb(255, 255, 255); stroke-opacity: 0;" transform="matrix(0.99998, -0.0063, 0.0063, 0.99998, -1.484668, 1.225137)"></path>\n  <text style="fill: rgb(254, 254, 254); font-family: Arial, sans-serif; font-size: 19.1px; stroke-opacity: 0; white-space: pre;" x="201.663" y="242.006">Sign Here</text>\n</svg>\n';
   signHereWidget.style.position = "absolute";
-  instance.contentDocument
-    .querySelector(`.PSPDFKit-Spread[data-spread-index="0"]`)
-    .appendChild(signHereWidget);
+  const initialSpread = instance.contentDocument.querySelector(
+    `.PSPDFKit-Spread[data-spread-index="0"]`
+  );
+  if (initialSpread) {
+    initialSpread.appendChild(signHereWidget);
+  }
 
   // Define a helper function to check if one box is within another.
   const updateSignHereWidget = async () => {
@@ -30,48 +37,36 @@ NutrientViewer.load({
           (_item, pageIndex: number) =>
             instance
               .getAnnotations(pageIndex)
-              .then(
-                (
-                  annotations: InstanceType<
-                    typeof NutrientViewer.Immutable.List<Annotation>
-                  >
-                ) =>
-                  annotations.filter(
+              .then((annotations) =>
+                annotations
+                  .filter(
                     (annotation): annotation is WidgetAnnotation =>
                       annotation instanceof
                       window.NutrientViewer.Annotations.WidgetAnnotation
                   )
+                  .toArray()
               )
         )
       )
-    )
-      .flat()
-      .flatMap((annotation: WidgetAnnotation) =>
-        (annotation as any)._tail ? (annotation as any)._tail.array : []
-      ) as WidgetAnnotation[];
+    ).flat();
     const signatures = (
       await Promise.all(
         Array.from({ length: instance.totalPageCount }).map(
           (_item, pageIndex: number) =>
             instance
               .getAnnotations(pageIndex)
-              .then(
-                (
-                  annotations: InstanceType<
-                    typeof NutrientViewer.Immutable.List<Annotation>
-                  >
-                ) =>
-                  annotations.filter(
-                    (annotation: Annotation) => (annotation as any).isSignature
+              .then((annotations) =>
+                annotations
+                  .filter(
+                    (annotation): annotation is AnnotationWithSignature =>
+                      (annotation as AnnotationWithSignature).isSignature ===
+                      true
                   )
+                  .toArray()
               )
         )
       )
-    )
-      .flat()
-      .flatMap((signature: Annotation) =>
-        (signature as any)._tail ? (signature as any)._tail.array : []
-      ) as Annotation[];
+    ).flat();
 
     // Flatten widgetAnnotationsUnFlattened to a single dimensional array
     // Move the "Sign Here" widget.
@@ -107,6 +102,10 @@ NutrientViewer.load({
       const spreadElement = instance.contentDocument.querySelector(
         `.PSPDFKit-Spread[data-spread-index="${firstWidget.pageIndex}"]`
       );
+
+      if (!element || !spreadElement) {
+        return;
+      }
 
       // Remove the widget from its current parent if it has one
       if (signHereWidget.parentNode) {
