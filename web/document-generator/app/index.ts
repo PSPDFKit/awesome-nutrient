@@ -325,7 +325,7 @@ function goDocxEditor() {
     if (APP.docxDocument == null) {
       const templateBuffer = await APP.templateDocument!.exportDOCX();
       const docxBuffer = await window.NutrientViewer.populateDocumentTemplate(
-        { document: templateBuffer },
+        { document: templateBuffer } as any,
         APP.dataJson
       );
       const docxDocument = await docAuthSystem.importDOCX(docxBuffer);

@@ -1,22 +1,18 @@
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
-type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
-type AnnotationsList = InstanceType<
-  typeof NutrientViewer.Immutable.List<Annotation>
->;
+import type { Instance, Annotation, List } from "@nutrient-sdk/viewer";
 
 // We need to inform NutrientViewer where to look for its library assets
 const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.5.0/";
 
-let _instance: NutrientViewerInstance | null = null;
+let _instance: Instance | null = null;
 
 const createCommentAnnotation = async (
-  instance: NutrientViewerInstance,
+  instance: Instance,
   annotation: Annotation
 ): Promise<Annotation> => {
   // Get the first created annotation
-  const commentID = NutrientViewer.generateInstantId();
+  const commentID = window.NutrientViewer.generateInstantId();
   // Create a new comment annotation
-  const parentCom = new NutrientViewer.Annotations.CommentMarkerAnnotation({
+  const parentCom = new window.NutrientViewer.Annotations.CommentMarkerAnnotation({
     id: commentID,
     isCommentThreadRoot: true,
     pageIndex: 0,
@@ -25,7 +21,7 @@ const createCommentAnnotation = async (
     customData: { parentAnnotation: annotation },
   });
   // Add the first comment to the document
-  const firstCom = new NutrientViewer.Comment({
+  const firstCom = new window.NutrientViewer.Comment({
     rootId: commentID,
     // Configure pageIndex
     pageIndex: 0,
@@ -45,7 +41,7 @@ const createCommentAnnotation = async (
 
 const duplicateAnnotationTooltipCallback = (annotation: Annotation) => {
   // If the annotation is a comment marker, dont show the tooltip
-  if (annotation instanceof NutrientViewer.Annotations.CommentMarkerAnnotation)
+  if (annotation instanceof window.NutrientViewer.Annotations.CommentMarkerAnnotation)
     return [];
   // Create a custom tooltip item with title "Comment"
   const duplicateItem = {
@@ -59,7 +55,7 @@ const duplicateAnnotationTooltipCallback = (annotation: Annotation) => {
         if (
           !(
             annotation instanceof
-            NutrientViewer.Annotations.CommentMarkerAnnotation
+            window.NutrientViewer.Annotations.CommentMarkerAnnotation
           )
         ) {
           // Create a new comment annotation if it does not exist
@@ -69,7 +65,7 @@ const duplicateAnnotationTooltipCallback = (annotation: Annotation) => {
           const parentAnnotationID = annotation.customData.commentAnnotationID;
           try {
             await _instance.setSelectedAnnotations(
-              NutrientViewer.Immutable.List([parentAnnotationID])
+              window.NutrientViewer.Immutable.List([parentAnnotationID])
             );
           } catch (error) {
             console.warn(error);
@@ -99,9 +95,9 @@ const setCommentColor = (
 
 const {
   UI: { createBlock, Recipes, Interfaces },
-} = NutrientViewer;
+} = window.NutrientViewer;
 
-NutrientViewer.load({
+window.NutrientViewer.load({
   ui: {
     [Interfaces.CommentThread]: ({
       props,
@@ -167,21 +163,21 @@ NutrientViewer.load({
   baseUrl,
   container: "#pspdfkit",
   document: "document.pdf",
-  toolbarItems: [...NutrientViewer.defaultToolbarItems, { type: "comment" }],
-  initialViewState: new NutrientViewer.ViewState({
+  toolbarItems: [...window.NutrientViewer.defaultToolbarItems, { type: "comment" }],
+  initialViewState: new window.NutrientViewer.ViewState({
     sidebarOptions: {
-      [NutrientViewer.SidebarMode.ANNOTATIONS]: {
-        includeContent: [NutrientViewer.Comment],
+      [window.NutrientViewer.SidebarMode.ANNOTATIONS]: {
+        includeContent: [window.NutrientViewer.Comment],
       },
     },
   }),
   annotationTooltipCallback: duplicateAnnotationTooltipCallback,
 })
-  .then((instance: NutrientViewerInstance) => {
+  .then((instance: Instance) => {
     _instance = instance;
     instance.addEventListener(
       "annotations.update",
-      async (event: AnnotationsList) => {
+      async (event: List<Annotation>) => {
         const annotation = event.toArray()[0];
         if (annotation?.customData?.commentAnnotationID) {
           try {
@@ -205,14 +201,14 @@ NutrientViewer.load({
       async (event: { annotation: Annotation; preventDefault: () => void }) => {
         if (
           event.annotation instanceof
-            NutrientViewer.Annotations.CommentMarkerAnnotation &&
+            window.NutrientViewer.Annotations.CommentMarkerAnnotation &&
           event.annotation.customData.parentAnnotation
         ) {
           event.preventDefault();
           const parentAnnotationID =
             event.annotation.customData.parentAnnotation.id;
           await instance.setSelectedAnnotations(
-            NutrientViewer.Immutable.List([parentAnnotationID])
+            window.NutrientViewer.Immutable.List([parentAnnotationID])
           );
           //,console.log("Annotation pressed", event);
         }

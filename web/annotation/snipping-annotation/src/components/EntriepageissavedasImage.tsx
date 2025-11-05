@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import type { Instance, Annotation } from "@nutrient-sdk/viewer";
 
 interface PdfViewerProps {
   document: string;
   handleAnnotation: string;
 }
 
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
-type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
-
-let instance: NutrientViewerInstance;
+let instance: Instance;
 
 export default function PdfViewerComponent(props: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -19,6 +17,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
     if (!container) return;
 
     (async function loadPdf() {
+      const NutrientViewer = window.NutrientViewer;
       if (!NutrientViewer) {
         console.error(
           "NutrientViewer not loaded. Make sure the CDN script is included."
@@ -28,7 +27,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
       NutrientViewer.unload(container);
 
-      const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
+      const toolbarItemsDefault = [...NutrientViewer.defaultToolbarItems];
       instance = await NutrientViewer.load({
         licenseKey: "Your License key goes here",
         container,
@@ -37,7 +36,9 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
         toolbarItems: toolbarItemsDefault,
       });
     })();
-    return () => window.NutrientViewer?.unload(container);
+    return () => {
+      window.NutrientViewer?.unload(container);
+    };
   }, [props.document]);
 
   useEffect(() => {

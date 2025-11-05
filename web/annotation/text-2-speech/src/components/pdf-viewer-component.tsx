@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import type { Instance, SearchResult, Rect, List, HighlightAnnotation } from "@nutrient-sdk/viewer";
 
 interface PdfViewerComponentProps {
   document: string;
 }
-
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
 
 // PDF Viewer Component
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
@@ -27,7 +26,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       return;
     }
 
-    let instance: NutrientViewerInstance; // Declared here to ensure accessibility in cleanup
+    let instance: Instance; // Declared here to ensure accessibility in cleanup
 
     (async () => {
       // Unload any existing instance to prevent memory leaks
@@ -39,7 +38,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         container, // The container where PSPDFKit will be rendered
         document: props.document, // The document to be displayed
         baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/", // Base URL for loading assets
-        toolbarItems: NutrientViewer.defaultToolbarItems, // Default toolbar settings
+        toolbarItems: [...NutrientViewer.defaultToolbarItems], // Default toolbar settings
         inlineTextSelectionToolbarItems: () => {
           return [];
         }, // To remove in the inline toolbar when text is selection
@@ -77,12 +76,9 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
             // Create highlight annotations for search results
             const annotations = results.map(
-              (result: {
-                pageIndex: number;
-                rectsOnPage: InstanceType<
-                  typeof NutrientViewer.Geometry.Rect
-                >[];
-              }) => {
+              (result: SearchResult) => {
+                if (result.pageIndex === null) return null;
+                const rectsArray = result.rectsOnPage.toArray();
                 return new NutrientViewer.Annotations.HighlightAnnotation({
                   pageIndex: result.pageIndex, // Page where text was found
                   rects: result.rectsOnPage, // Bounding rectangles of text
@@ -91,7 +87,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                   ), // Overall bounding box
                 });
               }
-            );
+            ).filter((a): a is HighlightAnnotation => a !== null);
 
             // Add the highlight annotations to the document
             instance.create(annotations);

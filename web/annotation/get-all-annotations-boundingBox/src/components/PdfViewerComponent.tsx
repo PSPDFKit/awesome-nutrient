@@ -1,5 +1,6 @@
 //PdfViewerComponent.tsx
 import { useEffect, useRef } from "react";
+import type { Instance, ToolbarItem, Annotation } from "@nutrient-sdk/viewer";
 
 interface PdfViewerComponentProps {
   document: string;
@@ -17,14 +18,7 @@ interface AnnotationData {
   i: number;
 }
 
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
-type ToolbarItem = {
-  type: string;
-  title?: string;
-  onPress?: () => Promise<void>;
-};
-
-let instance: NutrientViewerInstance;
+let instance: Instance;
 let allAnnotations: AnnotationData[] = []; // push all the annotation bounding box and pageindex and annotation numbers
 let pageIndex: number; // store the page index
 let currentAnnotationIndex = 0; // know the current annotation and scroll to next annotation
@@ -46,13 +40,13 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     }
 
     (async () => {
-      NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
+      window.NutrientViewer.unload(container); // Ensure that there's only one PSPDFKit instance.
 
       const defaultToolbarItems =
-        NutrientViewer.defaultDocumentEditorToolbarItems;
+        window.NutrientViewer.defaultDocumentEditorToolbarItems;
       const toolbarItems = [...defaultToolbarItems];
 
-      instance = await NutrientViewer.load({
+      instance = await window.NutrientViewer.load({
         licenseKey: lkey,
         container,
         document: props.document,
@@ -179,7 +173,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
       return () => {
         document.removeEventListener("paste", handlePaste);
-        NutrientViewer.unload(container);
+        window.NutrientViewer.unload(container);
       };
     })();
   }, [props.document]);

@@ -7,8 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+import type { Instance } from "@nutrient-sdk/viewer";
 
 async function toBase64(blob: Blob): Promise<string> {
   return new Promise((resolve) => {
@@ -50,7 +49,7 @@ const PdfViewerComponent = forwardRef<
   PdfViewerComponentProps
 >(({ id, document }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const instanceRef = useRef<NutrientViewerInstance | null>(null);
+  const instanceRef = useRef<Instance | null>(null);
   const [loadUrl, setLoadUrl] = useState<string | null>(null);
 
   useImperativeHandle(ref, () => ({
@@ -82,7 +81,7 @@ const PdfViewerComponent = forwardRef<
       return;
     }
 
-    let instance: NutrientViewerInstance | null = null;
+    let instance: Instance | null = null;
 
     const loadPDF = async () => {
       try {
@@ -93,6 +92,8 @@ const PdfViewerComponent = forwardRef<
 
         const key = `pdf-${id}`;
 
+        if (!containerRef.current) return;
+        
         instance = await NutrientViewer.load({
           container: containerRef.current,
           document: loadUrl,

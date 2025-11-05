@@ -1,8 +1,4 @@
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
-type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
-type WidgetAnnotation = InstanceType<
-  typeof NutrientViewer.Annotations.WidgetAnnotation
->;
+import type { Instance, Annotation, WidgetAnnotation } from "@nutrient-sdk/viewer";
 
 interface AnnotationWithSignature extends Annotation {
   isSignature?: boolean;
@@ -11,12 +7,12 @@ interface AnnotationWithSignature extends Annotation {
 // We need to inform NutrientViewer where to look for its library assets
 const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.5.0/";
 
-NutrientViewer.load({
+window.NutrientViewer.load({
   baseUrl,
   container: "#pspdfkit",
   document:
     "https://pj-document-bucket.s3.ca-central-1.amazonaws.com/The+Magnificent+Agreement+Regarding+the+History+of+the+Portable+Document+Format.pdf",
-}).then(async (instance: NutrientViewerInstance) => {
+}).then(async (instance: Instance) => {
   // Create and append the "Sign Here" widget to the document.
   const signHereWidget = document.createElement("div");
   signHereWidget.innerHTML =
@@ -42,7 +38,7 @@ NutrientViewer.load({
                   .filter(
                     (annotation): annotation is WidgetAnnotation =>
                       annotation instanceof
-                      window.NutrientViewer.Annotations.WidgetAnnotation
+                      window.window.NutrientViewer.Annotations.WidgetAnnotation
                   )
                   .toArray()
               )

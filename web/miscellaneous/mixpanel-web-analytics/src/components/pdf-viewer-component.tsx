@@ -1,5 +1,6 @@
 // src/components/pdf-viewer-component.tsx
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { Instance, Annotation, ViewState } from "@nutrient-sdk/viewer";
 import mixpanelService from "../services/mixpanel.ts";
 
 interface PdfViewerComponentProps {
@@ -7,10 +8,6 @@ interface PdfViewerComponentProps {
   fileName: string;
   onViewerReady?: () => void;
 }
-
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
-type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
-type ViewState = InstanceType<typeof NutrientViewer.ViewState>;
 
 interface DocumentInfo {
   file_name: string;

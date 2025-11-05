@@ -1,7 +1,6 @@
 // Import necessary React hooks
 import { useEffect, useRef } from "react";
-
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
+import type { Instance } from "@nutrient-sdk/viewer";
 
 interface PdfViewerComponentProps {
   document: string;
@@ -17,7 +16,7 @@ let pageWidth: number;
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   // Create references for the PDF container and PSPDFKit instance
   const containerRef = useRef<HTMLDivElement>(null);
-  const instanceRef = useRef<NutrientViewerInstance | null>(null); // Store PSPDFKit instance
+  const instanceRef = useRef<Instance | null>(null); // Store PSPDFKit instance
 
   // Function to enhance text with first letter to uppercase
   const correctText = (text: string): string => {
@@ -35,6 +34,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const container = containerRef.current;
     if (!container) return;
 
+    const NutrientViewer = window.NutrientViewer;
     if (!NutrientViewer) {
       console.error(
         "NutrientViewer not loaded. Make sure the CDN script is included."
@@ -51,7 +51,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         container,
         document: props.document,
         baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.5.2/",
-        toolbarItems: NutrientViewer.defaultToolbarItems,
+        toolbarItems: [...NutrientViewer.defaultToolbarItems],
       });
 
       instanceRef.current = instance; // Store instance in ref
@@ -59,6 +59,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       // Store current page details
       currentPage = instance.viewState.currentPageIndex;
       const pageInfo = instance.pageInfoForIndex(currentPage);
+      if (!pageInfo) return;
       pageWidth = pageInfo.width;
 
       // Cleanup on component unmount

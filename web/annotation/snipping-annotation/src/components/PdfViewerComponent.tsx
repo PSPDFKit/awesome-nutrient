@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import type { Instance } from "@nutrient-sdk/viewer";
 
 interface PdfViewerProps {
   document: string;
   handleAnnotation: string;
 }
 
-type NutrientViewerInstance = Awaited<ReturnType<typeof NutrientViewer.load>>;
-type Annotation = InstanceType<typeof NutrientViewer.Annotations.Annotation>;
-
-let instance: NutrientViewerInstance;
+let instance: Instance;
 
 export default function PdfViewerComponent(props: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,6 +16,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
     const container = containerRef.current;
     if (!container) return;
 
+    const NutrientViewer = window.NutrientViewer;
     if (!NutrientViewer) {
       console.error(
         "NutrientViewer not loaded. Make sure the CDN script is included."

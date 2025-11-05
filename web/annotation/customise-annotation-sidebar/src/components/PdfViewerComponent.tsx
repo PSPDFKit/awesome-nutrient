@@ -1,16 +1,15 @@
 import { useEffect, useRef } from "react";
+import type { Instance, Annotation } from "@nutrient-sdk/viewer";
 
 interface PdfViewerComponentProps {
   document: string;
 }
-
-type NutrientViewerInstance = Awaited<
-  ReturnType<typeof window.NutrientViewer.load>
->;
-type Annotation = InstanceType<
-  typeof window.NutrientViewer.Annotations.Annotation
->;
 type ViewState = InstanceType<typeof window.NutrientViewer.ViewState>;
+
+// Type guard to check if annotation has rects property
+function hasRects(annotation: Annotation): annotation is Annotation & { rects: any } {
+  return 'rects' in annotation && annotation.rects !== undefined;
+}
 
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -26,7 +25,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       return;
     }
 
-    let instance: NutrientViewerInstance | null = null;
+    let instance: Instance | null = null;
 
     (async () => {
       if (container) {
@@ -67,7 +66,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.CommentMarkerAnnotation &&
-                instance
+                instance &&
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
@@ -81,7 +81,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.InkAnnotation &&
-                instance
+                instance &&
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
@@ -111,7 +112,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.LineAnnotation &&
-                instance
+                instance &&
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
@@ -139,7 +141,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.MediaAnnotation &&
-                instance
+                instance &&
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
@@ -153,7 +156,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.NoteAnnotation &&
-                instance
+                instance &&
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
@@ -181,7 +185,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.PolygonAnnotation &&
-                instance
+                instance &&
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
@@ -195,7 +200,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.RectangleAnnotation &&
-                instance
+                instance &&
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
@@ -223,7 +229,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.ShapeAnnotation &&
-                instance
+                instance &&
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
