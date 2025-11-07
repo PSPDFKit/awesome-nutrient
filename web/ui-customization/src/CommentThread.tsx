@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
 import {
   ActionButton,
-  I18nProvider,
-  ThemeProvider,
-  FrameProvider,
   Avatar,
-  Editor,
-  Text,
   Box,
+  Editor,
+  FrameProvider,
+  I18nProvider,
+  Text,
+  ThemeProvider,
 } from "@baseline-ui/core";
 import { themes } from "@baseline-ui/tokens";
-import { Comment, Instance, List } from "@nutrient-sdk/viewer";
+import { Comment, type Instance, type List } from "@nutrient-sdk/viewer";
+import React, { useEffect } from "react";
 
 interface CommentThreadProps {
   instance: Instance | null;
@@ -34,7 +34,7 @@ const CommentThread = (props: CommentThreadProps) => {
     syncComments();
 
     instance?.addEventListener("comments.change", syncComments);
-  }, [instance, id, setComments]);
+  }, [instance, id]);
 
   return (
     <ThemeProvider theme={themes.base.light}>
@@ -116,7 +116,7 @@ const CommentThread = (props: CommentThreadProps) => {
                 }
 
                 const commentsInThread = (await instance.getComments()).filter(
-                  (c) => c.rootId === id
+                  (c) => c.rootId === id,
                 );
 
                 const isFirstComment = commentsInThread.size === 0;
@@ -131,7 +131,7 @@ const CommentThread = (props: CommentThreadProps) => {
                     .first();
 
                   const annotations = await instance.getAnnotations(
-                    instance.viewState.currentPageIndex
+                    instance.viewState.currentPageIndex,
                   );
 
                   // We also need to mark the associated CommentMarkerAnnotation as the root of the comment thread.

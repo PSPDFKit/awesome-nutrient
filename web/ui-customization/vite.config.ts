@@ -1,6 +1,6 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import copy from "rollup-plugin-copy";
+import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
