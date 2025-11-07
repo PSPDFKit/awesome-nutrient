@@ -1,10 +1,9 @@
 import { useEffect, useRef } from "react";
+import type { ViewState } from "@nutrient-sdk/viewer";
 
 interface NutrientPdfViewerProps {
   document: string;
 }
-
-type ViewState = InstanceType<typeof NutrientViewer.ViewState>;
 
 export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,6 +31,7 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
 
     async function initializeSDK() {
       if (!container) return;
+      const NutrientViewer = window.NutrientViewer;
       if (!NutrientViewer) {
         console.error(
           "NutrientViewer not loaded. Make sure the CDN script is included."
@@ -135,7 +135,7 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
     initializeSDK();
 
     return () => {
-      NutrientViewer?.unload(container);
+      window.NutrientViewer?.unload(container);
     };
   }, [props.document]);
 

@@ -1,8 +1,8 @@
-import type NutrientViewerNamespace from "@nutrient-sdk/viewer";
+import type NutrientViewer from "@nutrient-sdk/viewer";
 
 declare global {
   interface Window {
-    NutrientViewer: typeof NutrientViewerNamespace;
+    NutrientViewer: typeof NutrientViewer;
   }
 }
 

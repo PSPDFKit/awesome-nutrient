@@ -134,7 +134,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
     };
 
     return () => {
-      NutrientViewer?.unload(container);
+      window.NutrientViewer?.unload(container);
     };
   }, [props.document]);
 

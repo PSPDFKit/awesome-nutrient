@@ -1,4 +1,4 @@
-import type NutrientViewerNamespace from "@nutrient-sdk/viewer";
+import type NutrientViewer from "@nutrient-sdk/viewer";
 
 // Type definitions for DocAuth (loaded via CDN, no official types available)
 export interface DocAuthDocument {
@@ -41,7 +41,7 @@ export interface CodeMirrorEditor {
 declare global {
   interface Window {
     // Nutrient Web SDK loaded via CDN
-    NutrientViewer: typeof NutrientViewerNamespace;
+    NutrientViewer: typeof NutrientViewer;
     // DocAuth loaded via CDN
     DocAuth: DocAuthConstructor;
     // CodeMirror loaded via CDN

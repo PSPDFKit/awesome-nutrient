@@ -27,23 +27,24 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
     (async function loadPdf() {
       NutrientViewer.unload(container);
 
-      const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
       instance = await NutrientViewer.load({
         licenseKey: "Your License Key goes here",
         container,
         document: props.document,
         baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/",
-        toolbarItems: toolbarItemsDefault,
+        toolbarItems: [...NutrientViewer.defaultToolbarItems],
       });
     })();
-    return () => window.NutrientViewer?.unload(container);
+    return () => {
+      window.NutrientViewer?.unload(container);
+    };
   }, [props.document]);
 
   useEffect(() => {
     if (props.handleAnnotation === "get") {
       const fetchAnnotationCoordinates = async () => {
         const annotations = await instance.getAnnotations(0); // Assuming pageIndex is 0
-        annotations.forEach(async (annotation: Annotation) => {
+        annotations.forEach(async (annotation) => {
           const { bottom, left, right, top } = annotation.boundingBox;
           const width = right - left;
           const height = bottom - top;

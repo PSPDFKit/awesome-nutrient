@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { Instance, SearchResult, Rect, List, HighlightAnnotation } from "@nutrient-sdk/viewer";
+import type { Instance, SearchResult, HighlightAnnotation } from "@nutrient-sdk/viewer";
 
 interface PdfViewerComponentProps {
   document: string;
@@ -78,7 +78,6 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
             const annotations = results.map(
               (result: SearchResult) => {
                 if (result.pageIndex === null) return null;
-                const rectsArray = result.rectsOnPage.toArray();
                 return new NutrientViewer.Annotations.HighlightAnnotation({
                   pageIndex: result.pageIndex, // Page where text was found
                   rects: result.rectsOnPage, // Bounding rectangles of text

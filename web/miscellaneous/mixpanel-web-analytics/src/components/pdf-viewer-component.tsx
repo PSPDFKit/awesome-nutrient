@@ -25,7 +25,7 @@ export default function PdfViewerComponent({
 }: PdfViewerComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [viewerInstance, setViewerInstance] =
-    useState<NutrientViewerInstance | null>(null);
+    useState<Instance | null>(null);
   const [documentInfo, setDocumentInfo] = useState<DocumentInfo | null>(null);
   const startTimeRef = useRef(Date.now());
   const sessionId = useRef(
@@ -35,7 +35,7 @@ export default function PdfViewerComponent({
   // Memoize functions to avoid dependency issues
   const getDocumentInfoFromNutrient = useCallback(
     async (
-      instance: NutrientViewerInstance,
+      instance: Instance,
       currentFileName: string
     ): Promise<DocumentInfo> => {
       try {
@@ -82,7 +82,7 @@ export default function PdfViewerComponent({
   );
 
   const setupNutrientSDKEvents = useCallback(
-    (instance: NutrientViewerInstance, docInfo: DocumentInfo) => {
+    (instance: Instance, docInfo: DocumentInfo) => {
       const baseEventData = {
         ...docInfo,
       };

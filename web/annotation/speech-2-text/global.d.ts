@@ -52,9 +52,6 @@ declare global {
     SpeechRecognition: SpeechRecognitionConstructor;
     webkitSpeechRecognition: SpeechRecognitionConstructor;
   }
-  
-  // Make NutrientViewer available globally
-  const NutrientViewer: typeof import("@nutrient-sdk/viewer").default;
 }
 
 export {};
