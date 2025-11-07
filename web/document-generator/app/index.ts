@@ -1,13 +1,13 @@
 import type {
-  DocAuthSystem,
-  DocAuthEditor,
-  DocAuthDocument,
   CodeMirrorEditor,
+  DocAuthDocument,
+  DocAuthEditor,
+  DocAuthSystem,
 } from "../global";
 
 const backendUrl = new URL(
   "",
-  `${window.location.protocol}//${window.location.host}/../`
+  `${window.location.protocol}//${window.location.host}/../`,
 ).href;
 
 type NutrientViewerInstance = Awaited<
@@ -44,22 +44,18 @@ const sections = document.getElementsByTagName("section");
 
 /** Transition */
 
-const transitionSection = document.getElementById("Transition")!;
+const transitionSection = document.getElementById("Transition") as HTMLElement;
 
 function startTransition(message?: string) {
-  let msg = message;
+  const msg = message || "Transitioning...";
   const activeSections = Array.from(sections).filter(
-    (section) => !section.classList.contains("none")
+    (section) => !section.classList.contains("none"),
   );
   if (activeSections.length > 0) {
     activeSections[0].classList.add("none");
   }
 
-  if (!message) {
-    msg = "Transitioning...";
-  }
-
-  transitionSection.getElementsByTagName("h2")[0].innerText = msg!;
+  transitionSection.getElementsByTagName("h2")[0].innerText = msg;
   transitionSection.classList.remove("none");
 }
 
@@ -72,7 +68,9 @@ function endTransitionTo(section: HTMLElement) {
  * Step 1 - Select Template
  */
 
-const selectTemplateSection = document.getElementById("Step1_SelectTemplate")!;
+const selectTemplateSection = document.getElementById(
+  "Step1_SelectTemplate",
+) as HTMLElement;
 
 function initTemplatesSelection() {
   const form = selectTemplateSection.getElementsByTagName("form")[0];
@@ -133,7 +131,9 @@ function goTemplatesSelection() {
  *
  */
 
-const editTemplateSection = document.getElementById("Step2_EditTemplate")!;
+const editTemplateSection = document.getElementById(
+  "Step2_EditTemplate",
+) as HTMLElement;
 
 function initTemplateEditor() {
   const doButtonAction = (e: Event) => {
@@ -177,11 +177,13 @@ function goTemplateEditor() {
     if (APP.templateDocument === null) {
       const templateDocument =
         APP.template === "custom"
-          ? await docAuthSystem.importDOCX(APP.customTemplateBinary!) // import custom template DOCX
+          ? await docAuthSystem.importDOCX(
+              APP.customTemplateBinary as ArrayBuffer,
+            ) // import custom template DOCX
           : await docAuthSystem.loadDocument(
               await fetch(`${backendUrl}templates/${APP.template}.json`).then(
-                (response) => response.json()
-              )
+                (response) => response.json(),
+              ),
             ); // or load preselected template DocJSON
       APP.templateDocument = templateDocument;
     }
@@ -204,7 +206,9 @@ function goTemplateEditor() {
  * https://codemirror.net/docs/
  */
 
-const editDataSection = document.getElementById("Step3_EditData")!;
+const editDataSection = document.getElementById(
+  "Step3_EditData",
+) as HTMLElement;
 
 function initoDataEditor() {
   const doButtonAction = (e: Event) => {
@@ -244,7 +248,7 @@ function goDataEditor() {
     // get the template JSON data
     if (APP.dataJson === null) {
       const dataJson = await fetch(
-        `${backendUrl}data/${APP.template}.json`
+        `${backendUrl}data/${APP.template}.json`,
       ).then((response) => response.json());
       APP.dataJson = dataJson;
     }
@@ -253,7 +257,7 @@ function goDataEditor() {
     const textarea = document.createElement("textarea");
     textarea.rows = 50;
     textarea.value = JSON.stringify(APP.dataJson, null, 2);
-    const container = document.getElementById("jsonEditor")!;
+    const container = document.getElementById("jsonEditor") as HTMLElement;
     container.appendChild(textarea);
 
     // transition in
@@ -280,8 +284,8 @@ function goDataEditor() {
  */
 
 const editGeneratedDocxSection = document.getElementById(
-  "Step4_EditGeneratedDocx"
-)!;
+  "Step4_EditGeneratedDocx",
+) as HTMLElement;
 
 function initDocxEditor() {
   const doButtonAction = (e: Event) => {
@@ -323,10 +327,19 @@ function goDocxEditor() {
 
     // get template & resolve to DOCX
     if (APP.docxDocument == null) {
-      const templateBuffer = await APP.templateDocument!.exportDOCX();
+      if (!APP.templateDocument) {
+        throw new Error("Template document not initialized");
+      }
+      const templateBuffer = await APP.templateDocument.exportDOCX();
+      const dataJson = APP.dataJson || {};
+      // populateDocumentTemplate has incorrect types in the SDK, needs type assertion
       const docxBuffer = await window.NutrientViewer.populateDocumentTemplate(
-        { document: templateBuffer } as any,
-        APP.dataJson
+        { document: templateBuffer } as Parameters<
+          typeof window.NutrientViewer.populateDocumentTemplate
+        >[0],
+        dataJson as Parameters<
+          typeof window.NutrientViewer.populateDocumentTemplate
+        >[1],
       );
       const docxDocument = await docAuthSystem.importDOCX(docxBuffer);
       APP.docxDocument = docxDocument;
@@ -356,7 +369,9 @@ function goDocxEditor() {
  * Https://www.nutrient.io/guides/web/knowledge-base/download-exported-document
  */
 
-const viewPdfSection = document.getElementById("Step5_PreviewPDF")!;
+const viewPdfSection = document.getElementById(
+  "Step5_PreviewPDF",
+) as HTMLElement;
 
 function initPdfViewer() {
   const downloadPdf = (objectUrl: string) => {
@@ -384,7 +399,10 @@ function initPdfViewer() {
       }
       startTransition("Preparing PDF...");
       (async () => {
-        const buffer = await APP.pdfViewer!.exportPDF();
+        if (!APP.pdfViewer) {
+          throw new Error("PDF viewer not initialized");
+        }
+        const buffer = await APP.pdfViewer.exportPDF();
         const blob = new Blob([buffer], { type: "application/pdf" });
         const objectUrl = window.URL.createObjectURL(blob);
 
@@ -433,7 +451,7 @@ function goPdfViewer() {
 // On Load
 (() => {
   // Clicking the title or logo reloads the generator
-  document.getElementById("theTitle")!.addEventListener("click", (_e) => {
+  document.getElementById("theTitle")?.addEventListener("click", (_e) => {
     window.location.reload();
   });
 

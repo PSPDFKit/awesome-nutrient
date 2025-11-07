@@ -1,6 +1,7 @@
 // src/components/pdf-viewer-component.tsx
+
+import type { Instance, ViewState } from "@nutrient-sdk/viewer";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Instance, Annotation, ViewState } from "@nutrient-sdk/viewer";
 import mixpanelService from "../services/mixpanel.ts";
 
 interface PdfViewerComponentProps {
@@ -24,19 +25,18 @@ export default function PdfViewerComponent({
   onViewerReady,
 }: PdfViewerComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [viewerInstance, setViewerInstance] =
-    useState<Instance | null>(null);
+  const [viewerInstance, setViewerInstance] = useState<Instance | null>(null);
   const [documentInfo, setDocumentInfo] = useState<DocumentInfo | null>(null);
   const startTimeRef = useRef(Date.now());
   const sessionId = useRef(
-    `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
   );
 
   // Memoize functions to avoid dependency issues
   const getDocumentInfoFromNutrient = useCallback(
     async (
       instance: Instance,
-      currentFileName: string
+      currentFileName: string,
     ): Promise<DocumentInfo> => {
       try {
         const info: DocumentInfo = {
@@ -56,13 +56,15 @@ export default function PdfViewerComponent({
             instance.viewState.zoom !== undefined &&
             !Number.isNaN(instance.viewState.zoom)
           ) {
-            info.initial_zoom = Math.round(instance.viewState.zoom * 100);
+            info.initial_zoom = Math.round(
+              Number(instance.viewState.zoom) * 100,
+            );
           }
         }
 
         try {
           const annotations = await instance.getAnnotations(0);
-          info.initial_annotation_count = annotations.length;
+          info.initial_annotation_count = annotations.size;
         } catch (_e) {
           // Error getting annotations - set to 0
           info.initial_annotation_count = 0;
@@ -78,7 +80,7 @@ export default function PdfViewerComponent({
         };
       }
     },
-    []
+    [],
   );
 
   const setupNutrientSDKEvents = useCallback(
@@ -97,7 +99,7 @@ export default function PdfViewerComponent({
               page_number: pageIndex + 1,
               event_source: "nutrient_sdk",
             });
-          }
+          },
         );
 
         // Zoom changes
@@ -110,7 +112,7 @@ export default function PdfViewerComponent({
               zoom_factor: zoomLevel,
               event_source: "nutrient_sdk",
             });
-          }
+          },
         );
 
         // View state changes
@@ -122,131 +124,140 @@ export default function PdfViewerComponent({
               view_state_keys: Object.keys(viewState),
               event_source: "nutrient_sdk",
             });
-          }
+          },
         );
 
         // Annotation creation
         instance.addEventListener(
           "annotations.create",
-          (
-            createdAnnotations: InstanceType<
-              typeof NutrientViewer.Immutable.List<Annotation>
-            >
-          ) => {
-            const annotations = Array.from(createdAnnotations);
+          (createdAnnotations) => {
+            const annotations = createdAnnotations.toArray();
 
-            annotations.forEach((annotation: Annotation) => {
+            annotations.forEach((annotation) => {
+              const className =
+                "className" in annotation &&
+                typeof annotation.className === "string"
+                  ? annotation.className
+                  : null;
+              const hasNote = !!("note" in annotation && annotation.note);
+              const hasContents = !!(
+                "contents" in annotation && annotation.contents
+              );
+
               mixpanelService.track("Annotation Created", {
                 ...baseEventData,
-                annotation_type:
-                  annotation.className || annotation.constructor.name,
+                annotation_type: className || annotation.constructor.name,
                 annotation_id: annotation.id,
                 page_number: annotation.pageIndex + 1,
-                has_content: !!(annotation.note || annotation.contents),
+                has_content: hasNote || hasContents,
                 event_source: "nutrient_sdk",
               });
             });
-          }
+          },
         );
 
         // Annotation updates
         instance.addEventListener(
           "annotations.update",
-          (
-            updatedAnnotations: InstanceType<
-              typeof NutrientViewer.Immutable.List<Annotation>
-            >
-          ) => {
-            const annotations = Array.from(updatedAnnotations);
+          (updatedAnnotations) => {
+            const annotations = updatedAnnotations.toArray();
 
-            annotations.forEach((annotation: Annotation) => {
+            annotations.forEach((annotation) => {
+              const className =
+                "className" in annotation &&
+                typeof annotation.className === "string"
+                  ? annotation.className
+                  : null;
+
               mixpanelService.track("Annotation Updated", {
                 ...baseEventData,
-                annotation_type:
-                  annotation.className || annotation.constructor.name,
+                annotation_type: className || annotation.constructor.name,
                 annotation_id: annotation.id,
                 page_number: annotation.pageIndex + 1,
                 event_source: "nutrient_sdk",
               });
             });
-          }
+          },
         );
 
         // Annotation deletion
         instance.addEventListener(
           "annotations.delete",
-          (
-            deletedAnnotations: InstanceType<
-              typeof NutrientViewer.Immutable.List<Annotation>
-            >
-          ) => {
-            const annotations = Array.from(deletedAnnotations);
+          (deletedAnnotations) => {
+            const annotations = deletedAnnotations.toArray();
 
-            annotations.forEach((annotation: Annotation) => {
+            annotations.forEach((annotation) => {
+              const className =
+                "className" in annotation &&
+                typeof annotation.className === "string"
+                  ? annotation.className
+                  : null;
+
               mixpanelService.track("Annotation Deleted", {
                 ...baseEventData,
-                annotation_type:
-                  annotation.className || annotation.constructor.name,
+                annotation_type: className || annotation.constructor.name,
                 annotation_id: annotation.id,
                 page_number: annotation.pageIndex + 1,
                 event_source: "nutrient_sdk",
               });
             });
-          }
+          },
         );
 
         // Annotation selection
-        instance.addEventListener(
-          "annotationSelection.change",
-          (
-            selection: InstanceType<
-              typeof NutrientViewer.Immutable.List<Annotation>
-            > | null
-          ) => {
-            mixpanelService.track("Annotation Selection Changed", {
-              ...baseEventData,
-              selection_count: selection ? selection.length : 0,
-              event_source: "nutrient_sdk",
-            });
-          }
-        );
+        instance.addEventListener("annotationSelection.change", (selection) => {
+          mixpanelService.track("Annotation Selection Changed", {
+            ...baseEventData,
+            selection_count: selection ? selection.size : 0,
+            event_source: "nutrient_sdk",
+          });
+        });
 
         // Annotation interactions
-        instance.addEventListener(
-          "annotations.press",
-          (annotation: Annotation) => {
-            mixpanelService.track("Annotation Pressed", {
+        instance.addEventListener("annotations.press", (event) => {
+          const annotation = event.annotation;
+          const className =
+            "className" in annotation &&
+            typeof annotation.className === "string"
+              ? annotation.className
+              : null;
+
+          mixpanelService.track("Annotation Pressed", {
+            ...baseEventData,
+            annotation_type: className || annotation.constructor.name,
+            annotation_id: annotation.id,
+            page_number: annotation.pageIndex + 1,
+            event_source: "nutrient_sdk",
+          });
+        });
+
+        // Text selection
+        instance.addEventListener("textSelection.change", (selection) => {
+          if (
+            selection &&
+            "text" in selection &&
+            typeof selection.text === "string" &&
+            selection.text.trim().length > 0
+          ) {
+            const pageIndex =
+              "pageIndex" in selection &&
+              typeof selection.pageIndex === "number"
+                ? selection.pageIndex
+                : 0;
+
+            mixpanelService.track("Text Selection", {
               ...baseEventData,
-              annotation_type:
-                annotation.className || annotation.constructor.name,
-              annotation_id: annotation.id,
-              page_number: annotation.pageIndex + 1,
+              text_length: selection.text.length,
+              page_number: pageIndex + 1,
+              event_source: "nutrient_sdk",
+            });
+          } else if (selection === null) {
+            mixpanelService.track("Text Selection Cleared", {
+              ...baseEventData,
               event_source: "nutrient_sdk",
             });
           }
-        );
-
-        // Text selection
-        instance.addEventListener(
-          "textSelection.change",
-          (
-            selection: InstanceType<typeof NutrientViewer.TextSelection> | null
-          ) => {
-            if (selection?.text && selection.text.trim().length > 0) {
-              mixpanelService.track("Text Selection", {
-                ...baseEventData,
-                text_length: selection.text.length,
-                page_number: selection.pageIndex + 1,
-                event_source: "nutrient_sdk",
-              });
-            } else if (selection === null) {
-              mixpanelService.track("Text Selection Cleared", {
-                ...baseEventData,
-                event_source: "nutrient_sdk",
-              });
-            }
-          }
-        );
+        });
 
         // Form field updates
         instance.addEventListener(
@@ -257,68 +268,75 @@ export default function PdfViewerComponent({
               field_count: Object.keys(formFieldValues).length,
               event_source: "nutrient_sdk",
             });
-          }
+          },
         );
 
         // Form fields changes
-        instance.addEventListener(
-          "formFields.change",
-          (changes: { type?: string }) => {
-            mixpanelService.track("Form Fields Changed", {
-              ...baseEventData,
-              change_type: changes.type || "unknown",
-              event_source: "nutrient_sdk",
-            });
-          }
-        );
+        instance.addEventListener("formFields.change", () => {
+          mixpanelService.track("Form Fields Changed", {
+            ...baseEventData,
+            event_source: "nutrient_sdk",
+          });
+        });
 
         // Search state changes
-        instance.addEventListener(
-          "search.stateChange",
-          (searchState: {
-            query?: string;
-            results?: unknown[];
-            isCaseSensitive?: boolean;
-            matchWholeWord?: boolean;
-          }) => {
-            if (searchState.query?.trim()) {
-              mixpanelService.track("Search Performed", {
-                ...baseEventData,
-                query_length: searchState.query.length,
-                results_count: searchState.results
-                  ? searchState.results.length
-                  : 0,
-                is_case_sensitive: searchState.isCaseSensitive || false,
-                is_whole_word: searchState.matchWholeWord || false,
-                event_source: "nutrient_sdk",
-              });
-            }
+        instance.addEventListener("search.stateChange", (searchState) => {
+          if (
+            "query" in searchState &&
+            typeof searchState.query === "string" &&
+            searchState.query.trim()
+          ) {
+            const resultsCount =
+              "results" in searchState &&
+              searchState.results &&
+              typeof searchState.results === "object" &&
+              "size" in searchState.results &&
+              typeof searchState.results.size === "number"
+                ? searchState.results.size
+                : 0;
+            const isCaseSensitive =
+              "isCaseSensitive" in searchState &&
+              typeof searchState.isCaseSensitive === "boolean"
+                ? searchState.isCaseSensitive
+                : false;
+            const isWholeWord =
+              "matchWholeWord" in searchState &&
+              typeof searchState.matchWholeWord === "boolean"
+                ? searchState.matchWholeWord
+                : false;
+
+            mixpanelService.track("Search Performed", {
+              ...baseEventData,
+              query_length: searchState.query.length,
+              results_count: resultsCount,
+              is_case_sensitive: isCaseSensitive,
+              is_whole_word: isWholeWord,
+              event_source: "nutrient_sdk",
+            });
           }
-        );
+        });
 
         // Search term changes
-        instance.addEventListener(
-          "search.termChange",
-          (searchTerm: string | null) => {
-            mixpanelService.track("Search Term Changed", {
-              ...baseEventData,
-              search_term_length: searchTerm ? searchTerm.length : 0,
-              event_source: "nutrient_sdk",
-            });
-          }
-        );
+        instance.addEventListener("search.termChange", (event) => {
+          const searchTerm =
+            "searchTerm" in event && typeof event.searchTerm === "string"
+              ? event.searchTerm
+              : null;
+          mixpanelService.track("Search Term Changed", {
+            ...baseEventData,
+            search_term_length: searchTerm ? searchTerm.length : 0,
+            event_source: "nutrient_sdk",
+          });
+        });
 
         // Document changes
-        instance.addEventListener(
-          "document.change",
-          (changes: { type?: string }) => {
-            mixpanelService.track("Document Modified", {
-              ...baseEventData,
-              change_type: changes.type || "unknown",
-              event_source: "nutrient_sdk",
-            });
-          }
-        );
+        instance.addEventListener("document.change", (operations) => {
+          mixpanelService.track("Document Modified", {
+            ...baseEventData,
+            operation_count: operations.length,
+            event_source: "nutrient_sdk",
+          });
+        });
 
         // Document save state changes
         instance.addEventListener(
@@ -329,7 +347,7 @@ export default function PdfViewerComponent({
               has_changes: saveState.hasUnsavedChanges,
               event_source: "nutrient_sdk",
             });
-          }
+          },
         );
 
         // Page interactions
@@ -341,32 +359,24 @@ export default function PdfViewerComponent({
               page_number: pageInfo.pageIndex + 1,
               event_source: "nutrient_sdk",
             });
-          }
+          },
         );
 
         // Bookmark changes
-        instance.addEventListener(
-          "bookmarks.change",
-          (bookmarks: unknown[] | null) => {
-            mixpanelService.track("Bookmarks Changed", {
-              ...baseEventData,
-              bookmark_count: bookmarks ? bookmarks.length : 0,
-              event_source: "nutrient_sdk",
-            });
-          }
-        );
+        instance.addEventListener("bookmarks.change", () => {
+          mixpanelService.track("Bookmarks Changed", {
+            ...baseEventData,
+            event_source: "nutrient_sdk",
+          });
+        });
 
         // Comments changes
-        instance.addEventListener(
-          "comments.change",
-          (comments: unknown[] | null) => {
-            mixpanelService.track("Comments Changed", {
-              ...baseEventData,
-              comment_count: comments ? comments.length : 0,
-              event_source: "nutrient_sdk",
-            });
-          }
-        );
+        instance.addEventListener("comments.change", () => {
+          mixpanelService.track("Comments Changed", {
+            ...baseEventData,
+            event_source: "nutrient_sdk",
+          });
+        });
 
         // Undo actions
         instance.addEventListener("history.undo", () => {
@@ -393,7 +403,7 @@ export default function PdfViewerComponent({
               signature_id: signature.id,
               event_source: "nutrient_sdk",
             });
-          }
+          },
         );
 
         console.log("Nutrient SDK event listeners registered successfully");
@@ -406,7 +416,7 @@ export default function PdfViewerComponent({
         });
       }
     },
-    []
+    [],
   );
 
   // Main effect for loading PDF viewer
@@ -426,7 +436,7 @@ export default function PdfViewerComponent({
           { type: "content-editor" },
         ],
       })
-        .then(async (instance: NutrientViewerInstance) => {
+        .then(async (instance) => {
           const loadTime = Date.now() - loadStartTime;
 
           setViewerInstance(instance);
@@ -478,7 +488,7 @@ export default function PdfViewerComponent({
         });
       }
     };
-  }, [viewerInstance, documentInfo, fileName]);
+  }, [viewerInstance, documentInfo]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
 }

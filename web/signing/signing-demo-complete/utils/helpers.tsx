@@ -1,4 +1,4 @@
-import { AnnotationTypeEnum, User } from "../utils/types";
+import { AnnotationTypeEnum } from "../utils/types";
 
 type NutrientViewerInstance = Awaited<
   ReturnType<typeof window.NutrientViewer.load>
@@ -127,8 +127,7 @@ export const handleAnnotatitonCreation = async (
   instance: NutrientViewerInstance,
   annotation: Annotation & { isSignature?: boolean },
   mySignatureIdsRef: React.MutableRefObject<string[]>,
-  setSignatureAnnotationIds: (ids: string[]) => void,
-  myEmail: string
+  setSignatureAnnotationIds: (ids: string[]) => void
 ) => {
   if (annotation.isSignature) {
     for (let i = 0; i < instance.totalPageCount; i++) {

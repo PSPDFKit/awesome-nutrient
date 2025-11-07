@@ -1,6 +1,6 @@
 //PdfViewerComponent.tsx
 import { useEffect, useRef } from "react";
-import type { Instance, ToolbarItem, Annotation } from "@nutrient-sdk/viewer";
+import type { Instance, ToolbarItem } from "@nutrient-sdk/viewer";
 
 interface PdfViewerComponentProps {
   document: string;
@@ -58,7 +58,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
 
       // the following is the code to cut copy and paste the Annotations between pages - button in toolbar
       const copy = {
-        type: "custom",
+        type: "custom" as const,
         title: "Copy",
         onPress: async () => {
           const event = /(Mac)/i.test(navigator.platform)
@@ -69,7 +69,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       };
 
       const paste = {
-        type: "custom",
+        type: "custom" as const,
         title: "Paste",
         onPress: async () => {
           const event = /(Mac)/i.test(navigator.platform)
@@ -80,7 +80,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       };
 
       const cut = {
-        type: "custom",
+        type: "custom" as const,
         title: "Cut",
         onPress: async () => {
           const event = /(Mac)/i.test(navigator.platform)
@@ -91,7 +91,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       };
 
       const nextAnnotation = {
-        type: "custom",
+        type: "custom" as const,
         title: "Next Annotation",
         onPress: async () => {
           currentAnnotationIndex = currentAnnotationIndex + 1;
@@ -128,29 +128,30 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
             if (!file) return;
 
             const imageAttachmentId = await instance.createAttachment(file);
-            const annotation = new NutrientViewer.Annotations.ImageAnnotation({
-              pageIndex: currentPage,
-              contentType: content_Type,
-              imageAttachmentId,
-              description: "Pasted Image Annotation",
-              boundingBox: new NutrientViewer.Geometry.Rect({
-                left: 10,
-                top: 50,
-                width: 150,
-                height: 150,
-              }),
-            });
+            const annotation =
+              new window.NutrientViewer.Annotations.ImageAnnotation({
+                pageIndex: currentPage,
+                contentType: content_Type,
+                imageAttachmentId,
+                description: "Pasted Image Annotation",
+                boundingBox: new window.NutrientViewer.Geometry.Rect({
+                  left: 10,
+                  top: 50,
+                  width: 150,
+                  height: 150,
+                }),
+              });
             await instance.create(annotation);
           } else if (item.kind === "string") {
             item.getAsString(async (pastedText: string) => {
               const textAnnotation =
-                new NutrientViewer.Annotations.TextAnnotation({
+                new window.NutrientViewer.Annotations.TextAnnotation({
                   pageIndex: currentPage,
                   text: {
                     format: "plain",
                     value: pastedText,
                   },
-                  boundingBox: new NutrientViewer.Geometry.Rect({
+                  boundingBox: new window.NutrientViewer.Geometry.Rect({
                     left: 10,
                     top: 50,
                     width: 150,
@@ -220,7 +221,11 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     console.log("All Annotations", allAnnotations);
     console.log("currentAnnotationIndex is : ", currentAnnotationIndex);
     let highlightannotID: string;
-    const light_red = new NutrientViewer.Color({ r: 247, g: 141, b: 138 });
+    const light_red = new window.NutrientViewer.Color({
+      r: 247,
+      g: 141,
+      b: 138,
+    });
     if (allAnnotations === undefined || allAnnotations.length === 0) {
       fetchAnnotationCoordinates();
       currentAnnotationIndex = 0;
@@ -231,14 +236,14 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     if (allAnnotations.length > 0) {
       const annotation = allAnnotations[currentAnnotationIndex];
       console.log("Current Annotation: ", annotation);
-      const bBoxhighlight = new NutrientViewer.Geometry.Rect({
+      const bBoxhighlight = new window.NutrientViewer.Geometry.Rect({
         left: annotation.left,
         top: annotation.top,
         width: annotation.width,
         height: annotation.height,
       });
-      highlightannotID = await instance.create(
-        new NutrientViewer.Annotations.RectangleAnnotation({
+      const createdAnnotations = await instance.create(
+        new window.NutrientViewer.Annotations.RectangleAnnotation({
           pageIndex: annotation.pageIndex,
           boundingBox: bBoxhighlight,
           strokeWidth: 1,
@@ -246,10 +251,20 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
           opacity: 1,
         })
       );
+      const createdAnnotation = createdAnnotations[0];
+      if (
+        createdAnnotation &&
+        "id" in createdAnnotation &&
+        createdAnnotation.id
+      ) {
+        highlightannotID = createdAnnotation.id;
+      }
       //instance.jumpAndZoomToRect(annotation.pageIndex, bBoxhighlight); // This will zoom to the annotation.
       instance.jumpToRect(annotation.pageIndex, bBoxhighlight); // you can use this if you don't want to zoom and just focus on the annotation.
       setTimeout(async () => {
-        await instance.delete(highlightannotID);
+        if (highlightannotID) {
+          await instance.delete(highlightannotID);
+        }
       }, 3000);
     }
   };

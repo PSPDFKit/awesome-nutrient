@@ -258,7 +258,9 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.StampAnnotation &&
-                instance
+                instance &&
+                "rects" in annotation &&
+                annotation.rects
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
@@ -286,7 +288,9 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.TextAnnotation &&
-                instance
+                instance &&
+                "rects" in annotation &&
+                annotation.rects
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
