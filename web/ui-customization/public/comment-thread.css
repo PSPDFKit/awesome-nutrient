@@ -1,6 +1,36 @@
+@import "@baseline-ui/tokens/dist/index.css";
+@import "@baseline-ui/core/dist/index.css";
+
+@layer bui-reset {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
 .comment-thread-container {
-  width: 320px;
-  background: whitesmoke;
-  padding: 8px;
-  border-radius: 4px;
+  min-width: 240px;
+}
+
+.comment-thread-counter {
+  margin-bottom: 8px;
+}
+
+.comment-button {
+  margin-right: 4px;
+  margin-bottom: 8px;
+}
+
+.comment-creator {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.comment-content {
+  margin: 8px 0;
 }

@@ -12,7 +12,7 @@ function App() {
     let cleanup = () => {};
 
     (async () => {
-      const NutrientViewer = (await import("@nutrient-sdk/viewer")).default;
+      const NutrientViewer = await import("@nutrient-sdk/viewer");
 
       // Ensure there’s only one `NutrientViewer` instance.
       NutrientViewer.unload(container);
@@ -28,22 +28,19 @@ function App() {
           baseUrl,
           styleSheets: [`${baseUrl}comment-thread.css`],
           ui: {
-            commentThread: {
-              header: (instance, id) => {
-                const container = document.createElement("div");
-                const root = createRoot(container);
+            commentThread: (instance, id) => {
+              const container = document.createElement("div");
+              const root = createRoot(container);
 
-                return {
-                  render: () => container,
-                  onMount: () => {
-                    root.render(<CommentThread instance={instance} id={id} />);
-                  },
-                  onUnmount: () => {
-                    root.unmount();
-                  },
-                };
-              },
-              comment: () => ({ render: () => null }), // Disable default comment rendering.
+              return {
+                render: () => container,
+                onMount: () => {
+                  root.render(<CommentThread instance={instance} id={id} />);
+                },
+                onUnmount: () => {
+                  root.unmount();
+                },
+              };
             },
           },
         });

@@ -4,8 +4,12 @@ import {
   I18nProvider,
   ThemeProvider,
   FrameProvider,
+  Avatar,
   Editor,
+  Text,
+  Box,
 } from "@baseline-ui/core";
+import { themes } from "@baseline-ui/tokens";
 import { Comment, Instance, List } from "@nutrient-sdk/viewer";
 
 interface CommentThreadProps {
@@ -15,7 +19,8 @@ interface CommentThreadProps {
 
 const CommentThread = (props: CommentThreadProps) => {
   const { instance, id } = props;
-  const [comments, setComments] = React.useState<List<Comment> | null>(null);
+  const [comments, setComments] = React.useState<null | List<Comment>>(null);
+  // We only allow editing one comment at a time
   const [editCommentId, setEditCommentId] = React.useState<string | null>(null);
 
   useEffect(() => {
@@ -26,29 +31,56 @@ const CommentThread = (props: CommentThreadProps) => {
       });
     };
 
+    syncComments();
+
     instance?.addEventListener("comments.change", syncComments);
   }, [instance, id, setComments]);
 
   return (
-    <ThemeProvider>
+    <ThemeProvider theme={themes.base.light}>
       <FrameProvider>
-        <I18nProvider locale="en-US">
-          <div className="comment-thread-container">
-            <p>Total comments: {comments?.size ?? 0}</p>
+        <I18nProvider shouldLogMissingMessages={false} locale="en-US">
+          <Box
+            padding="md"
+            backgroundColor="background.primary.subtle"
+            borderRadius="sm"
+            boxShadow="low"
+            className="comment-thread-container"
+          >
+            <Text size="sm" type="label" className="comment-thread-counter">
+              💬 Total comments: {comments?.size ?? 0}
+            </Text>
             {comments?.map((comment) => (
               <div key={comment.id} className="comment-container">
+                <div className="comment-creator">
+                  <Avatar
+                    name={comment.creatorName ?? "Anonymous"}
+                    showInitials
+                  />{" "}
+                  <Text type="label" size="md">
+                    {comment.creatorName ?? "Anonymous"}
+                  </Text>
+                </div>
+                <div className="comment-date">
+                  <Text type="helper" size="sm">
+                    📅 Date: {comment.createdAt?.toLocaleString()}
+                  </Text>
+                </div>
                 {editCommentId === comment.id ? (
                   <Editor
-                    placeholder="Enter your comment"
+                    placeholder="Edit your comment"
                     autoFocus
-                    aria-label="Comment editor"
-                    defaultValue={comment.text.value!}
-                    enableRichText
+                    clearOnSave
+                    clearOnCancel
+                    saveOnEnter
+                    aria-label="Comment"
+                    defaultValue={comment.text.value ?? ""}
                     onSave={(value) => {
                       const updatedComment = comment.set("text", {
-                        format: "xhtml",
+                        format: "plain",
                         value,
                       });
+
                       instance?.update(updatedComment).then(() => {
                         setEditCommentId(null);
                       });
@@ -56,41 +88,86 @@ const CommentThread = (props: CommentThreadProps) => {
                   />
                 ) : (
                   <>
-                    <div
-                      dangerouslySetInnerHTML={{ __html: comment.text.value! }}
-                    />
+                    <div className="comment-content">{comment.text.value}</div>
                     <ActionButton
                       label="Edit"
-                      onPress={() => setEditCommentId(comment.id)}
+                      onClick={() => setEditCommentId(comment.id)}
+                      className="comment-button"
+                    />
+                    <ActionButton
+                      label="Delete"
+                      variant="error"
+                      onClick={() => instance?.delete(comment)}
+                      className="comment-button"
                     />
                   </>
                 )}
-
-                <ActionButton
-                  label="Delete"
-                  onClick={() => instance?.delete(comment)}
-                />
               </div>
             ))}
             <Editor
-              placeholder="Custom Editor"
-              aria-label="Comment editor"
-              onSave={(value) => {
-                const newComment = new Comment({
-                  text: {
-                    format: "xhtml",
-                    value,
-                  },
-                  // need to set rootId to previous comment in thread
-                  rootId: id,
-                });
-                // This errors out for first comment creation. Needs investigation.
-                instance?.create(newComment).then((ss) => {
-                  console.log("Comment created:", ss);
-                });
+              placeholder="Add a comment"
+              aria-label="Comment"
+              autoFocus
+              clearOnSave
+              saveOnEnter
+              onSave={async (value) => {
+                if (!instance) {
+                  return;
+                }
+
+                const commentsInThread = (await instance.getComments()).filter(
+                  (c) => c.rootId === id
+                );
+
+                const isFirstComment = commentsInThread.size === 0;
+
+                if (isFirstComment) {
+                  // In case of first comment, the SDK already creates a draft comment along with CommentMarkerAnnotation.
+                  // So we need to update that draft comment instead of creating a new one.
+                  const draftCommentInThread: Comment = (
+                    await instance.getComments({ includeDrafts: true })
+                  )
+                    .filter((c) => c.rootId === id && c.pageIndex === null)
+                    .first();
+
+                  const annotations = await instance.getAnnotations(
+                    instance.viewState.currentPageIndex
+                  );
+
+                  // We also need to mark the associated CommentMarkerAnnotation as the root of the comment thread.
+                  const rootAnnotation = annotations
+                    .find((a) => a.id === id)
+                    ?.set("isCommentThreadRoot", true);
+
+                  if (!rootAnnotation) {
+                    return;
+                  }
+
+                  const newComment = draftCommentInThread
+                    .set("text", {
+                      format: "plain",
+                      value,
+                    })
+                    .set("pageIndex", instance.viewState.currentPageIndex);
+
+                  await instance.update([newComment, rootAnnotation]);
+                } else {
+                  // For subsequent comments, we can create new comments without relying on draft comments.
+                  const newComment = new Comment({
+                    rootId: id,
+                    text: {
+                      format: "plain",
+                      value,
+                    },
+                    pageIndex: instance.viewState.currentPageIndex,
+                    createdAt: new Date(),
+                  });
+
+                  await instance.create(newComment);
+                }
               }}
             />
-          </div>
+          </Box>
         </I18nProvider>
       </FrameProvider>
     </ThemeProvider>

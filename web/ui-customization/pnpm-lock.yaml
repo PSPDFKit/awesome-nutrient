@@ -18,8 +18,8 @@ importers:
         specifier: ^0.45.8
         version: 0.45.8
       '@nutrient-sdk/viewer':
-        specifier: ^1.8.0
-        version: 1.8.0
+        specifier: 1.9.0-nightly.20251106
+        version: 1.9.0-nightly.20251106
       react:
         specifier: ^19.1.1
         version: 19.2.0
@@ -460,8 +460,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@nutrient-sdk/viewer@1.8.0':
-    resolution: {integrity: sha512-G9QHNUoUmuyfy661nPYz3HA59abm3hqnMxTtOOw9iQXaNXJ452774/TrgN+43ciHJXn+1f12Z56F809aj86zbQ==}
+  '@nutrient-sdk/viewer@1.9.0-nightly.20251106':
+    resolution: {integrity: sha512-3C3vZQL7GyXlQAimi0tNcNdNbhl+ovyNtvzaz5zpqgsev2r32djD+BVV9plYjFLhVhzEu+wL+xBGwfbnkGLSXw==}
 
   '@radix-ui/react-compose-refs@1.1.2':
     resolution: {integrity: sha512-z4eqJvfiNnFMHIIvXP3CY57y2WJs5g2v3X0zm9mEJkrkNv4rDxu+sg9Jh8EkXyeqBkB7SOcboo9dMVqhyrACIg==}
@@ -2360,7 +2360,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@nutrient-sdk/viewer@1.8.0':
+  '@nutrient-sdk/viewer@1.9.0-nightly.20251106':
     dependencies:
       '@types/react': 18.3.26
 
