@@ -62,9 +62,12 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
           );
           console.log("Annotation Bounding Box: ", annotation.boundingBox);
           // Render the full page as an image URL
+          const pageInfo = await instance.pageInfoForIndex(0);
+          if (!pageInfo) return;
+
           instance
             .renderPageAsImageURL(
-              { width: instance.pageInfoForIndex(0).width },
+              { width: pageInfo.width },
               0 // Assuming pageIndex is 0
             )
             .then(async (imageUrl: string) => {

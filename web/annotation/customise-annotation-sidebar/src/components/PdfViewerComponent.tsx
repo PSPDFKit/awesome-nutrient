@@ -7,8 +7,10 @@ interface PdfViewerComponentProps {
 type ViewState = InstanceType<typeof window.NutrientViewer.ViewState>;
 
 // Type guard to check if annotation has rects property
-function hasRects(annotation: Annotation): annotation is Annotation & { rects: any } {
-  return 'rects' in annotation && annotation.rects !== undefined;
+function hasRects(
+  annotation: Annotation
+): annotation is Annotation & { rects: any } {
+  return "rects" in annotation && annotation.rects !== undefined;
 }
 
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
@@ -39,16 +41,17 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
           [window.NutrientViewer.SidebarMode.ANNOTATIONS]: ({
             containerNode,
           }: {
-            containerNode: HTMLElement;
+            containerNode: Node;
           }) => ({
-            node: containerNode,
+            node: containerNode as HTMLElement,
             onRenderItem: ({
               item: annotation,
               itemContainerNode,
             }: {
               item: Annotation;
-              itemContainerNode: HTMLElement;
+              itemContainerNode: Node;
             }) => {
+              const containerElement = itemContainerNode as HTMLElement;
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.HighlightAnnotation &&
@@ -57,7 +60,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -72,7 +75,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -87,7 +90,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -102,7 +105,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
                     console.log("Text from Squiggle Annotation", text);
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -118,7 +121,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -132,7 +135,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -147,7 +150,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -162,7 +165,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -176,7 +179,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -191,7 +194,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -206,7 +209,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -220,7 +223,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -235,7 +238,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -249,7 +252,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -259,13 +262,12 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 annotation instanceof
                   window.NutrientViewer.Annotations.StampAnnotation &&
                 instance &&
-                "rects" in annotation &&
-                annotation.rects
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -279,7 +281,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -289,13 +291,12 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 annotation instanceof
                   window.NutrientViewer.Annotations.TextAnnotation &&
                 instance &&
-                "rects" in annotation &&
-                annotation.rects
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -309,7 +310,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -318,12 +319,13 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.UnknownAnnotation &&
-                instance
+                instance &&
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -332,12 +334,13 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
               if (
                 annotation instanceof
                   window.NutrientViewer.Annotations.WidgetAnnotation &&
-                instance
+                instance &&
+                hasRects(annotation)
               ) {
                 instance
                   .getTextFromRects(annotation.pageIndex, annotation.rects)
                   .then((text: string) => {
-                    const button = itemContainerNode.querySelector("button");
+                    const button = containerElement.querySelector("button");
                     if (button) {
                       button.textContent = text;
                     }
@@ -371,27 +374,29 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       ),
         console.log("Nutrient Web SDK successfully loaded!", instance);
 
-      instance.addEventListener(
-        "textSelection.change",
-        async (
-          textSelection: InstanceType<
-            typeof window.NutrientViewer.TextSelection
-          > | null
-        ) => {
-          if (textSelection) {
-            const text = await textSelection.getText();
-            console.log("Selected text:", text);
-            console.log("Text length:", text.length);
-          } else {
-            console.log("No text is selected");
-          }
+      const textSelectionHandler = async (
+        textSelection: InstanceType<
+          typeof window.NutrientViewer.TextSelection
+        > | null
+      ) => {
+        if (textSelection) {
+          const text = await textSelection.getText();
+          console.log("Selected text:", text);
+          console.log("Text length:", text.length);
+        } else {
+          console.log("No text is selected");
         }
-      );
+      };
+
+      instance.addEventListener("textSelection.change", textSelectionHandler);
 
       // Cleanup event listener and unload PSPDFKit on component unmount
       return () => {
         if (instance) {
-          instance.removeEventListener("textSelection.change");
+          instance.removeEventListener(
+            "textSelection.change",
+            textSelectionHandler
+          );
           window.NutrientViewer.unload(container);
         }
       };

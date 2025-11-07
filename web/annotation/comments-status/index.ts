@@ -1,8 +1,5 @@
 import type { Instance, Annotation, List } from "@nutrient-sdk/viewer";
 
-// We need to inform NutrientViewer where to look for its library assets
-const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.5.0/";
-
 let _instance: Instance | null = null;
 
 const createCommentAnnotation = async (
@@ -12,14 +9,15 @@ const createCommentAnnotation = async (
   // Get the first created annotation
   const commentID = window.NutrientViewer.generateInstantId();
   // Create a new comment annotation
-  const parentCom = new window.NutrientViewer.Annotations.CommentMarkerAnnotation({
-    id: commentID,
-    isCommentThreadRoot: true,
-    pageIndex: 0,
-    // Set the bounding box of the comment annotation
-    boundingBox: annotation.boundingBox,
-    customData: { parentAnnotation: annotation },
-  });
+  const parentCom =
+    new window.NutrientViewer.Annotations.CommentMarkerAnnotation({
+      id: commentID,
+      isCommentThreadRoot: true,
+      pageIndex: 0,
+      // Set the bounding box of the comment annotation
+      boundingBox: annotation.boundingBox,
+      customData: { parentAnnotation: annotation },
+    });
   // Add the first comment to the document
   const firstCom = new window.NutrientViewer.Comment({
     rootId: commentID,
@@ -36,16 +34,19 @@ const createCommentAnnotation = async (
   };
   const updatedAnnotation = annotation.set("customData", customData);
   const updatedAnnot = await instance.update(updatedAnnotation);
-  return updatedAnnot[0];
+  return updatedAnnot[0] as Annotation;
 };
 
 const duplicateAnnotationTooltipCallback = (annotation: Annotation) => {
   // If the annotation is a comment marker, dont show the tooltip
-  if (annotation instanceof window.NutrientViewer.Annotations.CommentMarkerAnnotation)
+  if (
+    annotation instanceof
+    window.NutrientViewer.Annotations.CommentMarkerAnnotation
+  )
     return [];
   // Create a custom tooltip item with title "Comment"
   const duplicateItem = {
-    type: "custom",
+    type: "custom" as const,
     title: "Comment",
     id: "tooltip-duplicate-annotation",
     className: "TooltipItem-Duplication",
@@ -62,13 +63,21 @@ const duplicateAnnotationTooltipCallback = (annotation: Annotation) => {
           if (!annotation.customData?.commentAnnotationID)
             annotation = await createCommentAnnotation(_instance, annotation);
 
-          const parentAnnotationID = annotation.customData.commentAnnotationID;
-          try {
-            await _instance.setSelectedAnnotations(
-              window.NutrientViewer.Immutable.List([parentAnnotationID])
-            );
-          } catch (error) {
-            console.warn(error);
+          if (
+            annotation.customData &&
+            typeof annotation.customData.commentAnnotationID === "string"
+          ) {
+            const parentAnnotationID =
+              annotation.customData.commentAnnotationID;
+            try {
+              await _instance.setSelectedAnnotations(
+                window.NutrientViewer.Immutable.List<string>([
+                  parentAnnotationID,
+                ])
+              );
+            } catch (error) {
+              console.warn(error);
+            }
           }
         }
       }
@@ -160,10 +169,12 @@ window.NutrientViewer.load({
       ).createComponent(),
     }),
   },
-  baseUrl,
   container: "#pspdfkit",
   document: "document.pdf",
-  toolbarItems: [...window.NutrientViewer.defaultToolbarItems, { type: "comment" }],
+  toolbarItems: [
+    ...window.NutrientViewer.defaultToolbarItems,
+    { type: "comment" },
+  ],
   initialViewState: new window.NutrientViewer.ViewState({
     sidebarOptions: {
       [window.NutrientViewer.SidebarMode.ANNOTATIONS]: {
@@ -179,16 +190,23 @@ window.NutrientViewer.load({
       "annotations.update",
       async (event: List<Annotation>) => {
         const annotation = event.toArray()[0];
-        if (annotation?.customData?.commentAnnotationID) {
+        if (
+          annotation?.customData?.commentAnnotationID &&
+          annotation.customData.commentAnnotation &&
+          typeof annotation.customData.commentAnnotation === "object" &&
+          "set" in annotation.customData.commentAnnotation &&
+          "boundingBox" in annotation
+        ) {
           try {
             // Update the comment annotation when the parent annotation is updated
-            let commentAnnotation = annotation.customData.commentAnnotation;
-            commentAnnotation = commentAnnotation.set(
+            const commentAnnotation = annotation.customData.commentAnnotation;
+            // @ts-expect-error - set method exists on annotation types
+            const updatedCommentAnnotation = commentAnnotation.set(
               "boundingBox",
               annotation.boundingBox
             );
-            const update = await instance.update(commentAnnotation);
-            console.log("Annotation updated", update);
+            await instance.update(updatedCommentAnnotation);
+            console.log("Annotation updated");
           } catch (error) {
             console.warn(error);
           }
@@ -198,17 +216,23 @@ window.NutrientViewer.load({
     // When a comment is pressed, select the parent annotation
     instance.addEventListener(
       "annotations.press",
-      async (event: { annotation: Annotation; preventDefault: () => void }) => {
+      async (event: {
+        annotation: Annotation;
+        preventDefault?: () => void;
+      }) => {
         if (
           event.annotation instanceof
             window.NutrientViewer.Annotations.CommentMarkerAnnotation &&
-          event.annotation.customData.parentAnnotation
+          event.annotation.customData &&
+          event.annotation.customData.parentAnnotation &&
+          typeof event.annotation.customData.parentAnnotation === "object" &&
+          "id" in event.annotation.customData.parentAnnotation
         ) {
-          event.preventDefault();
-          const parentAnnotationID =
-            event.annotation.customData.parentAnnotation.id;
+          event.preventDefault?.();
+          const parentAnnotationID = event.annotation.customData
+            .parentAnnotation.id as string;
           await instance.setSelectedAnnotations(
-            window.NutrientViewer.Immutable.List([parentAnnotationID])
+            window.NutrientViewer.Immutable.List<string>([parentAnnotationID])
           );
           //,console.log("Annotation pressed", event);
         }

@@ -42,4 +42,11 @@ Chart.lock
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Node.js
 node_modules/
+
+# Lock files - users generate their own based on package manager
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

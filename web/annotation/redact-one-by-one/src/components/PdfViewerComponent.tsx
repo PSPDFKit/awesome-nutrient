@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { Instance, Annotation } from "@nutrient-sdk/viewer";
+import type { Instance, Annotation, List } from "@nutrient-sdk/viewer";
 import "../App.css";
 
 interface PdfViewerProps {
@@ -36,7 +36,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
             NutrientViewer.Annotations.RedactionAnnotation
             ? [
                 {
-                  type: "custom",
+                  type: "custom" as const,
                   title: "Accept",
                   id: "tooltip-accept-annotation",
                   className: "TooltipItem-Duplication",
@@ -50,7 +50,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
                   },
                 },
                 {
-                  type: "custom",
+                  type: "custom" as const,
                   title: "Reject",
                   id: "tooltip-reject-annotation",
                   className: "TooltipItem-Duplication",
@@ -62,10 +62,9 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
             : [];
         };
 
-        const getAllAnnotations = async (): Promise<
-          typeof NutrientViewer.Immutable.List
-        > => {
-          let annotationsList = NutrientViewer.Immutable.List();
+        const getAllAnnotations = async (): Promise<List<Annotation>> => {
+          let annotationsList =
+            window.NutrientViewer.Immutable.List<Annotation>();
           for (let i = 0; i < instance.totalPageCount - 1; i++) {
             const anns = (await instance.getAnnotations(i)).filter(
               (a: Annotation) =>
@@ -79,7 +78,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
           container,
           document: props.document,
           baseUrl: `${window.location.protocol}//${window.location.host}/`,
-          toolbarItems: toolbarItemsDefault,
+          toolbarItems: [...toolbarItemsDefault],
           theme: NutrientViewer.Theme.DARK,
           annotationTooltipCallback: redactionAnnotationsHandlerCallback,
           styleSheets: ["/mypspdfkit.css"],

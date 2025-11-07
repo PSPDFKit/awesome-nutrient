@@ -12,7 +12,7 @@
   "description": "",
   "dependencies": {},
   "devDependencies": {
-    "@nutrient-sdk/viewer": "^1.0.0",
+    "@nutrient-sdk/viewer": "^1.8.0",
     "typescript": "^5.3.3"
   }
 }

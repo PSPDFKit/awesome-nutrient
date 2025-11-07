@@ -581,8 +581,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
                   inst,
                   annotation,
                   mySignatureIdsRef,
-                  setSignatureAnnotationIds,
-                  currUser.email
+                  setSignatureAnnotationIds
                 );
               }
             }
@@ -600,8 +599,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
                 inst,
                 annotation,
                 mySignatureIdsRef,
-                setSignatureAnnotationIds,
-                currUser.email
+                setSignatureAnnotationIds
               );
             }
           );
