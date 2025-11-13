@@ -12,7 +12,7 @@ function App() {
     let cleanup = () => {};
 
     (async () => {
-      const NutrientViewer = await import("@nutrient-sdk/viewer");
+      const NutrientViewer = (await import("@nutrient-sdk/viewer")).default;
 
       // Ensure there’s only one `NutrientViewer` instance.
       NutrientViewer.unload(container);

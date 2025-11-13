@@ -25,7 +25,9 @@ const CommentThread = (props: CommentThreadProps) => {
 
   useEffect(() => {
     const syncComments = () => {
+      // getComments lets us fetch all comments
       instance?.getComments().then((initialComments) => {
+        // Filter comments that belong to this thread using the id passed to the component via props
         const commentsInThread = initialComments.filter((c) => c.rootId === id);
         setComments(commentsInThread);
       });
@@ -33,7 +35,13 @@ const CommentThread = (props: CommentThreadProps) => {
 
     syncComments();
 
+    // Since comments can change due to various factors we add a listener to sync them
     instance?.addEventListener("comments.change", syncComments);
+
+    return () => {
+      // Cleanup the listener when the component unmounts
+      instance?.removeEventListener("comments.change", syncComments);
+    };
   }, [instance, id]);
 
   return (
@@ -81,6 +89,7 @@ const CommentThread = (props: CommentThreadProps) => {
                         value,
                       });
 
+                      // Use the update API to save the edited comment
                       instance?.update(updatedComment).then(() => {
                         setEditCommentId(null);
                       });
@@ -97,6 +106,7 @@ const CommentThread = (props: CommentThreadProps) => {
                     <ActionButton
                       label="Delete"
                       variant="error"
+                      // Use the delete API to remove the comment
                       onClick={() => instance?.delete(comment)}
                       className="comment-button"
                     />
@@ -122,19 +132,22 @@ const CommentThread = (props: CommentThreadProps) => {
                 const isFirstComment = commentsInThread.size === 0;
 
                 if (isFirstComment) {
-                  // In case of first comment, the SDK already creates a draft comment along with CommentMarkerAnnotation.
-                  // So we need to update that draft comment instead of creating a new one.
-                  const draftCommentInThread: Comment = (
-                    await instance.getComments({ includeDrafts: true })
-                  )
-                    .filter((c) => c.rootId === id && c.pageIndex === null)
-                    .first();
+                  /*
+                   * In case of first comment, the SDK already creates a draft comment along with CommentMarkerAnnotation.
+                   * So we need to update that draft comment instead of creating a new one.
+                   */
+
+                  const draftCommentInThread: Comment =
+                    // includeDrafts option helps us fetch draft comments
+                    (await instance.getComments({ includeDrafts: true }))
+                      .filter((c) => c.rootId === id && c.pageIndex === null)
+                      .first();
 
                   const annotations = await instance.getAnnotations(
                     instance.viewState.currentPageIndex,
                   );
 
-                  // We also need to mark the associated CommentMarkerAnnotation as the root of the comment thread.
+                  /* We also need to mark the associated CommentMarkerAnnotation as the root of the comment thread. */
                   const rootAnnotation = annotations
                     .find((a) => a.id === id)
                     ?.set("isCommentThreadRoot", true);
@@ -143,6 +156,7 @@ const CommentThread = (props: CommentThreadProps) => {
                     return;
                   }
 
+                  // Update the draft comment with the content and pageIndex which publishes it
                   const newComment = draftCommentInThread
                     .set("text", {
                       format: "plain",
@@ -150,9 +164,10 @@ const CommentThread = (props: CommentThreadProps) => {
                     })
                     .set("pageIndex", instance.viewState.currentPageIndex);
 
+                  // Use update API to update both the draft comment and the root annotation
                   await instance.update([newComment, rootAnnotation]);
                 } else {
-                  // For subsequent comments, we can create new comments without relying on draft comments.
+                  /* For subsequent comments, we can create new comments without relying on draft comments. */
                   const newComment = new Comment({
                     rootId: id,
                     text: {
@@ -163,6 +178,7 @@ const CommentThread = (props: CommentThreadProps) => {
                     createdAt: new Date(),
                   });
 
+                  // Use create API to add the new comment
                   await instance.create(newComment);
                 }
               }}

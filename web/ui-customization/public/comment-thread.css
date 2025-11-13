@@ -1,16 +1,3 @@
-@import "@baseline-ui/tokens/dist/index.css";
-@import "@baseline-ui/core/dist/index.css";
-
-@layer bui-reset {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-  }
-}
-
 .comment-thread-container {
   min-width: 240px;
 }
