@@ -13,7 +13,7 @@
     "@baseline-ui/core": "^0.45.8",
     "@baseline-ui/icons": "^0.45.8",
     "@baseline-ui/tokens": "^0.45.8",
-    "@nutrient-sdk/viewer": "1.9.0-nightly.20251112",
+    "@nutrient-sdk/viewer": "1.9.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
