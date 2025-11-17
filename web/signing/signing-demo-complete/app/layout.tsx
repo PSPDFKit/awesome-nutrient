@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import logo from "@/public/android-chrome-512x512.png";
 import ImageComponent from "next/image";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -99,6 +100,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${SFProText.variable} ${SFProDisplay.variable}`}>
+        <Script
+          src="https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.8.0/nutrient-viewer.js"
+          strategy="beforeInteractive"
+        />
         <nav style={{ display: "flex", alignItems: "center", margin: "10px" }}>
           <ImageComponent
             src={logo}

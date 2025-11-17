@@ -50,7 +50,6 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         licenseKey: import.meta.env.VITE_lkey,
         container,
         document: props.document,
-        baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.5.2/",
         toolbarItems: [...NutrientViewer.defaultToolbarItems],
       });
 

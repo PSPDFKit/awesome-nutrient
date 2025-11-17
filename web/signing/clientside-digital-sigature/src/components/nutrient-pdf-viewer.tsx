@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
 import type { ViewState } from "@nutrient-sdk/viewer";
+import { useEffect, useRef } from "react";
 
 interface NutrientPdfViewerProps {
   document: string;
@@ -34,7 +34,7 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
       const NutrientViewer = window.NutrientViewer;
       if (!NutrientViewer) {
         console.error(
-          "NutrientViewer not loaded. Make sure the CDN script is included."
+          "NutrientViewer not loaded. Make sure the CDN script is included.",
         );
         return;
       }
@@ -42,19 +42,15 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
       NutrientViewer.unload(container);
 
       const instance = await NutrientViewer.load({
-        //licenseKey: import.meta.env.VITE_lkey,
         container,
         document: props.document,
-        baseUrl: `${window.location.protocol}//${window.location.host}/${
-          import.meta.env.PUBLIC_URL ?? ""
-        }`,
       });
 
       instance.setViewState((viewState: ViewState) =>
         viewState.set(
           "showSignatureValidationStatus",
-          NutrientViewer.ShowSignatureValidationStatusMode.IF_SIGNED
-        )
+          NutrientViewer.ShowSignatureValidationStatusMode.IF_SIGNED,
+        ),
       );
 
       // Define the signing callback.
@@ -72,7 +68,7 @@ export default function NutrientPdfViewer(props: NutrientPdfViewerProps) {
 
           const hashBuffer = await crypto.subtle.digest(
             "SHA-256",
-            dataToBeSigned
+            dataToBeSigned,
           );
           const digestHex = bufferToHex(hashBuffer);
           const encodedContents = arrayBufferToBase64(fileContents);

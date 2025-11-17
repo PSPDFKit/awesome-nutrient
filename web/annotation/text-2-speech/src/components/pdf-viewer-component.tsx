@@ -1,5 +1,9 @@
+import type {
+  HighlightAnnotation,
+  Instance,
+  SearchResult,
+} from "@nutrient-sdk/viewer";
 import { useEffect, useRef, useState } from "react";
-import type { Instance, SearchResult, HighlightAnnotation } from "@nutrient-sdk/viewer";
 
 interface PdfViewerComponentProps {
   document: string;
@@ -21,7 +25,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
     const NutrientViewer = window.NutrientViewer;
     if (!NutrientViewer) {
       console.error(
-        "NutrientViewer not loaded. Make sure the CDN script is included."
+        "NutrientViewer not loaded. Make sure the CDN script is included.",
       );
       return;
     }
@@ -37,7 +41,6 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         //licenseKey: import.meta.env.VITE_lkey, // Uncomment and update the .env with License key for Nutrient web sdk
         container, // The container where PSPDFKit will be rendered
         document: props.document, // The document to be displayed
-        baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/", // Base URL for loading assets
         toolbarItems: [...NutrientViewer.defaultToolbarItems], // Default toolbar settings
         inlineTextSelectionToolbarItems: () => {
           return [];
@@ -50,7 +53,7 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
         async (
           textSelection: InstanceType<
             typeof NutrientViewer.TextSelection
-          > | null
+          > | null,
         ) => {
           if (textSelection) {
             // Stop any currently playing speech
@@ -75,25 +78,25 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
             const results = await instance.search(text);
 
             // Create highlight annotations for search results
-            const annotations = results.map(
-              (result: SearchResult) => {
+            const annotations = results
+              .map((result: SearchResult) => {
                 if (result.pageIndex === null) return null;
                 return new NutrientViewer.Annotations.HighlightAnnotation({
                   pageIndex: result.pageIndex, // Page where text was found
                   rects: result.rectsOnPage, // Bounding rectangles of text
                   boundingBox: NutrientViewer.Geometry.Rect.union(
-                    result.rectsOnPage
+                    result.rectsOnPage,
                   ), // Overall bounding box
                 });
-              }
-            ).filter((a): a is HighlightAnnotation => a !== null);
+              })
+              .filter((a): a is HighlightAnnotation => a !== null);
 
             // Add the highlight annotations to the document
             instance.create(annotations);
           } else {
             console.log("No text is selected");
           }
-        }
+        },
       );
 
       // Cleanup function: unload PSPDFKit when the component unmounts

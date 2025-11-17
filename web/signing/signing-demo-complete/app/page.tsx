@@ -53,16 +53,11 @@ const App: React.FC = () => {
   const [messages, setMessages] = useState([...initMessages]);
   const [aiMessages, setAiMessages] = useState<AIMessage[]>([]);
   useEffect(() => {
-    (async () => {
-      await import("pspdfkit");
+    if (window.NutrientViewer) {
       allUsers.forEach((user: User) => {
         user.color = window.NutrientViewer.Color.LIGHT_BLUE;
       });
-    })();
-    setTimeout(() => {
-      //console.log("Setting current user to Signer");
-      //setCurrUser(allUsers[1]);
-    }, 0);
+    }
   }, []);
 
   const [isChatOpen, setIsChatOpen] = useState(false);
