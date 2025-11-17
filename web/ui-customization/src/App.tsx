@@ -25,7 +25,8 @@ function App() {
         NutrientViewer.load({
           container,
           document: "https://www.nutrient.io/downloads/nutrient-web-demo.pdf",
-          // baseUrl,
+          // useCDN loads assets (like WASM files) from Nutrient's CDN
+          useCDN: true,
           styleSheets: [`${baseUrl}comment-thread.css`],
           ui: {
             commentThread: (instance, id) => {
