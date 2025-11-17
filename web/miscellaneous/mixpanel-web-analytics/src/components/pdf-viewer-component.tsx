@@ -428,7 +428,6 @@ export default function PdfViewerComponent({
       const loadStartTime = Date.now();
 
       NutrientViewer.load({
-        licenseKey: import.meta.env.VITE_lkey,
         container,
         document: document,
         toolbarItems: [
