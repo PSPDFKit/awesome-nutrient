@@ -33,7 +33,6 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       instance = await window.NutrientViewer.load({
         container,
         document: props.document,
-        baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/",
         documentEditorToolbarItems: toolbarItems,
       });
 
@@ -57,18 +56,19 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
             if (!file) return;
 
             const imageAttachmentId = await instance.createAttachment(file);
-            const annotation = new window.NutrientViewer.Annotations.ImageAnnotation({
-              pageIndex: currentPage,
-              contentType: content_Type,
-              imageAttachmentId,
-              description: "Pasted Image Annotation",
-              boundingBox: new window.NutrientViewer.Geometry.Rect({
-                left: 10,
-                top: 50,
-                width: 150,
-                height: 150,
-              }),
-            });
+            const annotation =
+              new window.NutrientViewer.Annotations.ImageAnnotation({
+                pageIndex: currentPage,
+                contentType: content_Type,
+                imageAttachmentId,
+                description: "Pasted Image Annotation",
+                boundingBox: new window.NutrientViewer.Geometry.Rect({
+                  left: 10,
+                  top: 50,
+                  width: 150,
+                  height: 150,
+                }),
+              });
             await instance.create(annotation);
           } else if (item.kind === "string") {
             item.getAsString(async (pastedText: string) => {

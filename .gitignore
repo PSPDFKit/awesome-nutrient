@@ -50,3 +50,9 @@ node_modules/
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# Compiled TypeScript output (we use Vite, which compiles in-memory)
+# Ignore .js files in web examples where there's a corresponding .ts file
+web/**/index.js
+web/**/vite.config.js
+web/**/app.js
