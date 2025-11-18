@@ -29,10 +29,8 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
       const toolbarItemsDefault = [...NutrientViewer.defaultToolbarItems];
       instance = await NutrientViewer.load({
-        licenseKey: "Your License key goes here",
         container,
         document: props.document,
-        baseUrl: `${window.location.protocol}//${window.location.host}/`,
         toolbarItems: toolbarItemsDefault,
       });
     })();

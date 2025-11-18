@@ -22,7 +22,6 @@ let instance: Instance;
 let allAnnotations: AnnotationData[] = []; // push all the annotation bounding box and pageindex and annotation numbers
 let pageIndex: number; // store the page index
 let currentAnnotationIndex = 0; // know the current annotation and scroll to next annotation
-const lkey = "Your license key here";
 
 export default function PdfViewerComponent(props: PdfViewerComponentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,10 +46,8 @@ export default function PdfViewerComponent(props: PdfViewerComponentProps) {
       const toolbarItems = [...defaultToolbarItems];
 
       instance = await window.NutrientViewer.load({
-        licenseKey: lkey,
         container,
         document: props.document,
-        baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/",
         documentEditorToolbarItems: toolbarItems,
         enableRichText: () => true,
         enableClipboardActions: true, // this is used to cut copy and paste between pages (by default you cannot move annotation between pages)

@@ -77,7 +77,6 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
         instance = await NutrientViewer.load({
           container,
           document: props.document,
-          baseUrl: `${window.location.protocol}//${window.location.host}/`,
           toolbarItems: [...toolbarItemsDefault],
           theme: NutrientViewer.Theme.DARK,
           annotationTooltipCallback: redactionAnnotationsHandlerCallback,

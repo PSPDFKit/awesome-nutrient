@@ -28,10 +28,8 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
       NutrientViewer.unload(container);
 
       instance = await NutrientViewer.load({
-        licenseKey: "Your License Key goes here",
         container,
         document: props.document,
-        baseUrl: "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/",
         toolbarItems: [...NutrientViewer.defaultToolbarItems],
       });
     })();
