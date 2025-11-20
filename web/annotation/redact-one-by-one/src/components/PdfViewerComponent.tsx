@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import "pspdfkit";
+import { useEffect, useRef } from "react";
+import type { Instance, Annotation, List } from "@nutrient-sdk/viewer";
 import "../App.css";
 
 interface PdfViewerProps {
@@ -7,43 +7,50 @@ interface PdfViewerProps {
   toolbar: string;
 }
 
-let PSPDFKit: any;
-let instance: any;
-let totalPageCount_;
+let instance: Instance;
 
 export default function PdfViewerComponent(props: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = containerRef.current;
+    if (!container) return;
 
-    const initializePSPDFKit = async () => {
+    const initializeNutrientViewer = async () => {
+      const NutrientViewer = window.NutrientViewer;
+      if (!NutrientViewer) {
+        console.error(
+          "NutrientViewer not loaded. Make sure the CDN script is included."
+        );
+        return;
+      }
+
       try {
-        PSPDFKit = await import("pspdfkit");
-        if (PSPDFKit) {
-          PSPDFKit.unload(container);
-        }
+        NutrientViewer.unload(container);
 
-        const toolbarItemsDefault = PSPDFKit.defaultToolbarItems;
-        const redactionAnnotationsHandlerCallback = (annotation) => {
-          return annotation instanceof PSPDFKit.Annotations.RedactionAnnotation
+        const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
+        const redactionAnnotationsHandlerCallback = (
+          annotation: Annotation
+        ) => {
+          return annotation instanceof
+            NutrientViewer.Annotations.RedactionAnnotation
             ? [
                 {
-                  type: "custom",
+                  type: "custom" as const,
                   title: "Accept",
                   id: "tooltip-accept-annotation",
                   className: "TooltipItem-Duplication",
                   onPress: async () => {
                     const allRedactionAnnotations = (
                       await getAllAnnotations()
-                    ).filter((a) => a.id !== annotation.id);
+                    ).filter((a: Annotation) => a.id !== annotation.id);
                     await instance.delete(allRedactionAnnotations);
                     await instance.applyRedactions();
                     await instance.create(allRedactionAnnotations);
                   },
                 },
                 {
-                  type: "custom",
+                  type: "custom" as const,
                   title: "Reject",
                   id: "tooltip-reject-annotation",
                   className: "TooltipItem-Duplication",
@@ -55,36 +62,40 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
             : [];
         };
 
-        const getAllAnnotations = async () => {
-          let annotationsList = PSPDFKit.Immutable.List();
+        const getAllAnnotations = async (): Promise<List<Annotation>> => {
+          let annotationsList =
+            window.NutrientViewer.Immutable.List<Annotation>();
           for (let i = 0; i < instance.totalPageCount - 1; i++) {
             const anns = (await instance.getAnnotations(i)).filter(
-              (a) => a instanceof PSPDFKit.Annotations.RedactionAnnotation,
+              (a: Annotation) =>
+                a instanceof NutrientViewer.Annotations.RedactionAnnotation
             );
             annotationsList = annotationsList.concat(anns);
           }
           return annotationsList;
         };
-        instance = await PSPDFKit.load({
+        instance = await NutrientViewer.load({
           container,
           document: props.document,
-          baseUrl: `${window.location.protocol}//${window.location.host}/`,
-          toolbarItems: toolbarItemsDefault,
-          theme: PSPDFKit.Theme.DARK,
+          toolbarItems: [...toolbarItemsDefault],
+          theme: NutrientViewer.Theme.DARK,
           annotationTooltipCallback: redactionAnnotationsHandlerCallback,
           styleSheets: ["/mypspdfkit.css"],
-          toolbarPlacement: PSPDFKit.ToolbarPlacement.TOP,
+          toolbarPlacement: NutrientViewer.ToolbarPlacement.TOP,
         });
         console.log("Instance:", instance);
-        // Create redactions once PSPDFKit is loaded
+        // Create redactions once NutrientViewer is loaded
         createRedactions();
       } catch (error) {
-        console.error("Error initializing PSPDFKit:", error);
+        console.error("Error initializing NutrientViewer:", error);
       }
     };
 
-    initializePSPDFKit();
-    const createRedactions = async () => {
+    initializeNutrientViewer();
+    const createRedactions = async (): Promise<void> => {
+      const NutrientViewer = window.NutrientViewer;
+      if (!NutrientViewer) return;
+
       const terms = ["summarize", "trees", "Learning", "Forests"];
 
       for (const term of terms) {
@@ -97,7 +108,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
         if (instance) {
           const options = {
-            searchType: PSPDFKit.SearchType.TEXT,
+            searchType: NutrientViewer.SearchType.TEXT,
             searchInAnnotations: true,
           };
           console.log("Options:", options);
@@ -107,7 +118,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
             console.log(
               "The following annotations have been added for term:",
               term,
-              ids,
+              ids
             );
             // Apply redactions if needed
             // await instance.applyRedactions();
@@ -120,7 +131,9 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
       console.log("All redactions have been created.");
     };
 
-    return () => PSPDFKit?.unload(container);
+    return () => {
+      window.NutrientViewer?.unload(container);
+    };
   }, [props.document]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;

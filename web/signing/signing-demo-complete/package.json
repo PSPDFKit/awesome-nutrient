@@ -4,21 +4,21 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "copyPSPDF": "cp -R ./node_modules/pspdfkit/dist/pspdfkit-lib public/pspdfkit-lib",
-    "build": "npm run copyPSPDF && next build",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@baseline-ui/core": "^0.18.1",
     "@baseline-ui/recipes": "^0.18.1",
     "@baseline-ui/tokens": "^0.18.1",
     "next": "14.1.4",
-    "pspdfkit": "^2024.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@nutrient-sdk/viewer": "^1.8.0",
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",

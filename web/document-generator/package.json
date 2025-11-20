@@ -1,0 +1,16 @@
+{
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "scripts": {
+    "start": "node server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@nutrient-sdk/viewer": "^1.8.0",
+    "typescript": "^5.3.3"
+  }
+}
