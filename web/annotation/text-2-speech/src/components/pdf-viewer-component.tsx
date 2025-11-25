@@ -1,0 +1,137 @@
+import type {
+  HighlightAnnotation,
+  Instance,
+  SearchResult,
+} from "@nutrient-sdk/viewer";
+import { useEffect, useRef, useState } from "react";
+
+interface PdfViewerComponentProps {
+  document: string;
+}
+
+// PDF Viewer Component
+export default function PdfViewerComponent(props: PdfViewerComponentProps) {
+  // Reference to the container where PSPDFKit will be loaded
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // State to track whether text-to-speech is currently active
+  const [_isSpeaking, setIsSpeaking] = useState<boolean>(false);
+
+  // useEffect hook to load NutrientViewer when the component mounts
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const NutrientViewer = window.NutrientViewer;
+    if (!NutrientViewer) {
+      console.error(
+        "NutrientViewer not loaded. Make sure the CDN script is included.",
+      );
+      return;
+    }
+
+    let instance: Instance; // Declared here to ensure accessibility in cleanup
+
+    (async () => {
+      // Unload any existing instance to prevent memory leaks
+      NutrientViewer.unload(container);
+
+      // Load PSPDFKit instance
+      instance = await NutrientViewer.load({
+        //licenseKey: import.meta.env.VITE_lkey, // Uncomment and update the .env with License key for Nutrient web sdk
+        container, // The container where PSPDFKit will be rendered
+        document: props.document, // The document to be displayed
+        toolbarItems: [...NutrientViewer.defaultToolbarItems], // Default toolbar settings
+        inlineTextSelectionToolbarItems: () => {
+          return [];
+        }, // To remove in the inline toolbar when text is selection
+      });
+
+      // Add event listener to detect text selection changes
+      instance.addEventListener(
+        "textSelection.change",
+        async (
+          textSelection: InstanceType<
+            typeof NutrientViewer.TextSelection
+          > | null,
+        ) => {
+          if (textSelection) {
+            // Stop any currently playing speech
+            window.speechSynthesis.cancel();
+            setIsSpeaking(false);
+
+            // Extract selected text
+            const text = await textSelection.getText();
+            console.log("Selected text:", text);
+
+            // Create a speech synthesis utterance
+            const utterance = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(utterance);
+            setIsSpeaking(true); // Set speaking state to true
+
+            // Reset speaking state when speech ends
+            utterance.onend = () => {
+              setIsSpeaking(false);
+            };
+
+            // Perform a search for the selected text within the document
+            const results = await instance.search(text);
+
+            // Create highlight annotations for search results
+            const annotations = results
+              .map((result: SearchResult) => {
+                if (result.pageIndex === null) return null;
+                return new NutrientViewer.Annotations.HighlightAnnotation({
+                  pageIndex: result.pageIndex, // Page where text was found
+                  rects: result.rectsOnPage, // Bounding rectangles of text
+                  boundingBox: NutrientViewer.Geometry.Rect.union(
+                    result.rectsOnPage,
+                  ), // Overall bounding box
+                });
+              })
+              .filter((a): a is HighlightAnnotation => a !== null);
+
+            // Add the highlight annotations to the document
+            instance.create(annotations);
+          } else {
+            console.log("No text is selected");
+          }
+        },
+      );
+
+      // Cleanup function: unload PSPDFKit when the component unmounts
+      return () => {
+        NutrientViewer.unload(container);
+      };
+    })();
+  }, [props.document]); // Runs whenever `props.document` changes
+
+  // Function to stop text-to-speech playback manually
+  const handleStop = () => {
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+  };
+
+  return (
+    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
+      {/* PDF Viewer Container */}
+      <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
+
+      {/* Floating Stop Button for Speech Synthesis */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 1000,
+          background: "white",
+          padding: "10px",
+        }}
+      >
+        <button type="button" onClick={handleStop}>
+          Stop
+        </button>
+      </div>
+    </div>
+  );
+}

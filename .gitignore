@@ -42,4 +42,17 @@ Chart.lock
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Node.js
 node_modules/
+
+# Lock files - users generate their own based on package manager
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Compiled TypeScript output (we use Vite, which compiles in-memory)
+# Ignore .js files in web examples where there's a corresponding .ts file
+web/**/index.js
+web/**/vite.config.js
+web/**/app.js

@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { AnnotationTypeEnum, type User } from "../utils/types";
 const ActionButton = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.ActionButton),
-  { ssr: false },
+  { ssr: false }
 );
 const Select = dynamic(
   () => import("@baseline-ui/core").then((mod) => mod.Select),
-  { ssr: false },
+  { ssr: false }
 );
 
 import dynamic from "next/dynamic";
@@ -30,14 +30,25 @@ import {
  * @param user - The currently logged-in user.
  * @returns The rendered SignDemo component.
  */
+type NutrientViewerType = typeof window.NutrientViewer;
+type NutrientViewerInstance = Awaited<
+  ReturnType<typeof window.NutrientViewer.load>
+>;
+type Annotation = InstanceType<
+  typeof window.NutrientViewer.Annotations.Annotation
+>;
+type StoredSignature = InstanceType<
+  typeof window.NutrientViewer.Annotations.InkAnnotation
+>;
+
 const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   allUsers,
   user,
 }) => {
-  const [PSPDFKit, setPSPDFKit] = useState<any>(null);
+  const [PSPDFKit, setPSPDFKit] = useState<NutrientViewerType | null>(null);
   //export const SignDemo: any = ({ allUsers, user }: { allUsers: User[], user: User }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [instance, setInstance] = useState<any>(null);
+  const [instance, setInstance] = useState<NutrientViewerInstance | null>(null);
 
   // State to store the users. Master is the default user for now who can add fields in the doc.
   const [users, setUsers] = useState<User[]>(allUsers);
@@ -45,9 +56,8 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   const [isVisible, setIsVisible] = useState(user.role === "Editor");
 
   // State to store the current signee i.e the user who is currently selected for which the field will be added
-  //@ts-ignore
   const [currSignee, setCurrSignee] = useState<User>(
-    users.find((user) => user.role !== "Editor"),
+    users.find((user) => user.role !== "Editor") || users[0]
   );
   const currSigneeRef = useRef(currSignee);
   currSigneeRef.current = currSignee;
@@ -82,11 +92,13 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   >([]);
 
   // For Custom Add Signature / Intitial field appearance
-  const [sessionSignatures, setSessionSignatures] = useState<any>([]);
-  const [sessionInitials, setSessionInitials] = useState<any>([]);
+  const [sessionSignatures, setSessionSignatures] = useState<StoredSignature[]>(
+    []
+  );
+  const [sessionInitials, setSessionInitials] = useState<StoredSignature[]>([]);
 
   function onDragStart(event: React.DragEvent<HTMLDivElement>, type: string) {
-    const instantId = "PSPDFKit.generateInstantId()";
+    const instantId = "window.NutrientViewer.generateInstantId()";
     const data = `${currSignee.name}%${currSignee.email}%${instantId}%${type}`;
 
     (event.target as HTMLDivElement).style.opacity = "0.8";
@@ -106,12 +118,16 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     e.preventDefault();
   };
 
-  const handleDrop = async (e: any, inst: any, PSPDFKit: any) => {
+  const handleDrop = async (
+    e: React.DragEvent,
+    inst: NutrientViewerInstance,
+    PSPDFKit: NutrientViewerType
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     const dataArray = e.dataTransfer.getData("text").split("%");
     let [name, email, instantId, annotationType] = dataArray;
-    instantId = PSPDFKit.generateInstantId();
+    instantId = window.NutrientViewer.generateInstantId();
     const signee = currSigneeRef.current;
     const user = currUserRef.current;
     const pageIndex = onPageIndexRef.current;
@@ -121,7 +137,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       annotationType === AnnotationTypeEnum.INITIAL
         ? 60
         : 40;
-    const clientRect = new PSPDFKit.Geometry.Rect({
+    const clientRect = new window.NutrientViewer.Geometry.Rect({
       left: e.clientX - rectWidth / 2,
       top: e.clientY - rectHeight / 2,
       height: rectHeight,
@@ -129,13 +145,13 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     });
     const pageRect = inst.transformContentClientToPageSpace(
       clientRect,
-      pageIndex,
+      pageIndex
     ) as any;
     if (
       annotationType === AnnotationTypeEnum.SIGNATURE ||
       annotationType === AnnotationTypeEnum.INITIAL
     ) {
-      const widget = new PSPDFKit.Annotations.WidgetAnnotation({
+      const widget = new window.NutrientViewer.Annotations.WidgetAnnotation({
         boundingBox: pageRect,
         formFieldName: instantId,
         id: instantId,
@@ -151,15 +167,17 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
         },
         //backgroundColor: signee.color,
       });
-      const formField = new PSPDFKit.FormFields.SignatureFormField({
-        annotationIds: PSPDFKit.Immutable.List([widget.id]),
-        name: instantId,
-        id: instantId,
-        readOnly: signee.id !== user.id,
-      });
+      const formField = new window.NutrientViewer.FormFields.SignatureFormField(
+        {
+          annotationIds: window.NutrientViewer.Immutable.List([widget.id]),
+          name: instantId,
+          id: instantId,
+          readOnly: signee.id !== user.id,
+        }
+      );
       await inst.create([widget, formField]);
     } else {
-      const text = new PSPDFKit.Annotations.TextAnnotation({
+      const text = new window.NutrientViewer.Annotations.TextAnnotation({
         pageIndex,
         boundingBox: pageRect,
         text: {
@@ -183,12 +201,15 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
     }
     // set the viewer to form creator mode so that the user can place the field
     // inst.setViewState((viewState) =>
-    //   viewState.set("interactionMode", PSPDFKit.InteractionMode.FORM_CREATOR)
+    //   viewState.set("interactionMode", window.NutrientViewer.InteractionMode.FORM_CREATOR)
     // );
 
     // @ts-ignore
     inst.setOnAnnotationResizeStart((eve) => {
-      if (eve.annotation instanceof PSPDFKit.Annotations.WidgetAnnotation) {
+      if (
+        eve.annotation instanceof
+        window.NutrientViewer.Annotations.WidgetAnnotation
+      ) {
         return {
           //maintainAspectRatio: true,
           //responsive: false,
@@ -198,7 +219,10 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
           minHeight: 30,
         };
       }
-      if (eve.annotation instanceof PSPDFKit.Annotations.TextAnnotation) {
+      if (
+        eve.annotation instanceof
+        window.NutrientViewer.Annotations.TextAnnotation
+      ) {
         return {
           //maintainAspectRatio: true,
           //responsive: false,
@@ -218,28 +242,37 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   const onChangeReadyToSign = async (
     value: boolean,
     user: User,
-    PSPDFKit: any,
+    PSPDFKit: NutrientViewerType | null
   ) => {
     if (instance) {
       setReadyToSign(value);
       if (user.role === "Editor") {
         if (value) {
-          instance.setViewState((viewState: any) =>
-            viewState.set("interactionMode", PSPDFKit.InteractionMode.PAN),
+          instance.setViewState(
+            (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
+              viewState.set(
+                "interactionMode",
+                window.NutrientViewer.InteractionMode.PAN
+              )
           );
           setIsTextAnnotationMovable(false);
         } else {
-          instance.setViewState((viewState: any) =>
-            viewState.set(
-              "interactionMode",
-              PSPDFKit.InteractionMode.FORM_CREATOR,
-            ),
+          instance.setViewState(
+            (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
+              viewState.set(
+                "interactionMode",
+                window.NutrientViewer.InteractionMode.FORM_CREATOR
+              )
           );
           setIsTextAnnotationMovable(true);
         }
       } else {
-        instance.setViewState((viewState: any) =>
-          viewState.set("interactionMode", PSPDFKit.InteractionMode.PAN),
+        instance.setViewState(
+          (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
+            viewState.set(
+              "interactionMode",
+              window.NutrientViewer.InteractionMode.PAN
+            )
         );
         setIsTextAnnotationMovable(false);
       }
@@ -277,37 +310,42 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   };
 
   // Function to get random color for the signee
-  const randomColor = (PSPDFKit: any) => {
-    const colors: any = [
-      PSPDFKit.Color.LIGHT_GREY,
-      PSPDFKit.Color.LIGHT_GREEN,
-      PSPDFKit.Color.LIGHT_YELLOW,
-      PSPDFKit.Color.LIGHT_ORANGE,
-      PSPDFKit.Color.LIGHT_RED,
-      PSPDFKit.Color.LIGHT_BLUE,
-      PSPDFKit.Color.fromHex("#0ffcf1"),
+  const randomColor = (PSPDFKit: NutrientViewerType) => {
+    const colors: InstanceType<typeof window.NutrientViewer.Color>[] = [
+      window.NutrientViewer.Color.LIGHT_GREY,
+      window.NutrientViewer.Color.LIGHT_GREEN,
+      window.NutrientViewer.Color.LIGHT_YELLOW,
+      window.NutrientViewer.Color.LIGHT_ORANGE,
+      window.NutrientViewer.Color.LIGHT_RED,
+      window.NutrientViewer.Color.LIGHT_BLUE,
+      window.NutrientViewer.Color.fromHex("#0ffcf1"),
     ];
     const usedColors = users.map((signee) => signee.color);
     const availableColors = colors.filter(
-      (color: any) => !usedColors.includes(color as any),
+      (color: InstanceType<typeof window.NutrientViewer.Color>) =>
+        !usedColors.includes(color)
     );
     const randomIndex = Math.floor(Math.random() * availableColors.length);
     return availableColors[randomIndex];
   };
 
   // Function to handle user change
-  const userChange = async (user: User, PSPDFKit: any) => {
+  const userChange = async (
+    user: User,
+    PSPDFKit: NutrientViewerType | null
+  ) => {
     setCurrUser(user);
     if (instance) {
       const formFields = await instance.getFormFields();
       const signatureFormFields = formFields.filter(
-        (field: any) => field instanceof PSPDFKit.FormFields.SignatureFormField,
+        (field: InstanceType<typeof window.NutrientViewer.FormField>) =>
+          field instanceof window.NutrientViewer.FormFields.SignatureFormField
       );
       const signatureAnnotations = async () => {
-        const annotations: any[] = [];
+        const annotations: string[] = [];
         for (let i = 0; i < instance.totalPageCount; i++) {
           const ann = await instance.getAnnotations(i);
-          ann.forEach((annotation: any) => {
+          ann.forEach((annotation: Annotation) => {
             if (
               annotation.customData &&
               annotation.customData.signerID === user.id
@@ -320,24 +358,32 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
       };
       const userFieldIds = await signatureAnnotations();
       const readOnlyFormFields = signatureFormFields
-        .map((it: any) => {
-          if (userFieldIds.includes(it.id)) {
-            return it.set("readOnly", false);
+        .map(
+          (
+            it: InstanceType<
+              typeof window.NutrientViewer.FormFields.SignatureFormField
+            >
+          ) => {
+            if (userFieldIds.includes(it.id)) {
+              return it.set("readOnly", false);
+            }
+            return it.set("readOnly", true);
           }
-          return it.set("readOnly", true);
-        })
+        )
         .filter(Boolean); // Filter out undefined values
       await instance.update(readOnlyFormFields);
       // User with role Editor can edit the document
       if (user.role === "Editor") {
-        instance.setViewState((viewState: any) =>
-          viewState.set("showToolbar", true),
+        instance.setViewState(
+          (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
+            viewState.set("showToolbar", true)
         );
         setIsVisible(true);
         onChangeReadyToSign(false, user, PSPDFKit);
       } else {
-        instance.setViewState((viewState: any) =>
-          viewState.set("showToolbar", false),
+        instance.setViewState(
+          (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
+            viewState.set("showToolbar", false)
         );
         setIsVisible(false);
         onChangeReadyToSign(true, user, PSPDFKit);
@@ -351,94 +397,111 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   // Load PSPDFKit
   useEffect(() => {
     const container = containerRef.current;
-    let PSPDFKit: any;
-    (async () => {
-      PSPDFKit = await import("pspdfkit");
+    if (window.NutrientViewer && container) {
+      const PSPDFKit = window.NutrientViewer;
       setPSPDFKit(PSPDFKit);
-      if (container) {
-        if (PSPDFKit) {
-          PSPDFKit.unload(container);
-        }
-        const {
-          UI: { createBlock, Recipes, Interfaces, Core },
-        } = PSPDFKit;
-        PSPDFKit.load({
-          licenseKey: process.env.NEXT_PUBLIC_LICENSE_KEY as string,
-          // @ts-ignore
-          ui: {
-            [Interfaces.CreateSignature]: ({ props }: any) => {
-              return {
-                content: createBlock(
-                  Recipes.CreateSignature,
-                  props,
-                  ({ ui }: any) => {
-                    if (isCreateInitial) {
-                      ui.getBlockById("title").children = "Create Initial";
-                      ui.getBlockById("save-signature-checkbox")._props.label =
-                        "Save Initial";
+      PSPDFKit.unload(container);
+      const {
+        UI: { createBlock, Recipes, Interfaces, Core },
+      } = PSPDFKit;
+      PSPDFKit.load({
+        licenseKey: process.env.NEXT_PUBLIC_LICENSE_KEY as string,
+        // @ts-ignore
+        ui: {
+          [Interfaces.CreateSignature]: ({ props }: { props: unknown }) => {
+            return {
+              content: createBlock(
+                Recipes.CreateSignature,
+                props,
+                ({
+                  ui,
+                }: {
+                  ui: {
+                    getBlockById: (id: string) => {
+                      children?: string;
+                      _props: Record<string, unknown>;
+                      items?: Array<{ id: string; label: string }>;
+                    };
+                    createComponent: () => unknown;
+                  };
+                }) => {
+                  if (isCreateInitial) {
+                    ui.getBlockById("title").children = "Create Initial";
+                    ui.getBlockById("save-signature-checkbox")._props.label =
+                      "Save Initial";
 
-                      const textInput = ui.getBlockById("signature-text-input");
-                      textInput._props.placeholder = "Initial";
-                      textInput._props.label = "Intial here";
-                      textInput._props.clearLabel = "Clear initial";
+                    const textInput = ui.getBlockById("signature-text-input");
+                    textInput._props.placeholder = "Initial";
+                    textInput._props.label = "Intial here";
+                    textInput._props.clearLabel = "Clear initial";
 
-                      const freehand = ui.getBlockById("freehand-canvas");
-                      freehand._props.placeholder = "Intial here";
-                      freehand._props.clearLabel = "Clear initial";
+                    const freehand = ui.getBlockById("freehand-canvas");
+                    freehand._props.placeholder = "Intial here";
+                    freehand._props.clearLabel = "Clear initial";
 
-                      const fontselect = ui.getBlockById("font-selector");
-                      if (fontselect._props.items[0].label === "Signature") {
-                        fontselect._props.items = fontselect._props.items.map(
-                          (item: any) => {
-                            return { id: item.id, label: "Initial" };
-                          },
-                        );
-                      }
+                    const fontselect = ui.getBlockById("font-selector");
+                    const items = fontselect._props.items as
+                      | Array<{
+                          id: string;
+                          label: string;
+                        }>
+                      | undefined;
+                    if (items && items[0]?.label === "Signature") {
+                      fontselect._props.items = items.map(
+                        (item: { id: string; label: string }) => {
+                          return { id: item.id, label: "Initial" };
+                        }
+                      );
                     }
-                    return ui.createComponent();
-                  },
-                ).createComponent(),
-              };
-            },
+                  }
+                  return ui.createComponent();
+                }
+              ).createComponent(),
+            };
           },
-          container,
-          document: "/document.pdf",
-          baseUrl: `${window.location.protocol}//${window.location.host}/`,
-          toolbarItems: TOOLBAR_ITEMS,
-          disableTextSelection: true,
-          customRenderers: {
-            Annotation: ({ annotation }: any) =>
-              getAnnotationRenderers({
-                annotation,
-              }),
-          },
-          styleSheets: ["/viewer.css"],
-          isEditableAnnotation: (annotation: any) => !annotation.isSignature,
-        }).then(async (inst: any) => {
-          setInstance(inst);
+        },
+        container,
+        document: "/document.pdf",
+        toolbarItems: TOOLBAR_ITEMS,
+        disableTextSelection: true,
+        customRenderers: {
+          Annotation: ({ annotation }: { annotation: Annotation }) =>
+            getAnnotationRenderers({
+              annotation,
+            }),
+        },
+        styleSheets: ["/viewer.css"],
+        isEditableAnnotation: (annotation: Annotation) =>
+          !(annotation as { isSignature?: boolean }).isSignature,
+      }).then(async (inst: NutrientViewerInstance) => {
+        setInstance(inst);
 
-          // **** Setting Page Index ****
+        // **** Setting Page Index ****
 
-          inst.addEventListener(
-            "viewState.currentPageIndex.change",
-            (page: any) => {
-              setOnPageIndex(page);
-            },
-          );
+        inst.addEventListener(
+          "viewState.currentPageIndex.change",
+          (page: number) => {
+            setOnPageIndex(page);
+          }
+        );
 
-          // **** Handle Drop event ****
+        // **** Handle Drop event ****
 
-          //@ts-ignore
-          const cont = inst.contentDocument.host;
-          cont.ondrop = async (e: any) => {
-            await handleDrop(e, inst, PSPDFKit);
-          };
+        //@ts-ignore
+        const cont = inst.contentDocument.host as HTMLElement;
+        cont.ondrop = async (e: DragEvent) => {
+          await handleDrop(e as unknown as React.DragEvent, inst, PSPDFKit);
+        };
 
-          // **** Handling Add Signature / Initial UI ****
+        // **** Handling Add Signature / Initial UI ****
 
-          // Track which signature form field was clicked on
-          // and wether it was an initial field or not.
-          inst.addEventListener("annotations.press", (event: any) => {
+        // Track which signature form field was clicked on
+        // and wether it was an initial field or not.
+        inst.addEventListener(
+          "annotations.press",
+          (event: {
+            annotation: Annotation & { customData?: { isInitial?: boolean } };
+          }) => {
             const lastFormFieldClicked = event.annotation;
 
             let annotationsToLoad;
@@ -455,109 +518,128 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
               isCreateInitial = false;
             }
             inst.setStoredSignatures(
-              PSPDFKit.Immutable.List(annotationsToLoad),
+              window.NutrientViewer.Immutable.List(annotationsToLoad)
             );
 
             if (
               !isTextAnnotationMovableRef.current &&
-              event.annotation instanceof PSPDFKit.Annotations.TextAnnotation
+              event.annotation instanceof
+                window.NutrientViewer.Annotations.TextAnnotation
             ) {
               //@ts-ignore
               event.preventDefault();
             }
-          });
-          let formDesignMode = !1;
+          }
+        );
+        let formDesignMode = !1;
 
-          inst.setToolbarItems((items: any) => [
-            ...items,
-            { type: "form-creator" },
-          ]);
-          inst.addEventListener("viewState.change", (viewState: any) => {
+        inst.setToolbarItems((items: unknown[]) => [
+          ...items,
+          { type: "form-creator" },
+        ]);
+        inst.addEventListener(
+          "viewState.change",
+          (
+            viewState: InstanceType<typeof window.NutrientViewer.ViewState> & {
+              formDesignMode?: boolean;
+            }
+          ) => {
             formDesignMode = viewState.formDesignMode === true;
-          });
+          }
+        );
 
-          inst.addEventListener(
-            "storedSignatures.create",
-            async (annotation: any) => {
-              // Logic for showing signatures and intials in the UI
-              if (isCreateInitial) {
-                setSessionInitials([...sessionInitials, annotation]);
-              } else {
-                setSessionSignatures([...sessionSignatures, annotation]);
-              }
-            },
-          );
+        inst.addEventListener(
+          "storedSignatures.create",
+          async (annotation: StoredSignature) => {
+            // Logic for showing signatures and intials in the UI
+            if (isCreateInitial) {
+              setSessionInitials([...sessionInitials, annotation]);
+            } else {
+              setSessionSignatures([...sessionSignatures, annotation]);
+            }
+          }
+        );
 
-          // **** Handling Signature / Initial fields appearance ****
+        // **** Handling Signature / Initial fields appearance ****
 
-          inst.addEventListener(
-            "annotations.load",
-            async (loadedAnnotations: any) => {
-              for await (const annotation of loadedAnnotations) {
-                await handleAnnotatitonCreation(
-                  inst,
-                  annotation,
-                  mySignatureIdsRef,
-                  setSignatureAnnotationIds,
-                  currUser.email,
-                );
-              }
-            },
-          );
-
-          inst.addEventListener(
-            "annotations.create",
-            async (createdAnnotations: any) => {
-              const annotation = createdAnnotations.get(0);
+        inst.addEventListener(
+          "annotations.load",
+          async (
+            loadedAnnotations: InstanceType<
+              typeof window.NutrientViewer.Immutable.List<Annotation>
+            >
+          ) => {
+            for await (const annotation of loadedAnnotations) {
               await handleAnnotatitonCreation(
                 inst,
                 annotation,
                 mySignatureIdsRef,
-                setSignatureAnnotationIds,
-                currUser.email,
+                setSignatureAnnotationIds
               );
-            },
-          );
+            }
+          }
+        );
 
-          inst.addEventListener(
-            "annotations.delete",
-            async (deletedAnnotations: any) => {
-              const annotation = deletedAnnotations.get(0);
-              await handleAnnotatitonDelete(inst, annotation, currUser?.email);
-              const updatedAnnotationIds = mySignatureIdsRef.current.filter(
-                (id) => id !== annotation.id,
-              );
-              setSignatureAnnotationIds(updatedAnnotationIds);
-              mySignatureIdsRef.current = updatedAnnotationIds;
-            },
-          );
-          inst.setViewState((viewState: any) =>
+        inst.addEventListener(
+          "annotations.create",
+          async (
+            createdAnnotations: InstanceType<
+              typeof window.NutrientViewer.Immutable.List<Annotation>
+            >
+          ) => {
+            const annotation = createdAnnotations.get(0);
+            await handleAnnotatitonCreation(
+              inst,
+              annotation,
+              mySignatureIdsRef,
+              setSignatureAnnotationIds
+            );
+          }
+        );
+
+        inst.addEventListener(
+          "annotations.delete",
+          async (
+            deletedAnnotations: InstanceType<
+              typeof window.NutrientViewer.Immutable.List<Annotation>
+            >
+          ) => {
+            const annotation = deletedAnnotations.get(0);
+            await handleAnnotatitonDelete(inst, annotation, currUser?.email);
+            const updatedAnnotationIds = mySignatureIdsRef.current.filter(
+              (id) => id !== annotation.id
+            );
+            setSignatureAnnotationIds(updatedAnnotationIds);
+            mySignatureIdsRef.current = updatedAnnotationIds;
+          }
+        );
+        inst.setViewState(
+          (viewState: InstanceType<typeof window.NutrientViewer.ViewState>) =>
             viewState.set(
               "interactionMode",
-              PSPDFKit.InteractionMode.FORM_CREATOR,
-            ),
-          );
-          setIsTextAnnotationMovable(true);
-          // const scrollElement =
-          //   inst.contentDocument.querySelector(".PSPDFKit-Scroll");
+              window.NutrientViewer.InteractionMode.FORM_CREATOR
+            )
+        );
+        setIsTextAnnotationMovable(true);
+        // const scrollElement =
+        //   inst.contentDocument.querySelector(".PSPDFKit-Scroll");
 
-          // if (scrollElement === null) console.log("Scroll element not found");
+        // if (scrollElement === null) console.log("Scroll element not found");
 
-          // //@ts-ignore
-          // scrollElement.addEventListener("scroll", updateSignHereWidget(inst));
-          // // Update the "Sign Here" widget when someone signs
-          // inst.addEventListener("annotations.change", () => {
-          //   updateSignHereWidget(inst);
-          // });
-          // // Update widget with delay to make it visually pop
-          // window.setTimeout(updateSignHereWidget, 1e3);
+        // //@ts-ignore
+        // scrollElement.addEventListener("scroll", updateSignHereWidget(inst));
+        // // Update the "Sign Here" widget when someone signs
+        // inst.addEventListener("annotations.change", () => {
+        //   updateSignHereWidget(inst);
+        // });
+        // // Update widget with delay to make it visually pop
+        // window.setTimeout(updateSignHereWidget, 1e3);
 
-          // inst.exportInstantJSON().then((data) => {
-          //   localStorage.setItem("document", JSON.stringify(data));
-          // });
-        });
-      }
-    })();
+        // inst.exportInstantJSON().then((data) => {
+        //   localStorage.setItem("document", JSON.stringify(data));
+        // });
+      });
+    }
   }, []);
 
   const signeeChanged = (signee: User) => {
@@ -568,7 +650,7 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
   const deleteUser = (user: User) => {
     const remainingUsers = users.filter((userL: User) => userL.id !== user.id);
     const currSig = users.find(
-      (userL) => user !== userL && userL.role !== "Editor",
+      (userL) => user !== userL && userL.role !== "Editor"
     );
     setUsers(remainingUsers);
     currSig ? signeeChanged(currSig) : alert("No Signee left");
@@ -659,10 +741,10 @@ const SignDemo: React.FC<{ allUsers: User[]; user: User }> = ({
               className="input-custom-style"
               selectedKey={currUser.id.toString()}
               onSelectionChange={
-                ((selected: any) => {
+                ((selected: number) => {
                   userChange(
                     users.find((user) => user.id === selected) as User,
-                    PSPDFKit,
+                    PSPDFKit
                   );
                 }) as any
               }
@@ -847,9 +929,9 @@ const DraggableAnnotation = ({
   className: string;
   type: string;
   label: string;
-  onDragStart: any;
-  onDragEnd: any;
-  userColor: any;
+  onDragStart: (e: React.DragEvent<HTMLDivElement>, type: string) => void;
+  onDragEnd: (e: React.DragEvent<HTMLDivElement>, type: string) => void;
+  userColor: InstanceType<typeof window.NutrientViewer.Color> | undefined;
 }) => {
   const id = `${type}-icon`;
   let icon = signSVG;

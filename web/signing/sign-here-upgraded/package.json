@@ -3,14 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "copy-assets": "cp -R ./node_modules/pspdfkit/dist/ ./assets/",
-    "start": "serve -l 8080 ."
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
   },
   "author": "",
   "license": "ISC",
   "description": "",
-  "dependencies": {
-    "pspdfkit": "^2024.4.0"
+  "dependencies": {},
+  "devDependencies": {
+    "@nutrient-sdk/viewer": "^1.8.0",
+    "typescript": "^5.3.3",
+    "vite": "^7.2.2"
   }
 }
