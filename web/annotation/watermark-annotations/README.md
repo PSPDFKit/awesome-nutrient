@@ -1,13 +1,15 @@
-# Watermark Annotations Example
+# Watermark Example
 
-This example demonstrates how to programmatically create watermark annotations using Nutrient Web SDK. It creates a grid of transparent "CONFIDENTIAL" text watermarks across all pages of a PDF document.
+This example demonstrates how to programmatically add watermarks using Nutrient Web SDK. It creates a grid of transparent "CONFIDENTIAL" text watermarks across all pages of a PDF document.
 
 ## Features
 
-- Creates a 4x3 grid of watermark text annotations on each page
+- Creates a 4x3 grid of watermarks on each page
 - Watermarks are semi-transparent (20% opacity) with a 30-degree rotation
 - Uses page dimensions to automatically position watermarks
-- Flattens annotations to make them permanent and non-editable
+- Flattens the watermarks to make them permanent and non-editable
+
+**Note:** This example disables text selection (`disableTextSelection: true`) to prevent the watermarks from being selected. This is a limitation of using text annotations for watermarks—disabling text selection affects the entire document. If your use case requires text selection, consider using image annotations instead.
 
 ## How to Run
 

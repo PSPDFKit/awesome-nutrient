@@ -1,0 +1,6 @@
+# Build artifacts
+dist
+index.js
+
+# Dependencies
+node_modules
