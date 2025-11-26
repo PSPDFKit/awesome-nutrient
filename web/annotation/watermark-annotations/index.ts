@@ -14,7 +14,6 @@ const baseOptions = {
 
 window.NutrientViewer.load({
   ...baseOptions,
-  theme: window.NutrientViewer.Theme.DARK,
   disableTextSelection: true,
 })
   .then(async (instance: Instance) => {
