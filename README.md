@@ -54,11 +54,11 @@ Clone and run these complete examples on your machine:
 
 | Category | Examples | Quick Access |
 |----------|----------|--------------|
-| **Annotations** | 9 examples including comment-annotations, redact-one-by-one, text-2-speech | [Browse →](./web/annotation/INDEX.md) |
-| **Signing** | 3 examples including sign-here-upgraded, digital signatures | [Browse →](./web/signing/INDEX.md) |
-| **Document Editor** | Page extraction and manipulation | [Browse →](./web/document-editor/INDEX.md) |
-| **Viewer** | Multi-tab viewer | [Browse →](./web/viewer/INDEX.md) |
-| **Miscellaneous** | Analytics integrations (Mixpanel) | [Browse →](./web/miscellaneous/INDEX.md) |
+| **Annotations** | 9 examples including comment-annotations, redact-one-by-one, text-2-speech | [Browse →](./web/annotation/README.md) |
+| **Signing** | 3 examples including sign-here-upgraded, digital signatures | [Browse →](./web/signing/README.md) |
+| **Document Editor** | Page extraction and manipulation | [Browse →](./web/document-editor/README.md) |
+| **Viewer** | Multi-tab viewer | [Browse →](./web/viewer/README.md) |
+| **Miscellaneous** | Analytics integrations (Mixpanel) | [Browse →](./web/miscellaneous/README.md) |
 
 ---
 
