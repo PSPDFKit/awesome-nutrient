@@ -1,9 +1,6 @@
 name: Type Check Playground Examples
 
 on:
-  push:
-    paths:
-      - 'playground/**'
   pull_request:
     paths:
       - 'playground/**'
