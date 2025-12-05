@@ -1,0 +1,35 @@
+name: Type Check Playground Examples
+
+on:
+  push:
+    paths:
+      - 'playground/**'
+  pull_request:
+    paths:
+      - 'playground/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: playground/package-lock.json
+
+      - name: Install dependencies
+        working-directory: playground
+        run: npm ci
+
+      - name: Run type check
+        working-directory: playground
+        run: npm run typecheck
