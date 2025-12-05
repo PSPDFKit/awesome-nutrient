@@ -1,7 +1,4 @@
-const baseOptions = {
-  container: ".nutrient-viewer",
-  document: "document.pdf",
-};
+import { baseOptions } from "../../shared/base-options";
 
 window.NutrientViewer.load({
   ...baseOptions,

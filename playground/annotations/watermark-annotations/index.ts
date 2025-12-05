@@ -1,9 +1,5 @@
 import type { Instance, PageInfo } from "@nutrient-sdk/viewer";
-
-const baseOptions = {
-  container: ".nutrient-viewer",
-  document: "document.pdf",
-};
+import { baseOptions } from "../../shared/base-options";
 
 window.NutrientViewer.load({
   ...baseOptions,
@@ -30,7 +26,7 @@ window.NutrientViewer.load({
           return acc;
         }
 
-        const [left, top, width, height] = cropBox;
+        const [_left, _top, width, height] = cropBox;
 
         const totalRows = 4; // 4 rows
         const totalCols = 3; // 3 columns
