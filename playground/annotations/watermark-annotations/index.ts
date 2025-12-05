@@ -1,12 +1,5 @@
 import type { Instance, PageInfo } from "@nutrient-sdk/viewer";
 
-if (!window.NutrientViewer) {
-  console.error(
-    "NutrientViewer not found. Make sure the CDN script is loaded.",
-  );
-  throw new Error("NutrientViewer not loaded");
-}
-
 const baseOptions = {
   container: ".nutrient-viewer",
   document: "document.pdf",
