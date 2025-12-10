@@ -14,16 +14,18 @@ window.NutrientViewer.load({
     title: "Toggle Annotations",
     onPress: async () => {
       const totalPages = instance.totalPageCount;
+      const updatedAnnotations: Annotation[] = [];
 
       for (let i = 0; i < totalPages; i++) {
         const annotations = await instance.getAnnotations(i);
 
-        annotations.forEach(async (annotation: Annotation) => {
+        annotations.forEach((annotation: Annotation) => {
           const updatedAnnotation = annotation.set("noView", annotationsHidden);
-          await instance.update(updatedAnnotation);
+          updatedAnnotations.push(updatedAnnotation);
         });
       }
 
+      await instance.update(updatedAnnotations);
       annotationsHidden = !annotationsHidden;
     },
   };
