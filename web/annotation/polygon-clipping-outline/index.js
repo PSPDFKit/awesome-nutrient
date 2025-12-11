@@ -9,7 +9,7 @@
  * into a single unified polygon outline.
  */
 
-const PSPDFKit = window.PSPDFKit;
+const NutrientViewer = window.NutrientViewer;
 const polygonClipping = window.polygonClipping;
 
 const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.9.1/";
@@ -41,10 +41,14 @@ function generateSvgOutline(annotation, options = {}) {
     const candidateRect = rects.get(i);
     // Tolerance for vertical alignment - adjust based on font size if needed
     if (
-      PSPDFKit.Geometry.Rect.areVerticallyAligned(mergedRect, candidateRect, 6)
+      NutrientViewer.Geometry.Rect.areVerticallyAligned(
+        mergedRect,
+        candidateRect,
+        6,
+      )
     ) {
-      mergedRect = PSPDFKit.Geometry.Rect.union(
-        PSPDFKit.Immutable.List([mergedRect, candidateRect]),
+      mergedRect = NutrientViewer.Geometry.Rect.union(
+        NutrientViewer.Immutable.List([mergedRect, candidateRect]),
       );
     } else {
       lineRects.push(mergedRect);
@@ -54,7 +58,7 @@ function generateSvgOutline(annotation, options = {}) {
   lineRects.push(mergedRect);
 
   // Calculate the viewBox based on the annotation's bounding box
-  const viewBox = new PSPDFKit.Geometry.Rect({
+  const viewBox = new NutrientViewer.Geometry.Rect({
     left: annotation.boundingBox.left - padding,
     top: annotation.boundingBox.top - padding,
     width: annotation.boundingBox.width + doublePadding,
@@ -150,17 +154,17 @@ function generateSvgOutline(annotation, options = {}) {
  */
 function isTextMarkupAnnotation(annotation) {
   return (
-    annotation instanceof PSPDFKit.Annotations.HighlightAnnotation ||
-    annotation instanceof PSPDFKit.Annotations.StrikeOutAnnotation ||
-    annotation instanceof PSPDFKit.Annotations.UnderlineAnnotation ||
-    annotation instanceof PSPDFKit.Annotations.SquiggleAnnotation
+    annotation instanceof NutrientViewer.Annotations.HighlightAnnotation ||
+    annotation instanceof NutrientViewer.Annotations.StrikeOutAnnotation ||
+    annotation instanceof NutrientViewer.Annotations.UnderlineAnnotation ||
+    annotation instanceof NutrientViewer.Annotations.SquiggleAnnotation
   );
 }
 
-// Load PSPDFKit with custom renderer
-PSPDFKit.load({
+// Load NutrientViewer with custom renderer
+NutrientViewer.load({
   baseUrl,
-  container: "#pspdfkit",
+  container: "#nutrient-viewer",
   document: "document.pdf",
   customRenderers: {
     Annotation: ({ annotation }) => {
@@ -205,11 +209,11 @@ PSPDFKit.load({
       }
     });
 
-    console.log("PSPDFKit loaded!");
+    console.log("NutrientViewer loaded!");
     console.log(
       "Select a text markup annotation (highlight, underline, strikeout, squiggle) to see the custom polygon outline.",
     );
   })
   .catch((error) => {
-    console.error("Failed to load PSPDFKit:", error.message);
+    console.error("Failed to load NutrientViewer:", error.message);
   });

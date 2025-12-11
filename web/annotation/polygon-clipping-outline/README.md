@@ -10,7 +10,7 @@ The default selection outline for text markup annotations is a simple rectangle 
 
 - **Precise outlines**: Generates SVG paths that follow the exact shape of text markup annotations
 - **Polygon union**: Uses `polygon-clipping` library to merge overlapping rectangles into a single outline
-- **Custom renderer**: Implements using PSPDFKit's `customRenderers.Annotation` API
+- **Custom renderer**: Implements using Nutrient Web SDK's `customRenderers.Annotation` API
 - **Configurable styling**: Adjustable padding, line width, and color
 
 ## How It Works
@@ -42,10 +42,10 @@ Then open `http://localhost:8080` in your browser.
 customRenderers: {
   Annotation: ({ annotation }) => {
     const isSelected = instance?.getSelectedAnnotations()?.some(a => a.id === annotation.id);
-    const isTextMarkup = annotation instanceof PSPDFKit.Annotations.HighlightAnnotation ||
-                         annotation instanceof PSPDFKit.Annotations.StrikeOutAnnotation ||
-                         annotation instanceof PSPDFKit.Annotations.UnderlineAnnotation ||
-                         annotation instanceof PSPDFKit.Annotations.SquiggleAnnotation;
+    const isTextMarkup = annotation instanceof NutrientViewer.Annotations.HighlightAnnotation ||
+                         annotation instanceof NutrientViewer.Annotations.StrikeOutAnnotation ||
+                         annotation instanceof NutrientViewer.Annotations.UnderlineAnnotation ||
+                         annotation instanceof NutrientViewer.Annotations.SquiggleAnnotation;
 
     if (isSelected && isTextMarkup) {
       const node = generateSvgOutline(annotation, { padding: 3, lineWidth: 2 });
