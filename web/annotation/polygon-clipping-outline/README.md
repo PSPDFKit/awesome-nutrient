@@ -89,5 +89,5 @@ This example is based on a solution shared by a Nutrient customer who needed mor
 ## Related
 
 - [Nutrient Web SDK Documentation](https://www.nutrient.io/guides/web/)
-- [Custom Renderers Guide](https://www.nutrient.io/guides/web/customizing-the-interface/custom-annotation-renderers/)
+- [Custom Renderers Guide](https://www.nutrient.io/guides/web/annotations/custom-rendered-annotations/)
 - [polygon-clipping on npm](https://www.npmjs.com/package/polygon-clipping)
