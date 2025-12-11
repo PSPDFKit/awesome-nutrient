@@ -54,7 +54,7 @@ Clone and run these complete examples on your machine:
 
 | Category | Examples | Quick Access |
 |----------|----------|--------------|
-| **Annotations** | 9 examples including comment-annotations, redact-one-by-one, text-2-speech | [Browse →](./web/annotation/README.md) |
+| **Annotations** | 10 examples including comment-annotations, polygon-clipping-outline, text-2-speech | [Browse →](./web/annotation/README.md) |
 | **Signing** | 3 examples including sign-here-upgraded, digital signatures | [Browse →](./web/signing/README.md) |
 | **Document Editor** | Page extraction and manipulation | [Browse →](./web/document-editor/README.md) |
 | **Viewer** | Multi-tab viewer | [Browse →](./web/viewer/README.md) |

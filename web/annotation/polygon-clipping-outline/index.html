@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Polygon Clipping Outline - Text Markup Annotations</title>
+    <link
+      rel="preload"
+      href="https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.9.1/nutrient-viewer.js"
+      as="script"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      #header {
+        background: #1a1a2e;
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      #header h1 {
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      #header p {
+        font-size: 13px;
+        color: #a0a0a0;
+      }
+
+      #pspdfkit {
+        width: 100%;
+        height: calc(100vh - 48px);
+      }
+
+      /* Hide default rectangular outline for text markup annotations */
+      .PSPDFKit-Highlight-Annotation.PSPDFKit-Text-Markup-Annotation-selected,
+      .PSPDFKit-Underline-Annotation.PSPDFKit-Text-Markup-Annotation-selected,
+      .PSPDFKit-StrikeOut-Annotation.PSPDFKit-Text-Markup-Annotation-selected,
+      .PSPDFKit-Squiggle-Annotation.PSPDFKit-Text-Markup-Annotation-selected {
+        outline: none !important;
+        border: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <h1>Polygon Clipping Outline Demo</h1>
+      <p>Select a highlight annotation to see the custom SVG outline</p>
+    </div>
+    <div id="pspdfkit"></div>
+
+    <script src="https://cdn.cloud.pspdfkit.com/pspdfkit-web@1.9.1/nutrient-viewer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/polygon-clipping@0.15.7/dist/polygon-clipping.umd.min.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
