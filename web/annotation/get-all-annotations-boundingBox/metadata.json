@@ -1,0 +1,8 @@
+{
+  "title": "Annotation Bounding Boxes",
+  "description": "Retrieve bounding box coordinates for all annotations in a document. Useful for annotation analysis, positioning, and spatial calculations.",
+  "category": "annotations",
+  "sidebar": {
+    "preset": "basic-viewer"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Paste Annotations from Clipboard",
+  "description": "Paste clipboard content (text or images) directly as annotations on PDF pages using Ctrl+V. Supports dynamic positioning and real-time document updates.",
+  "category": "annotations",
+  "sidebar": {
+    "preset": "basic-viewer"
+  },
+  "dependencies": {
+    "axios": "https://esm.sh/axios@1.7.9"
+  }
+}

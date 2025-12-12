@@ -1,0 +1,11 @@
+{
+  "title": "PDF Analytics with Mixpanel",
+  "description": "Comprehensive PDF event tracking with Mixpanel analytics. Real-time debug panel shows live event statistics for navigation, annotations, search, and signatures.",
+  "category": "other",
+  "sidebar": {
+    "preset": "basic-viewer"
+  },
+  "dependencies": {
+    "mixpanel-browser": "https://esm.sh/mixpanel-browser@2.55.1"
+  }
+}

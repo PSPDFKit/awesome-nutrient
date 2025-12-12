@@ -1,0 +1,8 @@
+{
+  "title": "Client-Side Digital Signatures",
+  "description": "PKCS7 digital signature workflow entirely on the client side. Includes file upload, SHA-256 hashing, signature generation, and real-time validation status.",
+  "category": "signatures",
+  "sidebar": {
+    "preset": "basic-viewer"
+  }
+}

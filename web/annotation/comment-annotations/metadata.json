@@ -1,0 +1,8 @@
+{
+  "title": "Comment Annotations",
+  "description": "Add comments directly to text annotations (highlights, strikeouts, underlines) with a custom toolbar button and automatic comment management.",
+  "category": "annotations",
+  "sidebar": {
+    "preset": "basic-viewer"
+  }
+}

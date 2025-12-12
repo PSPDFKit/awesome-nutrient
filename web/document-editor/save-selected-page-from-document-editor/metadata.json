@@ -1,0 +1,8 @@
+{
+  "title": "Export Selected Pages",
+  "description": "Select and export specific pages from the Document Editor UI. Save individual pages to a desired location.",
+  "category": "editor",
+  "sidebar": {
+    "preset": "basic-viewer"
+  }
+}

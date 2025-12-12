@@ -1,0 +1,11 @@
+{
+  "title": "Multi-Tab PDF Viewer",
+  "description": "Modern multi-tab PDF viewer with auto-save to localStorage. Open and manage multiple documents simultaneously with persistent storage and full annotation support.",
+  "category": "viewer",
+  "sidebar": {
+    "preset": "basic-viewer"
+  },
+  "dependencies": {
+    "react-icons": "https://esm.sh/react-icons@5.4.0?external=react"
+  }
+}

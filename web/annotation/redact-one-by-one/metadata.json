@@ -1,0 +1,8 @@
+{
+  "title": "Redaction Review Workflow",
+  "description": "Programmatic redaction workflow allowing users to review and individually accept or reject redaction annotations one by one.",
+  "category": "redaction",
+  "sidebar": {
+    "preset": "basic-viewer"
+  }
+}

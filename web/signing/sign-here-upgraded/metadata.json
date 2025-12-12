@@ -1,0 +1,8 @@
+{
+  "title": "Sign Here Widget",
+  "description": "Visual 'Sign Here' widget that guides users to signature fields and automatically navigates to the next field after completion.",
+  "category": "signatures",
+  "sidebar": {
+    "preset": "basic-viewer"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Speech-to-Text Annotations",
+  "description": "Convert spoken audio to text annotations using the browser Web Speech API. Speak to create text annotations on PDF pages. Requires microphone access.",
+  "category": "annotations",
+  "sidebar": {
+    "preset": "basic-viewer"
+  }
+}

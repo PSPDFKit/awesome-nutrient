@@ -1,0 +1,8 @@
+{
+  "title": "Programmatic Watermarks",
+  "description": "Create a grid of transparent 'CONFIDENTIAL' text watermarks across all PDF pages programmatically with automatic flattening.",
+  "category": "annotations",
+  "sidebar": {
+    "preset": "basic-viewer"
+  }
+}

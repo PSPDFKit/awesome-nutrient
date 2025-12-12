@@ -1,0 +1,8 @@
+{
+  "title": "Custom Comment Thread UI",
+  "description": "Custom comment thread UI using the customization slots API. Replicates default comment functionality with Baseline UI components for cleaner styling.",
+  "category": "ui",
+  "sidebar": {
+    "preset": "basic-viewer"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Comment Status Management",
+  "description": "Custom comment workflow with approval/rejection statuses, extending the comment UI with approve/reject menu items and color-coded status indicators.",
+  "category": "annotations",
+  "sidebar": {
+    "preset": "basic-viewer"
+  }
+}
