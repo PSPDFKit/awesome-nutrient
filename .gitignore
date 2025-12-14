@@ -43,3 +43,10 @@ Chart.lock
 .terraformrc
 terraform.rc
 node_modules/
+
+# SDK lib directories
+pspdfkit-lib/
+nutrient-viewer-lib/
+
+# Lock files (each example manages its own deps)
+pnpm-lock.yaml

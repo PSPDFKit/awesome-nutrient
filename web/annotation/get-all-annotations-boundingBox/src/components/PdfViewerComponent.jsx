@@ -1,42 +1,55 @@
 //PdfViewerComponent.jsx
 import { useEffect, useRef } from "react";
-import "pspdfkit";
 
-let PSPDFKit;
+// Wait for SDK to be available on window (injected by playground)
+const waitForSDK = () => {
+  return new Promise((resolve) => {
+    if (window.NutrientViewer) {
+      resolve(window.NutrientViewer);
+      return;
+    }
+    const check = setInterval(() => {
+      if (window.NutrientViewer) {
+        clearInterval(check);
+        resolve(window.NutrientViewer);
+      }
+    }, 50);
+  });
+};
+
+let NutrientViewer;
 let instance;
-let allAnnotations = []; // push all the annotation bounding box and pageindex and annotation numbers
-let pageIndex; // store the page index
-let currentAnnotationIndex = 0; // know the current annotation and scroll to next annotation
-const lkey = "Your license key here";
+let allAnnotations = [];
+let pageIndex;
+let currentAnnotationIndex = 0;
+
 export default function PdfViewerComponent(props) {
   const containerRef = useRef(null);
 
   useEffect(() => {
     const container = containerRef.current;
+    let pasteHandler = null;
 
     (async () => {
-      PSPDFKit = await import("pspdfkit");
+      NutrientViewer = await waitForSDK();
 
-      PSPDFKit.unload(container); // Ensure that there's only one PSPDFKit instance.
+      try {
+        NutrientViewer.unload(container);
+      } catch (e) {
+        // Ignore if nothing to unload
+      }
 
-      const defaultToolbarItems = PSPDFKit.defaultDocumentEditorToolbarItems;
+      const defaultToolbarItems = NutrientViewer.defaultDocumentEditorToolbarItems;
       const toolbarItems = [...defaultToolbarItems];
 
-      instance = await PSPDFKit.load({
-        licenseKey: lkey,
+      instance = await NutrientViewer.load({
         container,
         document: props.document,
-        baseUrl: `${window.location.protocol}//${window.location.host}/${import.meta.env.PUBLIC_URL ?? ""}`,
         documentEditorToolbarItems: toolbarItems,
         enableRichText: () => true,
-        enableClipboardActions: true, // this is used to cut copy and paste between pages (by default you cannot move annotation between pages)
+        enableClipboardActions: true,
       });
-      // Enable Content Editor
-      // instance.setViewState((v) =>
-      //   v.set("interactionMode", PSPDFKit.InteractionMode.CONTENT_EDITOR)
-      // );
-      //end of Enable content editor
-      // the following is the code to cut copy and paste the Annotations between pages - button in toolbar
+
       const copy = {
         type: "custom",
         title: "Copy",
@@ -86,11 +99,8 @@ export default function PdfViewerComponent(props) {
         items.push(nextAnnotation);
         return items;
       });
-      // End of the code to cut copy and paste the Annotations between pages - button in toolbar
 
-      // the following code is the paste event (which copies from clipboard and creates annotation based on text or image copied)
-      // the above copy paste and this one is different.
-      document.addEventListener("paste", async (event) => {
+      pasteHandler = async (event) => {
         let isProcessingPaste = false;
         if (isProcessingPaste) return;
 
@@ -98,7 +108,7 @@ export default function PdfViewerComponent(props) {
           const items = (
             event.clipboardData || event.originalEvent.clipboardData
           ).items;
-          const item = items[0]; // this will get only the last copied data from clipboard
+          const item = items[0];
 
           const content_Type = item.type;
           const currentPage = instance.viewState.currentPageIndex;
@@ -106,12 +116,12 @@ export default function PdfViewerComponent(props) {
           if (item.kind === "file" && item.type.startsWith("image")) {
             const file = item.getAsFile();
             const imageAttachmentId = await instance.createAttachment(file);
-            const annotation = new PSPDFKit.Annotations.ImageAnnotation({
+            const annotation = new NutrientViewer.Annotations.ImageAnnotation({
               pageIndex: currentPage,
               contentType: content_Type,
               imageAttachmentId,
               description: "Pasted Image Annotation",
-              boundingBox: new PSPDFKit.Geometry.Rect({
+              boundingBox: new NutrientViewer.Geometry.Rect({
                 left: 10,
                 top: 50,
                 width: 150,
@@ -121,13 +131,13 @@ export default function PdfViewerComponent(props) {
             await instance.create(annotation);
           } else if (item.kind === "string") {
             item.getAsString(async (pastedText) => {
-              const textAnnotation = new PSPDFKit.Annotations.TextAnnotation({
+              const textAnnotation = new NutrientViewer.Annotations.TextAnnotation({
                 pageIndex: currentPage,
                 text: {
                   format: "plain",
                   value: pastedText,
                 },
-                boundingBox: new PSPDFKit.Geometry.Rect({
+                boundingBox: new NutrientViewer.Geometry.Rect({
                   left: 10,
                   top: 50,
                   width: 150,
@@ -136,24 +146,27 @@ export default function PdfViewerComponent(props) {
               });
               await instance.create(textAnnotation);
             });
-          } else {
-            console.log("Unsupported clipboard item");
           }
         } finally {
           isProcessingPaste = false;
         }
-      });
-      // End of the code for paste event (which copies from clipboard and creates annotation based on text or image copied)
-      // Image annotation has some limitations of image types - please try it out and explore.
-
-      return () => {
-        document.removeEventListener("paste", handlePaste);
-        PSPDFKit.unload(container);
       };
+
+      document.addEventListener("paste", pasteHandler);
     })();
+
+    return () => {
+      if (pasteHandler) {
+        document.removeEventListener("paste", pasteHandler);
+      }
+      if (NutrientViewer && container) {
+        try {
+          NutrientViewer.unload(container);
+        } catch (e) {}
+      }
+    };
   }, [props.document]);
 
-  // Fetched all annotations
   useEffect(() => {
     if (props.handleAnnotation === "get") {
       allAnnotations = [];
@@ -163,40 +176,24 @@ export default function PdfViewerComponent(props) {
 
   const fetchAnnotationCoordinates = async () => {
     const tpage = instance.totalPageCount;
-    console.log("Total Pages", tpage);
     let i = 0;
     for (let j = 0; j < tpage; j++) {
-      const annotations = await instance.getAnnotations(j); // Assuming pageIndex is 0
+      const annotations = await instance.getAnnotations(j);
       pageIndex = j;
       for (const annotation of annotations) {
         i = i + 1;
         const { bottom, left, right, top } = annotation.boundingBox;
         const width = right - left;
         const height = bottom - top;
-        allAnnotations.push({
-          bottom,
-          right,
-          top,
-          left,
-          width,
-          height,
-          pageIndex,
-          i,
-        });
+        allAnnotations.push({ bottom, right, top, left, width, height, pageIndex, i });
       }
     }
-    //console.log("All annotations after pushing goes here: ", allAnnotations);
   };
-  // End of Fetched all annotations
 
-  //Get the next annotation - button available on the tool bar right corner
   const handleNextAnnotation = async () => {
-    console.log("All Annotation length", allAnnotations.length);
-    console.log("All Annotations", allAnnotations);
-    console.log("currentAnnotationIndex is : ", currentAnnotationIndex);
     let highlightannotID;
-    const light_red = new PSPDFKit.Color({ r: 247, g: 141, b: 138 });
-    if (allAnnotations === undefined || allAnnotations.length === 0) {
+    const light_red = new NutrientViewer.Color({ r: 247, g: 141, b: 138 });
+    if (!allAnnotations || allAnnotations.length === 0) {
       fetchAnnotationCoordinates();
       currentAnnotationIndex = 0;
     }
@@ -205,21 +202,14 @@ export default function PdfViewerComponent(props) {
     }
     if (allAnnotations.length > 0) {
       const annotation = allAnnotations[currentAnnotationIndex];
-      console.log("Current Annotation: ", annotation);
-      const bBox = new PSPDFKit.Geometry.Rect({
-        left: annotation.left, // you calculation goes here for level of zoom needed
-        top: annotation.top, // you calculation goes here for level of zoom needed
-        width: annotation.width + 100, // you calculation goes here for level of zoom needed
-        height: annotation.height + 100, // you calculation goes here for level of zoom needed
-      });
-      const bBoxhighlight = new PSPDFKit.Geometry.Rect({
+      const bBoxhighlight = new NutrientViewer.Geometry.Rect({
         left: annotation.left,
         top: annotation.top,
         width: annotation.width,
         height: annotation.height,
       });
       highlightannotID = await instance.create(
-        new PSPDFKit.Annotations.RectangleAnnotation({
+        new NutrientViewer.Annotations.RectangleAnnotation({
           pageIndex: annotation.pageIndex,
           boundingBox: bBoxhighlight,
           strokeWidth: 1,
@@ -227,17 +217,12 @@ export default function PdfViewerComponent(props) {
           opacity: 1,
         }),
       );
-      //instance.jumpAndZoomToRect(annotation.pageIndex, bBoxhighlight); // This will zoom to the annotation.
-      instance.jumpToRect(annotation.pageIndex, bBoxhighlight); // you can use this if you don't want to zoom and just focus on the annotation.
+      instance.jumpToRect(annotation.pageIndex, bBoxhighlight);
       setTimeout(async () => {
         await instance.delete(highlightannotID);
       }, 3000);
     }
   };
-  //End of Get the next annotation - button available on the tool bar right corner
-  return (
-    <>
-      <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />
-    </>
-  );
+
+  return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;
 }

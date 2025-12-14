@@ -1,7 +1,7 @@
 {
   "title": "Paste Annotations from Clipboard",
   "description": "Paste clipboard content (text or images) directly as annotations on PDF pages using Ctrl+V. Supports dynamic positioning and real-time document updates.",
-  "category": "annotations",
+  "category": "awesome-nutrient",
   "sidebar": {
     "preset": "basic-viewer"
   },

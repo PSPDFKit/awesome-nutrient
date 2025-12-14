@@ -1,8 +1,11 @@
 {
   "title": "Redaction Review Workflow",
   "description": "Programmatic redaction workflow allowing users to review and individually accept or reject redaction annotations one by one.",
-  "category": "redaction",
+  "category": "awesome-nutrient",
   "sidebar": {
     "preset": "basic-viewer"
+  },
+  "dependencies": {
+    "@baseline-ui/core": "https://esm.sh/@baseline-ui/core@0.47.0?external=react,react-dom"
   }
 }

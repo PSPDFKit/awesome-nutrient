@@ -1,7 +1,7 @@
 {
   "title": "Custom Annotation Sidebar",
   "description": "Customize the annotation sidebar UI and functionality with advanced annotation management and sidebar integration.",
-  "category": "annotations",
+  "category": "awesome-nutrient",
   "sidebar": {
     "preset": "basic-viewer"
   },

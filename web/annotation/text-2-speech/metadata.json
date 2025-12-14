@@ -1,7 +1,7 @@
 {
   "title": "Text-to-Speech Reader",
   "description": "Select PDF text and have it read aloud using browser text-to-speech synthesis. Includes optional highlighting of selected text.",
-  "category": "annotations",
+  "category": "awesome-nutrient",
   "sidebar": {
     "preset": "basic-viewer"
   }

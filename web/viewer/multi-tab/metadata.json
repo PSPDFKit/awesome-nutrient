@@ -1,7 +1,7 @@
 {
   "title": "Multi-Tab PDF Viewer",
   "description": "Modern multi-tab PDF viewer with auto-save to localStorage. Open and manage multiple documents simultaneously with persistent storage and full annotation support.",
-  "category": "viewer",
+  "category": "awesome-nutrient",
   "sidebar": {
     "preset": "basic-viewer"
   },

@@ -1,7 +1,7 @@
 {
   "title": "Snipping Tool for Annotations",
   "description": "Screenshot-like tool for annotating PDFs. Draw rectangles to create annotation areas with automatic image capture and saving.",
-  "category": "annotations",
+  "category": "awesome-nutrient",
   "sidebar": {
     "preset": "basic-viewer"
   },
