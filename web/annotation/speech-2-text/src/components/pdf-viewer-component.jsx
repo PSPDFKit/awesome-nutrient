@@ -1,6 +1,7 @@
 // Import necessary React hooks
 import { useEffect, useRef } from "react";
 
+
 // Global variables for tracking annotation positions
 let linecount = 0;
 let add = 0;
@@ -10,10 +11,10 @@ let pageWidth;
 
 // Define the main PDF viewer component
 export default function PdfViewerComponent(props) {
-  // Create references for the PDF container and PSPDFKit instance
+  // Create references for the PDF container and NutrientViewer instance
   const containerRef = useRef(null);
-  const instanceRef = useRef(null); // Store PSPDFKit instance
-  const PSPDFKitRef = useRef(null); // Store PSPDFKit module
+  const instanceRef = useRef(null); // Store NutrientViewer instance
+  const NutrientViewerRef = useRef(null); // Store NutrientViewer module
 
   // Function to enhance text with first letter to uppercase
   const correctText = (text) => {
@@ -26,24 +27,22 @@ export default function PdfViewerComponent(props) {
       .trim();
   };
 
-  // useEffect hook to load PSPDFKit and set up event listeners
+  // useEffect hook to load NutrientViewer and set up event listeners
   useEffect(() => {
     const container = containerRef.current;
 
     (async () => {
-      const PSPDFKit = await import("pspdfkit");
-      PSPDFKitRef.current = PSPDFKit; // Store PSPDFKit module globally
-      PSPDFKit.unload(container); // Ensure only one instance exists
+      const NutrientViewer = window.NutrientViewer;
+      NutrientViewerRef.current = NutrientViewer; // Store NutrientViewer module globally
 
-      // Load PSPDFKit instance
-      const instance = await PSPDFKit.load({
-        licenseKey: import.meta.env.VITE_lkey,
+      // Load NutrientViewer instance
+      const instance = await NutrientViewer.load({
         container,
         document: props.document,
         baseUrl: `${window.location.protocol}//${window.location.host}/${
           import.meta.env.PUBLIC_URL ?? ""
         }`,
-        toolbarItems: PSPDFKit.defaultToolbarItems,
+        toolbarItems: NutrientViewer.defaultToolbarItems,
       });
 
       instanceRef.current = instance; // Store instance in ref
@@ -56,7 +55,6 @@ export default function PdfViewerComponent(props) {
 
       // Cleanup on component unmount
       return () => {
-        PSPDFKit.unload(container);
       };
     })();
   }, [props.document]);
@@ -74,25 +72,25 @@ export default function PdfViewerComponent(props) {
       let transcript = event.results[0][0].transcript;
       transcript = correctText(transcript); // Apply text corrections
 
-      if (!instanceRef.current || !PSPDFKitRef.current) {
-        console.error("PSPDFKit instance is not available.");
+      if (!instanceRef.current || !NutrientViewerRef.current) {
+        console.error("NutrientViewer instance is not available.");
         return;
       }
 
-      const PSPDFKit = PSPDFKitRef.current; // Access PSPDFKit module
+      const NutrientViewer = NutrientViewerRef.current; // Access NutrientViewer module
 
       // To track annotation position place them correctly
       linecount += 1;
       add = linecount > 1 ? add + 25 : 0;
 
-      const bbox = new PSPDFKit.Geometry.Rect({
+      const bbox = new NutrientViewer.Geometry.Rect({
         left: 10,
         top: 50 + add,
         width: pageWidth - 20,
         height: 25,
       });
 
-      const textAnnotation = new PSPDFKit.Annotations.TextAnnotation({
+      const textAnnotation = new NutrientViewer.Annotations.TextAnnotation({
         pageIndex: currentPage,
         text: {
           format: "plain",

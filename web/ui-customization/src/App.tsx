@@ -12,22 +12,14 @@ function App() {
     let cleanup = () => {};
 
     (async () => {
-      const NutrientViewer = (await import("@nutrient-sdk/viewer")).default;
+      const NutrientViewer = window.NutrientViewer;
 
       // Ensure there’s only one `NutrientViewer` instance.
-      NutrientViewer.unload(container);
-
-      const baseUrl = `${window.location.protocol}//${window.location.host}/${
-        import.meta.env.PUBLIC_URL ?? ""
-      }`;
 
       if (container && NutrientViewer) {
         NutrientViewer.load({
           container,
           document: "https://www.nutrient.io/downloads/nutrient-web-demo.pdf",
-          // useCDN loads assets (like WASM files) from Nutrient's CDN
-          useCDN: true,
-          styleSheets: [`${baseUrl}comment-thread.css`],
           ui: {
             commentThread: (instance, id) => {
               const container = document.createElement("div");
@@ -47,9 +39,7 @@ function App() {
         });
       }
 
-      cleanup = () => {
-        NutrientViewer.unload(container);
-      };
+      cleanup = () => {};
     })();
 
     return cleanup;

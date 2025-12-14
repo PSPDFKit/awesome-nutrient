@@ -2,34 +2,30 @@ import { useEffect, useRef, useState } from "react";
 
 // PDF Viewer Component
 export default function PdfViewerComponent(props) {
-  // Reference to the container where PSPDFKit will be loaded
+  // Reference to the container where NutrientViewer will be loaded
   const containerRef = useRef(null);
 
   // State to track whether text-to-speech is currently active
   const [_isSpeaking, setIsSpeaking] = useState(false);
 
-  // useEffect hook to load PSPDFKit when the component mounts
+  // useEffect hook to load NutrientViewer when the component mounts
   useEffect(() => {
     const container = containerRef.current;
-    let PSPDFKit;
+    let NutrientViewer;
     let instance; // Declared here to ensure accessibility in cleanup
 
     (async () => {
-      // Dynamically import PSPDFKit to support tree shaking
-      PSPDFKit = await import("pspdfkit");
+      // Dynamically import NutrientViewer to support tree shaking
+      NutrientViewer = window.NutrientViewer;
 
       // Unload any existing instance to prevent memory leaks
-      PSPDFKit.unload(container);
 
-      // Load PSPDFKit instance
-      instance = await PSPDFKit.load({
+      // Load NutrientViewer instance
+      instance = await NutrientViewer.load({
         //licenseKey: import.meta.env.VITE_lkey, // Uncomment and update the .env with License key for Nutrient web sdk
-        container, // The container where PSPDFKit will be rendered
+        container, // The container where NutrientViewer will be rendered
         document: props.document, // The document to be displayed
-        baseUrl: `${window.location.protocol}//${window.location.host}/${
-          import.meta.env.PUBLIC_URL ?? ""
-        }`, // Base URL for loading assets
-        toolbarItems: PSPDFKit.defaultToolbarItems, // Default toolbar settings
+        toolbarItems: NutrientViewer.defaultToolbarItems, // Default toolbar settings
         inlineTextSelectionToolbarItems: (
           { defaultItems: _defaultItems, hasDesktopLayout: _hasDesktopLayout },
           _selection,
@@ -66,10 +62,12 @@ export default function PdfViewerComponent(props) {
 
             // Create highlight annotations for search results
             const annotations = results.map((result) => {
-              return new PSPDFKit.Annotations.HighlightAnnotation({
+              return new NutrientViewer.Annotations.HighlightAnnotation({
                 pageIndex: result.pageIndex, // Page where text was found
                 rects: result.rectsOnPage, // Bounding rectangles of text
-                boundingBox: PSPDFKit.Geometry.Rect.union(result.rectsOnPage), // Overall bounding box
+                boundingBox: NutrientViewer.Geometry.Rect.union(
+                  result.rectsOnPage,
+                ), // Overall bounding box
               });
             });
 
@@ -81,10 +79,8 @@ export default function PdfViewerComponent(props) {
         },
       );
 
-      // Cleanup function: unload PSPDFKit when the component unmounts
-      return () => {
-        PSPDFKit.unload(container);
-      };
+      // Cleanup function: unload NutrientViewer when the component unmounts
+      return () => {};
     })();
   }, [props.document]); // Runs whenever `props.document` changes
 

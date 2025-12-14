@@ -5,15 +5,13 @@ export default function PdfViewerComponent(props) {
 
   useEffect(() => {
     const container = containerRef.current;
-    let PSPDFKit;
+    let NutrientViewer;
     let instance;
 
     (async () => {
-      PSPDFKit = await import("pspdfkit");
+      NutrientViewer = window.NutrientViewer;
 
-      PSPDFKit.unload(container); // Ensure that there's only one PSPDFKit instance.
-
-      const defaultToolbarItems = PSPDFKit.defaultDocumentEditorToolbarItems;
+      const defaultToolbarItems = NutrientViewer.defaultDocumentEditorToolbarItems;
 
       // Custom toolbar item
       const customToolbarItem = {
@@ -72,17 +70,14 @@ export default function PdfViewerComponent(props) {
       // Insert custom item at the desired position
       const toolbarItems = [...defaultToolbarItems, customToolbarItem];
 
-      instance = await PSPDFKit.load({
+      instance = await NutrientViewer.load({
         container,
         document: props.document,
-        baseUrl: `${window.location.protocol}//${window.location.host}/${
-          import.meta.env.PUBLIC_URL ?? ""
-        }`,
         documentEditorToolbarItems: toolbarItems,
       });
     })();
 
-    return () => PSPDFKit?.unload(container);
+    return () => NutrientViewer?.unload(container);
   }, [props.document]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />;

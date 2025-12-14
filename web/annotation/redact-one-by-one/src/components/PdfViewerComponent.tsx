@@ -6,21 +6,6 @@ interface PdfViewerProps {
   toolbar: string;
 }
 
-// Wait for SDK to be available on window (injected by playground)
-const waitForSDK = (): Promise<any> => {
-  return new Promise((resolve) => {
-    if ((window as any).NutrientViewer) {
-      resolve((window as any).NutrientViewer);
-      return;
-    }
-    const check = setInterval(() => {
-      if ((window as any).NutrientViewer) {
-        clearInterval(check);
-        resolve((window as any).NutrientViewer);
-      }
-    }, 50);
-  });
-};
 
 let NutrientViewer: any;
 let instance: any;
@@ -33,7 +18,7 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
     const initializeSDK = async () => {
       try {
-        NutrientViewer = await waitForSDK();
+        NutrientViewer = window.NutrientViewer;
         
         try {
           NutrientViewer.unload(container);

@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 
+
 export default function PdfViewerComponent(props) {
   const containerRef = useRef(null);
-  let PSPDFKit;
+  let NutrientViewer;
   let instance;
   let isProcessingPaste = false;
 
@@ -22,12 +23,12 @@ export default function PdfViewerComponent(props) {
       if (item.kind === "file" && item.type.startsWith("image")) {
         const file = item.getAsFile();
         const imageAttachmentId = await instance.createAttachment(file);
-        const annotation = new PSPDFKit.Annotations.ImageAnnotation({
+        const annotation = new NutrientViewer.Annotations.ImageAnnotation({
           pageIndex: currentPage,
           contentType: content_Type,
           imageAttachmentId,
           description: "Pasted Image Annotation",
-          boundingBox: new PSPDFKit.Geometry.Rect({
+          boundingBox: new NutrientViewer.Geometry.Rect({
             left: 10,
             top: 50,
             width: 150,
@@ -38,13 +39,13 @@ export default function PdfViewerComponent(props) {
       } else if (item.kind === "string") {
         item.getAsString(async (pastedText) => {
           // Here you can create a text annotation if needed
-          const textAnnotation = new PSPDFKit.Annotations.TextAnnotation({
+          const textAnnotation = new NutrientViewer.Annotations.TextAnnotation({
             pageIndex: currentPage,
             text: {
               format: "plain",
               value: pastedText,
             },
-            boundingBox: new PSPDFKit.Geometry.Rect({
+            boundingBox: new NutrientViewer.Geometry.Rect({
               left: 10,
               top: 50,
               width: 600,
@@ -65,17 +66,15 @@ export default function PdfViewerComponent(props) {
     const container = containerRef.current;
 
     (async () => {
-      PSPDFKit = await import("pspdfkit");
+      NutrientViewer = window.NutrientViewer;
 
-      PSPDFKit.unload(container); // Ensure that there's only one PSPDFKit instance.
 
-      const defaultToolbarItems = PSPDFKit.defaultDocumentEditorToolbarItems;
+      const defaultToolbarItems = NutrientViewer.defaultDocumentEditorToolbarItems;
 
       // Insert custom item at the desired position
       const toolbarItems = [...defaultToolbarItems];
 
-      instance = await PSPDFKit.load({
-        licenseKey: import.meta.env.VITE_lkey,
+      instance = await NutrientViewer.load({
         container,
         document: props.document,
         baseUrl: `${window.location.protocol}//${window.location.host}/${
@@ -91,7 +90,6 @@ export default function PdfViewerComponent(props) {
       // Cleanup on component unmount
       return () => {
         document.removeEventListener("paste", handlePasteEvent);
-        PSPDFKit.unload(container);
       };
     })();
   }, [props.document]);

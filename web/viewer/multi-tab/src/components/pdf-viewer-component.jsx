@@ -63,8 +63,25 @@ const PdfViewerComponent = forwardRef(({ id, document }, ref) => {
     }
 
     let instance = null;
+    let cancelled = false;
 
     const loadPDF = async () => {
+      // Wait for container to have dimensions (handles display:none -> display:block transition)
+      const waitForDimensions = () => new Promise((resolve) => {
+        const check = () => {
+          if (cancelled) return;
+          const rect = containerRef.current?.getBoundingClientRect();
+          if (rect && rect.width > 0 && rect.height > 0) {
+            resolve();
+          } else {
+            requestAnimationFrame(check);
+          }
+        };
+        check();
+      });
+      
+      await waitForDimensions();
+      if (cancelled) return;
       try {
         if (instanceRef.current) {
           NutrientViewer.unload(instanceRef.current);
@@ -76,7 +93,6 @@ const PdfViewerComponent = forwardRef(({ id, document }, ref) => {
         instance = await NutrientViewer.load({
           container: containerRef.current,
           document: loadUrl,
-          licenseKey: import.meta.env.VITE_lkey,
         });
 
         instanceRef.current = instance;
@@ -106,6 +122,7 @@ const PdfViewerComponent = forwardRef(({ id, document }, ref) => {
     loadPDF();
 
     return () => {
+      cancelled = true;
       if (instanceRef.current && window.NutrientViewer) {
         window.NutrientViewer.unload(instanceRef.current);
         instanceRef.current = null;

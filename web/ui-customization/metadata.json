@@ -4,5 +4,10 @@
   "category": "awesome-nutrient",
   "sidebar": {
     "preset": "basic-viewer"
+  },
+  "dependencies": {
+    "@baseline-ui/core": "https://esm.sh/@baseline-ui/core@0.47.0?external=react,react-dom",
+    "@baseline-ui/tokens": "https://esm.sh/@baseline-ui/tokens@0.47.0?external=react,react-dom",
+    "@baseline-ui/icons": "https://esm.sh/@baseline-ui/icons@0.47.0?external=react,react-dom"
   }
 }

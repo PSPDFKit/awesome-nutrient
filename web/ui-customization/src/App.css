@@ -1,5 +1,5 @@
-@import "@baseline-ui/tokens/dist/index.css";
-@import "@baseline-ui/core/dist/index.css";
+@import "https://unpkg.com/@baseline-ui/tokens@0.47.0/dist/index.css";
+@import "https://unpkg.com/@baseline-ui/core@0.47.0/dist/index.css";
 
 @layer bui-reset {
   * {

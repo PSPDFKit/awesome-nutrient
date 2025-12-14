@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import "pspdfkit";
 import html2canvas from "html2canvas";
+
 
 interface PdfViewerProps {
   document: string;
@@ -8,7 +8,7 @@ interface PdfViewerProps {
 }
 
 let instance: any;
-let PSPDFKit: any;
+let NutrientViewer: any;
 
 export default function PdfViewerComponent(props: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,22 +18,19 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
     const container = containerRef.current;
 
     (async function loadPdf() {
-      PSPDFKit = await import("pspdfkit");
+      NutrientViewer = window.NutrientViewer;
 
-      if (PSPDFKit) {
-        PSPDFKit.unload(container);
+      if (NutrientViewer) {
       }
 
-      const toolbarItemsDefault = PSPDFKit.defaultToolbarItems;
-      instance = await PSPDFKit.load({
-        licenseKey: "Your License Key goes here",
+      const toolbarItemsDefault = NutrientViewer.defaultToolbarItems;
+      instance = await NutrientViewer.load({
         container,
         document: props.document,
-        baseUrl: `${window.location.protocol}//${window.location.host}/`,
         toolbarItems: toolbarItemsDefault,
       });
     })();
-    return () => PSPDFKit?.unload(container);
+    return () => NutrientViewer?.unload(container);
   }, [props.document]);
 
   useEffect(() => {

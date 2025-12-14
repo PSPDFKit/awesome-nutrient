@@ -1,7 +1,7 @@
 // App.jsx
 import { useId, useState } from "react";
 
-import PdfViewerComponent from "./components/PdfViewerComponent.jsx";
+import PdfViewerComponent from "./components/pdf-viewer-component.jsx";
 import "./App.css";
 
 function App() {

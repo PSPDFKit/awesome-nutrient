@@ -1,32 +1,22 @@
-const PSPDFKit = window.PSPDFKit;
-
-// We need to inform PSPDFKit where to look for its library assets, i.e. the location of the `pspdfkit-lib` directory.
-const baseUrl = "https://cdn.cloud.pspdfkit.com/pspdfkit-web@2024.4.0/";
+const NutrientViewer = window.NutrientViewer;
 
 let _instance = null;
 
 const createCommentAnnotation = async (instance, annotation) => {
-  // Get the first created annotation
-  const commentID = PSPDFKit.generateInstantId();
-  // Create a new comment annotation
-  const parentCom = new PSPDFKit.Annotations.CommentMarkerAnnotation({
+  const commentID = NutrientViewer.generateInstantId();
+  const parentCom = new NutrientViewer.Annotations.CommentMarkerAnnotation({
     id: commentID,
     isCommentThreadRoot: true,
     pageIndex: 0,
-    // Set the bounding box of the comment annotation
     boundingBox: annotation.boundingBox,
     customData: { parentAnnotation: annotation },
   });
-  // Add the first comment to the document
-  const firstCom = new PSPDFKit.Comment({
+  const firstCom = new NutrientViewer.Comment({
     rootId: commentID,
-    // Configure pageIndex
     pageIndex: 0,
-    // Set the text of the first comment
     text: { format: "plain", value: "New Annotation Comment" },
   });
   const commentAnnots = await instance.create([parentCom, firstCom]);
-  // Add the comment id to the annotation customData
   const customData = {
     commentAnnotationID: commentID,
     commentAnnotation: commentAnnots[0],
@@ -37,29 +27,22 @@ const createCommentAnnotation = async (instance, annotation) => {
 };
 
 const duplicateAnnotationTooltipCallback = (annotation) => {
-  // If the annotation is a comment marker, dont show the tooltip
-  if (annotation instanceof PSPDFKit.Annotations.CommentMarkerAnnotation)
+  if (annotation instanceof NutrientViewer.Annotations.CommentMarkerAnnotation)
     return [];
-  // Create a custom tooltip item with title "Comment"
   const duplicateItem = {
     type: "custom",
     title: "Comment",
     id: "tooltip-duplicate-annotation",
     className: "TooltipItem-Duplication",
     onPress: async () => {
-      //console.log("Annotation pressed", annotation);
       if (_instance) {
-        if (
-          !(annotation instanceof PSPDFKit.Annotations.CommentMarkerAnnotation)
-        ) {
-          // Create a new comment annotation if it does not exist
+        if (!(annotation instanceof NutrientViewer.Annotations.CommentMarkerAnnotation)) {
           if (!annotation.customData?.commentAnnotationID)
             annotation = await createCommentAnnotation(_instance, annotation);
-
           const parentAnnotationID = annotation.customData.commentAnnotationID;
           try {
             await _instance.setSelectedAnnotations(
-              PSPDFKit.Immutable.List([parentAnnotationID]),
+              NutrientViewer.Immutable.List([parentAnnotationID])
             );
           } catch (error) {
             console.warn(error);
@@ -86,9 +69,9 @@ const setCommentColor = (ele, currStatus) => {
 
 const {
   UI: { createBlock, Recipes, Interfaces },
-} = PSPDFKit;
+} = NutrientViewer;
 
-PSPDFKit.load({
+NutrientViewer.load({
   ui: {
     [Interfaces.CommentThread]: ({ props }) => ({
       content: createBlock(Recipes.CommentThread, props, ({ ui }) => {
@@ -105,13 +88,10 @@ PSPDFKit.load({
                 } else if ("reject" === id) {
                   setCommentColor(props.ref, "rejected");
                   window.alert(`Rejected ${props.comments[0].id}`);
-                }
-                // Add more status as needed
-                else {
+                } else {
                   menuProps.onAction(id);
                 }
               },
-              // Also add status here
               items: [
                 ...menuProps.items,
                 { id: "approve", label: "Approve" },
@@ -123,14 +103,13 @@ PSPDFKit.load({
       }).createComponent(),
     }),
   },
-  baseUrl,
-  container: "#pspdfkit",
+  container: "#nutrient-viewer",
   document: "document.pdf",
-  toolbarItems: [...PSPDFKit.defaultToolbarItems, { type: "comment" }],
-  initialViewState: new PSPDFKit.ViewState({
+  toolbarItems: [...NutrientViewer.defaultToolbarItems, { type: "comment" }],
+  initialViewState: new NutrientViewer.ViewState({
     sidebarOptions: {
-      [PSPDFKit.SidebarMode.ANNOTATIONS]: {
-        includeContent: [PSPDFKit.Comment],
+      [NutrientViewer.SidebarMode.ANNOTATIONS]: {
+        includeContent: [NutrientViewer.Comment],
       },
     },
   }),
@@ -142,12 +121,8 @@ PSPDFKit.load({
       const annotation = event.toArray()[0];
       if (annotation?.customData?.commentAnnotationID) {
         try {
-          // Update the comment annotation when the parent annotation is updated
           let commentAnnotation = annotation.customData.commentAnnotation;
-          commentAnnotation = commentAnnotation.set(
-            "boundingBox",
-            annotation.boundingBox,
-          );
+          commentAnnotation = commentAnnotation.set("boundingBox", annotation.boundingBox);
           const update = await instance.update(commentAnnotation);
           console.log("Annotation updated", update);
         } catch (error) {
@@ -155,20 +130,16 @@ PSPDFKit.load({
         }
       }
     });
-    // When a comment is pressed, select the parent annotation
     instance.addEventListener("annotations.press", async (event) => {
       if (
-        event.annotation instanceof
-          PSPDFKit.Annotations.CommentMarkerAnnotation &&
+        event.annotation instanceof NutrientViewer.Annotations.CommentMarkerAnnotation &&
         event.annotation.customData.parentAnnotation
       ) {
         event.preventDefault();
-        const parentAnnotationID =
-          event.annotation.customData.parentAnnotation.id;
+        const parentAnnotationID = event.annotation.customData.parentAnnotation.id;
         await instance.setSelectedAnnotations(
-          PSPDFKit.Immutable.List([parentAnnotationID]),
+          NutrientViewer.Immutable.List([parentAnnotationID])
         );
-        //,console.log("Annotation pressed", event);
       }
     });
   })
