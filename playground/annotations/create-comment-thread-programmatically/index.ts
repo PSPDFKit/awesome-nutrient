@@ -1,7 +1,6 @@
 import type { Annotation } from "@nutrient-sdk/viewer";
 import { baseOptions } from "../../shared/base-options";
 
-// Set user name from a login or authentication
 const username = "Omar";
 
 window.NutrientViewer.load({
