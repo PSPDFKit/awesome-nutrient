@@ -195,19 +195,31 @@ NutrientViewer.load({
     },
   },
 })
-  .then((instance) => {
+  .then(async (instance) => {
     _instance = instance;
 
     // Create some sample highlight annotations if document doesn't have any
-    instance.getAnnotations(0).then((annotations) => {
-      const hasHighlights = annotations.some((a) => isTextMarkupAnnotation(a));
+    const annotations = await instance.getAnnotations(0);
 
-      if (!hasHighlights) {
-        console.log(
-          "Tip: Select some text and use the highlight tool to create annotations, then click on them to see the custom outline.",
-        );
+    const hasHighlights = annotations.some((a) => isTextMarkupAnnotation(a));
+
+    if (!hasHighlights) {
+      const textLines = await instance.textLinesForPageIndex(0);
+
+      if (textLines.size === 0) {
+        console.warn("No text lines found on the first page.");
+
+        return;
       }
-    });
+
+      const newHighlight = new NutrientViewer.Annotations.HighlightAnnotation({
+        pageIndex: 0,
+        boundingBox: textLines.first().boundingBox,
+        rects: NutrientViewer.Immutable.List([textLines.first().boundingBox]),
+      });
+
+      instance.create(newHighlight);
+    }
 
     console.log("NutrientViewer loaded!");
     console.log(
