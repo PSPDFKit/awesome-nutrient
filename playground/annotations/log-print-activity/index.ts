@@ -24,7 +24,6 @@ function getCurrentDateTime(): string {
 }
 
 function logPrintActivity(): void {
-  console.log("Logging print activity");
   const printTime = getCurrentDateTime();
   const printEntry = `Printed on ${printTime}`;
 
@@ -33,8 +32,6 @@ function logPrintActivity(): void {
   if (printHistory.length > 10) {
     printHistory = printHistory.slice(0, 10);
   }
-
-  console.log("Print history updated:", printHistory);
   updateCustomUI();
 }
 
@@ -43,7 +40,6 @@ function createCustomUI(): CustomUI {
     [window.NutrientViewer.UIElement.Sidebar]: {
       [window.NutrientViewer.SidebarMode.CUSTOM]: ({ containerNode }) => {
         const container = containerNode as HTMLElement;
-        // Clear the container
         container.innerHTML = "";
 
         const mainContainer = document.createElement("div");
@@ -51,13 +47,11 @@ function createCustomUI(): CustomUI {
         mainContainer.style.height = "100%";
         mainContainer.style.overflowY = "auto";
 
-        // Print activity title
         const printTitle = document.createElement("h4");
         printTitle.innerText = "Print Activity Log";
         printTitle.style.margin = "0 0 15px 0";
         printTitle.style.color = "#fff";
 
-        // History list container
         const historyList = document.createElement("div");
         historyList.style.maxHeight = "400px";
         historyList.style.overflowY = "auto";
@@ -102,20 +96,12 @@ function updateCustomUI(): void {
 }
 
 function setupPrintEventListeners(): void {
-  console.log("Setting up print event listeners");
-
   window.addEventListener("beforeprint", () => {
-    console.log("Before print event detected");
     logPrintActivity();
-  });
-
-  window.addEventListener("afterprint", () => {
-    console.log("After print event detected");
   });
 
   document.addEventListener("keydown", (event) => {
     if ((event.ctrlKey || event.metaKey) && event.key === "p") {
-      console.log("Print keyboard shortcut detected");
       setTimeout(() => {
         logPrintActivity();
       }, 100);
@@ -129,13 +115,10 @@ window.NutrientViewer.load({
   enableHistory: true,
   enableClipboardActions: true,
 }).then((instanceRef) => {
-  console.log("NutrientViewer loaded successfully");
   instance = instanceRef;
 
-  // Set the Custom UI
   instance.setCustomUIConfiguration(createCustomUI());
 
-  // The Sidebar Custom Button with Icon
   const custom: ToolbarItem = {
     type: "custom",
     id: "Print Activity Log",
@@ -162,14 +145,9 @@ window.NutrientViewer.load({
     [],
   );
 
-  // Adding it to the sidebars
   instance.setToolbarItems([...toolbarItems]);
 
-  // Set initial view to custom sidebar
   instance.setViewState(instance.viewState.set("sidebarMode", "CUSTOM"));
 
-  // Set up print event listeners
   setupPrintEventListeners();
 });
-
-console.log("Script loaded. Print activity will be tracked automatically.");
