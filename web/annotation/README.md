@@ -116,6 +116,18 @@ npm start
 
 ---
 
+### polygon-clipping-outline
+**Description**: Custom SVG polygon outlines for text markup annotations (highlights, underlines, strikeouts, squiggles) using the polygon-clipping library. More precise than the default rectangular selection outline.
+
+**Quick start**:
+```bash
+cd polygon-clipping-outline
+npm install
+npm start
+```
+
+---
+
 ## Prerequisites
 
 All examples require:
