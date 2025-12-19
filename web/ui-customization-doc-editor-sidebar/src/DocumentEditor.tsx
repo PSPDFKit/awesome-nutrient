@@ -189,7 +189,9 @@ const DocumentEditor = (props: Props) => {
               imageWidth="md"
               selectionMode="multiple"
               onSelectionChange={(keys) =>
-                setSelectedKeys(keys === "all" ? new Set() : keys)
+                setSelectedKeys(
+                  keys === "all" ? new Set(pages.map((page) => page.id)) : keys,
+                )
               }
             />
             <Box gap="md" display="flex">
