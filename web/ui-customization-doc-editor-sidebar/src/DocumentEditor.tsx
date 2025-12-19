@@ -16,130 +16,128 @@ import {
   RotateCounterClockwiseIcon,
 } from "@baseline-ui/icons/24";
 import { themes } from "@baseline-ui/tokens";
-import type { Instance } from "@nutrient-sdk/viewer";
+import type { DocumentOperations, Instance } from "@nutrient-sdk/viewer";
 import NutrientViewer from "@nutrient-sdk/viewer";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Props {
   instance: Instance;
 }
 
+interface PageData {
+  id: string;
+  label: string;
+  alt: string;
+  pageIndex: number;
+  src: string;
+}
+
+type DocumentOperation =
+  | DocumentOperations.RotatePagesOperation
+  | DocumentOperations.RemovePagesOperation
+  | DocumentOperations.AddPageAfterOperation;
+
 const DocumentEditor = (props: Props) => {
   const { instance } = props;
-  const [pages, setPages] = useState([]);
+  const [pages, setPages] = useState<PageData[]>([]);
   // TODO: handle for 'all' selection
-  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
+  const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(
+    new Set(),
+  );
+  const [operationQueue, setOperationQueue] = useState<DocumentOperation[]>([]);
 
-  useEffect(() => {
+  const populatePageData = useCallback(async () => {
     const totalPages = instance.totalPageCount;
+    const pagesData = [];
 
-    async function populatePageData() {
-      const pagesData = [];
+    for (let pageIndex = 0; pageIndex < totalPages; pageIndex += 1) {
+      const pageInfo = instance.pageInfoForIndex(pageIndex);
 
-      for (let pageIndex = 0; pageIndex < totalPages; pageIndex += 1) {
-        const pageInfo = instance.pageInfoForIndex(pageIndex);
-
-        if (!pageInfo) {
-          continue;
-        }
-        const src = await instance.renderPageAsImageURL(
-          { width: 400 },
-          pageIndex,
-        );
-        pagesData.push({
-          id: pageInfo.label,
-          label: pageInfo.label,
-          alt: pageInfo.label,
-          pageIndex: pageInfo.index,
-          src,
-        });
+      if (!pageInfo) {
+        continue;
       }
-
-      setPages(pagesData);
+      const src = await instance.renderPageAsImageURL(
+        { width: 400 },
+        pageIndex,
+      );
+      pagesData.push({
+        id: pageInfo.label,
+        label: pageInfo.label,
+        alt: pageInfo.label,
+        pageIndex: pageInfo.index,
+        src,
+      });
     }
 
-    populatePageData();
+    setPages(pagesData);
   }, [instance]);
+
+  useEffect(() => {
+    populatePageData();
+  }, [populatePageData]);
 
   console.log("Pages data:", pages, selectedKeys);
 
-  const performDocumentOperation = async (operation) => {
+  const queueDocumentOperation = (operation: string | number) => {
+    let operationData: DocumentOperation | undefined;
+
+    const parseKey = (key: string | number): number => {
+      return typeof key === "string" ? Number.parseInt(key, 10) : key;
+    };
+
     if (operation === "rotate-clockwise") {
-      await instance.applyOperations([
-        {
-          type: "rotatePages",
-          pageIndexes: [...selectedKeys].map(
-            (key) => Number.parseInt(key, 10) - 1,
-          ),
-          rotateBy: 90,
-        },
-      ]);
+      operationData = {
+        type: "rotatePages",
+        pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
+        rotateBy: 90,
+      };
     } else if (operation === "rotate-counterclockwise") {
-      await instance.applyOperations([
-        {
-          type: "rotatePages",
-          pageIndexes: [...selectedKeys].map(
-            (key) => Number.parseInt(key, 10) - 1,
-          ),
-          rotateBy: 270,
-        },
-      ]);
+      operationData = {
+        type: "rotatePages",
+        pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
+        rotateBy: 270,
+      };
     } else if (operation === "remove-pages") {
-      await instance.applyOperations([
-        {
-          type: "removePages",
-          pageIndexes: [...selectedKeys].map(
-            (key) => Number.parseInt(key, 10) - 1,
-          ),
-        },
-      ]);
+      operationData = {
+        type: "removePages",
+        pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
+      };
     } else if (operation === "add-page") {
-      await instance.applyOperations([
-        {
-          type: "addPage",
-          beforePageIndex: Number.parseInt([...selectedKeys][0], 10) - 1,
-          backgroundColor: new NutrientViewer.Color({ r: 255, g: 255, b: 255 }),
-          pageHeight: 400,
-          pageWidth: 300,
-          rotateBy: 0,
-        },
-      ]);
+      operationData = {
+        type: "addPage",
+        afterPageIndex: parseKey([...selectedKeys][0]) - 1,
+        backgroundColor: new NutrientViewer.Color({ r: 255, g: 255, b: 255 }),
+        pageHeight: 400,
+        pageWidth: 300,
+        rotateBy: 0,
+      };
     }
 
-    const totalPages = instance.totalPageCount;
+    if (operationData) {
+      setOperationQueue((prev) => [...prev, operationData]);
+    }
+  };
 
-    async function populatePageData() {
-      const pagesData = [];
-
-      for (let pageIndex = 0; pageIndex < totalPages; pageIndex += 1) {
-        const pageInfo = instance.pageInfoForIndex(pageIndex);
-
-        if (!pageInfo) {
-          continue;
-        }
-        const src = await instance.renderPageAsImageURL(
-          { width: 400 },
-          pageIndex,
-        );
-        pagesData.push({
-          id: pageInfo.label,
-          label: pageInfo.label,
-          alt: pageInfo.label,
-          pageIndex: pageInfo.index,
-          src,
-        });
-      }
-
-      setPages(pagesData);
+  const handleSave = async () => {
+    if (operationQueue.length === 0) {
+      return;
     }
 
-    populatePageData();
+    await instance.applyOperations(operationQueue);
+    await populatePageData();
+
+    setOperationQueue([]);
+    setSelectedKeys(new Set());
   };
 
   const selectionText = selectedKeys.size ? (
     <Text>{selectedKeys.size} page(s) selected</Text>
   ) : (
     <Text>No pages selected</Text>
+  );
+
+  const pendingOperationsText = operationQueue.length > 0 && (
+    <Text>{operationQueue.length} pending operation(s)</Text>
   );
 
   const operations = (
@@ -167,7 +165,7 @@ const DocumentEditor = (props: Props) => {
           icon: PageAddIcon,
         },
       ]}
-      onAction={performDocumentOperation}
+      onAction={queueDocumentOperation}
     />
   );
 
@@ -183,16 +181,23 @@ const DocumentEditor = (props: Props) => {
             gap="lg"
           >
             {selectionText}
+            {pendingOperationsText}
             {operations}
             <ImageGallery
               aria-label="Document editor sidebar"
               items={pages}
               imageWidth="md"
               selectionMode="multiple"
-              onSelectionChange={(keys) => setSelectedKeys(keys)}
+              onSelectionChange={(keys) =>
+                setSelectedKeys(keys === "all" ? new Set() : keys)
+              }
             />
             <Box gap="md" display="flex">
-              <ActionButton label="Save" />
+              <ActionButton
+                label="Save"
+                onPress={handleSave}
+                isDisabled={operationQueue.length === 0}
+              />
               <ActionButton
                 label="Save as"
                 iconStart={DocumentPdfIcon}
