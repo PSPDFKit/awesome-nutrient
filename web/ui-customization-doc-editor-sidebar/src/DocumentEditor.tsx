@@ -30,6 +30,13 @@ interface PageData {
   alt: string;
   pageIndex: number;
   src: string;
+  rotation: number;
+}
+
+interface DraftPageData extends PageData {
+  draftRotation?: number; // Additional rotation applied in draft state
+  isNew?: boolean;
+  isRemoved?: boolean;
 }
 
 type DocumentOperation =
@@ -40,7 +47,7 @@ type DocumentOperation =
 const DocumentEditor = (props: Props) => {
   const { instance } = props;
   const [pages, setPages] = useState<PageData[]>([]);
-  // TODO: handle for 'all' selection
+  const [draftPages, setDraftPages] = useState<DraftPageData[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(
     new Set(),
   );
@@ -66,10 +73,12 @@ const DocumentEditor = (props: Props) => {
         alt: pageInfo.label,
         pageIndex: pageInfo.index,
         src,
+        rotation: pageInfo.rotation || 0,
       });
     }
 
     setPages(pagesData);
+    setDraftPages(pagesData);
   }, [instance]);
 
   useEffect(() => {
@@ -91,26 +100,64 @@ const DocumentEditor = (props: Props) => {
         pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
         rotateBy: 90,
       };
+      // Update draft state
+      setDraftPages((current) =>
+        current.map((page) =>
+          selectedKeys.has(page.id)
+            ? { ...page, draftRotation: (page.draftRotation || 0) + 90 }
+            : page,
+        ),
+      );
     } else if (operation === "rotate-counterclockwise") {
       operationData = {
         type: "rotatePages",
         pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
         rotateBy: 270,
       };
+      // Update draft state
+      setDraftPages((current) =>
+        current.map((page) =>
+          selectedKeys.has(page.id)
+            ? { ...page, draftRotation: (page.draftRotation || 0) + 270 }
+            : page,
+        ),
+      );
     } else if (operation === "remove-pages") {
       operationData = {
         type: "removePages",
         pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
       };
+      // Update draft state
+      setDraftPages((current) =>
+        current.map((page) =>
+          selectedKeys.has(page.id) ? { ...page, isRemoved: true } : page,
+        ),
+      );
     } else if (operation === "add-page") {
+      const afterIndex = parseKey([...selectedKeys][0]) - 1;
       operationData = {
         type: "addPage",
-        afterPageIndex: parseKey([...selectedKeys][0]) - 1,
+        afterPageIndex: afterIndex,
         backgroundColor: new NutrientViewer.Color({ r: 255, g: 255, b: 255 }),
         pageHeight: 400,
         pageWidth: 300,
         rotateBy: 0,
       };
+      // Update draft state
+      setDraftPages((current) => {
+        const newPage: DraftPageData = {
+          id: `temp-${Date.now()}`,
+          label: "New Page",
+          alt: "New blank page",
+          pageIndex: afterIndex + 1,
+          src: "",
+          rotation: 0,
+          isNew: true,
+        };
+        const result = [...current];
+        result.splice(afterIndex + 1, 0, newPage);
+        return result;
+      });
     }
 
     if (operationData) {
@@ -128,6 +175,48 @@ const DocumentEditor = (props: Props) => {
 
     setOperationQueue([]);
     setSelectedKeys(new Set());
+  };
+
+  const displayPages = draftPages.filter((page) => !page.isRemoved);
+
+  const renderImage = (item: {
+    id: string;
+    data?: { alt?: string; src?: string };
+  }) => {
+    // Find the corresponding draft page
+    const draftPage = displayPages.find((page) => page.id === item.id);
+
+    if (!draftPage) {
+      return <div>Error: Page not found</div>;
+    }
+
+    if (draftPage.isNew) {
+      // Render a white blank page
+      return (
+        <div
+          style={{
+            backgroundColor: "white",
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "1px solid #e5e7eb",
+          }}
+        >
+          <Text>New Page</Text>
+        </div>
+      );
+    }
+
+    // Apply only draft rotation (the fetched image already has the document rotation applied)
+    const style = draftPage.draftRotation
+      ? { transform: `rotate(${draftPage.draftRotation}deg)` }
+      : undefined;
+
+    return (
+      <img src={draftPage.src} alt={draftPage.alt} style={style} width="100%" />
+    );
   };
 
   const selectionText = selectedKeys.size ? (
@@ -185,14 +274,41 @@ const DocumentEditor = (props: Props) => {
             {operations}
             <ImageGallery
               aria-label="Document editor sidebar"
-              items={pages}
+              items={displayPages}
               imageWidth="md"
               selectionMode="multiple"
+              selectedKeys={selectedKeys}
               onSelectionChange={(keys) =>
                 setSelectedKeys(
-                  keys === "all" ? new Set(pages.map((page) => page.id)) : keys,
+                  keys === "all"
+                    ? new Set(displayPages.map((page) => page.id))
+                    : keys,
                 )
               }
+              renderImage={renderImage}
+              imageDimensions={(item) => {
+                const draftPage = displayPages.find(
+                  (page) => page.id === item.id,
+                );
+                if (!draftPage) {
+                  return { width: 180, height: 250 };
+                }
+
+                // Calculate total rotation (document rotation + draft rotation)
+                const totalRotation =
+                  draftPage.rotation + (draftPage.draftRotation || 0);
+
+                // For 90 or 270 degree rotations, swap dimensions
+                const normalizedRotation = totalRotation % 360;
+                const isRotated90or270 =
+                  normalizedRotation === 90 || normalizedRotation === 270;
+
+                if (isRotated90or270) {
+                  return { width: 250, height: 180 };
+                }
+
+                return { width: 180, height: 250 };
+              }}
             />
             <Box gap="md" display="flex">
               <ActionButton
