@@ -40,37 +40,37 @@ window.NutrientViewer.load({
     { type: "removePages", pageIndexes: secondHalfIndexes },
     { type: "applyInstantJson", instantJson: annotationJson },
   ]);
-  const firstHalfBlob = new Blob([firstHalfBuffer], {
-    type: "application/pdf",
-  });
 
   // Export second half
   const secondHalfBuffer = await instance.exportPDFWithOperations([
     { type: "removePages", pageIndexes: firstHalfIndexes },
   ]);
+
+  // Unload the original headless instance
+  await window.NutrientViewer.unload(instance);
+
+  // Load the first half (with annotation) and append the second half
+  const tempInstance = await window.NutrientViewer.load({
+    ...baseOptions,
+    document: firstHalfBuffer,
+    headless: true,
+  });
+
+  // Merge: append the second half to the first half
   const secondHalfBlob = new Blob([secondHalfBuffer], {
     type: "application/pdf",
   });
-
-  // Reassemble: import both halves and remove original pages
-  const mergedBuffer = await instance.exportPDFWithOperations([
+  const mergedBuffer = await tempInstance.exportPDFWithOperations([
     {
       type: "importDocument",
-      beforePageIndex: totalPages,
+      beforePageIndex: firstHalfIndexes.length,
       treatImportedDocumentAsOnePage: false,
       document: secondHalfBlob,
     },
-    {
-      type: "importDocument",
-      beforePageIndex: totalPages,
-      treatImportedDocumentAsOnePage: false,
-      document: firstHalfBlob,
-    },
-    { type: "removePages", pageIndexes: pageIndexes },
   ]);
 
-  // Unload headless instance
-  await window.NutrientViewer.unload(instance);
+  // Unload the temporary instance
+  await window.NutrientViewer.unload(tempInstance);
 
   // Load the merged result in normal mode
   const { document: _, ...restOptions } = baseOptions;
