@@ -29,28 +29,11 @@ window.NutrientViewer.load({
         return;
       }
 
-      // Export a PDF containing only the cropped region
-      const croppedPdf = await instance.exportPDFWithOperations([
-        {
-          type: "cropPages",
-          pageIndexes: [cropPageIndex],
-          cropBox: cropArea,
-        },
-      ]);
-
-      // Load the cropped PDF in headless mode to extract text
-      const headlessInstance = await window.NutrientViewer.load({
-        ...baseOptions,
-        document: croppedPdf,
-        headless: true,
-      });
-
-      // Extract text from the cropped page
-      const textLines = await headlessInstance.textLinesForPageIndex(0);
-      const extractedText = textLines.map((line) => line.contents).join("");
-
-      // Clean up the headless instance
-      await window.NutrientViewer.unload(headlessInstance);
+      // Extract text from the selected region using getTextFromRects API
+      const extractedText = await instance.getTextFromRects(
+        cropPageIndex,
+        window.NutrientViewer.Immutable.List([cropArea]),
+      );
 
       // Display the extracted text (replace with your own handling)
       alert(`Extracted text:\n\n${extractedText}`);
