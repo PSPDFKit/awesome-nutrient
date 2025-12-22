@@ -1,4 +1,8 @@
-import type { DocumentEditorToolbarItem, Instance } from "@nutrient-sdk/viewer";
+import type {
+  DocumentEditorToolbarItem,
+  DocumentEditorUIHandler,
+  Instance,
+} from "@nutrient-sdk/viewer";
 import { baseOptions } from "../../shared/base-options";
 
 let nutrientInstance: Instance;
@@ -7,22 +11,11 @@ const customItem: DocumentEditorToolbarItem = {
   type: "custom",
   id: "ExportPDF",
   title: "Export Selected Pages",
-  onPress: () => {
-    // Get the pageIds of the page selected in the Document Editor
-    const selectedPages = nutrientInstance.contentDocument.querySelectorAll(
-      ".PSPDFKit-DocumentEditor-Thumbnails-Page-Selected",
-    );
-    const pagesToExport = Array.from(selectedPages)
-      .map((page) => {
-        const parent = (page as HTMLElement).parentNode?.parentNode
-          ?.parentNode as HTMLElement | null;
-        return parent?.getAttribute("data-id");
-      })
-      .filter((id): id is string => id !== null && id !== undefined)
-      .map(Number)
-      .sort((a, b) => a - b);
+  onPress: (_event, documentEditorUIHandler: DocumentEditorUIHandler) => {
+    // Get the page indexes of the pages selected in the Document Editor using the API
+    const pagesToExport = documentEditorUIHandler.getSelectedPageIndexes();
 
-    // Get the document as a PDF ArrayBuffer
+    // Get the document as a PDF ArrayBuffer with only the selected pages
     const operations = [
       { type: "keepPages" as const, pageIndexes: pagesToExport },
     ];
