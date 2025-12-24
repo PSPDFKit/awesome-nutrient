@@ -1,0 +1,10 @@
+/* Add your CSS here */
+.required-form-field:after {
+  content: " *";
+  color: red;
+  font-weight: bold;
+  position: absolute;
+  right: -12px;
+  top: 35%;
+  transform: translateY(-50%);
+}
