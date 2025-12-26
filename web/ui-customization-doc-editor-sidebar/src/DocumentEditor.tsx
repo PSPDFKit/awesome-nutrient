@@ -10,6 +10,7 @@ import {
 } from "@baseline-ui/core";
 import {
   DocumentPdfIcon,
+  DownloadIcon,
   DuplicateIcon,
   PageAddIcon,
   PageRemoveIcon,
@@ -83,17 +84,22 @@ const DocumentEditor = (props: Props) => {
     populatePageData();
   }, [populatePageData]);
 
-  const queueDocumentOperation = (operation: string | number) => {
-    let operationData: DocumentOperation | undefined;
+  const getPageIndexesFromSelectedKeys = (): number[] => {
+    return [...selectedKeys]
+      .map((key) => {
+        const page = draftPages.find((p) => p.id === key);
+        return page?.pageIndex;
+      })
+      .filter((index): index is number => index !== undefined);
+  };
 
-    const parseKey = (key: string | number): number => {
-      return typeof key === "string" ? Number.parseInt(key, 10) : key;
-    };
+  const queueDocumentOperation = async (operation: string | number) => {
+    let operationData: DocumentOperation | undefined;
 
     if (operation === "rotate-clockwise") {
       operationData = {
         type: "rotatePages",
-        pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
+        pageIndexes: getPageIndexesFromSelectedKeys(),
         rotateBy: 90,
       };
 
@@ -107,7 +113,7 @@ const DocumentEditor = (props: Props) => {
     } else if (operation === "rotate-counterclockwise") {
       operationData = {
         type: "rotatePages",
-        pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
+        pageIndexes: getPageIndexesFromSelectedKeys(),
         rotateBy: 270,
       };
 
@@ -121,7 +127,7 @@ const DocumentEditor = (props: Props) => {
     } else if (operation === "remove-pages") {
       operationData = {
         type: "removePages",
-        pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
+        pageIndexes: getPageIndexesFromSelectedKeys(),
       };
 
       setDraftPages((current) =>
@@ -130,7 +136,8 @@ const DocumentEditor = (props: Props) => {
         ),
       );
     } else if (operation === "add-page") {
-      const afterIndex = parseKey([...selectedKeys][0]) - 1;
+      const selectedPageIndexes = getPageIndexesFromSelectedKeys();
+      const afterIndex = selectedPageIndexes[0];
       operationData = {
         type: "addPage",
         afterPageIndex: afterIndex,
@@ -152,12 +159,17 @@ const DocumentEditor = (props: Props) => {
         };
         const result = [...current];
         result.splice(afterIndex + 1, 0, newPage);
-        return result;
+
+        // Update pageIndex for all pages after the insertion point
+        return result.map((page, index) => ({
+          ...page,
+          pageIndex: index,
+        }));
       });
     } else if (operation === "duplicate-page") {
-      const selectedPageIndexes = [...selectedKeys]
-        .map((key) => parseKey(key) - 1)
-        .sort((a, b) => b - a);
+      const selectedPageIndexes = getPageIndexesFromSelectedKeys().sort(
+        (a, b) => b - a,
+      );
 
       operationData = {
         type: "duplicatePages",
@@ -178,8 +190,16 @@ const DocumentEditor = (props: Props) => {
             result.splice(pageIndex + 1, 0, duplicatedPage);
           }
         }
-        return result;
+
+        // Update pageIndex for all pages after duplication
+        return result.map((page, index) => ({
+          ...page,
+          pageIndex: index,
+        }));
       });
+    } else if (operation === "export-selected-pages") {
+      await handleExportSelectedPages();
+      return; // Don't queue this operation
     }
 
     if (operationData) {
@@ -200,15 +220,8 @@ const DocumentEditor = (props: Props) => {
   };
 
   const handleExportPDF = async () => {
-    // Apply pending operations first if any
-    if (operationQueue.length > 0) {
-      await instance.applyOperations(operationQueue);
-      setOperationQueue([]);
-      setSelectedKeys(new Set());
-    }
-
     // Export the PDF
-    const arrayBuffer = await instance.exportPDF();
+    const arrayBuffer = await instance.exportPDFWithOperations(operationQueue);
     const blob = new Blob([arrayBuffer], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
 
@@ -222,9 +235,38 @@ const DocumentEditor = (props: Props) => {
 
     // Clean up the URL
     URL.revokeObjectURL(url);
+    setSelectedKeys(new Set());
+  };
 
-    // Refresh page data
-    await populatePageData();
+  const handleExportSelectedPages = async () => {
+    // Convert selected keys to page indexes
+    const selectedPageIndexes = getPageIndexesFromSelectedKeys();
+
+    // Create KeepPages operation for export
+    const keepPagesOperation = {
+      type: "keepPages" as const,
+      pageIndexes: selectedPageIndexes,
+    };
+
+    // Export PDF with only selected pages
+    const arrayBuffer = await instance.exportPDFWithOperations([
+      ...operationQueue,
+      keepPagesOperation,
+    ]);
+    const blob = new Blob([arrayBuffer], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+
+    // Download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `selected-pages-${selectedPageIndexes.length}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Cleanup
+    URL.revokeObjectURL(url);
+    setSelectedKeys(new Set());
   };
 
   const displayPages = draftPages.filter((page) => !page.isRemoved);
@@ -307,6 +349,11 @@ const DocumentEditor = (props: Props) => {
           id: "duplicate-page",
           label: "Duplicate Page",
           icon: DuplicateIcon,
+        },
+        {
+          id: "export-selected-pages",
+          label: "Export Selected Pages",
+          icon: DownloadIcon,
         },
       ]}
       onAction={queueDocumentOperation}
