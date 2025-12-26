@@ -9,6 +9,7 @@ import {
   ThemeProvider,
 } from "@baseline-ui/core";
 import {
+  ArrowLeftIcon,
   ArrowRightIcon,
   DocumentPdfIcon,
   DownloadIcon,
@@ -44,7 +45,8 @@ type DocumentOperation =
   | DocumentOperations.RemovePagesOperation
   | DocumentOperations.AddPageAfterOperation
   | DocumentOperations.DuplicatePagesOperation
-  | DocumentOperations.MovePagesAfterOperation;
+  | DocumentOperations.MovePagesAfterOperation
+  | DocumentOperations.MovePagesBeforeOperation;
 
 const DocumentEditor = (props: Props) => {
   const { instance } = props;
@@ -226,6 +228,37 @@ const DocumentEditor = (props: Props) => {
 
         return updatePageIndexes(result);
       });
+    } else if (operation === "move-left") {
+      const selectedPageIndexes = getPageIndexesFromSelectedKeys().sort(
+        (a, b) => a - b,
+      );
+
+      // Can't move left if the leftmost selected page is already at the start
+      const minIndex = Math.min(...selectedPageIndexes);
+      if (minIndex === 0) {
+        return;
+      }
+
+      operationData = {
+        type: "movePages",
+        pageIndexes: selectedPageIndexes,
+        beforePageIndex: minIndex - 1,
+      };
+
+      setDraftPages((current) => {
+        const result = [...current];
+
+        const pagesToMove = selectedPageIndexes
+          .slice()
+          .reverse()
+          .map((index) => result.splice(index, 1)[0]);
+
+        // Insert all pages before minIndex position (adjust for removed pages)
+        const insertPosition = minIndex - 1;
+        result.splice(insertPosition, 0, ...pagesToMove.reverse());
+
+        return updatePageIndexes(result);
+      });
     } else if (operation === "export-selected-pages") {
       await handleExportSelectedPages();
       return; // Don't queue this operation
@@ -376,6 +409,11 @@ const DocumentEditor = (props: Props) => {
           id: "duplicate-page",
           label: "Duplicate Page",
           icon: DuplicateIcon,
+        },
+        {
+          id: "move-left",
+          label: "Move Left",
+          icon: ArrowLeftIcon,
         },
         {
           id: "move-right",
