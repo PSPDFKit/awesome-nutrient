@@ -199,6 +199,34 @@ const DocumentEditor = (props: Props) => {
     setSelectedKeys(new Set());
   };
 
+  const handleExportPDF = async () => {
+    // Apply pending operations first if any
+    if (operationQueue.length > 0) {
+      await instance.applyOperations(operationQueue);
+      setOperationQueue([]);
+      setSelectedKeys(new Set());
+    }
+
+    // Export the PDF
+    const arrayBuffer = await instance.exportPDF();
+    const blob = new Blob([arrayBuffer], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+
+    // Create a download link and trigger download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "edited-document.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Clean up the URL
+    URL.revokeObjectURL(url);
+
+    // Refresh page data
+    await populatePageData();
+  };
+
   const displayPages = draftPages.filter((page) => !page.isRemoved);
 
   const renderImage = (item: {
@@ -347,6 +375,7 @@ const DocumentEditor = (props: Props) => {
                 label="Save as"
                 iconStart={DocumentPdfIcon}
                 variant="secondary"
+                onPress={handleExportPDF}
               />
             </Box>
           </Box>
