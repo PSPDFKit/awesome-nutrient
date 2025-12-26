@@ -92,6 +92,13 @@ const DocumentEditor = (props: Props) => {
       .filter((index): index is number => index !== undefined);
   };
 
+  const updatePageIndexes = (pages: DraftPageData[]): DraftPageData[] => {
+    return pages.map((page, index) => ({
+      ...page,
+      pageIndex: index,
+    }));
+  };
+
   const queueDocumentOperation = async (operation: string | number) => {
     let operationData: DocumentOperation | undefined;
 
@@ -131,12 +138,7 @@ const DocumentEditor = (props: Props) => {
 
       setDraftPages((current) => {
         const result = current.filter((page) => !selectedKeys.has(page.id));
-
-        // Update pageIndex for all remaining pages
-        return result.map((page, index) => ({
-          ...page,
-          pageIndex: index,
-        }));
+        return updatePageIndexes(result);
       });
     } else if (operation === "add-page") {
       const selectedPageIndexes = getPageIndexesFromSelectedKeys();
@@ -162,12 +164,7 @@ const DocumentEditor = (props: Props) => {
         };
         const result = [...current];
         result.splice(afterIndex + 1, 0, newPage);
-
-        // Update pageIndex for all pages after the insertion point
-        return result.map((page, index) => ({
-          ...page,
-          pageIndex: index,
-        }));
+        return updatePageIndexes(result);
       });
     } else if (operation === "duplicate-page") {
       const selectedPageIndexes = getPageIndexesFromSelectedKeys().sort(
@@ -194,11 +191,7 @@ const DocumentEditor = (props: Props) => {
           }
         }
 
-        // Update pageIndex for all pages after duplication
-        return result.map((page, index) => ({
-          ...page,
-          pageIndex: index,
-        }));
+        return updatePageIndexes(result);
       });
     } else if (operation === "export-selected-pages") {
       await handleExportSelectedPages();
