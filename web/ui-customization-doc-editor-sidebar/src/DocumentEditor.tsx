@@ -18,6 +18,7 @@ import {
   PageRemoveIcon,
   RotateClockwiseIcon,
   RotateCounterClockwiseIcon,
+  UploadIcon,
 } from "@baseline-ui/icons/24";
 import { themes } from "@baseline-ui/tokens";
 import type { DocumentOperations, Instance } from "@nutrient-sdk/viewer";
@@ -46,7 +47,8 @@ type DocumentOperation =
   | DocumentOperations.AddPageAfterOperation
   | DocumentOperations.DuplicatePagesOperation
   | DocumentOperations.MovePagesAfterOperation
-  | DocumentOperations.MovePagesBeforeOperation;
+  | DocumentOperations.MovePagesBeforeOperation
+  | DocumentOperations.ImportDocumentAfterOperation;
 
 const DocumentEditor = (props: Props) => {
   const { instance } = props;
@@ -259,6 +261,51 @@ const DocumentEditor = (props: Props) => {
 
         return updatePageIndexes(result);
       });
+    } else if (operation === "import-document") {
+      // Create file input
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "application/pdf";
+
+      input.onchange = async (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (!file) return;
+
+        const selectedPageIndexes = getPageIndexesFromSelectedKeys();
+        const afterIndex =
+          selectedPageIndexes.length > 0
+            ? Math.max(...selectedPageIndexes)
+            : draftPages.length - 1;
+
+        const importOperation: DocumentOperations.ImportDocumentAfterOperation =
+          {
+            type: "importDocument",
+            afterPageIndex: afterIndex,
+            document: file,
+            treatImportedDocumentAsOnePage: true,
+          };
+
+        // Add a placeholder draft page for the imported document
+        setDraftPages((current) => {
+          const newPage: DraftPageData = {
+            id: `temp-import-${Date.now()}`,
+            label: file.name,
+            alt: `Imported: ${file.name}`,
+            pageIndex: afterIndex + 1,
+            src: "", // Will be populated after save
+            rotation: 0,
+            isNew: true,
+          };
+          const result = [...current];
+          result.splice(afterIndex + 1, 0, newPage);
+          return updatePageIndexes(result);
+        });
+
+        setOperationQueue((prev) => [...prev, importOperation]);
+      };
+
+      input.click();
+      return; // Don't queue yet, will be queued in onchange
     } else if (operation === "export-selected-pages") {
       await handleExportSelectedPages();
       return; // Don't queue this operation
@@ -409,6 +456,11 @@ const DocumentEditor = (props: Props) => {
           id: "duplicate-page",
           label: "Duplicate Page",
           icon: DuplicateIcon,
+        },
+        {
+          id: "import-document",
+          label: "Import Document",
+          icon: UploadIcon,
         },
         {
           id: "move-left",
