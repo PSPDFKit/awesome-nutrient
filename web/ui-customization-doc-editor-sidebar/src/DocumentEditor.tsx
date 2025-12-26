@@ -10,6 +10,7 @@ import {
 } from "@baseline-ui/core";
 import {
   DocumentPdfIcon,
+  DuplicateIcon,
   PageAddIcon,
   PageRemoveIcon,
   RotateClockwiseIcon,
@@ -24,16 +25,14 @@ interface Props {
   instance: Instance;
 }
 
-interface PageData {
+interface DraftPageData {
   id: string;
   label: string;
   alt: string;
   pageIndex: number;
   src: string;
   rotation: number;
-}
 
-interface DraftPageData extends PageData {
   draftRotation?: number; // Additional rotation applied in draft state
   isNew?: boolean;
   isRemoved?: boolean;
@@ -42,7 +41,8 @@ interface DraftPageData extends PageData {
 type DocumentOperation =
   | DocumentOperations.RotatePagesOperation
   | DocumentOperations.RemovePagesOperation
-  | DocumentOperations.AddPageAfterOperation;
+  | DocumentOperations.AddPageAfterOperation
+  | DocumentOperations.DuplicatePagesOperation;
 
 const DocumentEditor = (props: Props) => {
   const { instance } = props;
@@ -96,7 +96,7 @@ const DocumentEditor = (props: Props) => {
         pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
         rotateBy: 90,
       };
-      // Update draft state
+
       setDraftPages((current) =>
         current.map((page) =>
           selectedKeys.has(page.id)
@@ -110,7 +110,7 @@ const DocumentEditor = (props: Props) => {
         pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
         rotateBy: 270,
       };
-      // Update draft state
+
       setDraftPages((current) =>
         current.map((page) =>
           selectedKeys.has(page.id)
@@ -123,7 +123,7 @@ const DocumentEditor = (props: Props) => {
         type: "removePages",
         pageIndexes: [...selectedKeys].map((key) => parseKey(key) - 1),
       };
-      // Update draft state
+
       setDraftPages((current) =>
         current.map((page) =>
           selectedKeys.has(page.id) ? { ...page, isRemoved: true } : page,
@@ -139,7 +139,7 @@ const DocumentEditor = (props: Props) => {
         pageWidth: 300,
         rotateBy: 0,
       };
-      // Update draft state
+
       setDraftPages((current) => {
         const newPage: DraftPageData = {
           id: `temp-${Date.now()}`,
@@ -152,6 +152,33 @@ const DocumentEditor = (props: Props) => {
         };
         const result = [...current];
         result.splice(afterIndex + 1, 0, newPage);
+        return result;
+      });
+    } else if (operation === "duplicate-page") {
+      const selectedPageIndexes = [...selectedKeys]
+        .map((key) => parseKey(key) - 1)
+        .sort((a, b) => b - a);
+
+      operationData = {
+        type: "duplicatePages",
+        pageIndexes: selectedPageIndexes,
+      };
+
+      setDraftPages((current) => {
+        const result = [...current];
+        for (const pageIndex of selectedPageIndexes) {
+          const originalPage = result.find((p) => p.pageIndex === pageIndex);
+          if (originalPage) {
+            const duplicatedPage: DraftPageData = {
+              ...originalPage,
+              id: `temp-dup-${Date.now()}-${pageIndex}`,
+              label: `${originalPage.label} (copy)`,
+              alt: `${originalPage.alt} (copy)`,
+              isNew: true,
+            };
+            result.splice(pageIndex + 1, 0, duplicatedPage);
+          }
+        }
         return result;
       });
     }
@@ -248,6 +275,11 @@ const DocumentEditor = (props: Props) => {
           id: "add-page",
           label: "Add Page",
           icon: PageAddIcon,
+        },
+        {
+          id: "duplicate-page",
+          label: "Duplicate Page",
+          icon: DuplicateIcon,
         },
       ]}
       onAction={queueDocumentOperation}
