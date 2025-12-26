@@ -51,7 +51,7 @@ function App() {
         }).then((instance) => {
           // Define a custom toolbar item.
           const documentEditorToolbarItem = {
-            type: "custom",
+            type: "custom" as const,
             id: "documentEditorToolbarItem",
             title: "Document Editor",
             dropdownGroup: "sidebar",
