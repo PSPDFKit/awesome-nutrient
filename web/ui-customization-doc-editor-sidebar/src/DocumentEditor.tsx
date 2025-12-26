@@ -174,7 +174,6 @@ const DocumentEditor = (props: Props) => {
               id: `temp-dup-${Date.now()}-${pageIndex}`,
               label: `${originalPage.label} (copy)`,
               alt: `${originalPage.alt} (copy)`,
-              isNew: true,
             };
             result.splice(pageIndex + 1, 0, duplicatedPage);
           }
