@@ -67,7 +67,10 @@
   },
   "overrides": [
     {
-      "includes": ["web/ui-customization/**/*"],
+      "includes": [
+        "web/ui-customization/**/*",
+        "web/ui-customization-doc-editor-sidebar/**/*"
+      ],
       "linter": {
         "rules": {
           "style": {
