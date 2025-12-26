@@ -1,0 +1,42 @@
+/* Add your CSS here */
+.PSPDFKit-Shape-Annotation {
+  pointer-events: auto;
+  outline: none !important;
+}
+
+.PSPDFKit-Shape-Annotation:not(:has(svg ellipse))::after {
+  cursor: default !important;
+  pointer-events: auto;
+  content: "";
+  position: absolute;
+  top: 1.25rem;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  right: 1.25rem;
+  outline: 1px solid red !important;
+}
+
+.PSPDFKit-Shape-Annotation:has(svg ellipse)::after {
+  cursor: default !important;
+  pointer-events: auto;
+  content: "";
+  position: absolute;
+  top: 1.25rem;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  right: 1.25rem;
+  outline: 1px solid red !important;
+  border-radius: 50%;
+}
+
+.PSPDFKit-Shape-Annotation::before {
+  cursor: pointer;
+  pointer-events: auto;
+  content: "";
+  position: absolute;
+  top: -25px;
+  bottom: -25px;
+  left: -25px;
+  right: -25px;
+  outline: 2px solid pink;
+}

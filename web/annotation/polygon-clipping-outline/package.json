@@ -1,0 +1,15 @@
+{
+  "name": "polygon-clipping-outline",
+  "description": "Custom SVG polygon outlines for text markup annotation selection",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "polygon-clipping": "^0.15.7"
+  },
+  "scripts": {
+    "start": "serve -l 8080 ."
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}

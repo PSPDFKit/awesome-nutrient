@@ -1,0 +1,11 @@
+{
+  "name": "playground-examples",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@nutrient-sdk/viewer": "^1.9.1",
+    "typescript": "5.9.2"
+  }
+}

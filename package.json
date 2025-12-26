@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@biomejs/biome": "^2.2.4",
+    "@biomejs/biome": "^2.3.1",
     "@eslint/js": "^9.18.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.1"
