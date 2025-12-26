@@ -36,7 +36,6 @@ interface DraftPageData {
 
   draftRotation?: number; // Additional rotation applied in draft state
   isNew?: boolean;
-  isRemoved?: boolean;
 }
 
 type DocumentOperation =
@@ -130,11 +129,15 @@ const DocumentEditor = (props: Props) => {
         pageIndexes: getPageIndexesFromSelectedKeys(),
       };
 
-      setDraftPages((current) =>
-        current.map((page) =>
-          selectedKeys.has(page.id) ? { ...page, isRemoved: true } : page,
-        ),
-      );
+      setDraftPages((current) => {
+        const result = current.filter((page) => !selectedKeys.has(page.id));
+
+        // Update pageIndex for all remaining pages
+        return result.map((page, index) => ({
+          ...page,
+          pageIndex: index,
+        }));
+      });
     } else if (operation === "add-page") {
       const selectedPageIndexes = getPageIndexesFromSelectedKeys();
       const afterIndex = selectedPageIndexes[0];
@@ -269,14 +272,12 @@ const DocumentEditor = (props: Props) => {
     setSelectedKeys(new Set());
   };
 
-  const displayPages = draftPages.filter((page) => !page.isRemoved);
-
   const renderImage = (item: {
     id: string;
     data?: { alt?: string; src?: string };
   }) => {
     // Find the corresponding draft page
-    const draftPage = displayPages.find((page) => page.id === item.id);
+    const draftPage = draftPages.find((page) => page.id === item.id);
 
     if (!draftPage) {
       return <div>Error: Page not found</div>;
@@ -376,20 +377,20 @@ const DocumentEditor = (props: Props) => {
             {operations}
             <ImageGallery
               aria-label="Document editor sidebar"
-              items={displayPages}
+              items={draftPages}
               imageWidth="md"
               selectionMode="multiple"
               selectedKeys={selectedKeys}
               onSelectionChange={(keys) =>
                 setSelectedKeys(
                   keys === "all"
-                    ? new Set(displayPages.map((page) => page.id))
+                    ? new Set(draftPages.map((page) => page.id))
                     : keys,
                 )
               }
               renderImage={renderImage}
               imageDimensions={(item) => {
-                const draftPage = displayPages.find(
+                const draftPage = draftPages.find(
                   (page) => page.id === item.id,
                 );
                 if (!draftPage) {
