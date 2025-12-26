@@ -46,10 +46,9 @@ type DocumentOperation =
 
 const DocumentEditor = (props: Props) => {
   const { instance } = props;
-  const [pages, setPages] = useState<PageData[]>([]);
   const [draftPages, setDraftPages] = useState<DraftPageData[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(
-    new Set()
+    new Set(),
   );
   const [operationQueue, setOperationQueue] = useState<DocumentOperation[]>([]);
 
@@ -65,7 +64,7 @@ const DocumentEditor = (props: Props) => {
       }
       const src = await instance.renderPageAsImageURL(
         { width: 400 },
-        pageIndex
+        pageIndex,
       );
       pagesData.push({
         id: pageInfo.label,
@@ -77,15 +76,12 @@ const DocumentEditor = (props: Props) => {
       });
     }
 
-    setPages(pagesData);
     setDraftPages(pagesData);
   }, [instance]);
 
   useEffect(() => {
     populatePageData();
   }, [populatePageData]);
-
-  console.log("Pages data:", pages, selectedKeys);
 
   const queueDocumentOperation = (operation: string | number) => {
     let operationData: DocumentOperation | undefined;
@@ -105,8 +101,8 @@ const DocumentEditor = (props: Props) => {
         current.map((page) =>
           selectedKeys.has(page.id)
             ? { ...page, draftRotation: (page.draftRotation || 0) + 90 }
-            : page
-        )
+            : page,
+        ),
       );
     } else if (operation === "rotate-counterclockwise") {
       operationData = {
@@ -119,8 +115,8 @@ const DocumentEditor = (props: Props) => {
         current.map((page) =>
           selectedKeys.has(page.id)
             ? { ...page, draftRotation: (page.draftRotation || 0) + 270 }
-            : page
-        )
+            : page,
+        ),
       );
     } else if (operation === "remove-pages") {
       operationData = {
@@ -130,8 +126,8 @@ const DocumentEditor = (props: Props) => {
       // Update draft state
       setDraftPages((current) =>
         current.map((page) =>
-          selectedKeys.has(page.id) ? { ...page, isRemoved: true } : page
-        )
+          selectedKeys.has(page.id) ? { ...page, isRemoved: true } : page,
+        ),
       );
     } else if (operation === "add-page") {
       const afterIndex = parseKey([...selectedKeys][0]) - 1;
@@ -282,13 +278,13 @@ const DocumentEditor = (props: Props) => {
                 setSelectedKeys(
                   keys === "all"
                     ? new Set(displayPages.map((page) => page.id))
-                    : keys
+                    : keys,
                 )
               }
               renderImage={renderImage}
               imageDimensions={(item) => {
                 const draftPage = displayPages.find(
-                  (page) => page.id === item.id
+                  (page) => page.id === item.id,
                 );
                 if (!draftPage) {
                   return { width: 180, height: 250 };
