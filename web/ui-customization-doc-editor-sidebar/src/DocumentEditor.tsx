@@ -9,6 +9,7 @@ import {
   ThemeProvider,
 } from "@baseline-ui/core";
 import {
+  ArrowRightIcon,
   DocumentPdfIcon,
   DownloadIcon,
   DuplicateIcon,
@@ -42,7 +43,8 @@ type DocumentOperation =
   | DocumentOperations.RotatePagesOperation
   | DocumentOperations.RemovePagesOperation
   | DocumentOperations.AddPageAfterOperation
-  | DocumentOperations.DuplicatePagesOperation;
+  | DocumentOperations.DuplicatePagesOperation
+  | DocumentOperations.MovePagesAfterOperation;
 
 const DocumentEditor = (props: Props) => {
   const { instance } = props;
@@ -190,6 +192,37 @@ const DocumentEditor = (props: Props) => {
             result.splice(pageIndex + 1, 0, duplicatedPage);
           }
         }
+
+        return updatePageIndexes(result);
+      });
+    } else if (operation === "move-right") {
+      const selectedPageIndexes = getPageIndexesFromSelectedKeys().sort(
+        (a, b) => a - b,
+      );
+
+      // Can't move right if the rightmost selected page is already at the end
+      const maxIndex = Math.max(...selectedPageIndexes);
+      if (maxIndex >= draftPages.length - 1) {
+        return;
+      }
+
+      operationData = {
+        type: "movePages",
+        pageIndexes: selectedPageIndexes,
+        afterPageIndex: maxIndex + 1,
+      };
+
+      setDraftPages((current) => {
+        const result = [...current];
+
+        const pagesToMove = selectedPageIndexes
+          .slice()
+          .reverse()
+          .map((index) => result.splice(index, 1)[0]);
+
+        // Insert all pages after maxIndex position (adjust for removed pages)
+        const insertPosition = maxIndex - selectedPageIndexes.length + 2;
+        result.splice(insertPosition, 0, ...pagesToMove.reverse());
 
         return updatePageIndexes(result);
       });
@@ -343,6 +376,11 @@ const DocumentEditor = (props: Props) => {
           id: "duplicate-page",
           label: "Duplicate Page",
           icon: DuplicateIcon,
+        },
+        {
+          id: "move-right",
+          label: "Move Right",
+          icon: ArrowRightIcon,
         },
         {
           id: "export-selected-pages",
