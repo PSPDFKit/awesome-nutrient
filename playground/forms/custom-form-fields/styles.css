@@ -1,0 +1,11 @@
+/* Add your CSS here */
+.PSPDFKit-Form-Creator-Editor-Form-Field-Name {
+  pointer-events: none important;
+  opacity: 0.5 !important;
+  cursor: not-allowed;
+  outline: none;
+}
+
+.PSPDFKit-Form-Creator-Editor-Delete {
+  display: none;
+}
