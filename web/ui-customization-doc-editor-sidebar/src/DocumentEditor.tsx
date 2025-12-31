@@ -414,7 +414,16 @@ const DocumentEditor = (props: Props) => {
       : undefined;
 
     return (
-      <img src={draftPage.src} alt={draftPage.alt} style={style} width="100%" />
+      <img
+        src={draftPage.src}
+        alt={draftPage.alt}
+        style={style}
+        width={
+          draftPage.rotation === 90 || draftPage.rotation === 270
+            ? "250px"
+            : "180px"
+        }
+      />
     );
   };
 
