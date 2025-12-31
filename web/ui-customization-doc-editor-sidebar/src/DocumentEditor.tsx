@@ -168,8 +168,11 @@ const DocumentEditor = (props: Props) => {
           rotation: 0,
           isNew: true,
         };
-        const result = [...current];
-        result.splice(afterIndex + 1, 0, newPage);
+        const result = [
+          ...current.slice(0, afterIndex + 1),
+          newPage,
+          ...current.slice(afterIndex + 1),
+        ];
         return updatePageIndexes(result);
       });
     } else if (operation === "duplicate-page") {
@@ -183,7 +186,7 @@ const DocumentEditor = (props: Props) => {
       };
 
       setDraftPages((current) => {
-        const result = [...current];
+        let result = [...current];
         for (const pageIndex of selectedPageIndexes) {
           const originalPage = result.find((p) => p.pageIndex === pageIndex);
           if (originalPage) {
@@ -193,7 +196,11 @@ const DocumentEditor = (props: Props) => {
               label: `${originalPage.label} (copy)`,
               alt: `${originalPage.alt} (copy)`,
             };
-            result.splice(pageIndex + 1, 0, duplicatedPage);
+            result = [
+              ...result.slice(0, pageIndex + 1),
+              duplicatedPage,
+              ...result.slice(pageIndex + 1),
+            ];
           }
         }
 
@@ -217,16 +224,18 @@ const DocumentEditor = (props: Props) => {
       };
 
       setDraftPages((current) => {
-        const result = [...current];
-
-        const pagesToMove = selectedPageIndexes
-          .slice()
-          .reverse()
-          .map((index) => result.splice(index, 1)[0]);
+        const pagesToMove = selectedPageIndexes.map((index) => current[index]);
+        const remaining = current.filter(
+          (_, index) => !selectedPageIndexes.includes(index),
+        );
 
         // Insert all pages after maxIndex position (adjust for removed pages)
         const insertPosition = maxIndex - selectedPageIndexes.length + 2;
-        result.splice(insertPosition, 0, ...pagesToMove.reverse());
+        const result = [
+          ...remaining.slice(0, insertPosition),
+          ...pagesToMove,
+          ...remaining.slice(insertPosition),
+        ];
 
         return updatePageIndexes(result);
       });
@@ -248,16 +257,18 @@ const DocumentEditor = (props: Props) => {
       };
 
       setDraftPages((current) => {
-        const result = [...current];
-
-        const pagesToMove = selectedPageIndexes
-          .slice()
-          .reverse()
-          .map((index) => result.splice(index, 1)[0]);
+        const pagesToMove = selectedPageIndexes.map((index) => current[index]);
+        const remaining = current.filter(
+          (_, index) => !selectedPageIndexes.includes(index),
+        );
 
         // Insert all pages before minIndex position (adjust for removed pages)
         const insertPosition = minIndex - 1;
-        result.splice(insertPosition, 0, ...pagesToMove.reverse());
+        const result = [
+          ...remaining.slice(0, insertPosition),
+          ...pagesToMove,
+          ...remaining.slice(insertPosition),
+        ];
 
         return updatePageIndexes(result);
       });
@@ -296,8 +307,11 @@ const DocumentEditor = (props: Props) => {
             rotation: 0,
             isNew: true,
           };
-          const result = [...current];
-          result.splice(afterIndex + 1, 0, newPage);
+          const result = [
+            ...current.slice(0, afterIndex + 1),
+            newPage,
+            ...current.slice(afterIndex + 1),
+          ];
           return updatePageIndexes(result);
         });
 
