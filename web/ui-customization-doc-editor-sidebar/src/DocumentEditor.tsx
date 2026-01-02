@@ -510,7 +510,8 @@ const DocumentEditor = (props: Props) => {
       <FrameProvider>
         <I18nProvider shouldLogMissingMessages={false} locale="en-US">
           <Box
-            padding="lg"
+            paddingY="lg"
+            paddingInlineStart="lg"
             alignItems="center"
             display="flex"
             flexDirection="column"
@@ -556,6 +557,7 @@ const DocumentEditor = (props: Props) => {
 
                 return { width: 180, height: 250 };
               }}
+              style={{ overflowY: "auto", maxHeight: "calc(100vh - 200px)" }}
             />
             <Box gap="md" display="flex">
               <ActionButton
