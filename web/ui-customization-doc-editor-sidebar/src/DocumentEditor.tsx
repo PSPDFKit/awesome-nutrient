@@ -23,7 +23,7 @@ import {
 import { themes } from "@baseline-ui/tokens";
 import type { DocumentOperations, Instance } from "@nutrient-sdk/viewer";
 import NutrientViewer from "@nutrient-sdk/viewer";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface Props {
   instance: Instance;
@@ -57,10 +57,21 @@ const DocumentEditor = (props: Props) => {
     new Set(),
   );
   const [operationQueue, setOperationQueue] = useState<DocumentOperation[]>([]);
+  const blobUrlsRef = useRef<Set<string>>(new Set());
+
+  const cleanupBlobUrls = useCallback(() => {
+    blobUrlsRef.current.forEach((url) => {
+      URL.revokeObjectURL(url);
+    });
+    blobUrlsRef.current.clear();
+  }, []);
 
   const populatePageData = useCallback(async () => {
     const totalPages = instance.totalPageCount;
     const pagesData = [];
+
+    // Revoke old URLs before creating new ones
+    cleanupBlobUrls();
 
     for (let pageIndex = 0; pageIndex < totalPages; pageIndex += 1) {
       const pageInfo = instance.pageInfoForIndex(pageIndex);
@@ -72,6 +83,12 @@ const DocumentEditor = (props: Props) => {
         { width: 400 },
         pageIndex,
       );
+
+      // Track blob URL for cleanup
+      if (src.startsWith("blob:")) {
+        blobUrlsRef.current.add(src);
+      }
+
       pagesData.push({
         id: pageInfo.label,
         label: pageInfo.label,
@@ -83,11 +100,18 @@ const DocumentEditor = (props: Props) => {
     }
 
     setDraftPages(pagesData);
-  }, [instance]);
+  }, [instance, cleanupBlobUrls]);
 
   useEffect(() => {
     populatePageData();
   }, [populatePageData]);
+
+  // Cleanup blob URLs on unmount
+  useEffect(() => {
+    return () => {
+      cleanupBlobUrls();
+    };
+  }, [cleanupBlobUrls]);
 
   const getPageIndexesFromSelectedKeys = (): number[] => {
     return [...selectedKeys]
