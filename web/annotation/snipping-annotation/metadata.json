@@ -1,17 +1,20 @@
 {
-  "title": "Text to Speech",
-  "description": "Read PDF text aloud using the Web Speech API. Select text and have it spoken for accessibility or hands-free reading.",
+  "title": "Snipping Annotation",
+  "description": "Capture annotation regions as images using html2canvas. Export specific areas of annotated PDFs as image files.",
   "category": "Annotations",
   "framework": "react",
   "keywords": [
-    "text to speech",
-    "TTS",
-    "voice",
-    "read aloud",
-    "accessibility",
-    "Web Speech API"
+    "snipping",
+    "screenshot",
+    "capture",
+    "export",
+    "image",
+    "html2canvas"
   ],
+  "dependencies": {
+    "html2canvas": "https://esm.sh/html2canvas"
+  },
   "sidebar": {
-    "guideUrl": "https://www.nutrient.io/guides/web/text-selection/"
+    "guideUrl": "https://www.nutrient.io/guides/web/annotations/"
   }
 }
