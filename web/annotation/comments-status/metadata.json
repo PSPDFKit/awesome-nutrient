@@ -1,0 +1,10 @@
+{
+  "title": "Comment Status Workflow",
+  "description": "Add approval/rejection status to comment threads. Demonstrates customizing the comment thread UI with approve/reject actions.",
+  "category": "Annotations",
+  "framework": "vanilla",
+  "keywords": ["comments", "status", "approval", "workflow", "comment thread", "UI customization"],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/comments/"
+  }
+}

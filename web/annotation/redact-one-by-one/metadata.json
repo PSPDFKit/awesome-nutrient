@@ -1,0 +1,10 @@
+{
+  "title": "Redact One-by-One",
+  "description": "Review and apply redactions individually with accept/reject controls. Demonstrates custom annotation tooltips for granular redaction workflow.",
+  "category": "Annotations",
+  "framework": "react",
+  "keywords": ["redaction", "review", "accept", "reject", "tooltip", "workflow"],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/redaction/"
+  }
+}

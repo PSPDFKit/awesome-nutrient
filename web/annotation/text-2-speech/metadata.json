@@ -1,0 +1,17 @@
+{
+  "title": "Text to Speech",
+  "description": "Read PDF text aloud using the Web Speech API. Select text and have it spoken for accessibility or hands-free reading.",
+  "category": "Annotations",
+  "framework": "react",
+  "keywords": [
+    "text to speech",
+    "TTS",
+    "voice",
+    "read aloud",
+    "accessibility",
+    "Web Speech API"
+  ],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/text-selection/"
+  }
+}

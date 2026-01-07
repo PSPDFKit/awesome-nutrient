@@ -1,0 +1,19 @@
+{
+  "title": "Polygon Clipping Outline",
+  "description": "Create custom SVG polygon outlines for text markup annotations. Uses polygon-clipping to merge overlapping rectangles into unified outlines.",
+  "category": "Annotations",
+  "framework": "vanilla",
+  "keywords": [
+    "highlight",
+    "text markup",
+    "custom renderer",
+    "SVG",
+    "polygon clipping"
+  ],
+  "dependencies": {
+    "polygon-clipping": "https://cdn.jsdelivr.net/npm/polygon-clipping@0.15.7/dist/polygon-clipping.umd.min.js"
+  },
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/annotations/text-markup-annotations/"
+  }
+}

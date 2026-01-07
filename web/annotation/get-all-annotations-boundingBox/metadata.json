@@ -1,0 +1,10 @@
+{
+  "title": "Annotation Bounding Boxes",
+  "description": "Extract bounding box coordinates from all annotations. Useful for annotation positioning, collision detection, or export workflows.",
+  "category": "Annotations",
+  "framework": "react",
+  "keywords": ["bounding box", "coordinates", "position", "annotation data", "export"],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/annotations/"
+  }
+}

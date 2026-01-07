@@ -1,0 +1,10 @@
+{
+  "title": "Custom Annotation Sidebar",
+  "description": "Customize the annotation sidebar appearance and behavior. Filter, sort, and style annotation lists.",
+  "category": "Annotations",
+  "framework": "react",
+  "keywords": ["sidebar", "annotation list", "customization", "filter", "UI"],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/customization/annotation-sidebar/"
+  }
+}

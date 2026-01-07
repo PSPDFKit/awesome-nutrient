@@ -1,0 +1,16 @@
+{
+  "title": "Watermark Annotations",
+  "description": "Add text watermarks across all pages of a PDF document. Demonstrates programmatically creating text annotations as watermarks with opacity and rotation.",
+  "category": "Annotations",
+  "framework": "vanilla",
+  "keywords": [
+    "watermark",
+    "text annotation",
+    "security",
+    "confidential",
+    "flatten"
+  ],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/annotations/text-annotations/"
+  }
+}

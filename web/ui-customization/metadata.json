@@ -1,0 +1,16 @@
+{
+  "title": "Custom Comment Thread UI",
+  "description": "Build a completely custom comment thread component using React. Demonstrates how to replace the default comment UI with your own React components.",
+  "category": "UI Customization",
+  "framework": "react",
+  "keywords": [
+    "comments",
+    "custom UI",
+    "React",
+    "comment thread",
+    "UI components"
+  ],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/comments/custom-comment-thread/"
+  }
+}

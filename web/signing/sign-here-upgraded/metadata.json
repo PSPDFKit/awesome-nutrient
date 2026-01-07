@@ -1,0 +1,10 @@
+{
+  "title": "Sign Here Widget",
+  "description": "Create a dynamic 'Sign Here' arrow widget that guides users to unsigned signature fields and celebrates when all signatures are complete.",
+  "category": "Signing",
+  "framework": "vanilla",
+  "keywords": ["signature", "sign here", "widget", "guided signing", "signature field"],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/signatures/"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Document Editor Sidebar",
+  "description": "Build a custom document editor sidebar with page thumbnails and manipulation controls. Demonstrates advanced UI customization.",
+  "category": "UI Customization",
+  "framework": "react",
+  "keywords": [
+    "document editor",
+    "sidebar",
+    "page thumbnails",
+    "page manipulation",
+    "custom UI"
+  ],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/document-editor/"
+  }
+}

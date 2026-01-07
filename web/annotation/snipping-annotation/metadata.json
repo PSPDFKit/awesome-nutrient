@@ -1,0 +1,13 @@
+{
+  "title": "Snipping Annotation",
+  "description": "Capture annotation regions as images using html2canvas. Export specific areas of annotated PDFs as image files.",
+  "category": "Annotations",
+  "framework": "react",
+  "keywords": ["snipping", "screenshot", "capture", "export", "image", "html2canvas"],
+  "dependencies": {
+    "html2canvas": "https://esm.sh/html2canvas"
+  },
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/annotations/"
+  }
+}

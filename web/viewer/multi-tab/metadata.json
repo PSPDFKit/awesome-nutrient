@@ -1,0 +1,10 @@
+{
+  "title": "Multi-Tab PDF Viewer",
+  "description": "View multiple PDF documents in browser tabs. Features tab management, document persistence in localStorage, and export functionality.",
+  "category": "Viewer",
+  "framework": "react",
+  "keywords": ["tabs", "multiple documents", "localStorage", "document management", "export"],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/"
+  }
+}

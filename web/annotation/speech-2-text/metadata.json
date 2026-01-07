@@ -1,0 +1,10 @@
+{
+  "title": "Speech to Text Annotations",
+  "description": "Create text annotations from speech using the Web Speech API. Dictate notes and comments hands-free.",
+  "category": "Annotations",
+  "framework": "react",
+  "keywords": ["speech", "voice", "dictation", "text annotation", "Web Speech API", "accessibility"],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/annotations/text-annotations/"
+  }
+}

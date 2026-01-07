@@ -1,0 +1,10 @@
+{
+  "title": "Clipboard to Annotation",
+  "description": "Create annotations from clipboard content. Paste images or text directly onto PDF pages as annotations.",
+  "category": "Annotations",
+  "framework": "react",
+  "keywords": ["clipboard", "paste", "image annotation", "text annotation", "copy paste"],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/annotations/"
+  }
+}

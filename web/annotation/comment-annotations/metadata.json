@@ -1,0 +1,10 @@
+{
+  "title": "Comment Annotations",
+  "description": "Add comments to highlight annotations using a custom annotation toolbar button. Demonstrates how to create comment threads on text markup annotations.",
+  "category": "Annotations",
+  "framework": "vanilla",
+  "keywords": ["comments", "annotations", "highlight", "text markup", "annotation toolbar"],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/comments/"
+  }
+}

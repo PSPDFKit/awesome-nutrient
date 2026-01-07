@@ -1,0 +1,10 @@
+{
+  "title": "Save Selected Pages",
+  "description": "Extract and save individual pages from the document editor. Select pages from thumbnails and export them as a new PDF.",
+  "category": "Document Editor",
+  "framework": "react",
+  "keywords": ["document editor", "page extraction", "save pages", "export", "PDF split"],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/document-editor/"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Mixpanel Analytics Integration",
+  "description": "Track PDF viewer events with Mixpanel analytics. Monitor user interactions, page views, and annotation activity.",
+  "category": "Integrations",
+  "framework": "react",
+  "keywords": [
+    "analytics",
+    "Mixpanel",
+    "tracking",
+    "events",
+    "metrics",
+    "user behavior"
+  ],
+  "sidebar": {
+    "guideUrl": "https://www.nutrient.io/guides/web/"
+  }
+}
