@@ -7,7 +7,7 @@ let instance;
 let allAnnotations = []; // push all the annotation bounding box and pageindex and annotation numbers
 let pageIndex; // store the page index
 let currentAnnotationIndex = 0; // know the current annotation and scroll to next annotation
-const lkey = "Your license key here";
+
 export default function PdfViewerComponent(props) {
   const containerRef = useRef(null);
 
@@ -23,7 +23,6 @@ export default function PdfViewerComponent(props) {
       const toolbarItems = [...defaultToolbarItems];
 
       instance = await PSPDFKit.load({
-        licenseKey: lkey,
         container,
         document: props.document,
         baseUrl: `${window.location.protocol}//${window.location.host}/${import.meta.env.PUBLIC_URL ?? ""}`,

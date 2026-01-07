@@ -26,7 +26,6 @@ export default function PdfViewerComponent(props: PdfViewerProps) {
 
       const toolbarItemsDefault = PSPDFKit.defaultToolbarItems;
       instance = await PSPDFKit.load({
-        licenseKey: "Your License Key goes here",
         container,
         document: props.document,
         baseUrl: `${window.location.protocol}//${window.location.host}/`,

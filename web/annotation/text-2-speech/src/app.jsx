@@ -1,8 +1,8 @@
 // App.jsx
 import { useId, useState } from "react";
 
-import PdfViewerComponent from "./components/PdfViewerComponent.jsx";
-import "./App.css";
+import PdfViewerComponent from "./components/pdf-viewer-component.jsx";
+import "./app.css";
 
 function App() {
   const [document, setDocument] = useState("document.pdf");
