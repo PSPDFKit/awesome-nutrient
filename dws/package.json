@@ -40,7 +40,7 @@
     "node-fetch": "^3.3.2",
     "rollup-plugin-copy": "^3.5.0",
     "typescript": "^5.9.2",
-    "vite": "^6.3.5"
+    "vite": "^6.4.1"
   },
   "overrides": {
     "vite": "6.4.1"
