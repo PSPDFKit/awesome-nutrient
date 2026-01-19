@@ -8,8 +8,6 @@ const item = {
   id: "add-radio-group",
   title: "Add Radio Group",
   onPress: async () => {
-    if (!instance) return;
-
     const radioWidget1 = new window.NutrientViewer.Annotations.WidgetAnnotation(
       {
         id: window.NutrientViewer.generateInstantId(),
@@ -23,6 +21,7 @@ const item = {
         }),
       },
     );
+
     const radioWidget2 = new window.NutrientViewer.Annotations.WidgetAnnotation(
       {
         id: window.NutrientViewer.generateInstantId(),
@@ -36,6 +35,7 @@ const item = {
         }),
       },
     );
+
     const formField = new window.NutrientViewer.FormFields.RadioButtonFormField(
       {
         name: "MyFormField",
@@ -56,7 +56,8 @@ const item = {
         defaultValue: "1",
       },
     );
-    await instance.create([radioWidget1, radioWidget2, formField]);
+
+    await instance?.create([radioWidget1, radioWidget2, formField]);
   },
 };
 
