@@ -25,7 +25,7 @@
     "@types/react-dom": "^19.1.2",
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
-    "@vitejs/plugin-react": "^4.4.1",
+    "@vitejs/plugin-react": "^5.1.2",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -40,9 +40,6 @@
     "node-fetch": "^3.3.2",
     "rollup-plugin-copy": "^3.5.0",
     "typescript": "^5.9.2",
-    "vite": "^6.3.5"
-  },
-  "overrides": {
-    "vite": "6.4.1"
+    "vite": "^7.3.1"
   }
 }
