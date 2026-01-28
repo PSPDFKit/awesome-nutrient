@@ -1,0 +1,108 @@
+.widget-overlay {
+  position: relative;
+  background-color: #f8f9fa;
+  color: #333;
+  border: 2px solid #007bff;
+  cursor: move;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.1s ease;
+  width: inherit;
+  height: inherit;
+}
+
+.widget-overlay:hover {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
+}
+
+.widget-overlay.selected {
+  outline: 5px solid #007bff;
+  outline-offset: 2px;
+  z-index: 999;
+}
+
+.widget-overlay.dragging {
+  opacity: 0.8;
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.widget-text-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  padding: 4px;
+}
+
+.widget-type-indicator {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  width: 24px;
+  height: 24px;
+  background: #007bff;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  z-index: 10;
+}
+
+.resize-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #007bff;
+  border: 2px solid white;
+  border-radius: 2px;
+  z-index: 15;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.widget-overlay.selected .resize-handle {
+  opacity: 1;
+}
+
+.resize-handle.nw {
+  top: -5px;
+  left: -5px;
+  cursor: nw-resize;
+}
+
+.resize-handle.ne {
+  top: -5px;
+  right: -5px;
+  cursor: ne-resize;
+}
+
+.resize-handle.sw {
+  bottom: -5px;
+  left: -5px;
+  cursor: sw-resize;
+}
+
+.resize-handle.se {
+  bottom: -5px;
+  right: -5px;
+  cursor: se-resize;
+}
