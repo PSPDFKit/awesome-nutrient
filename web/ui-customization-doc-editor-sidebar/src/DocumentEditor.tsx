@@ -1,6 +1,5 @@
 import {
   ActionButton,
-  ActionGroup,
   ActionIconButton,
   Box,
   FrameProvider,
@@ -13,11 +12,13 @@ import {
   Toolbar,
 } from "@baseline-ui/core";
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  DuplicateIcon,
   PageAddIcon,
+  PageDuplicateIcon,
+  PageMoveLeftIcon,
+  PageMoveRightIcon,
   PageRemoveIcon,
+  PagesInsertAltIcon,
+  PagesNewFromSelectionIcon,
   RotateClockwiseIcon,
   RotateCounterClockwiseIcon,
 } from "@baseline-ui/icons/24";
@@ -485,20 +486,20 @@ const DocumentEditor = (props: Props) => {
     <Box display="flex" gap="xs" alignItems="center">
       <Toolbar isCollapsible>
         <ActionIconButton
-          icon={RotateCounterClockwiseIcon}
-          aria-label="Rotate Left"
-          tooltip
-          size="lg"
-          isDisabled={isOperationsDisabled}
-          onPress={() => queueDocumentOperation("rotate-counterclockwise")}
-        />
-        <ActionIconButton
           icon={RotateClockwiseIcon}
           aria-label="Rotate Right"
           tooltip
           size="lg"
           isDisabled={isOperationsDisabled}
           onPress={() => queueDocumentOperation("rotate-clockwise")}
+        />
+        <ActionIconButton
+          icon={RotateCounterClockwiseIcon}
+          aria-label="Rotate Left"
+          tooltip
+          size="lg"
+          isDisabled={isOperationsDisabled}
+          onPress={() => queueDocumentOperation("rotate-counterclockwise")}
         />
         <ActionIconButton
           icon={PageRemoveIcon}
@@ -517,7 +518,7 @@ const DocumentEditor = (props: Props) => {
           onPress={() => queueDocumentOperation("add-page")}
         />
         <ActionIconButton
-          icon={DuplicateIcon}
+          icon={PageDuplicateIcon}
           aria-label="Duplicate Page"
           tooltip
           size="lg"
@@ -525,7 +526,22 @@ const DocumentEditor = (props: Props) => {
           onPress={() => queueDocumentOperation("duplicate-page")}
         />
         <ActionIconButton
-          icon={ArrowRightIcon}
+          icon={PagesInsertAltIcon}
+          aria-label="Import Document"
+          tooltip
+          size="lg"
+          onPress={() => queueDocumentOperation("import-document")}
+        />
+        <ActionIconButton
+          icon={PageMoveLeftIcon}
+          aria-label="Move Left"
+          tooltip
+          size="lg"
+          isDisabled={isOperationsDisabled}
+          onPress={() => queueDocumentOperation("move-left")}
+        />
+        <ActionIconButton
+          icon={PageMoveRightIcon}
           aria-label="Move Right"
           tooltip
           size="lg"
@@ -533,12 +549,12 @@ const DocumentEditor = (props: Props) => {
           onPress={() => queueDocumentOperation("move-right")}
         />
         <ActionIconButton
-          icon={ArrowLeftIcon}
-          aria-label="Move Left"
+          icon={PagesNewFromSelectionIcon}
+          aria-label="Export Selected Pages"
           tooltip
           size="lg"
           isDisabled={isOperationsDisabled}
-          onPress={() => queueDocumentOperation("move-left")}
+          onPress={() => queueDocumentOperation("export-selected-pages")}
         />
       </Toolbar>
     </Box>
@@ -662,6 +678,7 @@ const DocumentEditor = (props: Props) => {
 
                   return { width: 102, height: 136 };
                 }}
+                // @ts-expect-error Private API
                 layoutTransition={false}
               />
 
