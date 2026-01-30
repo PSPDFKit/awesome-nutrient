@@ -3,23 +3,23 @@ import {
   ActionGroup,
   ActionIconButton,
   Box,
+  FrameProvider,
   I18nProvider,
   ImageGallery,
   Separator,
+  TagGroup,
   Text,
   ThemeProvider,
+  Toolbar,
 } from "@baseline-ui/core";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  DownloadIcon,
   DuplicateIcon,
   PageAddIcon,
   PageRemoveIcon,
   RotateClockwiseIcon,
   RotateCounterClockwiseIcon,
-  SelectAllIcon,
-  UploadIcon,
 } from "@baseline-ui/icons/24";
 import { sprinkles, themes } from "@baseline-ui/tokens";
 import type { DocumentOperations, Instance } from "@nutrient-sdk/viewer";
@@ -131,7 +131,6 @@ const DocumentEditor = (props: Props) => {
   };
 
   const queueDocumentOperation = async (operation: string | number) => {
-    debugger
     let operationData: DocumentOperation | undefined;
 
     if (operation === "rotate-clockwise") {
@@ -483,61 +482,71 @@ const DocumentEditor = (props: Props) => {
   const isOperationsDisabled = selectedKeys.size === 0;
 
   const operations = (
-    <ActionGroup
-      isDisabled={isOperationsDisabled}
-      items={[
-        {
-          id: "rotate-clockwise",
-          label: "Rotate Clockwise",
-          icon: RotateClockwiseIcon,
-        },
-        {
-          id: "rotate-counterclockwise",
-          label: "Rotate Counterclockwise",
-          icon: RotateCounterClockwiseIcon,
-        },
-        {
-          id: "remove-pages",
-          label: "Remove Pages",
-          icon: PageRemoveIcon,
-        },
-        {
-          id: "add-page",
-          label: "Add Page",
-          icon: PageAddIcon,
-        },
-        {
-          id: "duplicate-page",
-          label: "Duplicate Page",
-          icon: DuplicateIcon,
-        },
-        {
-          id: "import-document",
-          label: "Import Document",
-          icon: UploadIcon,
-        },
-        {
-          id: "move-left",
-          label: "Move Left",
-          icon: ArrowLeftIcon,
-        },
-        {
-          id: "move-right",
-          label: "Move Right",
-          icon: ArrowRightIcon,
-        },
-        {
-          id: "export-selected-pages",
-          label: "Export Selected Pages",
-          icon: DownloadIcon,
-        },
-      ]}
-      onAction={queueDocumentOperation}
-    />
+    <Box display="flex" gap="xs" alignItems="center">
+      <Toolbar isCollapsible>
+        <ActionIconButton
+          icon={RotateCounterClockwiseIcon}
+          aria-label="Rotate Left"
+          tooltip
+          size="lg"
+          isDisabled={isOperationsDisabled}
+          onPress={() => queueDocumentOperation("rotate-counterclockwise")}
+        />
+        <ActionIconButton
+          icon={RotateClockwiseIcon}
+          aria-label="Rotate Right"
+          tooltip
+          size="lg"
+          isDisabled={isOperationsDisabled}
+          onPress={() => queueDocumentOperation("rotate-clockwise")}
+        />
+        <ActionIconButton
+          icon={PageRemoveIcon}
+          aria-label="Delete Page"
+          tooltip
+          size="lg"
+          isDisabled={isOperationsDisabled}
+          onPress={() => queueDocumentOperation("remove-pages")}
+        />
+        <ActionIconButton
+          icon={PageAddIcon}
+          aria-label="Add Page"
+          tooltip
+          size="lg"
+          isDisabled={isOperationsDisabled}
+          onPress={() => queueDocumentOperation("add-page")}
+        />
+        <ActionIconButton
+          icon={DuplicateIcon}
+          aria-label="Duplicate Page"
+          tooltip
+          size="lg"
+          isDisabled={isOperationsDisabled}
+          onPress={() => queueDocumentOperation("duplicate-page")}
+        />
+        <ActionIconButton
+          icon={ArrowRightIcon}
+          aria-label="Move Right"
+          tooltip
+          size="lg"
+          isDisabled={isOperationsDisabled}
+          onPress={() => queueDocumentOperation("move-right")}
+        />
+        <ActionIconButton
+          icon={ArrowLeftIcon}
+          aria-label="Move Left"
+          tooltip
+          size="lg"
+          isDisabled={isOperationsDisabled}
+          onPress={() => queueDocumentOperation("move-left")}
+        />
+      </Toolbar>
+    </Box>
   );
 
   return (
     <ThemeProvider theme={themes.base.light}>
+      <FrameProvider>
         <I18nProvider shouldLogMissingMessages={false} locale="en-US">
           <Box
             display="flex"
@@ -546,28 +555,60 @@ const DocumentEditor = (props: Props) => {
             flex={1}
             style={{
               height: "calc(100vh - 48px)",
+              minWidth: 320,
             }}
           >
-            <Box
-              display="flex"
-              flexDirection="column"
-            >
-              <Text
-                type="title"
-                size="sm"
-                elementType="h2"
-                className={sprinkles({
-                  paddingX: "lg",
-                  paddingY: "md",
-                  display: "flex",
-                  alignItems: "center",
-                })}
+            <Box display="flex" flexDirection="column">
+              <div
                 style={{
-                  minHeight: 48
+                  display: "grid",
+                  // 3 columns
+                  gridTemplateColumns: "1fr 1fr 1fr",
+                  gap: "md",
                 }}
               >
-                Organize Pages
-              </Text>
+                <Text
+                  type="title"
+                  size="sm"
+                  elementType="h2"
+                  className={sprinkles({
+                    paddingX: "lg",
+                    paddingY: "md",
+                    display: "flex",
+                    alignItems: "center",
+                  })}
+                  style={{
+                    minHeight: 48,
+                  }}
+                >
+                  Organize Pages
+                </Text>
+
+                {selectedKeys.size > 0 && (
+                  <Box
+                    display="flex"
+                    gap="md"
+                    alignItems="center"
+                    style={{
+                      placeSelf: "center",
+                    }}
+                  >
+                    <TagGroup
+                      variant="neutral"
+                      items={[
+                        {
+                          id: "selected-pages",
+                          label:
+                            selectedKeys.size > 1
+                              ? `${selectedKeys.size} Pages selected`
+                              : `${selectedKeys.size} Page selected`,
+                        },
+                      ]}
+                      aria-label="Document editor sidebar"
+                    />
+                  </Box>
+                )}
+              </div>
               <Separator />
               {operations}
               <Separator />
@@ -582,30 +623,48 @@ const DocumentEditor = (props: Props) => {
                 minHeight: 0,
               }}
             >
-              <Box paddingX="lg">
-                <ImageGallery
-                  aria-label="Document editor sidebar"
-                  items={draftPages}
-                  selectionMode="multiple"
-                  selectedKeys={selectedKeys}
-                  onSelectionChange={(keys) => {
-                    setSelectedKeys(
-                      keys === "all"
-                        ? new Set(draftPages.map((page) => page.id))
-                        : keys,
-                    );
-                  }}
-                  renderImage={renderImage}
-                  imageDimensions={() => {
-                    // Return consistent dimensions for all thumbnails
-                    // This ensures grid alignment regardless of page orientation
+              <ImageGallery
+                aria-label="Document editor sidebar"
+                items={draftPages}
+                selectionMode="multiple"
+                selectedKeys={selectedKeys}
+                onSelectionChange={(keys) => {
+                  setSelectedKeys(
+                    keys === "all"
+                      ? new Set(draftPages.map((page) => page.id))
+                      : keys,
+                  );
+                }}
+                renderImage={renderImage}
+                imageDimensions={(item) => {
+                  // Find the corresponding draft page
+                  const draftPage = draftPages.find(
+                    (page) => page.id === item.id,
+                  );
+
+                  if (!draftPage) {
                     return { width: 102, height: 136 };
-                  }}
-                />
-              </Box>
+                  }
+
+                  // Calculate total rotation (document rotation + draft rotation)
+                  const totalRotation =
+                    draftPage.rotation + (draftPage.draftRotation || 0);
+
+                  // For 90 or 270 degree rotations, swap dimensions
+                  const normalizedRotation = totalRotation % 360;
+                  const isRotated90or270 =
+                    normalizedRotation === 90 || normalizedRotation === 270;
+
+                  if (isRotated90or270) {
+                    return { width: 136, height: 102 };
+                  }
+
+                  return { width: 102, height: 136 };
+                }}
+                layoutTransition={false}
+              />
             </Box>
 
-<Separator />
             <Box
               paddingY="md"
               paddingInlineStart="lg"
@@ -617,20 +676,21 @@ const DocumentEditor = (props: Props) => {
               <ActionButton
                 label="Save As..."
                 variant="secondary"
-                onPress={alert}
-                className={sprinkles({flex: 1, justifyContent: "center"})}
-                style={{textAlign: "center"}}
+                onPress={handleExportPDF}
+                className={sprinkles({ flex: 1, justifyContent: "center" })}
+                style={{ textAlign: "center" }}
               />
               <ActionButton
                 label="Save"
                 onPress={handleSave}
                 isDisabled={operationQueue.length === 0}
-                className={sprinkles({flex: 1, justifyContent: "center"})}
-                style={{textAlign: "center"}}
+                className={sprinkles({ flex: 1, justifyContent: "center" })}
+                style={{ textAlign: "center" }}
               />
             </Box>
           </Box>
         </I18nProvider>
+      </FrameProvider>
     </ThemeProvider>
   );
 };
