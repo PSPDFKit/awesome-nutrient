@@ -21,7 +21,7 @@ import {
   RotateClockwiseIcon,
   RotateCounterClockwiseIcon,
 } from "@baseline-ui/icons/24";
-import { sprinkles, themes } from "@baseline-ui/tokens";
+import { sprinkles, themes, themeVars } from "@baseline-ui/tokens";
 import type { DocumentOperations, Instance } from "@nutrient-sdk/viewer";
 import NutrientViewer from "@nutrient-sdk/viewer";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -618,6 +618,7 @@ const DocumentEditor = (props: Props) => {
               flex="1"
               display="flex"
               flexDirection="column"
+              position="relative"
               style={{
                 overflowY: "auto",
                 minHeight: 0,
@@ -663,7 +664,28 @@ const DocumentEditor = (props: Props) => {
                 }}
                 layoutTransition={false}
               />
+
+              {operationQueue.length > 0 && (
+                <TagGroup
+                  variant="red"
+                  items={[
+                    {
+                      id: "pending-operations",
+                      label: "You have unsaved changes",
+                    },
+                  ]}
+                  aria-label="Document editor sidebar"
+                  style={{
+                    position: "absolute",
+                    bottom: themeVars.spacing.xl,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                  }}
+                />
+              )}
             </Box>
+
+            <Separator />
 
             <Box
               paddingY="md"
