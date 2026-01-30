@@ -418,6 +418,30 @@ const DocumentEditor = (props: Props) => {
     setSelectedKeys(new Set());
   };
 
+  const [maxWidth, setMaxWidth] = useState(102);
+
+  const toolbarContainerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const container = toolbarContainerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        // Use modern ResizeObserver API
+        const width =
+          entry.borderBoxSize?.[0]?.inlineSize ??
+          entry.contentBoxSize?.[0]?.inlineSize ??
+          entry.contentRect?.width ??
+          0;
+        if (width > 0) {
+          setMaxWidth(width);
+        }
+      }
+    });
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, []);
+
   const renderImage = (item: {
     id: string;
     data?: { alt?: string; src?: string };
@@ -481,84 +505,6 @@ const DocumentEditor = (props: Props) => {
   };
 
   const isOperationsDisabled = selectedKeys.size === 0;
-
-  const operations = (
-    <Box display="flex" gap="xs" alignItems="center">
-      <Toolbar isCollapsible>
-        <ActionIconButton
-          icon={RotateClockwiseIcon}
-          aria-label="Rotate Right"
-          tooltip
-          size="lg"
-          isDisabled={isOperationsDisabled}
-          onPress={() => queueDocumentOperation("rotate-clockwise")}
-        />
-        <ActionIconButton
-          icon={RotateCounterClockwiseIcon}
-          aria-label="Rotate Left"
-          tooltip
-          size="lg"
-          isDisabled={isOperationsDisabled}
-          onPress={() => queueDocumentOperation("rotate-counterclockwise")}
-        />
-        <ActionIconButton
-          icon={PageRemoveIcon}
-          aria-label="Delete Page"
-          tooltip
-          size="lg"
-          isDisabled={isOperationsDisabled}
-          onPress={() => queueDocumentOperation("remove-pages")}
-        />
-        <ActionIconButton
-          icon={PageAddIcon}
-          aria-label="Add Page"
-          tooltip
-          size="lg"
-          isDisabled={isOperationsDisabled}
-          onPress={() => queueDocumentOperation("add-page")}
-        />
-        <ActionIconButton
-          icon={PageDuplicateIcon}
-          aria-label="Duplicate Page"
-          tooltip
-          size="lg"
-          isDisabled={isOperationsDisabled}
-          onPress={() => queueDocumentOperation("duplicate-page")}
-        />
-        <ActionIconButton
-          icon={PagesInsertAltIcon}
-          aria-label="Import Document"
-          tooltip
-          size="lg"
-          onPress={() => queueDocumentOperation("import-document")}
-        />
-        <ActionIconButton
-          icon={PageMoveLeftIcon}
-          aria-label="Move Left"
-          tooltip
-          size="lg"
-          isDisabled={isOperationsDisabled}
-          onPress={() => queueDocumentOperation("move-left")}
-        />
-        <ActionIconButton
-          icon={PageMoveRightIcon}
-          aria-label="Move Right"
-          tooltip
-          size="lg"
-          isDisabled={isOperationsDisabled}
-          onPress={() => queueDocumentOperation("move-right")}
-        />
-        <ActionIconButton
-          icon={PagesNewFromSelectionIcon}
-          aria-label="Export Selected Pages"
-          tooltip
-          size="lg"
-          isDisabled={isOperationsDisabled}
-          onPress={() => queueDocumentOperation("export-selected-pages")}
-        />
-      </Toolbar>
-    </Box>
-  );
 
   return (
     <ThemeProvider theme={themes.base.light}>
@@ -626,7 +572,99 @@ const DocumentEditor = (props: Props) => {
                 )}
               </div>
               <Separator />
-              {operations}
+              <Box
+                display="flex"
+                gap="xs"
+                alignItems="center"
+                ref={toolbarContainerRef}
+              >
+                <Toolbar isCollapsible style={{ maxWidth, width: "100%" }}>
+                  <ActionIconButton
+                    icon={RotateClockwiseIcon}
+                    variant="toolbar"
+                    aria-label="Rotate Right"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("rotate-clockwise")}
+                  />
+                  <ActionIconButton
+                    icon={RotateCounterClockwiseIcon}
+                    variant="toolbar"
+                    aria-label="Rotate Left"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() =>
+                      queueDocumentOperation("rotate-counterclockwise")
+                    }
+                  />
+                  <ActionIconButton
+                    icon={PageRemoveIcon}
+                    variant="toolbar"
+                    aria-label="Delete Page"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("remove-pages")}
+                  />
+                  <ActionIconButton
+                    icon={PageAddIcon}
+                    variant="toolbar"
+                    aria-label="Add Page"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("add-page")}
+                  />
+                  <ActionIconButton
+                    icon={PageDuplicateIcon}
+                    variant="toolbar"
+                    aria-label="Duplicate Page"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("duplicate-page")}
+                  />
+                  <ActionIconButton
+                    icon={PagesInsertAltIcon}
+                    variant="toolbar"
+                    aria-label="Import Document"
+                    tooltip
+                    size="lg"
+                    onPress={() => queueDocumentOperation("import-document")}
+                  />
+                  <ActionIconButton
+                    icon={PageMoveLeftIcon}
+                    variant="toolbar"
+                    aria-label="Move Left"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("move-left")}
+                  />
+                  <ActionIconButton
+                    icon={PageMoveRightIcon}
+                    variant="toolbar"
+                    aria-label="Move Right"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("move-right")}
+                  />
+                  <ActionIconButton
+                    icon={PagesNewFromSelectionIcon}
+                    variant="toolbar"
+                    aria-label="Export Selected Pages"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() =>
+                      queueDocumentOperation("export-selected-pages")
+                    }
+                  />
+                </Toolbar>
+              </Box>
               <Separator />
             </Box>
 

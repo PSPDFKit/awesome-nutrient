@@ -11,3 +11,7 @@
   column-gap: var(--bui-spacing-lg);
   place-items: center;
 }
+
+[role="toolbar"] > div {
+  gap: var(--bui-spacing-xl);
+}
