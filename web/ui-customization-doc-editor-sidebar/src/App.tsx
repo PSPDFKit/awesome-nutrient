@@ -49,14 +49,9 @@ function App() {
             },
           },
         }).then((instance) => {
-instance.setViewState((viewState) =>
-  viewState.set(
-      "sidebarWidth",
-      600
-    ),
-  );
-
-
+          instance.setViewState((viewState) =>
+            viewState.set("sidebarWidth", 600),
+          );
 
           // Define a custom toolbar item.
           const documentEditorToolbarItem = {

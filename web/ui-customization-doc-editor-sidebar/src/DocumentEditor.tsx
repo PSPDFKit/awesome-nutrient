@@ -27,6 +27,13 @@ import type { DocumentOperations, Instance } from "@nutrient-sdk/viewer";
 import NutrientViewer from "@nutrient-sdk/viewer";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+// Layout constants
+const THUMBNAIL_WIDTH = 140;
+const THUMBNAIL_HEIGHT = 200;
+const THUMBNAIL_DIMENSION_WIDTH = 102;
+const THUMBNAIL_DIMENSION_HEIGHT = 136;
+const SIDEBAR_MIN_WIDTH = 320;
+
 interface Props {
   instance: Instance;
 }
@@ -418,30 +425,6 @@ const DocumentEditor = (props: Props) => {
     setSelectedKeys(new Set());
   };
 
-  const [maxWidth, setMaxWidth] = useState(102);
-
-  const toolbarContainerRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const container = toolbarContainerRef.current;
-    if (!container) return;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        // Use modern ResizeObserver API
-        const width =
-          entry.borderBoxSize?.[0]?.inlineSize ??
-          entry.contentBoxSize?.[0]?.inlineSize ??
-          entry.contentRect?.width ??
-          0;
-        if (width > 0) {
-          setMaxWidth(width);
-        }
-      }
-    });
-    resizeObserver.observe(container);
-    return () => resizeObserver.disconnect();
-  }, []);
-
   const renderImage = (item: {
     id: string;
     data?: { alt?: string; src?: string };
@@ -459,8 +442,8 @@ const DocumentEditor = (props: Props) => {
         <div
           style={{
             backgroundColor: "white",
-            width: "140px", // Fixed width matching other thumbnails
-            height: "200px", // Fixed height matching other thumbnails
+            width: THUMBNAIL_WIDTH,
+            height: THUMBNAIL_HEIGHT,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -480,8 +463,8 @@ const DocumentEditor = (props: Props) => {
     // Ensure consistent container width regardless of rotation
     // The image will be rotated inside, but container maintains fixed width
     const containerStyle: React.CSSProperties = {
-      width: "140px", // Fixed width for all thumbnails
-      height: "200px", // Fixed height for all thumbnails
+      width: THUMBNAIL_WIDTH,
+      height: THUMBNAIL_HEIGHT,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -515,21 +498,14 @@ const DocumentEditor = (props: Props) => {
             flexDirection="column"
             width="full"
             flex={1}
+            className="document-editor-container"
             style={{
               height: "calc(100vh - 48px)",
-              minWidth: 320,
+              minWidth: SIDEBAR_MIN_WIDTH,
             }}
-            ref={toolbarContainerRef}
           >
             <Box display="flex" flexDirection="column">
-              <div
-                style={{
-                  display: "grid",
-                  // 3 columns
-                  gridTemplateColumns: "1fr 1fr 1fr",
-                  gap: "md",
-                }}
-              >
+              <div className="document-editor-header">
                 <Text
                   type="title"
                   size="sm"
@@ -567,7 +543,7 @@ const DocumentEditor = (props: Props) => {
                               : `${selectedKeys.size} Page selected`,
                         },
                       ]}
-                      aria-label="Document editor sidebar"
+                      aria-label="Selected pages count"
                     />
                   </Box>
                 )}
@@ -585,18 +561,8 @@ const DocumentEditor = (props: Props) => {
                   isCollapsible
                   style={{
                     width: "100%",
-                    overflow: "hidden",
                   }}
                 >
-                  <ActionIconButton
-                    icon={RotateClockwiseIcon}
-                    variant="toolbar"
-                    aria-label="Rotate Right"
-                    tooltip
-                    size="lg"
-                    isDisabled={isOperationsDisabled}
-                    onPress={() => queueDocumentOperation("rotate-clockwise")}
-                  />
                   <ActionIconButton
                     icon={RotateCounterClockwiseIcon}
                     variant="toolbar"
@@ -607,6 +573,15 @@ const DocumentEditor = (props: Props) => {
                     onPress={() =>
                       queueDocumentOperation("rotate-counterclockwise")
                     }
+                  />
+                  <ActionIconButton
+                    icon={RotateClockwiseIcon}
+                    variant="toolbar"
+                    aria-label="Rotate Right"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("rotate-clockwise")}
                   />
                   <ActionIconButton
                     icon={PageRemoveIcon}
@@ -707,7 +682,10 @@ const DocumentEditor = (props: Props) => {
                   );
 
                   if (!draftPage) {
-                    return { width: 102, height: 136 };
+                    return {
+                      width: THUMBNAIL_DIMENSION_WIDTH,
+                      height: THUMBNAIL_DIMENSION_HEIGHT,
+                    };
                   }
 
                   // Calculate total rotation (document rotation + draft rotation)
@@ -720,10 +698,16 @@ const DocumentEditor = (props: Props) => {
                     normalizedRotation === 90 || normalizedRotation === 270;
 
                   if (isRotated90or270) {
-                    return { width: 136, height: 102 };
+                    return {
+                      width: THUMBNAIL_DIMENSION_HEIGHT,
+                      height: THUMBNAIL_DIMENSION_WIDTH,
+                    };
                   }
 
-                  return { width: 102, height: 136 };
+                  return {
+                    width: THUMBNAIL_DIMENSION_WIDTH,
+                    height: THUMBNAIL_DIMENSION_HEIGHT,
+                  };
                 }}
                 // @ts-expect-error Private API
                 layoutTransition={false}
@@ -738,7 +722,7 @@ const DocumentEditor = (props: Props) => {
                       label: "You have unsaved changes",
                     },
                   ]}
-                  aria-label="Document editor sidebar"
+                  aria-label="Unsaved changes indicator"
                   style={{
                     position: "absolute",
                     bottom: themeVars.spacing.xl,
