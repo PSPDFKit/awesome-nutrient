@@ -12,6 +12,16 @@
   place-items: center;
 }
 
-[role="toolbar"] > div {
-  gap: var(--bui-spacing-xl);
+.PSPDFKit-Sidebar [role="toolbar"] button {
+  padding-inline: var(--bui-spacing-2-xl);
+}
+
+.PSPDFKit-Sidebar [role="toolbar"] > div {
+  align-items: center;
+}
+
+.PSPDFKit-Sidebar .BaselineUI-Menu-Trigger {
+  margin-left: auto;
+  height: 48px;
+  max-height: unset;
 }

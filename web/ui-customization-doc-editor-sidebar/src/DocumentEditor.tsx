@@ -519,6 +519,7 @@ const DocumentEditor = (props: Props) => {
               height: "calc(100vh - 48px)",
               minWidth: 320,
             }}
+            ref={toolbarContainerRef}
           >
             <Box display="flex" flexDirection="column">
               <div
@@ -576,9 +577,17 @@ const DocumentEditor = (props: Props) => {
                 display="flex"
                 gap="xs"
                 alignItems="center"
-                ref={toolbarContainerRef}
+                flexGrow={0}
+                flexShrink={0}
+                width="full"
               >
-                <Toolbar isCollapsible style={{ maxWidth, width: "100%" }}>
+                <Toolbar
+                  isCollapsible
+                  style={{
+                    width: "100%",
+                    overflow: "hidden",
+                  }}
+                >
                   <ActionIconButton
                     icon={RotateClockwiseIcon}
                     variant="toolbar"
