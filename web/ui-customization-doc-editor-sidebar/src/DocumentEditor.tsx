@@ -1,26 +1,27 @@
 import {
   ActionButton,
   ActionGroup,
+  ActionIconButton,
   Box,
-  FrameProvider,
   I18nProvider,
   ImageGallery,
+  Separator,
   Text,
   ThemeProvider,
 } from "@baseline-ui/core";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  DocumentPdfIcon,
   DownloadIcon,
   DuplicateIcon,
   PageAddIcon,
   PageRemoveIcon,
   RotateClockwiseIcon,
   RotateCounterClockwiseIcon,
+  SelectAllIcon,
   UploadIcon,
 } from "@baseline-ui/icons/24";
-import { themes } from "@baseline-ui/tokens";
+import { sprinkles, themes } from "@baseline-ui/tokens";
 import type { DocumentOperations, Instance } from "@nutrient-sdk/viewer";
 import NutrientViewer from "@nutrient-sdk/viewer";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -130,6 +131,7 @@ const DocumentEditor = (props: Props) => {
   };
 
   const queueDocumentOperation = async (operation: string | number) => {
+    debugger
     let operationData: DocumentOperation | undefined;
 
     if (operation === "rotate-clockwise") {
@@ -428,13 +430,13 @@ const DocumentEditor = (props: Props) => {
     }
 
     if (draftPage.isNew) {
-      // Render a white blank page
+      // Render a white blank page with consistent dimensions
       return (
         <div
           style={{
             backgroundColor: "white",
-            width: "100%",
-            height: "100%",
+            width: "140px", // Fixed width matching other thumbnails
+            height: "200px", // Fixed height matching other thumbnails
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -451,33 +453,38 @@ const DocumentEditor = (props: Props) => {
       ? { transform: `rotate(${draftPage.draftRotation}deg)` }
       : undefined;
 
+    // Ensure consistent container width regardless of rotation
+    // The image will be rotated inside, but container maintains fixed width
+    const containerStyle: React.CSSProperties = {
+      width: "140px", // Fixed width for all thumbnails
+      height: "200px", // Fixed height for all thumbnails
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "hidden",
+    };
+
     return (
-      <img
-        src={draftPage.src}
-        alt={draftPage.alt}
-        style={style}
-        width={
-          draftPage.rotation === 90 || draftPage.rotation === 270
-            ? "250px"
-            : "180px"
-        }
-      />
+      <div style={containerStyle}>
+        <img
+          src={draftPage.src}
+          alt={draftPage.alt}
+          style={{
+            ...style,
+            maxWidth: "100%",
+            maxHeight: "100%",
+            objectFit: "contain",
+          }}
+        />
+      </div>
     );
   };
 
-  const selectionText = selectedKeys.size ? (
-    <Text>{selectedKeys.size} page(s) selected</Text>
-  ) : (
-    <Text>No pages selected</Text>
-  );
-
-  const pendingOperationsText = operationQueue.length > 0 && (
-    <Text>{operationQueue.length} pending operation(s)</Text>
-  );
+  const isOperationsDisabled = selectedKeys.size === 0;
 
   const operations = (
     <ActionGroup
-      isDisabled={selectedKeys.size === 0}
+      isDisabled={isOperationsDisabled}
       items={[
         {
           id: "rotate-clockwise",
@@ -531,74 +538,99 @@ const DocumentEditor = (props: Props) => {
 
   return (
     <ThemeProvider theme={themes.base.light}>
-      <FrameProvider>
         <I18nProvider shouldLogMissingMessages={false} locale="en-US">
           <Box
-            paddingY="lg"
-            paddingInlineStart="lg"
-            alignItems="center"
             display="flex"
             flexDirection="column"
-            gap="lg"
+            width="full"
+            flex={1}
+            style={{
+              height: "calc(100vh - 48px)",
+            }}
           >
-            {selectionText}
-            {pendingOperationsText}
-            {operations}
-            <ImageGallery
-              aria-label="Document editor sidebar"
-              items={draftPages}
-              imageWidth="md"
-              selectionMode="multiple"
-              selectedKeys={selectedKeys}
-              onSelectionChange={(keys) =>
-                setSelectedKeys(
-                  keys === "all"
-                    ? new Set(draftPages.map((page) => page.id))
-                    : keys,
-                )
-              }
-              renderImage={renderImage}
-              imageDimensions={(item) => {
-                const draftPage = draftPages.find(
-                  (page) => page.id === item.id,
-                );
-                if (!draftPage) {
-                  return { width: 180, height: 250 };
-                }
+            <Box
+              display="flex"
+              flexDirection="column"
+            >
+              <Text
+                type="title"
+                size="sm"
+                elementType="h2"
+                className={sprinkles({
+                  paddingX: "lg",
+                  paddingY: "md",
+                  display: "flex",
+                  alignItems: "center",
+                })}
+                style={{
+                  minHeight: 48
+                }}
+              >
+                Organize Pages
+              </Text>
+              <Separator />
+              {operations}
+              <Separator />
+            </Box>
 
-                // Calculate total rotation (document rotation + draft rotation)
-                const totalRotation =
-                  draftPage.rotation + (draftPage.draftRotation || 0);
-
-                // For 90 or 270 degree rotations, swap dimensions
-                const normalizedRotation = totalRotation % 360;
-                const isRotated90or270 =
-                  normalizedRotation === 90 || normalizedRotation === 270;
-
-                if (isRotated90or270) {
-                  return { width: 250, height: 180 };
-                }
-
-                return { width: 180, height: 250 };
+            <Box
+              flex="1"
+              display="flex"
+              flexDirection="column"
+              style={{
+                overflowY: "auto",
+                minHeight: 0,
               }}
-              style={{ overflowY: "auto", maxHeight: "calc(100vh - 200px)" }}
-            />
-            <Box gap="md" display="flex">
+            >
+              <Box paddingX="lg">
+                <ImageGallery
+                  aria-label="Document editor sidebar"
+                  items={draftPages}
+                  selectionMode="multiple"
+                  selectedKeys={selectedKeys}
+                  onSelectionChange={(keys) => {
+                    setSelectedKeys(
+                      keys === "all"
+                        ? new Set(draftPages.map((page) => page.id))
+                        : keys,
+                    );
+                  }}
+                  renderImage={renderImage}
+                  imageDimensions={() => {
+                    // Return consistent dimensions for all thumbnails
+                    // This ensures grid alignment regardless of page orientation
+                    return { width: 102, height: 136 };
+                  }}
+                />
+              </Box>
+            </Box>
+
+<Separator />
+            <Box
+              paddingY="md"
+              paddingInlineStart="lg"
+              paddingInlineEnd="lg"
+              display="flex"
+              gap="md"
+              justifyContent="space-between"
+            >
+              <ActionButton
+                label="Save As..."
+                variant="secondary"
+                onPress={alert}
+                className={sprinkles({flex: 1, justifyContent: "center"})}
+                style={{textAlign: "center"}}
+              />
               <ActionButton
                 label="Save"
                 onPress={handleSave}
                 isDisabled={operationQueue.length === 0}
-              />
-              <ActionButton
-                label="Save as"
-                iconStart={DocumentPdfIcon}
-                variant="secondary"
-                onPress={handleExportPDF}
+                className={sprinkles({flex: 1, justifyContent: "center"})}
+                style={{textAlign: "center"}}
               />
             </Box>
           </Box>
         </I18nProvider>
-      </FrameProvider>
     </ThemeProvider>
   );
 };

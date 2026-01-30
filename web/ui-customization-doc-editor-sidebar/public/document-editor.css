@@ -1,0 +1,14 @@
+.BaselineUI-ImageGallery [role="option"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--bui-spacing-2-xl);
+}
+
+.BaselineUI-ImageGallery .BaselineUI-ListBox {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: var(--bui-spacing-2-xl);
+    column-gap: var(--bui-spacing-lg);
+    place-items: center;
+}
