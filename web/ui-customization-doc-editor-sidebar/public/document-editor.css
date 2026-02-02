@@ -14,7 +14,7 @@
 }
 
 .PSPDFKit-Sidebar [role="toolbar"] button {
-  padding-inline: var(--bui-spacing-2-xl);
+  flex: 1;
 }
 
 .PSPDFKit-Sidebar [role="toolbar"] > div {

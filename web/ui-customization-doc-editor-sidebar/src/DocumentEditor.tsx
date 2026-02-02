@@ -66,6 +66,7 @@ const DocumentEditor = (props: Props) => {
     new Set(),
   );
   const [operationQueue, setOperationQueue] = useState<DocumentOperation[]>([]);
+  const [isUnsavedTagDismissed, setIsUnsavedTagDismissed] = useState(false);
   const blobUrlsRef = useRef<Set<string>>(new Set());
 
   const cleanupBlobUrls = useCallback(() => {
@@ -349,6 +350,7 @@ const DocumentEditor = (props: Props) => {
         });
 
         setOperationQueue((prev) => [...prev, importOperation]);
+        setIsUnsavedTagDismissed(false);
       };
 
       input.click();
@@ -360,6 +362,7 @@ const DocumentEditor = (props: Props) => {
 
     if (operationData) {
       setOperationQueue((prev) => [...prev, operationData]);
+      setIsUnsavedTagDismissed(false);
     }
   };
 
@@ -373,6 +376,7 @@ const DocumentEditor = (props: Props) => {
 
     setOperationQueue([]);
     setSelectedKeys(new Set());
+    setIsUnsavedTagDismissed(false);
   };
 
   const handleExportPDF = async () => {
@@ -713,7 +717,7 @@ const DocumentEditor = (props: Props) => {
                 layoutTransition={false}
               />
 
-              {operationQueue.length > 0 && (
+              {operationQueue.length > 0 && !isUnsavedTagDismissed && (
                 <TagGroup
                   variant="red"
                   items={[
@@ -722,6 +726,9 @@ const DocumentEditor = (props: Props) => {
                       label: "You have unsaved changes",
                     },
                   ]}
+                  onRemove={() => {
+                    setIsUnsavedTagDismissed(true);
+                  }}
                   aria-label="Unsaved changes indicator"
                   style={{
                     position: "absolute",
@@ -736,22 +743,22 @@ const DocumentEditor = (props: Props) => {
             <Separator />
 
             <Box
-              paddingY="md"
-              paddingInlineStart="lg"
-              paddingInlineEnd="lg"
+              padding="lg"
               display="flex"
-              gap="md"
+              gap="lg"
               justifyContent="space-between"
             >
               <ActionButton
-                label="Save As..."
+                label="Download"
                 variant="secondary"
+                size="lg"
                 onPress={handleExportPDF}
                 className={sprinkles({ flex: 1, justifyContent: "center" })}
                 style={{ textAlign: "center" }}
               />
               <ActionButton
                 label="Save"
+                size="lg"
                 onPress={handleSave}
                 isDisabled={operationQueue.length === 0}
                 className={sprinkles({ flex: 1, justifyContent: "center" })}
