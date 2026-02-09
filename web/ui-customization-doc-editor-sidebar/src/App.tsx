@@ -53,30 +53,43 @@ function App() {
             viewState.set("sidebarWidth", 600),
           );
 
-          // Define a custom toolbar item.
-          const documentEditorToolbarItem = {
-            type: "custom" as const,
-            id: "documentEditorToolbarItem",
-            title: "Document Editor",
-            dropdownGroup: "sidebar",
-            icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" style="color: var(--bui-color-icon-primary);"><path fill-rule="evenodd" d="M12.02 5.97a.75.75 0 0 0 0 1.06l4.95 4.95a.75.75 0 0 0 1.06 0l4.95-4.95a.75.75 0 0 0 0-1.06l-4.95-4.95a.75.75 0 0 0-1.06 0zm5.48 4.42L13.61 6.5l3.89-3.89 3.889 3.89-3.89 3.89ZM3 2.25a.75.75 0 0 0-.75.75v7c0 .414.336.75.75.75h7a.75.75 0 0 0 .75-.75V3a.75.75 0 0 0-.75-.75zm.75 7v-5.5h5.5v5.5zM2.25 14a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75zm1.5.75v5.5h5.5v-5.5zM14 13.25a.75.75 0 0 0-.75.75v7c0 .414.336.75.75.75h7a.75.75 0 0 0 .75-.75v-7a.75.75 0 0 0-.75-.75zm.75 7v-5.5h5.5v5.5z" clip-rule="evenodd"></path></svg>',
-            onPress: () => {
-              instance.setViewState((viewState) =>
-                viewState.set(
-                  "sidebarMode",
-                  viewState.sidebarMode === "documentEditor"
-                    ? null
-                    : "documentEditor",
-                ),
-              );
-            },
-          };
+          function getDocumentEditorToolbarItem(isSelected: boolean) {
+            return {
+              type: "custom" as const,
+              selected: isSelected,
+              id: "documentEditorToolbarItem",
+              title: "Document Editor",
+              dropdownGroup: "sidebar",
+              icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.02 5.97a.75.75 0 0 0 0 1.06l4.95 4.95a.75.75 0 0 0 1.06 0l4.95-4.95a.75.75 0 0 0 0-1.06l-4.95-4.95a.75.75 0 0 0-1.06 0zm5.48 4.42L13.61 6.5l3.89-3.89 3.889 3.89-3.89 3.89ZM3 2.25a.75.75 0 0 0-.75.75v7c0 .414.336.75.75.75h7a.75.75 0 0 0 .75-.75V3a.75.75 0 0 0-.75-.75zm.75 7v-5.5h5.5v5.5zM2.25 14a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75zm1.5.75v5.5h5.5v-5.5zM14 13.25a.75.75 0 0 0-.75.75v7c0 .414.336.75.75.75h7a.75.75 0 0 0 .75-.75v-7a.75.75 0 0 0-.75-.75zm.75 7v-5.5h5.5v5.5z" clip-rule="evenodd"></path></svg>',
+              onPress: () => {
+                instance.setViewState((viewState) =>
+                  viewState.set(
+                    "sidebarMode",
+                    viewState.sidebarMode === "documentEditor"
+                      ? null
+                      : "documentEditor",
+                  ),
+                );
+              },
+            };
+          }
 
           // Add the custom toolbar item to the existing toolbar items.
           instance.setToolbarItems([
             ...NutrientViewer.defaultToolbarItems,
-            documentEditorToolbarItem,
+            getDocumentEditorToolbarItem(
+              instance.viewState.sidebarMode === "documentEditor",
+            ),
           ]);
+
+          instance.addEventListener("viewState.change", (viewState) => {
+            instance.setToolbarItems([
+              ...NutrientViewer.defaultToolbarItems,
+              getDocumentEditorToolbarItem(
+                viewState.sidebarMode === "documentEditor",
+              ),
+            ]);
+          });
         });
       }
 
