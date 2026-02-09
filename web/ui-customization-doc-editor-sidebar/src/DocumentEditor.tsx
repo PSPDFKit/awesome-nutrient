@@ -1,29 +1,38 @@
 import {
   ActionButton,
-  ActionGroup,
+  ActionIconButton,
   Box,
   FrameProvider,
   I18nProvider,
   ImageGallery,
+  Separator,
+  TagGroup,
   Text,
   ThemeProvider,
+  Toolbar,
 } from "@baseline-ui/core";
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  DocumentPdfIcon,
-  DownloadIcon,
-  DuplicateIcon,
   PageAddIcon,
+  PageDuplicateIcon,
+  PageMoveLeftIcon,
+  PageMoveRightIcon,
   PageRemoveIcon,
+  PagesInsertAltIcon,
+  PagesNewFromSelectionIcon,
   RotateClockwiseIcon,
   RotateCounterClockwiseIcon,
-  UploadIcon,
 } from "@baseline-ui/icons/24";
-import { themes } from "@baseline-ui/tokens";
+import { sprinkles, themes, themeVars } from "@baseline-ui/tokens";
 import type { DocumentOperations, Instance } from "@nutrient-sdk/viewer";
 import NutrientViewer from "@nutrient-sdk/viewer";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+// Layout constants
+const THUMBNAIL_WIDTH = 140;
+const THUMBNAIL_HEIGHT = 200;
+const THUMBNAIL_DIMENSION_WIDTH = 102;
+const THUMBNAIL_DIMENSION_HEIGHT = 136;
+const SIDEBAR_MIN_WIDTH = 320;
 
 interface Props {
   instance: Instance;
@@ -57,6 +66,7 @@ const DocumentEditor = (props: Props) => {
     new Set(),
   );
   const [operationQueue, setOperationQueue] = useState<DocumentOperation[]>([]);
+  const [isUnsavedTagDismissed, setIsUnsavedTagDismissed] = useState(false);
   const blobUrlsRef = useRef<Set<string>>(new Set());
 
   const cleanupBlobUrls = useCallback(() => {
@@ -340,6 +350,7 @@ const DocumentEditor = (props: Props) => {
         });
 
         setOperationQueue((prev) => [...prev, importOperation]);
+        setIsUnsavedTagDismissed(false);
       };
 
       input.click();
@@ -351,6 +362,7 @@ const DocumentEditor = (props: Props) => {
 
     if (operationData) {
       setOperationQueue((prev) => [...prev, operationData]);
+      setIsUnsavedTagDismissed(false);
     }
   };
 
@@ -364,6 +376,7 @@ const DocumentEditor = (props: Props) => {
 
     setOperationQueue([]);
     setSelectedKeys(new Set());
+    setIsUnsavedTagDismissed(false);
   };
 
   const handleExportPDF = async () => {
@@ -428,13 +441,13 @@ const DocumentEditor = (props: Props) => {
     }
 
     if (draftPage.isNew) {
-      // Render a white blank page
+      // Render a white blank page with consistent dimensions
       return (
         <div
           style={{
             backgroundColor: "white",
-            width: "100%",
-            height: "100%",
+            width: THUMBNAIL_WIDTH,
+            height: THUMBNAIL_HEIGHT,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -451,149 +464,305 @@ const DocumentEditor = (props: Props) => {
       ? { transform: `rotate(${draftPage.draftRotation}deg)` }
       : undefined;
 
+    // Ensure consistent container width regardless of rotation
+    // The image will be rotated inside, but container maintains fixed width
+    const containerStyle: React.CSSProperties = {
+      width: THUMBNAIL_WIDTH,
+      height: THUMBNAIL_HEIGHT,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "hidden",
+    };
+
     return (
-      <img
-        src={draftPage.src}
-        alt={draftPage.alt}
-        style={style}
-        width={
-          draftPage.rotation === 90 || draftPage.rotation === 270
-            ? "250px"
-            : "180px"
-        }
-      />
+      <div style={containerStyle}>
+        <img
+          src={draftPage.src}
+          alt={draftPage.alt}
+          style={{
+            ...style,
+            maxWidth: "100%",
+            maxHeight: "100%",
+            objectFit: "contain",
+          }}
+        />
+      </div>
     );
   };
 
-  const selectionText = selectedKeys.size ? (
-    <Text>{selectedKeys.size} page(s) selected</Text>
-  ) : (
-    <Text>No pages selected</Text>
-  );
-
-  const pendingOperationsText = operationQueue.length > 0 && (
-    <Text>{operationQueue.length} pending operation(s)</Text>
-  );
-
-  const operations = (
-    <ActionGroup
-      isDisabled={selectedKeys.size === 0}
-      items={[
-        {
-          id: "rotate-clockwise",
-          label: "Rotate Clockwise",
-          icon: RotateClockwiseIcon,
-        },
-        {
-          id: "rotate-counterclockwise",
-          label: "Rotate Counterclockwise",
-          icon: RotateCounterClockwiseIcon,
-        },
-        {
-          id: "remove-pages",
-          label: "Remove Pages",
-          icon: PageRemoveIcon,
-        },
-        {
-          id: "add-page",
-          label: "Add Page",
-          icon: PageAddIcon,
-        },
-        {
-          id: "duplicate-page",
-          label: "Duplicate Page",
-          icon: DuplicateIcon,
-        },
-        {
-          id: "import-document",
-          label: "Import Document",
-          icon: UploadIcon,
-        },
-        {
-          id: "move-left",
-          label: "Move Left",
-          icon: ArrowLeftIcon,
-        },
-        {
-          id: "move-right",
-          label: "Move Right",
-          icon: ArrowRightIcon,
-        },
-        {
-          id: "export-selected-pages",
-          label: "Export Selected Pages",
-          icon: DownloadIcon,
-        },
-      ]}
-      onAction={queueDocumentOperation}
-    />
-  );
+  const isOperationsDisabled = selectedKeys.size === 0;
 
   return (
     <ThemeProvider theme={themes.base.light}>
       <FrameProvider>
         <I18nProvider shouldLogMissingMessages={false} locale="en-US">
           <Box
-            paddingY="lg"
-            paddingInlineStart="lg"
-            alignItems="center"
             display="flex"
             flexDirection="column"
-            gap="lg"
+            width="full"
+            flex={1}
+            className="document-editor-container"
+            style={{
+              height: "calc(100vh - 48px)",
+              minWidth: SIDEBAR_MIN_WIDTH,
+            }}
           >
-            {selectionText}
-            {pendingOperationsText}
-            {operations}
-            <ImageGallery
-              aria-label="Document editor sidebar"
-              items={draftPages}
-              imageWidth="md"
-              selectionMode="multiple"
-              selectedKeys={selectedKeys}
-              onSelectionChange={(keys) =>
-                setSelectedKeys(
-                  keys === "all"
-                    ? new Set(draftPages.map((page) => page.id))
-                    : keys,
-                )
-              }
-              renderImage={renderImage}
-              imageDimensions={(item) => {
-                const draftPage = draftPages.find(
-                  (page) => page.id === item.id,
-                );
-                if (!draftPage) {
-                  return { width: 180, height: 250 };
-                }
+            <Box display="flex" flexDirection="column">
+              <div className="document-editor-header">
+                <Text
+                  type="title"
+                  size="sm"
+                  elementType="h2"
+                  className={sprinkles({
+                    paddingX: "lg",
+                    paddingY: "md",
+                    display: "flex",
+                    alignItems: "center",
+                  })}
+                  style={{
+                    minHeight: 48,
+                  }}
+                >
+                  Organize Pages
+                </Text>
 
-                // Calculate total rotation (document rotation + draft rotation)
-                const totalRotation =
-                  draftPage.rotation + (draftPage.draftRotation || 0);
+                {selectedKeys.size > 0 && (
+                  <Box
+                    display="flex"
+                    gap="md"
+                    alignItems="center"
+                    style={{
+                      placeSelf: "center",
+                    }}
+                  >
+                    <TagGroup
+                      variant="neutral"
+                      items={[
+                        {
+                          id: "selected-pages",
+                          label:
+                            selectedKeys.size > 1
+                              ? `${selectedKeys.size} Pages selected`
+                              : `${selectedKeys.size} Page selected`,
+                        },
+                      ]}
+                      aria-label="Selected pages count"
+                    />
+                  </Box>
+                )}
+              </div>
+              <Separator />
+              <Box
+                display="flex"
+                gap="xs"
+                alignItems="center"
+                flexGrow={0}
+                flexShrink={0}
+                width="full"
+              >
+                <Toolbar
+                  isCollapsible
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  <ActionIconButton
+                    icon={RotateCounterClockwiseIcon}
+                    variant="toolbar"
+                    aria-label="Rotate Left"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() =>
+                      queueDocumentOperation("rotate-counterclockwise")
+                    }
+                  />
+                  <ActionIconButton
+                    icon={RotateClockwiseIcon}
+                    variant="toolbar"
+                    aria-label="Rotate Right"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("rotate-clockwise")}
+                  />
+                  <ActionIconButton
+                    icon={PageRemoveIcon}
+                    variant="toolbar"
+                    aria-label="Delete Page"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("remove-pages")}
+                  />
+                  <ActionIconButton
+                    icon={PageAddIcon}
+                    variant="toolbar"
+                    aria-label="Add Page"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("add-page")}
+                  />
+                  <ActionIconButton
+                    icon={PageDuplicateIcon}
+                    variant="toolbar"
+                    aria-label="Duplicate Page"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("duplicate-page")}
+                  />
+                  <ActionIconButton
+                    icon={PagesInsertAltIcon}
+                    variant="toolbar"
+                    aria-label="Import Document"
+                    tooltip
+                    size="lg"
+                    onPress={() => queueDocumentOperation("import-document")}
+                  />
+                  <ActionIconButton
+                    icon={PageMoveLeftIcon}
+                    variant="toolbar"
+                    aria-label="Move Left"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("move-left")}
+                  />
+                  <ActionIconButton
+                    icon={PageMoveRightIcon}
+                    variant="toolbar"
+                    aria-label="Move Right"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() => queueDocumentOperation("move-right")}
+                  />
+                  <ActionIconButton
+                    icon={PagesNewFromSelectionIcon}
+                    variant="toolbar"
+                    aria-label="Export Selected Pages"
+                    tooltip
+                    size="lg"
+                    isDisabled={isOperationsDisabled}
+                    onPress={() =>
+                      queueDocumentOperation("export-selected-pages")
+                    }
+                  />
+                </Toolbar>
+              </Box>
+              <Separator />
+            </Box>
 
-                // For 90 or 270 degree rotations, swap dimensions
-                const normalizedRotation = totalRotation % 360;
-                const isRotated90or270 =
-                  normalizedRotation === 90 || normalizedRotation === 270;
-
-                if (isRotated90or270) {
-                  return { width: 250, height: 180 };
-                }
-
-                return { width: 180, height: 250 };
+            <Box
+              flex="1"
+              display="flex"
+              flexDirection="column"
+              position="relative"
+              style={{
+                overflowY: "auto",
+                minHeight: 0,
               }}
-              style={{ overflowY: "auto", maxHeight: "calc(100vh - 200px)" }}
-            />
-            <Box gap="md" display="flex">
+            >
+              <ImageGallery
+                aria-label="Document editor sidebar"
+                items={draftPages}
+                selectionMode="multiple"
+                selectedKeys={selectedKeys}
+                onSelectionChange={(keys) => {
+                  setSelectedKeys(
+                    keys === "all"
+                      ? new Set(draftPages.map((page) => page.id))
+                      : keys,
+                  );
+                }}
+                renderImage={renderImage}
+                imageDimensions={(item) => {
+                  // Find the corresponding draft page
+                  const draftPage = draftPages.find(
+                    (page) => page.id === item.id,
+                  );
+
+                  if (!draftPage) {
+                    return {
+                      width: THUMBNAIL_DIMENSION_WIDTH,
+                      height: THUMBNAIL_DIMENSION_HEIGHT,
+                    };
+                  }
+
+                  // Calculate total rotation (document rotation + draft rotation)
+                  const totalRotation =
+                    draftPage.rotation + (draftPage.draftRotation || 0);
+
+                  // For 90 or 270 degree rotations, swap dimensions
+                  const normalizedRotation = totalRotation % 360;
+                  const isRotated90or270 =
+                    normalizedRotation === 90 || normalizedRotation === 270;
+
+                  if (isRotated90or270) {
+                    return {
+                      width: THUMBNAIL_DIMENSION_HEIGHT,
+                      height: THUMBNAIL_DIMENSION_WIDTH,
+                    };
+                  }
+
+                  return {
+                    width: THUMBNAIL_DIMENSION_WIDTH,
+                    height: THUMBNAIL_DIMENSION_HEIGHT,
+                  };
+                }}
+                // @ts-expect-error Private API
+                layoutTransition={false}
+              />
+
+              {operationQueue.length > 0 && !isUnsavedTagDismissed && (
+                <TagGroup
+                  variant="red"
+                  items={[
+                    {
+                      id: "pending-operations",
+                      label: "You have unsaved changes",
+                    },
+                  ]}
+                  onRemove={() => {
+                    setIsUnsavedTagDismissed(true);
+                  }}
+                  aria-label="Unsaved changes indicator"
+                  style={{
+                    position: "absolute",
+                    bottom: themeVars.spacing.xl,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                  }}
+                />
+              )}
+            </Box>
+
+            <Separator />
+
+            <Box
+              padding="lg"
+              display="flex"
+              gap="lg"
+              justifyContent="space-between"
+            >
               <ActionButton
-                label="Save"
-                onPress={handleSave}
-                isDisabled={operationQueue.length === 0}
+                label="Download"
+                variant="secondary"
+                size="lg"
+                onPress={handleExportPDF}
+                className={sprinkles({ flex: 1, justifyContent: "center" })}
+                style={{ textAlign: "center" }}
               />
               <ActionButton
-                label="Save as"
-                iconStart={DocumentPdfIcon}
-                variant="secondary"
-                onPress={handleExportPDF}
+                label="Save"
+                size="lg"
+                onPress={handleSave}
+                isDisabled={operationQueue.length === 0}
+                className={sprinkles({ flex: 1, justifyContent: "center" })}
+                style={{ textAlign: "center" }}
               />
             </Box>
           </Box>

@@ -10,9 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@baseline-ui/core": "^0.45.8",
-    "@baseline-ui/icons": "^0.45.8",
-    "@baseline-ui/tokens": "^0.45.8",
+    "@baseline-ui/core": "^0.48.5",
+    "@baseline-ui/icons": "^0.48.5",
+    "@baseline-ui/tokens": "^0.48.5",
     "@nutrient-sdk/viewer": "1.9.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

@@ -1,0 +1,45 @@
+.BaselineUI-ImageGallery [role="option"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--bui-spacing-2-xl);
+  width: 184px;
+}
+
+.BaselineUI-ImageGallery.BaselineUI-ListBox {
+  row-gap: var(--bui-spacing-2-xl);
+  column-gap: var(--bui-spacing-lg);
+  place-items: center;
+  justify-content: center;
+}
+
+.PSPDFKit-Sidebar [role="toolbar"] button {
+  flex: 1;
+}
+
+.PSPDFKit-Sidebar [role="toolbar"] > div {
+  align-items: center;
+}
+
+.PSPDFKit-Sidebar .BaselineUI-Menu-Trigger {
+  margin-left: auto;
+  height: 48px;
+  max-height: unset;
+}
+
+/* Container query for responsive header */
+.document-editor-container {
+  container-type: inline-size;
+}
+
+.document-editor-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--bui-spacing-md);
+}
+
+@container (max-width: 400px) {
+  .document-editor-header {
+    grid-template-columns: 1fr 1fr;
+  }
+}
