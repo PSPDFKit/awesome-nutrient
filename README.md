@@ -92,8 +92,9 @@ Server-side PDF processing and manipulation:
 
 ### MCP Servers Hub
 
-- [Nutrient DWS MCP Server](https://github.com/PSPDFKit/nutrient-dws-mcp-server) — Connect AI assistants to Nutrient Document Web Services for OCR, redaction, signing, conversion, and watermarking.
+- [Nutrient DWS MCP Server](https://github.com/PSPDFKit/nutrient-dws-mcp-server) — Connect AI assistants to Nutrient Document Web Services for OCR, redaction, signing, conversion, and watermarking (high-level workflow tools).
 - [Nutrient Document Engine MCP Server](https://github.com/PSPDFKit/nutrient-document-engine-mcp-server) — Connect agents to self-hosted Document Engine for document discovery, extraction, editing, annotations, and redaction.
+- [Nutrient PDF MCP Server](https://github.com/PSPDFKit/nutrient-pdf-mcp-server) — Low-level PDF object-tree exploration/debugging; use this for structural inspection rather than end-to-end processing workflows.
 - [Nutrient MCP overview](https://www.nutrient.io/mcp-server-pdf-automation-llm) — Product overview and setup guidance.
 
 ---
