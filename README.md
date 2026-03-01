@@ -102,6 +102,7 @@ Server-side PDF processing and manipulation:
 ## AI & Document Generation
 
 - [AI Document Assistant](https://github.com/PSPDFKit/ai-document-assistant-demo) — Natural language PDF interaction with AI
+- [AI-Assisted Document Editing](./document-authoring/ai-editing/) — AI-assisted document editing with Document Authoring SDK. Like Cursor for documents.
 - [Document Generator (Vanilla JS)](./web/document-generator-vanillajs/) — Step-by-step PDF generation with Document Authoring SDK
 
 ---

@@ -1,0 +1,11 @@
+# Node / Next.js artifacts in nested document authoring examples
+**/node_modules
+**/.next
+**/coverage
+**/tsconfig.tsbuildinfo
+
+# Local environment files
+**/.env.local
+
+# macOS
+.DS_Store
