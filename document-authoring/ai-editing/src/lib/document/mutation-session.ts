@@ -68,6 +68,73 @@ const tokenize = tokenizeSearchText;
 const escapeRegExp = (value: string): string =>
   value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+const MAX_SEARCH_REGEX_PATTERN_CHARS = 160;
+const MAX_SEARCH_REGEX_INPUT_CHARS = 4_000;
+const MAX_SEARCH_REGEX_ALTERNATIONS = 12;
+const LOOKAROUND_REGEX = /\(\?(?:=|!|<=|<!)/;
+const BACKREFERENCE_REGEX = /\\(?:[1-9]\d*|k<[^>]+>)/;
+const NESTED_QUANTIFIER_REGEX =
+  /\((?:[^()\\]|\\.)*[+*](?:[^()\\]|\\.)*\)\s*(?:[+*]|\{)/;
+const REPEATED_WILDCARD_GROUP_REGEX =
+  /\((?:[^()\\]|\\.)*(?:\.\*|\.\+)(?:[^()\\]|\\.)*\)\s*(?:[+*]|\{)/;
+
+const countUnescapedAlternations = (pattern: string): number => {
+  let count = 0;
+  let escaped = false;
+  for (let index = 0; index < pattern.length; index += 1) {
+    const char = pattern[index];
+    if (!char) {
+      continue;
+    }
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+    if (char === "\\") {
+      escaped = true;
+      continue;
+    }
+    if (char === "|") {
+      count += 1;
+    }
+  }
+  return count;
+};
+
+const assertSafeSearchRegexPattern = (pattern: string): void => {
+  if (pattern.length > MAX_SEARCH_REGEX_PATTERN_CHARS) {
+    throw new Error(
+      `search_elements.regex pattern is too long (${pattern.length} > ${MAX_SEARCH_REGEX_PATTERN_CHARS}).`,
+    );
+  }
+  if (LOOKAROUND_REGEX.test(pattern)) {
+    throw new Error(
+      "search_elements.regex does not allow lookaround assertions for safety.",
+    );
+  }
+  if (BACKREFERENCE_REGEX.test(pattern)) {
+    throw new Error(
+      "search_elements.regex does not allow backreferences for safety.",
+    );
+  }
+  if (NESTED_QUANTIFIER_REGEX.test(pattern)) {
+    throw new Error(
+      "search_elements.regex does not allow nested quantifiers for safety.",
+    );
+  }
+  if (REPEATED_WILDCARD_GROUP_REGEX.test(pattern)) {
+    throw new Error(
+      "search_elements.regex does not allow repeated wildcard groups for safety.",
+    );
+  }
+  const alternationCount = countUnescapedAlternations(pattern);
+  if (alternationCount > MAX_SEARCH_REGEX_ALTERNATIONS) {
+    throw new Error(
+      `search_elements.regex has too many alternations (${alternationCount} > ${MAX_SEARCH_REGEX_ALTERNATIONS}).`,
+    );
+  }
+};
+
 const truncateText = (value: string, maxChars: number): string =>
   value.length <= maxChars
     ? value
@@ -972,6 +1039,7 @@ export class DocumentMutationSession {
     const allowedKinds = new Set(parsedArgs.kinds);
 
     if (parsedArgs.regex) {
+      assertSafeSearchRegexPattern(parsedArgs.regex.pattern);
       const flags = `${parsedArgs.regex.multiline ? "m" : ""}${parsedArgs.regex.ignoreCase ? "i" : ""}`;
       let matcher: RegExp;
       try {
@@ -988,8 +1056,12 @@ export class DocumentMutationSession {
         .filter((element) => allowedKinds.has(element.kind))
         .filter((element) => {
           const rawText = this.readElementText(element);
+          const boundedText =
+            rawText.length > MAX_SEARCH_REGEX_INPUT_CHARS
+              ? rawText.slice(0, MAX_SEARCH_REGEX_INPUT_CHARS)
+              : rawText;
           matcher.lastIndex = 0;
-          return matcher.test(rawText);
+          return matcher.test(boundedText);
         })
         .slice(0, parsedArgs.maxResults)
         .map((element) => {

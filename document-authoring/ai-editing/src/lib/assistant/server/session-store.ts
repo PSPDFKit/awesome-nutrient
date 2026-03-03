@@ -1,8 +1,13 @@
+import { randomUUID } from "node:crypto";
 import type {
   AssistantConversationMessage,
   AssistantToolCall,
 } from "@/lib/assistant/contracts";
 import { runAssistantServerGraph } from "@/lib/assistant/server/graph";
+import {
+  AssistantSessionError,
+  AssistantSessionErrorCode,
+} from "@/lib/assistant/server/session-errors";
 import {
   type AssistantSessionEvent,
   AssistantSessionEventSchema,
@@ -23,8 +28,7 @@ type PendingToolRequest = {
 const TOOL_REQUEST_TIMEOUT_MS = 120_000;
 const SESSION_STALE_AFTER_MS = 30 * 60_000;
 
-const makeId = (prefix: string): string =>
-  `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+const makeId = (prefix: string): string => `${prefix}-${randomUUID()}`;
 
 class AssistantSession {
   private readonly subscribers = new Set<SessionSubscriber>();
@@ -123,7 +127,10 @@ class AssistantSession {
     messages: AssistantConversationMessage[];
   }): Promise<string> {
     if (this.activeRunId !== null) {
-      throw new Error("A run is already in progress for this session.");
+      throw new AssistantSessionError(
+        AssistantSessionErrorCode.RunAlreadyInProgress,
+        "A run is already in progress for this session.",
+      );
     }
 
     this.touch();
@@ -211,10 +218,14 @@ class AssistantSession {
     this.touch();
     const pending = this.pendingToolRequests.get(input.requestId);
     if (!pending) {
-      throw new Error(`Unknown tool request: ${input.requestId}`);
+      throw new AssistantSessionError(
+        AssistantSessionErrorCode.UnknownToolRequest,
+        `Unknown tool request: ${input.requestId}`,
+      );
     }
     if (pending.runId !== input.runId) {
-      throw new Error(
+      throw new AssistantSessionError(
+        AssistantSessionErrorCode.ToolResultRunMismatch,
         `Tool result run mismatch. request runId=${pending.runId}, payload runId=${input.runId}`,
       );
     }
@@ -263,4 +274,7 @@ export const createAssistantSession = (): AssistantSession => {
 
 export const getAssistantSession = (
   sessionId: string,
-): AssistantSession | null => sessions.get(sessionId) ?? null;
+): AssistantSession | null => {
+  sweepStaleSessions();
+  return sessions.get(sessionId) ?? null;
+};

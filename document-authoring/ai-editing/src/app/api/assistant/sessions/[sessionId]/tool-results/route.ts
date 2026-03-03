@@ -1,4 +1,8 @@
 import { NextResponse } from "next/server";
+import {
+  AssistantSessionErrorCode,
+  isAssistantSessionError,
+} from "@/lib/assistant/server/session-errors";
 import { SubmitToolResultsRequestSchema } from "@/lib/assistant/server/session-events";
 import { getAssistantSession } from "@/lib/assistant/server/session-store";
 
@@ -34,9 +38,17 @@ export async function POST(
       error instanceof Error
         ? error.message
         : "Unknown tool result submission failure.";
-    const status = /unknown tool request|run mismatch/i.test(message)
-      ? 409
-      : 500;
+    const status =
+      isAssistantSessionError(
+        error,
+        AssistantSessionErrorCode.UnknownToolRequest,
+      ) ||
+      isAssistantSessionError(
+        error,
+        AssistantSessionErrorCode.ToolResultRunMismatch,
+      )
+        ? 409
+        : 500;
     return NextResponse.json({ error: message }, { status });
   }
 }

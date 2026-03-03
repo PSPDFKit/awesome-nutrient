@@ -101,4 +101,36 @@ describe("executeAssistantToolCalls", () => {
     });
     expect(runtime.restoreSnapshotMock).toHaveBeenCalledTimes(1);
   });
+
+  it("keeps original tool error context when snapshot restore also fails", async () => {
+    const runtime = createRuntime();
+    executeToolCallMock.mockRejectedValueOnce(new Error("Target not found"));
+    runtime.restoreSnapshotMock.mockRejectedValueOnce(
+      new Error("Snapshot missing"),
+    );
+
+    const observations = await executeAssistantToolCalls({
+      runtime,
+      toolCalls: [
+        {
+          id: "tool-3",
+          name: "replace_paragraph",
+          args: {
+            id: "p-0.0",
+            paragraph: {
+              text: "Replacement",
+            },
+          },
+        },
+      ],
+      onUpdate: () => undefined,
+    });
+
+    expect(observations).toHaveLength(1);
+    expect(observations[0]?.result).toMatchObject({
+      ok: false,
+      error:
+        "Tool execution failed: Target not found. Snapshot restore failed: Snapshot missing",
+    });
+  });
 });

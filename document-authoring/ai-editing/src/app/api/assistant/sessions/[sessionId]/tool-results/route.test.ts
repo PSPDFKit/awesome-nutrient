@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "@/app/api/assistant/sessions/[sessionId]/tool-results/route";
+import {
+  AssistantSessionError,
+  AssistantSessionErrorCode,
+} from "@/lib/assistant/server/session-errors";
 
 const getAssistantSession = vi.hoisted(() => vi.fn());
 
@@ -72,5 +76,66 @@ describe("POST /api/assistant/sessions/[sessionId]/tool-results", () => {
     expect(response.status).toBe(200);
     expect(payload.ok).toBe(true);
     expect(submitToolResults).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns 409 for unknown tool request errors", async () => {
+    const submitToolResults = vi.fn(() => {
+      throw new AssistantSessionError(
+        AssistantSessionErrorCode.UnknownToolRequest,
+        "Unknown tool request: request-1",
+      );
+    });
+    getAssistantSession.mockReturnValue({
+      submitToolResults,
+    });
+
+    const response = await POST(
+      new Request(
+        "http://localhost/api/assistant/sessions/session-1/tool-results",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            runId: "run-1",
+            requestId: "request-1",
+            observations: [],
+          }),
+          headers: {
+            "content-type": "application/json",
+          },
+        },
+      ),
+      { params: Promise.resolve({ sessionId: "session-1" }) },
+    );
+
+    expect(response.status).toBe(409);
+  });
+
+  it("returns 500 for unexpected tool result failures", async () => {
+    const submitToolResults = vi.fn(() => {
+      throw new Error("boom");
+    });
+    getAssistantSession.mockReturnValue({
+      submitToolResults,
+    });
+
+    const response = await POST(
+      new Request(
+        "http://localhost/api/assistant/sessions/session-1/tool-results",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            runId: "run-1",
+            requestId: "request-1",
+            observations: [],
+          }),
+          headers: {
+            "content-type": "application/json",
+          },
+        },
+      ),
+      { params: Promise.resolve({ sessionId: "session-1" }) },
+    );
+
+    expect(response.status).toBe(500);
   });
 });

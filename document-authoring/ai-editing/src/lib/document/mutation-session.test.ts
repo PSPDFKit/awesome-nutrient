@@ -427,6 +427,47 @@ describe("DocumentMutationSession.searchElements", () => {
       "it-0.1.3",
     ]);
   });
+
+  it("rejects unsafe nested-quantifier regex patterns", () => {
+    const { draft } = createSearchDraft(["aaaaab"]);
+    const session = new DocumentMutationSession(draft as never);
+
+    expect(() =>
+      session.searchElements({
+        query: "a",
+        mode: "exact_phrase",
+        regex: {
+          pattern: "(a+)+$",
+          ignoreCase: false,
+          multiline: false,
+        },
+        kinds: ["paragraph"],
+        maxResults: 20,
+        minScore: 0,
+      }),
+    ).toThrow(/nested quantifiers/i);
+  });
+
+  it("rejects overly long regex patterns", () => {
+    const { draft } = createSearchDraft(["text"]);
+    const session = new DocumentMutationSession(draft as never);
+    const longPattern = "a".repeat(161);
+
+    expect(() =>
+      session.searchElements({
+        query: "a",
+        mode: "exact_phrase",
+        regex: {
+          pattern: longPattern,
+          ignoreCase: false,
+          multiline: false,
+        },
+        kinds: ["paragraph"],
+        maxResults: 20,
+        minScore: 0,
+      }),
+    ).toThrow(/too long/i);
+  });
 });
 
 describe("DocumentMutationSession.replaceParagraph", () => {

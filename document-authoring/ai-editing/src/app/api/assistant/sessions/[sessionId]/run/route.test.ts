@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "@/app/api/assistant/sessions/[sessionId]/run/route";
+import {
+  AssistantSessionError,
+  AssistantSessionErrorCode,
+} from "@/lib/assistant/server/session-errors";
 
 const getAssistantSession = vi.hoisted(() => vi.fn());
 
@@ -54,5 +58,56 @@ describe("POST /api/assistant/sessions/[sessionId]/run", () => {
     expect(response.status).toBe(200);
     expect(startRun).toHaveBeenCalledTimes(1);
     expect(payload.runId).toBe("run-1");
+  });
+
+  it("returns 409 when another run is already in progress", async () => {
+    const startRun = vi.fn(async () => {
+      throw new AssistantSessionError(
+        AssistantSessionErrorCode.RunAlreadyInProgress,
+        "A run is already in progress for this session.",
+      );
+    });
+    getAssistantSession.mockReturnValue({
+      startRun,
+    });
+
+    const response = await POST(
+      new Request("http://localhost/api/assistant/sessions/session-1/run", {
+        method: "POST",
+        body: JSON.stringify({
+          messages: [{ role: "user", content: "Write about Spain" }],
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      }),
+      { params: Promise.resolve({ sessionId: "session-1" }) },
+    );
+
+    expect(response.status).toBe(409);
+  });
+
+  it("returns 500 when run startup fails unexpectedly", async () => {
+    const startRun = vi.fn(async () => {
+      throw new Error("boom");
+    });
+    getAssistantSession.mockReturnValue({
+      startRun,
+    });
+
+    const response = await POST(
+      new Request("http://localhost/api/assistant/sessions/session-1/run", {
+        method: "POST",
+        body: JSON.stringify({
+          messages: [{ role: "user", content: "Write about Spain" }],
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      }),
+      { params: Promise.resolve({ sessionId: "session-1" }) },
+    );
+
+    expect(response.status).toBe(500);
   });
 });

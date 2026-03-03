@@ -16,6 +16,7 @@ import type {
   AssistantToolCall,
 } from "@/lib/assistant/contracts";
 import {
+  type AssistantSessionEvent,
   AssistantSessionEventSchema,
   CreateAssistantSessionResponseSchema,
   StartAssistantRunRequestSchema,
@@ -56,6 +57,11 @@ type DebugEventLog = {
   label: string;
   payload: unknown;
 };
+
+type RunScopedSessionEvent = Exclude<
+  AssistantSessionEvent,
+  { type: "session.connected" }
+>;
 
 const extractRouteErrorMessage = (payload: unknown): string | null => {
   if (typeof payload !== "object" || payload === null) {
@@ -328,6 +334,8 @@ export function DocumentAuthoringAiShell() {
     );
   }, [messages, toolLogs]);
   const activeRunIdRef = useRef<string | null>(null);
+  const pendingRunEventsRef = useRef<RunScopedSessionEvent[]>([]);
+  const isSubmittingRef = useRef(false);
   const runtimeRef = useRef<DocumentRuntime | null>(null);
   const sessionIdRef = useRef<string | null>(null);
   const agentMessagesRef =
@@ -341,6 +349,13 @@ export function DocumentAuthoringAiShell() {
   useEffect(() => {
     sessionIdRef.current = sessionId;
   }, [sessionId]);
+
+  useEffect(() => {
+    isSubmittingRef.current = isSubmitting;
+    if (!isSubmitting) {
+      pendingRunEventsRef.current = [];
+    }
+  }, [isSubmitting]);
 
   useEffect(() => {
     if (timelineEntries.length === 0) {
@@ -528,6 +543,94 @@ export function DocumentAuthoringAiShell() {
     [applyToolUpdate, recordQueuedToolLogs, submitToolResults],
   );
 
+  const processRunScopedSessionEvent = useCallback(
+    (serverEvent: RunScopedSessionEvent, currentSessionId: string) => {
+      if (serverEvent.type === "assistant.delta") {
+        upsertAssistantDeltaMessage(setMessages, {
+          runId: serverEvent.runId,
+          round: serverEvent.round,
+          textDelta: serverEvent.textDelta,
+        });
+        return;
+      }
+
+      if (serverEvent.type === "assistant.turn") {
+        appendDebugEvent("assistant.turn", serverEvent);
+        finalizeAssistantRoundMessage(setMessages, {
+          runId: serverEvent.runId,
+          round: serverEvent.round,
+          text: serverEvent.assistantText,
+        });
+        return;
+      }
+
+      if (serverEvent.type === "tools.requested") {
+        appendDebugEvent("tools.requested", serverEvent);
+        void executeRequestedToolCalls({
+          sessionId: currentSessionId,
+          runId: serverEvent.runId,
+          requestId: serverEvent.requestId,
+          toolCalls: serverEvent.toolCalls,
+        }).catch((error) => {
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Failed to execute requested tool calls.";
+          setMessages((current) => [
+            ...current,
+            createMessage("assistant", `Request failed: ${message}`),
+          ]);
+          setIsSubmitting(false);
+          activeRunIdRef.current = null;
+        });
+        return;
+      }
+
+      if (serverEvent.type === "run.completed") {
+        appendDebugEvent("run.completed", serverEvent);
+        setAgentMessages(serverEvent.messages);
+        finalizeAssistantRoundMessage(setMessages, {
+          runId: serverEvent.runId,
+          round: serverEvent.rounds,
+          text: serverEvent.assistantText,
+        });
+        settleStreamingAssistantMessagesForRun(setMessages, serverEvent.runId);
+        if (!normalizeAssistantReply(serverEvent.assistantText)) {
+          appendAssistantMessage(
+            setMessages,
+            "Completed the requested update.",
+          );
+        }
+        setIsSubmitting(false);
+        activeRunIdRef.current = null;
+        return;
+      }
+
+      settleStreamingAssistantMessagesForRun(setMessages, serverEvent.runId);
+      setMessages((current) => [
+        ...current,
+        createMessage("assistant", `Request failed: ${serverEvent.error}`),
+      ]);
+      setIsSubmitting(false);
+      activeRunIdRef.current = null;
+    },
+    [appendDebugEvent, executeRequestedToolCalls],
+  );
+
+  const flushPendingRunEvents = useCallback(
+    (currentSessionId: string, runId: string) => {
+      const queuedEvents = pendingRunEventsRef.current;
+      pendingRunEventsRef.current = [];
+      for (const queuedEvent of queuedEvents) {
+        if (queuedEvent.runId !== runId) {
+          continue;
+        }
+        processRunScopedSessionEvent(queuedEvent, currentSessionId);
+      }
+    },
+    [processRunScopedSessionEvent],
+  );
+
   useEffect(() => {
     let disposed = false;
     let source: EventSource | null = null;
@@ -576,102 +679,20 @@ export function DocumentAuthoringAiShell() {
         }
 
         const serverEvent = parsed.data;
-        const activeRunId = activeRunIdRef.current;
         if (serverEvent.type === "session.connected") {
           return;
         }
-
-        if (serverEvent.type === "assistant.delta") {
-          if (activeRunId !== serverEvent.runId) {
-            return;
+        const activeRunId = activeRunIdRef.current;
+        if (!activeRunId) {
+          if (isSubmittingRef.current) {
+            pendingRunEventsRef.current.push(serverEvent);
           }
-          upsertAssistantDeltaMessage(setMessages, {
-            runId: serverEvent.runId,
-            round: serverEvent.round,
-            textDelta: serverEvent.textDelta,
-          });
           return;
         }
-
-        if (serverEvent.type === "assistant.turn") {
-          if (activeRunId !== serverEvent.runId) {
-            return;
-          }
-          appendDebugEvent("assistant.turn", serverEvent);
-          finalizeAssistantRoundMessage(setMessages, {
-            runId: serverEvent.runId,
-            round: serverEvent.round,
-            text: serverEvent.assistantText,
-          });
+        if (activeRunId !== serverEvent.runId) {
           return;
         }
-
-        if (serverEvent.type === "tools.requested") {
-          if (activeRunId !== serverEvent.runId) {
-            return;
-          }
-          appendDebugEvent("tools.requested", serverEvent);
-          void executeRequestedToolCalls({
-            sessionId: session.sessionId,
-            runId: serverEvent.runId,
-            requestId: serverEvent.requestId,
-            toolCalls: serverEvent.toolCalls,
-          }).catch((error) => {
-            const message =
-              error instanceof Error
-                ? error.message
-                : "Failed to execute requested tool calls.";
-            setMessages((current) => [
-              ...current,
-              createMessage("assistant", `Request failed: ${message}`),
-            ]);
-            setIsSubmitting(false);
-            activeRunIdRef.current = null;
-          });
-          return;
-        }
-
-        if (serverEvent.type === "run.completed") {
-          if (activeRunId !== serverEvent.runId) {
-            return;
-          }
-          appendDebugEvent("run.completed", serverEvent);
-          setAgentMessages(serverEvent.messages);
-          finalizeAssistantRoundMessage(setMessages, {
-            runId: serverEvent.runId,
-            round: serverEvent.rounds,
-            text: serverEvent.assistantText,
-          });
-          settleStreamingAssistantMessagesForRun(
-            setMessages,
-            serverEvent.runId,
-          );
-          if (!normalizeAssistantReply(serverEvent.assistantText)) {
-            appendAssistantMessage(
-              setMessages,
-              "Completed the requested update.",
-            );
-          }
-          setIsSubmitting(false);
-          activeRunIdRef.current = null;
-          return;
-        }
-
-        if (serverEvent.type === "run.failed") {
-          if (activeRunId !== serverEvent.runId) {
-            return;
-          }
-          settleStreamingAssistantMessagesForRun(
-            setMessages,
-            serverEvent.runId,
-          );
-          setMessages((current) => [
-            ...current,
-            createMessage("assistant", `Request failed: ${serverEvent.error}`),
-          ]);
-          setIsSubmitting(false);
-          activeRunIdRef.current = null;
-        }
+        processRunScopedSessionEvent(serverEvent, session.sessionId);
       };
 
       source.onerror = () => {
@@ -711,7 +732,7 @@ export function DocumentAuthoringAiShell() {
       disposed = true;
       source?.close();
     };
-  }, [appendDebugEvent, executeRequestedToolCalls]);
+  }, [processRunScopedSessionEvent]);
 
   const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -736,6 +757,7 @@ export function DocumentAuthoringAiShell() {
     setMessages(nextMessages);
     setDraftInput("");
     setIsSubmitting(true);
+    pendingRunEventsRef.current = [];
 
     const nextAgentMessages: AssistantConversationMessage[] = [
       ...agentMessagesRef.current,
@@ -776,6 +798,7 @@ export function DocumentAuthoringAiShell() {
         (await response.json()) as unknown,
       );
       activeRunIdRef.current = runPayload.runId;
+      flushPendingRunEvents(currentSessionId, runPayload.runId);
       setAgentMessages(nextAgentMessages);
     } catch (error) {
       const message =
@@ -788,6 +811,7 @@ export function DocumentAuthoringAiShell() {
       ]);
       setIsSubmitting(false);
       activeRunIdRef.current = null;
+      pendingRunEventsRef.current = [];
     }
   };
 

@@ -298,4 +298,71 @@ describe("DocumentAuthoringAiShell", () => {
       );
     });
   });
+
+  it("queues run-scoped SSE events that arrive before /run responds", async () => {
+    let resolveRunResponse!: (response: Response) => void;
+    const runResponse = new Promise<Response>((resolve) => {
+      resolveRunResponse = resolve;
+    });
+
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            sessionId: "session-1",
+          }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        ),
+      )
+      .mockImplementationOnce(async () => runResponse);
+    vi.stubGlobal("fetch", fetchMock);
+
+    const user = userEvent.setup();
+    render(<DocumentAuthoringAiShell />);
+
+    await waitFor(() => {
+      expect(MockEventSource.instances).toHaveLength(1);
+    });
+    const source = MockEventSource.instances[0]!;
+
+    await user.type(screen.getByLabelText(/ask assistant/i), "Write a summary");
+    await user.click(screen.getByRole("button", { name: "Submit" }));
+
+    source.emit({
+      type: "assistant.delta",
+      runId: "run-early",
+      round: 1,
+      textDelta: "Early reply",
+    });
+    source.emit({
+      type: "run.completed",
+      runId: "run-early",
+      assistantText: "Early reply",
+      rounds: 1,
+      messages: [
+        {
+          role: "user",
+          content: "Write a summary",
+        },
+        {
+          role: "assistant",
+          content: "Early reply",
+        },
+      ],
+    });
+
+    expect(screen.queryByText("Early reply")).not.toBeInTheDocument();
+
+    resolveRunResponse(
+      new Response(
+        JSON.stringify({
+          runId: "run-early",
+        }),
+        { status: 200, headers: { "content-type": "application/json" } },
+      ),
+    );
+
+    expect(await screen.findByText("Early reply")).toBeInTheDocument();
+  });
 });

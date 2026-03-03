@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import {
+  AssistantSessionErrorCode,
+  isAssistantSessionError,
+} from "@/lib/assistant/server/session-errors";
+import {
   StartAssistantRunRequestSchema,
   StartAssistantRunResponseSchema,
 } from "@/lib/assistant/server/session-events";
@@ -42,7 +46,12 @@ export async function POST(
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unknown run startup failure.";
-    const status = /already in progress/i.test(message) ? 409 : 500;
+    const status = isAssistantSessionError(
+      error,
+      AssistantSessionErrorCode.RunAlreadyInProgress,
+    )
+      ? 409
+      : 500;
     return NextResponse.json({ error: message }, { status });
   }
 }

@@ -48,7 +48,15 @@ const executeWriteToolCall = async (
     });
     return result;
   } catch (error) {
-    await runtime.restoreSnapshot(beforeSnapshot);
+    try {
+      await runtime.restoreSnapshot(beforeSnapshot);
+    } catch (restoreError) {
+      throw new Error(
+        `Tool execution failed: ${normalizeErrorMessage(
+          error,
+        )}. Snapshot restore failed: ${normalizeErrorMessage(restoreError)}`,
+      );
+    }
     throw error;
   }
 };
