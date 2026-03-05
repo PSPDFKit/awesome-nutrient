@@ -33,7 +33,6 @@ Nutrient's AI and MCP ecosystem for agent builders and enterprise teams:
 - [nutrient-dws-client-python](https://github.com/PSPDFKit/nutrient-dws-client-python) — Python DWS client for workflow automation.
 - [nutrient-dws-client-typescript](https://github.com/PSPDFKit-labs/nutrient-dws-client-typescript) — TypeScript DWS client for workflow automation.
 - [nutrient-agent-skill](https://github.com/PSPDFKit-labs/nutrient-agent-skill) — Agent Skills package for document-processing workflows.
-- [pi-skills](https://github.com/PSPDFKit-labs/pi-skills) — PI skill collection for agent workflows.
 - [agent-skills](https://github.com/jdrhyne/agent-skills) — Cross-platform skills hub including Nutrient-focused integrations.
 - [Nutrient AI Infrastructure](https://www.nutrient.io/ai/infrastructure/) — Architecture and positioning overview for agent-ready document infrastructure.
 - [Nutrient MCP Server landing page](https://www.nutrient.io/mcp-server-pdf-automation-llm/) — Product overview and getting-started path.
