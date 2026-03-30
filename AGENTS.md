@@ -30,11 +30,15 @@ awesome-nutrient/
 │   ├── viewer/
 │   ├── shared/                 #   Shared utilities for snippets
 │   ├── types/                  #   TypeScript type definitions
-│   └── web-*.md                #   Category index files with Playground URLs
+│   ├── web-*.md                #   Category index files with Playground URLs
+│   ├── README.md
+│   ├── package.json            #   Snippet typechecking workspace
+│   └── tsconfig.json
 ├── dws/                        # Document Web Services example (React + Vite)
 ├── document-engine/            # Deployment examples (Terraform, Kubernetes)
 ├── document-authoring/         # Document Authoring SDK examples
 ├── gdpicture/                  # GdPicture examples (.NET)
+├── resources/                  # Shared assets (PDFs, images)
 ├── android/                    # Android examples (placeholder)
 ├── ios/                        # iOS examples (placeholder)
 ├── windows/                    # Windows WinUI3 example
