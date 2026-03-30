@@ -1,4 +1,4 @@
-import type { Instance } from "@nutrient-sdk/viewer";
+import type { Instance, ToolbarItem } from "@nutrient-sdk/viewer";
 import { baseOptions } from "../../shared/base-options";
 
 let instance: Instance | null = null;
@@ -30,11 +30,11 @@ const createGroupedRadioButtons = async (instance: Instance | null) => {
 
   const formField = new window.NutrientViewer.FormFields.RadioButtonFormField({
     name: "MyFormField",
-    annotationIds: new window.NutrientViewer.Immutable.List([
+    annotationIds: window.NutrientViewer.Immutable.List([
       radioWidget1.id,
       radioWidget2.id,
     ]),
-    options: new window.NutrientViewer.Immutable.List([
+    options: window.NutrientViewer.Immutable.List([
       new window.NutrientViewer.FormOption({
         label: "Option 1",
         value: "1",
@@ -50,7 +50,7 @@ const createGroupedRadioButtons = async (instance: Instance | null) => {
   await instance?.create([radioWidget1, radioWidget2, formField]);
 };
 
-const item = {
+const item: ToolbarItem = {
   type: "custom",
   id: "add-radio-group",
   title: "Add Radio Group",
