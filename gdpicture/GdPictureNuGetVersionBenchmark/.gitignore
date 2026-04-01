@@ -1,0 +1,14 @@
+# build output
+bin/
+obj/
+BenchmarkDotNet.Artifacts/
+
+# IDE / OS
+.idea/
+.DS_Store
+*.user
+
+# keep assets folder empty in git
+assets/*
+!assets/.gitkeep
+!assets/.gitignore
