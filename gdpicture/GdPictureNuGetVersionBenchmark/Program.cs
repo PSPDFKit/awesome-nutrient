@@ -24,11 +24,7 @@ var candidateVersion = GetArgumentValue(args, "--candidate-version")
 
 var baseJob = Job.ShortRun
     .WithRuntime(CoreRuntime.Core10_0)
-    .WithGcServer(true)
-    .WithArguments([
-        new MsBuildArgument("-p:WarningLevel=0"),
-        new MsBuildArgument("-p:ObfuscateProject=false")
-    ]);
+    .WithGcServer(true);
 
 var config = ManualConfig
     .Create(DefaultConfig.Instance)
@@ -36,15 +32,11 @@ var config = ManualConfig
         .WithId($"GdPicture {baselineVersion}")
         .WithBaseline(true)
         .WithArguments([
-            new MsBuildArgument("-p:WarningLevel=0"),
-            new MsBuildArgument("-p:ObfuscateProject=false"),
             new MsBuildArgument($"-p:VersionGdPicture={baselineVersion}")
         ]))
     .AddJob(baseJob
         .WithId($"GdPicture {candidateVersion}")
         .WithArguments([
-            new MsBuildArgument("-p:WarningLevel=0"),
-            new MsBuildArgument("-p:ObfuscateProject=false"),
             new MsBuildArgument($"-p:VersionGdPicture={candidateVersion}")
         ]))
     .WithSummaryStyle(SummaryStyle.Default.WithRatioStyle(RatioStyle.Percentage))
