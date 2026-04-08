@@ -21,6 +21,24 @@ This repository contains examples built with [Nutrient](https://www.nutrient.io/
 
 ---
 
+
+## 🤖 AI & MCP Servers
+
+Nutrient's AI and MCP ecosystem for agent builders and enterprise teams:
+
+- [Nutrient DWS MCP Server](https://github.com/PSPDFKit/nutrient-dws-mcp-server) — Cloud document workflow MCP for convert/OCR/redact/sign/extract operations.
+- [Nutrient Document Engine MCP Server](https://github.com/PSPDFKit/nutrient-document-engine-mcp-server) — Self-hosted document workflow MCP for controlled deployments.
+- [Nutrient PDF MCP Server](https://github.com/PSPDFKit/nutrient-pdf-mcp-server) — Low-level PDF object-tree inspection/debugging MCP.
+- [ai-assistant-demo](https://github.com/PSPDFKit/ai-assistant-demo) — End-to-end AI document assistant demo.
+- [nutrient-dws-client-python](https://github.com/PSPDFKit/nutrient-dws-client-python) — Python DWS client for workflow automation.
+- [nutrient-dws-client-typescript](https://github.com/PSPDFKit-labs/nutrient-dws-client-typescript) — TypeScript DWS client for workflow automation.
+- [nutrient-agent-skill](https://github.com/PSPDFKit-labs/nutrient-agent-skill) — Agent Skills package for document-processing workflows.
+- [agent-skills](https://github.com/jdrhyne/agent-skills) — Cross-platform skills hub including Nutrient-focused integrations.
+- [Nutrient AI Infrastructure](https://www.nutrient.io/ai/infrastructure/) — Architecture and positioning overview for agent-ready document infrastructure.
+- [Nutrient MCP Server landing page](https://www.nutrient.io/mcp-server-pdf-automation-llm/) — Product overview and getting-started path.
+
+---
+
 ## Web SDK Examples
 
 ### Official Example Catalog
@@ -87,9 +105,20 @@ Server-side PDF processing and manipulation:
 
 ## AI & Document Generation
 
-- [AI Document Assistant](https://github.com/PSPDFKit/ai-document-assistant-demo) — Natural language PDF interaction with AI
-- [Document Authoring Template Population](./web/document-authoring-template-population/) — TypeScript library for populating templates with data (placeholders, loops, conditionals, table rows)
+- [AI Document Assistant](https://github.com/PSPDFKit/ai-assistant-demo) — Natural language PDF interaction with AI
+- [AI-Assisted Document Editing](./document-authoring/ai-editing/) — AI-assisted document editing with Document Authoring SDK. Like Cursor for documents.
 - [Document Generator (Vanilla JS)](./web/document-generator-vanillajs/) — Step-by-step PDF generation with Document Authoring SDK
+
+### MCP Servers Hub
+
+- [Nutrient DWS MCP Server](https://github.com/PSPDFKit/nutrient-dws-mcp-server) — Cloud document workflow MCP for convert/OCR/redact/sign/extract operations.
+- [Nutrient Document Engine MCP Server](https://github.com/PSPDFKit/nutrient-document-engine-mcp-server) — Self-hosted document workflow MCP for controlled deployments.
+- [Nutrient PDF MCP Server](https://github.com/PSPDFKit/nutrient-pdf-mcp-server) — Low-level PDF object-tree inspection/debugging MCP.
+- [Nutrient DWS Python Client](https://github.com/PSPDFKit/nutrient-dws-client-python) — Python client workflows for DWS.
+- [Nutrient DWS TypeScript Client](https://github.com/PSPDFKit-labs/nutrient-dws-client-typescript) — TypeScript client workflows for DWS.
+- [Nutrient Agent Skill](https://github.com/PSPDFKit-labs/nutrient-agent-skill) — Reusable skill package for coding agents.
+- [Nutrient MCP overview](https://www.nutrient.io/mcp-server-pdf-automation-llm) — Product overview and setup guidance.
+- [Nutrient AI Infrastructure](https://www.nutrient.io/ai/infrastructure/) — Architecture overview and role mapping.
 
 ---
 
