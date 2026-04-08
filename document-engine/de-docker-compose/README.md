@@ -140,12 +140,14 @@ curl --request GET \
 Stop the stack:
 
 ```bash
+source document-engine.env.sh
 docker compose down
 ```
 
 Remove the stack and local volumes:
 
 ```bash
+source document-engine.env.sh
 docker compose down -v
 ```
 
