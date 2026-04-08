@@ -74,9 +74,8 @@ parse_args() {
 
     if [ "${#positional[@]}" -eq 1 ]; then
         DOCUMENT_ENGINE_IMAGE_TAG="${positional[0]}"
+        DOCUMENT_ENGINE_IMAGE="${DOCUMENT_ENGINE_IMAGE_REPOSITORY}:${DOCUMENT_ENGINE_IMAGE_TAG}"
     fi
-
-    DOCUMENT_ENGINE_IMAGE="${DOCUMENT_ENGINE_IMAGE_REPOSITORY}:${DOCUMENT_ENGINE_IMAGE_TAG}"
 }
 
 check_prerequisites() {
