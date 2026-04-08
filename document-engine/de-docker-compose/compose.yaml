@@ -1,0 +1,103 @@
+services:
+  db:
+    image: ${POSTGRES_IMAGE}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_INITDB_ARGS: --data-checksums
+      PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  minio:
+    image: ${MINIO_IMAGE}
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - "${MINIO_CONSOLE_PORT}:9001"
+    restart: unless-stopped
+    volumes:
+      - minio-data:/data
+
+  minio-setup:
+    image: ${MINIO_MC_IMAGE}
+    depends_on:
+      minio:
+        condition: service_started
+    entrypoint:
+      - /bin/sh
+    command:
+      - -ec
+      - |
+        until mc alias set local http://minio:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"; do
+          sleep 2
+        done
+        mc mb --ignore-existing local/"$ASSET_STORAGE_S3_BUCKET"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      ASSET_STORAGE_S3_BUCKET: ${ASSET_STORAGE_S3_BUCKET}
+    restart: "no"
+
+  document-engine:
+    image: ${DOCUMENT_ENGINE_IMAGE}
+    depends_on:
+      db:
+        condition: service_healthy
+      minio-setup:
+        condition: service_completed_successfully
+    environment:
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+      PGHOST: db
+      PGPORT: 5432
+      API_AUTH_TOKEN: ${API_AUTH_TOKEN}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
+      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
+      ACTIVATION_KEY: ${ACTIVATION_KEY}
+      ASSET_STORAGE_BACKEND: ${ASSET_STORAGE_BACKEND}
+      ASSET_STORAGE_S3_BUCKET: ${ASSET_STORAGE_S3_BUCKET}
+      ASSET_STORAGE_S3_ACCESS_KEY_ID: ${ASSET_STORAGE_S3_ACCESS_KEY_ID}
+      ASSET_STORAGE_S3_SECRET_ACCESS_KEY: ${ASSET_STORAGE_S3_SECRET_ACCESS_KEY}
+      ASSET_STORAGE_S3_HOST: ${ASSET_STORAGE_S3_HOST}
+      ASSET_STORAGE_S3_PORT: ${ASSET_STORAGE_S3_PORT}
+      ASSET_STORAGE_S3_SCHEME: ${ASSET_STORAGE_S3_SCHEME}
+      ASSET_STORAGE_S3_REGION: ${ASSET_STORAGE_S3_REGION}
+      HTTP2_SHARED_RENDERING_PROCESS_ENABLE: ${HTTP2_SHARED_RENDERING_PROCESS_ENABLE}
+      HTTP2_SHARED_RENDERING_PROCESS_CHECKIN_TIMEOUT: ${HTTP2_SHARED_RENDERING_PROCESS_CHECKIN_TIMEOUT}
+      HTTP2_SHARED_RENDERING_PROCESS_CHECKOUT_TIMEOUT: ${HTTP2_SHARED_RENDERING_PROCESS_CHECKOUT_TIMEOUT}
+      MAX_UPLOAD_SIZE_BYTES: ${MAX_UPLOAD_SIZE_BYTES}
+      SERVER_REQUEST_TIMEOUT: ${SERVER_REQUEST_TIMEOUT}
+      PSPDFKIT_WORKER_TIMEOUT: ${PSPDFKIT_WORKER_TIMEOUT}
+      FILE_UPLOAD_TIMEOUT_MS: ${FILE_UPLOAD_TIMEOUT_MS}
+      READ_ANNOTATION_BATCH_TIMEOUT: ${READ_ANNOTATION_BATCH_TIMEOUT}
+      ASSET_STORAGE_CACHE_SIZE: ${ASSET_STORAGE_CACHE_SIZE}
+      ASSET_STORAGE_CACHE_TIMEOUT: ${ASSET_STORAGE_CACHE_TIMEOUT}
+    restart: unless-stopped
+
+  caddy:
+    image: ${CADDY_IMAGE}
+    depends_on:
+      document-engine:
+        condition: service_started
+    ports:
+      - "${CADDY_HTTP_PORT}:5000"
+    restart: unless-stopped
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+
+volumes:
+  pgdata:
+  minio-data:

@@ -1,0 +1,25 @@
+{
+  auto_https off
+}
+
+:5000 {
+  request_body {
+    max_size 50GB
+  }
+
+  # Match the tile-rendering route that needs an upstream HTTP/2 hop to exercise the shared rendering process code path.
+  @render_tiles path_regexp render_tiles ^/i/d/[^/]+/h/[^/]+/page-.*
+
+  handle @render_tiles {
+    reverse_proxy h2c://document-engine:5000
+  }
+
+  handle {
+    reverse_proxy http://document-engine:5000 {
+      transport http {
+        versions 1.1
+        response_header_timeout 15m
+      }
+    }
+  }
+}
