@@ -1,112 +1,68 @@
 # Agent Guide: awesome-nutrient
 
-Curated collection of Nutrient SDK examples, demos, and resources.
-This is **not** an SDK — it's showcase and educational content.
+Curated collection of Nutrient examples, demos, and resources.
+This is **not** an SDK repository.
 
-## Repository Structure
+## Start Here
 
-```
-awesome-nutrient/
-├── web/                        # Local runnable Web SDK examples
-│   ├── annotation/             #   Annotation demos (comment, clipboard, watermark…)
-│   ├── signing/                #   Signing demos (digital signatures, sign-here…)
-│   ├── document-editor/        #   Page manipulation demos
-│   ├── document-generator-vanillajs/  # Document Authoring SDK generator
-│   ├── viewer/                 #   Multi-tab viewer
-│   ├── ui-customization/       #   Baseline UI customization
-│   ├── ui-customization-doc-editor-sidebar/
-│   └── miscellaneous/          #   Analytics integrations
-├── playground/                 # Interactive Playground snippets
-│   ├── annotations/            #   Snippet folders (TypeScript + MDX)
-│   ├── comments/
-│   ├── content-editor/
-│   ├── document-editor/
-│   ├── form-creator/
-│   ├── forms/
-│   ├── redaction/
-│   ├── signatures/
-│   ├── text-comparison/
-│   ├── toolbar-menus/
-│   ├── viewer/
-│   ├── shared/                 #   Shared utilities for snippets
-│   ├── types/                  #   TypeScript type definitions
-│   ├── web-*.md                #   Category index files with Playground URLs
-│   ├── README.md
-│   ├── package.json            #   Snippet typechecking workspace
-│   └── tsconfig.json
-├── dws/                        # Document Web Services example (React + Vite)
-├── document-engine/            # Deployment examples (Terraform, Kubernetes)
-├── document-authoring/         # Document Authoring SDK examples
-├── gdpicture/                  # GdPicture examples (.NET)
-├── resources/                  # Shared assets (PDFs, images)
-├── android/                    # Android examples (placeholder)
-├── ios/                        # iOS examples (placeholder)
-├── windows/                    # Windows WinUI3 example
-└── README.md                   # Main index linking to everything
-```
+Before making changes, inspect these files instead of relying on this guide as a second source of truth:
 
-## Content Types
+- `README.md` — top-level catalog, content taxonomy, and main entry points
+- `playground/README.md` — Playground-specific organization and navigation
+- The nearest category `README.md` under `web/` (or another platform folder) — local conventions and example index
+- The example's own `README.md` and `package.json` — setup and run instructions
+- `package.json` — repo-level scripts
+- `biome.json` — formatting and linting rules
+- `.github/workflows/` — CI checks
+- `DISCLAIMER.md` — support expectations for this repo
 
-Choose the right format for your contribution:
+Do not duplicate the contents of those files here.
 
-| Type | When to Use | Location |
-|------|------------|----------|
-| **Playground snippet** | Small, single-feature demos (<100 lines). Runs in the browser with zero setup. | `playground/<category>/<name>/` |
-| **Local example** | Multi-file projects that need `npm install`. More complex demos. | `web/<category>/<name>/` |
-| **External link** | References to other repos, docs, or third-party integrations. | `README.md` |
+## Contribution Types
 
-## Adding a Playground Snippet
+Choose the right kind of contribution for the content you are adding:
 
-Each snippet lives in `playground/<category>/<snippet-name>/` with two files:
+| Type | Use When | Primary Location |
+|------|----------|------------------|
+| **Playground snippet** | Small, browser-based examples that should run instantly with no local setup | `playground/` |
+| **Runnable local example** | Multi-file examples intended to be installed and run locally | Platform/category folders such as `web/` |
+| **External link / catalog entry** | The canonical implementation or documentation lives in another repo or on nutrient.io | Relevant README/index file |
 
-1. **`index.ts`** — The TypeScript code that runs in the Playground
-2. **`playground.mdx`** — MDX file with metadata and description
+If unsure, prefer linking to the canonical source over creating a duplicate copy here.
 
-After creating the snippet folder:
-- Add an entry in the corresponding `playground/web-<category>.md` index file
-- The entry should include a Playground URL with the base64-encoded snippet
+## Playground Snippets
 
-## Adding a Local Web Example
+For Playground work:
 
-1. Create `web/<category>/<example-name>/`
-2. Include at minimum:
-   - `package.json` with a `start` script
-   - `index.html`
-   - `index.js` (or `index.ts`)
-   - A sample PDF if needed (`document.pdf`)
-3. Add a `README.md` in the example folder with description and quick start
-4. Add an entry in `web/<category>/README.md`
-5. If it's a new category, add it to the root `README.md`
+- Start in `playground/README.md`
+- Follow the existing category structure under `playground/`
+- Update the relevant `playground/web-*.md` index file so the snippet remains discoverable
+- Use `playground/package.json` and `playground/tsconfig.json` as the source of truth for validation
 
-## Commands
+## Runnable Local Examples
 
-```bash
-# Install dependencies (root — formatter + linting)
-npm install
+For local examples:
 
-# Format all code with Biome
-npm run format
+- Follow the conventions already used in the folder you are editing
+- Add or update the example's own `README.md` with a short description and quick start
+- Update the nearest category `README.md` so the example is discoverable
+- If needed, update the root `README.md` when adding a new top-level category or notable entry point
+- Do **not** assume every example uses the same run script — inspect that example's `package.json`
 
-# Run lint-staged checks (runs automatically on commit via Husky)
-npm run lint-staged
-```
+## Contribution Rules
 
-## Code Style
+- Keep changes focused and easy to discover
+- Update the relevant README/index whenever you add, remove, move, or rename content
+- Prefer canonical links over duplicated code when appropriate
+- Preserve naming and folder conventions used in the area you are editing
+- Use `@nutrient-sdk/viewer` for new Web SDK examples instead of legacy `pspdfkit`
+- Do not add guidance or claims that conflict with `DISCLAIMER.md`
 
-- **Biome** handles formatting and linting. Run `npm run format` before committing.
-- Husky pre-commit hook runs `lint-staged` automatically.
-- CI runs Biome checks on every push and PR.
+## Validation
 
-## Rules
+Before opening a PR:
 
-- All code must pass Biome formatting
-- Every local example must have a working `npm start`
-- Keep README sections ordered by category
-- Don't duplicate content — a feature should be either a playground snippet OR a local example, not both
-- Use `@nutrient-sdk/viewer` (not legacy `pspdfkit`) for new Web SDK examples
-- Include a `README.md` with description and quick-start instructions in every example folder
-
-## CI
-
-- **Biome** (`byome.yml`) — Code formatting and lint checks
-- **Typecheck** (`typecheck.yml`) — TypeScript validation for playground snippets
+- Run the relevant repo-level or example-level scripts from `package.json`
+- Verify changed links and referenced paths
+- Check `.github/workflows/` if CI expectations are unclear
+- Run formatting via the repo's documented scripts when applicable

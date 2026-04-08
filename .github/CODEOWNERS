@@ -1,6 +1,2 @@
-# Default: Dev Rel owns this repo
-* @PSPDFKit/dev-rel
-
-# Web SDK examples — Web team as backup reviewers
-/web/ @PSPDFKit/dev-rel @PSPDFKit/nickel
-/playground/ @PSPDFKit/dev-rel @PSPDFKit/nickel
+# Default owners
+* @PSPDFKit/web @PSPDFKit/web-de-support
