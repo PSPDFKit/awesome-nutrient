@@ -30,11 +30,11 @@ const createGroupedRadioButtons = async (instance: Instance | null) => {
 
   const formField = new NutrientViewer.FormFields.RadioButtonFormField({
     name: "MyFormField",
-    annotationIds: new NutrientViewer.Immutable.List([
+    annotationIds: NutrientViewer.Immutable.List([
       radioWidget1.id,
       radioWidget2.id,
     ]),
-    options: new NutrientViewer.Immutable.List([
+    options: NutrientViewer.Immutable.List([
       new NutrientViewer.FormOption({
         label: "Option 1",
         value: "1",
