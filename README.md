@@ -84,6 +84,7 @@ Clone and run these complete examples on your machine:
 
 ### Document Engine
 Server-side PDF processing and manipulation:
+- [Docker Compose Deployment](./document-engine/de-docker-compose)
 - [AWS ECS Deployment with Terraform](./document-engine/de-aws-ecs-terraform)
 - [Orbstack Kubernetes Deployment](./document-engine/de-orbstack-kubernetes)
 
