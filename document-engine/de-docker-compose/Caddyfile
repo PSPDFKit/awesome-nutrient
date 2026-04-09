@@ -1,25 +1,44 @@
+# Reverse proxy for local big-file testing that exercises the shared rendering
+# process without requiring TLS.
+#
+# The shared rendering feature (HTTP2_SHARED_RENDERING_PROCESS_ENABLE) reuses a
+# single pspdfkitd worker checkout across multiple tile requests that arrive as
+# HTTP/2 streams on the same Cowboy connection. The worker is cached in the
+# Cowboy connection process's dictionary, so multiplexing matters: requests on
+# the same HTTP/2 connection share a worker, requests on separate connections
+# do not.
+#
+# TLS is not needed for this to work. Caddy's h2c reverse_proxy uses Go's
+# http.Transport, which maintains a pool of HTTP/2 connections to the upstream
+# and multiplexes requests as streams onto them — regardless of whether the
+# browser-to-Caddy leg is HTTP/1.1 or HTTP/2. Multiple browser HTTP/1.1
+# requests are funnelled onto a single h2c upstream connection, giving Cowboy
+# the HTTP/2 stream multiplexing it needs.
+#
+# Non-tile traffic (uploads, dashboard, API) stays on HTTP/1.1 upstream to
+# avoid Cowboy's HTTP/2 reset-rate guard on large request bodies.
 {
-  auto_https off
+	auto_https off
 }
 
 :5000 {
-  request_body {
-    max_size 50GB
-  }
+	request_body {
+		max_size 50GB
+	}
 
-  # Match the tile-rendering route that needs an upstream HTTP/2 hop to exercise the shared rendering process code path.
-  @render_tiles path_regexp render_tiles ^/i/d/[^/]+/h/[^/]+/page-.*
+	# Match the tile-rendering route that needs an upstream HTTP/2 hop to exercise the shared rendering process code path.
+	@render_tiles path_regexp render_tiles ^/i/d/[^/]+/h/[^/]+/page-.*
 
-  handle @render_tiles {
-    reverse_proxy h2c://document-engine:5000
-  }
+	handle @render_tiles {
+		reverse_proxy h2c://document-engine:5000
+	}
 
-  handle {
-    reverse_proxy http://document-engine:5000 {
-      transport http {
-        versions 1.1
-        response_header_timeout 15m
-      }
-    }
-  }
+	handle {
+		reverse_proxy http://document-engine:5000 {
+			transport http {
+				versions 1.1
+				response_header_timeout 15m
+			}
+		}
+	}
 }

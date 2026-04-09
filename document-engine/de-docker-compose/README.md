@@ -84,7 +84,7 @@ Caddy is configured to:
 - Proxy `/i/d/.../h/.../page-*` tile-rendering requests upstream over HTTP/2
 - Keep all other upstream requests on HTTP/1.1 with `response_header_timeout 15m`
 
-The example still exposes the dashboard at `http://localhost:5000/dashboard`. That is intentional: the special HTTP/2 requirement applies to the upstream Caddy-to-Document-Engine hop for tile rendering, which is configured with cleartext HTTP/2 (`h2c`). If you also want browser-to-Caddy HTTP/2, the stack would need to switch to local HTTPS instead of the current `auto_https off` setup.
+The dashboard is exposed at plain `http://localhost:5000/dashboard`. TLS is not needed: Caddy's h2c reverse proxy uses Go's `http.Transport`, which multiplexes incoming HTTP/1.1 requests onto a single upstream HTTP/2 connection. This gives Document Engine the HTTP/2 stream multiplexing it needs to reuse a single rendering worker across concurrent tile requests.
 
 ## API usage examples
 
