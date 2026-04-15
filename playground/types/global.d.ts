@@ -1,8 +1,9 @@
-import type NutrientViewer from "@nutrient-sdk/viewer";
+import type NutrientViewerType from "@nutrient-sdk/viewer";
 
 declare global {
+  var NutrientViewer: typeof NutrientViewerType;
+
   interface Window {
-    // Nutrient Web SDK loaded via CDN
-    NutrientViewer: typeof NutrientViewer;
+    NutrientViewer: typeof NutrientViewerType;
   }
 }
