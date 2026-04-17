@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Authoring Templating Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      border-bottom: 2px solid #4CAF50;
+      padding-bottom: 10px;
+    }
+    #editor {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ddd;
+      margin: 20px 0;
+      background: white;
+      position: relative;
+    }
+    #editor > * {
+      height: 100%;
+    }
+    .controls {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .status {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .status.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 13px;
+    }
+    .data-editor {
+      margin: 20px 0;
+    }
+    textarea {
+      width: 100%;
+      min-height: 200px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Document Authoring Templating Test</h1>
+
+    <div class="status info">
+      <strong>Ready to test!</strong> Upload a DOCX template with placeholders like &#123;&#123;customerName&#125;&#125;. License key is optional (SDK will show watermark without one).
+    </div>
+
+    <div class="controls">
+      <input type="text" id="licenseKey" placeholder="License key (optional - will show watermark without)" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+      <input type="file" id="fileInput" accept=".docx" style="display: none;">
+      <button type="button" onclick="document.getElementById('fileInput').click()">Upload DOCX Template</button>
+      <button type="button" id="applyTemplateBtn" disabled onclick="applyTemplate()">Apply Template Data</button>
+    </div>
+
+    <div class="data-editor">
+      <h3>Template Data (Edit JSON below):</h3>
+      <textarea id="templateData"></textarea>
+    </div>
+
+    <div id="status"></div>
+
+    <div id="editor"></div>
+  </div>
+
+  <!-- Load Document Authoring SDK from CDN -->
+  <script
+    src="https://document-authoring.cdn.nutrient.io/releases/document-authoring-1.10.0-umd.js"
+    onload="console.log('SDK loaded successfully')"
+    onerror="console.error('Failed to load SDK from CDN')">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </script>
+
+  <!-- Load our templating library -->
+  <script type="module">
+    import { applyTemplateData } from './src/index.ts';
+
+    let docInstance = null;
+
+    window.applyTemplateData = applyTemplateData;
+
+    // Initialize template data
+    document.getElementById('templateData').value = JSON.stringify({
+      "config": {
+        "delimiter": { "start": "{{", "end": "}}" },
+        "defaultValue": ""
+      },
+      "model": {
+        "opportunity_name": "Acme Corporation",
+        "order_number": "INV-2024-001",
+        "today": "January 15, 2024",
+        "name": "Milos",
+        "showDiscount": true,
+        "discountAmount": "$50.00",
+        "lineItems": [
+          {
+            "itemNumber": "1",
+            "description": "Web Development Services",
+            "quantity": "40",
+            "rate": "$150.00",
+            "amount": "$6,000.00"
+          },
+          {
+            "itemNumber": "2",
+            "description": "UI/UX Design",
+            "quantity": "20",
+            "rate": "$175.00",
+            "amount": "$3,500.00"
+          },
+          {
+            "itemNumber": "3",
+            "description": "Consulting",
+            "quantity": "10",
+            "rate": "$200.00",
+            "amount": "$2,000.00"
+          }
+        ],
+        "subtotal": "$11,500.00",
+        "tax": "$920.00",
+        "total": "$12,420.00",
+        "isPaid": false
+      }
+    }, null, 2);
+
+    // Wait for SDK to load
+    window.addEventListener('load', () => {
+      console.log('Available on window:', Object.keys(window).filter(k => k.includes('Nutrient') || k.includes('PSPDFKit') || k.includes('DocAuth')));
+    });
+
+    // Create new document from scratch
+    window.createNewDocument = async () => {
+      const licenseKey = document.getElementById('licenseKey').value;
+
+      showStatus('Creating new document...', 'info');
+
+      try {
+        const config = {
+          container: document.querySelector('#editor')
+        };
+
+        if (licenseKey) {
+          config.licenseKey = licenseKey;
+        }
+
+        // Use the correct API
+        const system = await window.DocAuth.createDocAuthSystem(config);
+
+        console.log('System created:', system);
+
+        // Create a minimal valid DocJSON document
+        const blankDocJSON = {
+          format: "https://schema.nutrient.io/docjson/v1/document.json",
+          document: {
+            body: {
+              sections: [{
+                content: [{
+                  type: "p",
+                  children: [{
+                    type: "r",
+                    text: ""
+                  }]
+                }]
+              }]
+            }
+          }
+        };
+
+        // Load the blank document
+        const doc = await system.loadDocument(blankDocJSON);
+
+        // Create editor
+        const editor = await system.createEditor(
+          document.querySelector('#editor'),
+          { document: doc }
+        );
+
+        console.log('Document:', doc);
+        console.log('Document has transaction?', typeof doc.transaction === 'function');
+        console.log('Editor:', editor);
+
+        // Store for template application
+        window.docSystem = system;
+        window.currentEditor = editor;
+        docInstance = doc;
+
+        showStatus(`New document created! You can now type your template with placeholders like ${String.fromCharCode(123,123)}name${String.fromCharCode(125,125)}, then apply data.`, 'success');
+        document.getElementById('applyTemplateBtn').disabled = false;
+      } catch (error) {
+        showStatus(`Error creating document: ${error.message}`, 'error');
+        console.error('Full error:', error);
+      }
+    };
+
+    // Handle file upload
+    document.getElementById('fileInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const licenseKey = document.getElementById('licenseKey').value;
+
+      showStatus('Loading document...', 'info');
+
+      try {
+        const systemConfig = {
+          container: document.querySelector('#editor')
+        };
+
+        if (licenseKey) {
+          systemConfig.licenseKey = licenseKey;
+        } else {
+          showStatus('Loading without license key - document will have watermark', 'info');
+        }
+
+        const system = await window.DocAuth.createDocAuthSystem(systemConfig);
+
+        // Import DOCX file
+        const doc = await system.importDOCX(file);
+
+        // Create editor
+        const editor = await system.createEditor(
+          document.querySelector('#editor'),
+          { document: doc }
+        );
+
+        console.log('Document loaded:', doc);
+        console.log('Document has transaction?', typeof doc.transaction === 'function');
+
+        window.docSystem = system;
+        window.currentEditor = editor;
+        docInstance = doc;
+
+        showStatus('Document loaded successfully! You can now apply template data.', 'success');
+        document.getElementById('applyTemplateBtn').disabled = false;
+      } catch (error) {
+        showStatus(`Error loading document: ${error.message}`, 'error');
+        console.error(error);
+      }
+    });
+
+    // Apply template data
+    window.applyTemplate = async () => {
+      if (!docInstance) {
+        showStatus('Please upload a document first', 'error');
+        return;
+      }
+
+      try {
+        // Parse the JSON data
+        const dataText = document.getElementById('templateData').value;
+        const templateData = JSON.parse(dataText);
+
+        showStatus('Applying template data...', 'info');
+
+        console.log('=== APPLYING TEMPLATE DATA ===');
+        console.log('Document instance:', docInstance);
+        console.log('Has transaction method?', typeof docInstance.transaction);
+        console.log('Template data:', templateData);
+
+        // Apply the template data
+        await applyTemplateData(docInstance, templateData);
+
+        showStatus('Template data applied successfully! Check the document above.', 'success');
+        console.log('=== TEMPLATE APPLICATION COMPLETE ===');
+      } catch (error) {
+        showStatus(`Error applying template: ${error.message}`, 'error');
+        console.error('=== ERROR ===');
+        console.error('Error:', error);
+        console.error('Stack:', error.stack);
+      }
+    };
+
+    function showStatus(message, type) {
+      const statusDiv = document.getElementById('status');
+      statusDiv.className = `status ${type}`;
+      statusDiv.innerHTML = `<strong>${type === 'error' ? 'Error' : type === 'success' ? 'Success' : 'Info'}:</strong> ${message}`;
+    }
+
+    window.showStatus = showStatus;
+  </script>
+</body>
+</html>

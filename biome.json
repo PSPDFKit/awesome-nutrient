@@ -22,7 +22,10 @@
       "!web/document-editor/save-selected-page-from-document-editor",
       "!web/signing/signing-demo-complete",
       "!web/signing/sign-here-upgraded",
-      "!web/viewer/multi-tab"
+      "!web/viewer/multi-tab",
+      "!playground/form-creator",
+      "!web/document-generator-vanillajs",
+      "!windows/pspdfkit-with-winui3"
     ]
   },
   "formatter": {
