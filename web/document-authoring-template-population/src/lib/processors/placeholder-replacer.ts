@@ -36,7 +36,7 @@ export class PlaceholderReplacer {
    * Get value for a specific key
    */
   getValue(key: string): any {
-    const value = DataResolver.resolve(this.model, key);
+    const value = resolve(this.model, key);
     return value !== undefined && value !== null ? value : this.defaultValue;
   }
 
