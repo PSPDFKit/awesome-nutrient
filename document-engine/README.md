@@ -4,9 +4,11 @@
 
 ## Available examples
 
+### [de-docker-compose](de-docker-compose)
+Demonstrates minimal installation of Document Engine on a local Docker Compose stack using PostgreSQL, MinIO, and Caddy.
+
 ### [de-aws-ecs-terraform](de-aws-ecs-terraform)
 Demonstrates minimal installation of Document Engine on AWS using Terraform and Elastic Container Service (ECS).
 
 ### [de-orbstack-kubernetes](de-orbstack-kubernetes)
 Demonstrates minimal installation of Document Engine on a local Kubernetes cluster using OrbStack. 
-
