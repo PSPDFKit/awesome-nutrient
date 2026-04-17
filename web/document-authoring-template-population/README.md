@@ -121,16 +121,16 @@ document-authoring-template-population/
 ├── src/
 │   ├── index.ts                     # Main library export
 │   ├── lib/
-│   │   ├── DocumentTemplating.ts    # Core templating engine
+│   │   ├── document-templating.ts   # Core templating engine
 │   │   ├── parser/
-│   │   │   └── TemplateParser.ts    # Placeholder parsing
+│   │   │   └── template-parser.ts   # Placeholder parsing
 │   │   ├── processors/
-│   │   │   ├── PlaceholderReplacer.ts  # {{variable}} replacement
-│   │   │   ├── ConditionalProcessor.ts # Conditional logic
-│   │   │   └── LoopProcessor.ts        # Array loop handling
+│   │   │   ├── placeholder-replacer.ts  # {{variable}} replacement
+│   │   │   ├── conditional-processor.ts # Conditional logic
+│   │   │   └── loop-processor.ts        # Array loop handling
 │   │   └── utils/
-│   │       ├── DataResolver.ts      # Data access utilities
-│   │       └── ValidatorUtil.ts     # Validation helpers
+│   │       ├── data-resolver.ts     # Data access utilities
+│   │       └── validator-util.ts    # Validation helpers
 │   └── types/
 │       └── index.ts                 # TypeScript type definitions
 ├── index.html                       # Demo application

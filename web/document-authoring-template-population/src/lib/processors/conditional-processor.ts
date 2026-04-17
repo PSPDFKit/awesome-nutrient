@@ -1,4 +1,4 @@
-import { PlaceholderType } from "../types";
+import { PlaceholderType } from "../../types";
 import { isTruthy, resolve } from "../utils/data-resolver";
 
 /**
