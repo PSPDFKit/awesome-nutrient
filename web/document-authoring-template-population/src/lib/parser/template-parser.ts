@@ -2,7 +2,7 @@ import {
   type DelimiterConfig,
   type ParsedPlaceholder,
   PlaceholderType,
-} from "../types";
+} from "../../types";
 import { validatePlaceholderName } from "../utils/validator-util";
 
 /**

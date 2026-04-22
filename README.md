@@ -108,6 +108,7 @@ Server-side PDF processing and manipulation:
 
 - [AI Document Assistant](https://github.com/PSPDFKit/ai-assistant-demo) — Natural language PDF interaction with AI
 - [AI-Assisted Document Editing](./document-authoring/ai-editing/) — AI-assisted document editing with Document Authoring SDK. Like Cursor for documents.
+- [Document Authoring Template Population](./web/document-authoring-template-population/) — TypeScript library for populating templates with data (placeholders, loops, conditionals, table rows)
 - [Document Generator (Vanilla JS)](./web/document-generator-vanillajs/) — Step-by-step PDF generation with Document Authoring SDK
 
 ### MCP Servers Hub
