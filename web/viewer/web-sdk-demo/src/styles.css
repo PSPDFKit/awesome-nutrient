@@ -1,0 +1,1716 @@
+/* ── Token layer (Baseline UI–style semantic tokens) ─────────────────── */
+
+:root {
+  /*
+   * Color · canvas hierarchy.
+   *
+   * These resolve through the Baseline UI tokens that <ThemeProvider> injects
+   * (see src/theme.ts). The custom theme is also passed to PSPDFKit.load(),
+   * so the SDK iframe and the demo shell share one source of truth.
+   */
+  --color-canvas: var(--bui-color-background-primary-strong);
+  --color-surface: var(--bui-color-background-secondary-medium);
+  --color-surface-raised: var(--bui-color-background-secondary-strong);
+  --color-surface-hover: var(--bui-color-background-secondary-strong);
+
+  /* Color · borders */
+  --color-border: var(--bui-color-border-medium);
+  --color-border-subtle: var(--bui-color-border-subtle);
+
+  /* Color · foreground */
+  --color-fg-primary: #ffffff;
+  --color-fg-secondary: #a8a8a8;
+  --color-fg-muted: #6e6e6e;
+  --color-fg-subtle: #4a4a4a;
+
+  /* Color · accent */
+  --color-accent: #00c9a7;
+  --color-accent-soft: rgba(0, 201, 167, 0.12);
+
+  /* Spacing scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* Toolbar controls (hover pill on dark chrome — matches product reference) */
+  --toolbar-btn-hover-bg: #3f3f3f;
+  --toolbar-btn-active-bg: #353535;
+  --toolbar-btn-radius: 10px;
+
+  /*
+   * Sign menu portal-safe colors.
+   *
+   * Popover portals mount outside the ThemeProvider subtree, so these must not
+   * depend on --bui-* variables indirectly through --color-* tokens.
+   */
+  --sign-popover-bg: #1a1a1a;
+  --sign-popover-border: #2a2a2a;
+  --sign-popover-preview-bg: #3a3a3a;
+
+  /* Type */
+  --font-ui: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Space Mono', 'Courier New', monospace;
+
+  /* Layout */
+  --sidebar-width: 280px;
+  --toolbar-height: 48px;
+
+  font-family: var(--font-ui);
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --color-canvas: #f2f0eb;
+  --color-surface: #ffffff;
+  --color-surface-raised: #efefef;
+  --color-surface-hover: #e8e6e1;
+  --toolbar-btn-hover-bg: #e4e2dd;
+  --toolbar-btn-active-bg: #d8d6d0;
+  --color-border: #d0cec9;
+  --color-border-subtle: #e0ddd6;
+  --color-fg-primary: #111111;
+  --color-fg-secondary: #555555;
+  --color-fg-muted: #888888;
+  --color-fg-subtle: #aaaaaa;
+  --sign-popover-bg: #ffffff;
+  --sign-popover-border: #d0cec9;
+  --sign-popover-preview-bg: #efefef;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  background: var(--color-canvas);
+  color: var(--color-fg-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* ── Scrollbars ──────────────────────────────────────────────────────── */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-fg-subtle);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ── App shell ───────────────────────────────────────────────────────── */
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-canvas);
+}
+
+.app-viewer {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────── */
+
+.sidebar {
+  position: relative;
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) var(--space-4);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  transition: background 150ms ease-out;
+}
+
+.sidebar--drag {
+  background: var(--color-surface-raised);
+}
+
+.sidebar__header {
+  padding: 0 var(--space-2) var(--space-4);
+}
+
+.sidebar__mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-fg-primary);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+.sidebar__mode-btn:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.sidebar__mode-btn--active {
+  background-color: var(--bui-color-background-interactive-enabled);
+  border-color: var(--bui-color-background-interactive-enabled);
+  color: #fff;
+}
+
+.sidebar__title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.sidebar__section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-fg-primary);
+}
+
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: var(--color-fg-secondary);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: color 150ms ease-out, background 150ms ease-out;
+}
+
+.upload-btn:hover {
+  color: var(--color-fg-primary);
+  background-color: var(--color-surface-hover);
+}
+
+.upload-btn input {
+  display: none;
+}
+
+.sidebar__empty {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: 13px;
+  color: var(--color-fg-secondary);
+  line-height: 1.5;
+}
+
+.file-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-fg-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 150ms ease-out, color 150ms ease-out;
+}
+
+.file-item:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-fg-primary);
+}
+
+.file-item--active {
+  background-color: var(--color-surface-hover);
+  color: var(--color-fg-primary);
+}
+
+.file-item__meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-item__name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-item__size {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-fg-subtle);
+  letter-spacing: 0.04em;
+}
+
+.file-item__remove {
+  border: none;
+  background: transparent;
+  color: var(--color-fg-subtle);
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity 150ms ease-out, color 150ms ease-out;
+}
+
+.file-item:hover .file-item__remove {
+  opacity: 1;
+}
+
+.file-item__remove:hover {
+  color: var(--color-fg-primary);
+  background: var(--color-border);
+}
+
+.drop-overlay {
+  position: absolute;
+  inset: var(--space-2);
+  border: 1px dashed var(--color-accent);
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* ── Toolbar ─────────────────────────────────────────────────────────── */
+
+.toolbar {
+  height: var(--toolbar-height);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-3);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  gap: var(--space-2);
+  overflow-x: auto;
+}
+
+.toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.toolbar__group--grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.toolbar__group--right {
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.toolbar__divider {
+  width: 1px;
+  height: 20px;
+  background: var(--color-border);
+  margin: 0 var(--space-2);
+  flex-shrink: 0;
+}
+
+.toolbar__label {
+  font-size: 13px;
+  color: var(--color-fg-secondary);
+  padding: 0 var(--space-1);
+  white-space: nowrap;
+}
+
+.toolbar__page-input {
+  width: 40px;
+  height: 28px;
+  padding: 0 var(--space-2);
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-fg-primary);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  text-align: center;
+  outline: none;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.toolbar__page-input:focus-visible {
+  border-color: var(--bui-color-border-interactive-enabled);
+  box-shadow: 0 0 0 1px var(--bui-color-border-interactive-enabled);
+}
+
+.toolbar__page-input:disabled {
+  color: var(--color-fg-subtle);
+  cursor: not-allowed;
+}
+
+.toolbar__zoom {
+  height: 28px;
+  padding: 0 var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-fg-primary);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  min-width: 60px;
+  transition: background 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.toolbar__zoom:hover:not(:disabled) {
+  background-color: var(--color-surface-hover);
+}
+
+.toolbar__zoom:disabled {
+  color: var(--color-fg-subtle);
+  cursor: not-allowed;
+}
+
+.toolbar__zoom .caret {
+  color: var(--color-fg-secondary);
+}
+
+/*
+ * Toolbar buttons share hover + focus styling.
+ * - Hover: subtle raised surface (`background.secondary.strong`).
+ * - Focus-visible: 2px ring in the accent color (`border.interactive.enabled`).
+ *
+ * `:focus-visible` (not `:focus`) keeps the ring out of mouse interactions
+ * while still showing it for keyboard navigation.
+ */
+
+.icon-btn,
+.label-btn,
+.toolbar__zoom {
+  outline: none;
+}
+
+.icon-btn:focus-visible,
+.label-btn:focus-visible,
+.toolbar__zoom:focus-visible {
+  box-shadow: 0 0 0 2px var(--bui-color-border-interactive-enabled);
+}
+
+/* Generic icon-only square button (rotate, trash, etc.). */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 6px;
+  border: none;
+  background: transparent;
+  color: var(--color-fg-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 150ms ease-out, color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.icon-btn:hover:not(:disabled) {
+  background-color: var(--color-surface-hover);
+}
+
+.icon-btn:active:not(:disabled) {
+  background-color: var(--bui-color-background-secondary-strong);
+  filter: brightness(0.92);
+}
+
+.icon-btn:disabled {
+  color: var(--color-fg-subtle);
+  cursor: not-allowed;
+}
+
+.icon-btn--split {
+  padding: 0 4px 0 6px;
+}
+
+.icon-btn--split .caret {
+  color: var(--color-fg-secondary);
+  margin-left: 2px;
+}
+
+/* Icon + label button (Insert image, Draw, Highlight, etc.). */
+.label-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 32px;
+  padding: 0 var(--space-3);
+  border: none;
+  background: transparent;
+  color: var(--color-fg-primary);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 150ms ease-out, color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.label-btn:hover:not(:disabled) {
+  background-color: var(--color-surface-hover);
+}
+
+.label-btn:active:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.label-btn:disabled {
+  color: var(--color-fg-subtle);
+  cursor: not-allowed;
+}
+
+.label-btn .caret {
+  color: var(--color-fg-secondary);
+  margin-left: -2px;
+}
+
+/*
+ * Toolbar-only hover: pill-shaped surface (reference UI). These rules sit
+ * after the generic `.icon-btn` / `.label-btn` hovers so they win in the cascade.
+ */
+.toolbar .icon-btn,
+.toolbar .label-btn,
+.toolbar .toolbar__zoom {
+  border-radius: var(--toolbar-btn-radius);
+}
+
+.toolbar .label-btn {
+  padding: 0 var(--space-4);
+}
+
+.toolbar .icon-btn:hover:not(:disabled),
+.toolbar .label-btn:hover:not(:disabled) {
+  background-color: var(--toolbar-btn-hover-bg);
+}
+
+.toolbar .icon-btn:active:not(:disabled),
+.toolbar .label-btn:active:not(:disabled) {
+  background-color: var(--toolbar-btn-active-bg);
+  filter: none;
+}
+
+.toolbar .toolbar__zoom:hover:not(:disabled) {
+  background-color: var(--toolbar-btn-hover-bg);
+}
+
+.toolbar .toolbar__zoom:active:not(:disabled) {
+  background-color: var(--toolbar-btn-active-bg);
+  filter: none;
+}
+
+/* Sign split control uses Baseline `ActionButton` for popover wiring — align with label tools. */
+.toolbar .sign-menu-trigger {
+  gap: var(--space-2);
+  height: 32px;
+  min-height: 32px;
+  padding-inline: var(--space-4);
+  color: var(--color-fg-primary);
+  background: transparent;
+}
+
+.toolbar .sign-menu-trigger:hover:not(:disabled) {
+  background-color: var(--toolbar-btn-hover-bg);
+}
+
+.toolbar .sign-menu-trigger:active:not(:disabled) {
+  background-color: var(--toolbar-btn-active-bg);
+}
+
+/* Move split control: icon-only sibling of the rotate/trash/add buttons,
+   with a small caret to signal the dropdown. */
+.toolbar .move-menu-trigger {
+  gap: 4px;
+  height: 32px;
+  min-height: 32px;
+  min-width: 0;
+  padding-inline: 8px;
+  color: var(--color-fg-primary);
+  background: transparent;
+}
+
+.toolbar .move-menu-trigger:hover:not(:disabled) {
+  background-color: var(--toolbar-btn-hover-bg);
+}
+
+.toolbar .move-menu-trigger:active:not(:disabled) {
+  background-color: var(--toolbar-btn-active-bg);
+}
+
+/* Force Baseline `ActionButton` icons to inherit the toolbar text color
+   instead of the interactive accent. Both <svg> and any inner <path>/<circle>
+   that hard-code `stroke="currentColor"` follow the parent color. */
+.toolbar .sign-menu-trigger,
+.toolbar .move-menu-trigger {
+  color: var(--color-fg-primary);
+}
+
+.toolbar .sign-menu-trigger svg,
+.toolbar .move-menu-trigger svg {
+  color: inherit;
+  stroke: currentColor;
+}
+
+/* ── Viewer ──────────────────────────────────────────────────────────── */
+
+.viewer {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.viewer-empty {
+  margin: auto;
+  text-align: center;
+  color: var(--color-fg-secondary);
+}
+
+.viewer-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.viewer-empty__hint {
+  margin-top: var(--space-2) !important;
+  color: var(--color-fg-subtle);
+  font-size: 13px;
+}
+
+/* ── Sign popover (toolbar dropdown) ─────────────────────────────────── */
+
+/* Portal wrapper: stay above the Web SDK root (iframes / high stacking contexts). */
+.sign-popover-portal {
+  z-index: 200000;
+}
+
+/*
+ * Baseline renders: portal → [underlay] → motion “ContentContainer” → “Content” → children.
+ * Opaque paint belongs on `.sign-popover-chrome` (ContentContainer) + `isNonModal` so the
+ * modal underlay does not wash the page through the panel.
+ */
+.sign-popover-chrome {
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: var(--sign-popover-bg) !important;
+  background-color: var(--sign-popover-bg) !important;
+  border: 1px solid var(--sign-popover-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+.sign-popover__body {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.sign-popover {
+  display: flex;
+  flex-direction: column;
+  min-width: 240px;
+  padding: var(--space-2);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.sign-popover__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  border: none;
+  color: var(--color-fg-primary);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sign-popover__item:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.sign-popover__divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-1) 0;
+}
+
+.sign-popover__preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-2);
+  background: var(--sign-popover-preview-bg);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.sign-popover__preview img {
+  max-width: 100%;
+  max-height: 64px;
+  object-fit: contain;
+}
+
+/* ── Move page popover ───────────────────────────────────────────────── */
+
+.move-popover {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 220px;
+  padding: var(--space-3);
+  background: #1a1a1a;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-fg-primary);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+}
+
+.move-popover__label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-fg-secondary);
+}
+
+.move-popover__input {
+  height: 34px;
+  padding: 0 var(--space-2);
+  background: #111111;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-fg-primary);
+  font-family: var(--font-ui);
+}
+
+.move-popover__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.move-popover__btn {
+  height: 32px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-fg-primary);
+  cursor: pointer;
+}
+
+.move-popover__btn:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+}
+
+.move-popover__btn:disabled {
+  color: var(--color-fg-subtle);
+  cursor: not-allowed;
+}
+
+/* ── Signers panel (slide-in right side) ─────────────────────────────── */
+
+.signers-panel {
+  position: relative;
+  width: 320px;
+  flex: 0 0 320px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4);
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border-left: 1px solid var(--color-border);
+  color: var(--color-fg-primary);
+  overflow-y: auto;
+  box-shadow: none;
+}
+
+.signers-panel__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-fg-primary);
+}
+
+.signers-panel__header h2 {
+  margin: 0;
+  flex: 1;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.signers-panel__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--color-fg-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.signers-panel__close:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-fg-primary);
+}
+
+.signers-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-1);
+}
+
+.signers-panel__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-fg-secondary);
+  letter-spacing: 0.02em;
+}
+
+.signers-panel__signer {
+  position: relative;
+}
+
+.signers-panel__signer-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  height: 36px;
+  padding: 0 var(--space-3);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-fg-primary);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.signers-panel__signer-trigger span {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.signers-panel__signer-trigger:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.signers-panel__signer-menu {
+  position: static;
+  margin: var(--space-1) 0 0;
+  list-style: none;
+  padding: var(--space-1);
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+.signers-panel__signer-option {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-fg-primary);
+  font-size: 14px;
+}
+
+.signers-panel__signer-option small {
+  color: var(--color-fg-muted);
+  font-size: 12px;
+}
+
+.signers-panel__signer-option:hover,
+.signers-panel__signer-option--active {
+  background-color: var(--color-surface-hover);
+}
+
+.signers-panel__add-signers {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: transparent;
+  border: none;
+  color: var(--color-fg-secondary);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.signers-panel__add-signers:hover {
+  color: var(--color-fg-primary);
+  background-color: var(--color-surface-hover);
+}
+
+.field-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  height: 36px;
+  padding: 0 var(--space-3);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-fg-primary);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  cursor: grab;
+  text-align: left;
+}
+
+.field-pill:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.field-pill:active {
+  cursor: grabbing;
+}
+
+.field-pill__handle {
+  margin-left: auto;
+  color: var(--color-fg-subtle);
+  font-size: 14px;
+  letter-spacing: -2px;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.field-pill:hover .field-pill__handle {
+  opacity: 1;
+}
+
+/* ── Signing modal (Draw / Type / Upload / Saved) ────────────────────── */
+
+.signing-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.68);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  z-index: 1000;
+}
+
+.signing-modal {
+  position: relative;
+  width: min(62vw, 560px);
+  min-width: 440px;
+  min-height: 360px;
+  background: #171716;
+  border: 1px solid #242424;
+  border-radius: 10px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: #f7f7f7;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.65);
+}
+
+.signing-modal__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: #f4f4f4;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.signing-modal__close:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-fg-primary);
+}
+
+.signing-modal__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.signing-modal__tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.signing-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px 9px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #b7b7b7;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+
+.signing-tab:focus {
+  outline: none;
+}
+
+.signing-tab:focus-visible {
+  box-shadow: 0 0 0 1px var(--bui-color-border-interactive-enabled);
+}
+
+.signing-tab--active {
+  color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+
+.signing-modal__body {
+  min-height: 168px;
+}
+
+.signing-pad {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.signing-pad__canvas {
+  position: relative;
+  height: 164px;
+  background: #f4f4f4;
+  border: 1px solid #c9c9c9;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.signing-pad__canvas canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.signing-pad__guide {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  left: 24px;
+  color: #b6b6b6;
+  font-size: 18px;
+  border-bottom: 1px solid #aaa;
+  padding-bottom: 3px;
+  pointer-events: none;
+}
+
+.signing-pad__clear {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: #7f7f7f;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.signing-pad__type-preview {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+  height: 164px;
+  padding: 0 26px;
+  background: #f4f4f4;
+  border: 1px solid #c9c9c9;
+  border-radius: 0;
+  color: #111;
+  cursor: text;
+  font-family: inherit;
+  text-align: left;
+}
+
+.signing-pad__type-preview::before {
+  content: '×';
+  position: absolute;
+  left: 26px;
+  bottom: 24px;
+  color: #b6b6b6;
+  font-size: 18px;
+}
+
+.signing-pad__type-preview::after {
+  content: '';
+  position: absolute;
+  right: 26px;
+  bottom: 28px;
+  left: 26px;
+  height: 1px;
+  background: #b6b6b6;
+}
+
+.signing-pad__type-text {
+  font-family: 'Segoe Script', 'Brush Script MT', cursive;
+  position: relative;
+  z-index: 1;
+  margin-left: 42px;
+  transform: translateY(18px);
+  color: #6e6e6e;
+  font-size: 44px;
+  line-height: 1;
+}
+
+.signing-pad__type-placeholder {
+  position: relative;
+  z-index: 1;
+  margin-left: 42px;
+  transform: translateY(18px);
+  color: #9a9a9a;
+  font-style: italic;
+  font-size: 32px;
+  font-family: 'Segoe Script', 'Brush Script MT', cursive;
+}
+
+.signing-pad__type-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: text;
+}
+
+.signing-pad--upload {
+  align-items: center;
+  justify-content: center;
+  min-height: 178px;
+  border: 1px solid #343434;
+  border-radius: 0;
+  padding: var(--space-4);
+  text-align: center;
+  color: #f7f7f7;
+}
+
+.signing-pad__upload-info {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.signing-pad__upload-info--muted {
+  color: var(--color-fg-secondary);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.signing-pad__upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 6px;
+  background: #f4f4f4;
+  color: #111;
+  padding: 7px 12px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 12px;
+}
+
+.signing-pad__upload-btn::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+}
+
+.signing-pad__upload-btn input {
+  display: none;
+}
+
+.signing-pad__upload-preview {
+  max-width: 100%;
+  max-height: 160px;
+  background: #f4f4f4;
+  border-radius: 0;
+  padding: var(--space-3);
+}
+
+.signing-pad--saved {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  align-content: start;
+  gap: var(--space-3);
+  min-height: 178px;
+}
+
+.signing-pad--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 178px;
+  color: var(--color-fg-secondary);
+  font-size: 14px;
+  text-align: center;
+}
+
+.saved-tile {
+  position: relative;
+  background: #f4f4f4;
+  border-radius: 0;
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96px;
+}
+
+.saved-tile img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.saved-tile--active {
+  border-color: var(--bui-color-border-interactive-enabled);
+}
+
+.saved-tile__delete {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.saved-tile:hover .saved-tile__delete {
+  opacity: 1;
+}
+
+.signing-modal__footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 4px;
+  border-top: none;
+}
+
+.signing-modal__disclaimer {
+  flex: 1;
+  margin: 0;
+  max-width: 410px;
+  font-size: 10px;
+  color: #f2f2f2;
+  line-height: 1.45;
+}
+
+.signing-modal__insert {
+  min-width: 56px;
+  height: 30px;
+  padding: 0 14px;
+  background: #f4f4f4;
+  color: #111111;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.signing-modal__insert:disabled {
+  background: #5f5b55;
+  color: #2f2d2a;
+  cursor: not-allowed;
+}
+
+.signing-modal__btn-secondary {
+  padding: var(--space-2) var(--space-4);
+  background: transparent;
+  color: var(--color-fg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.signing-modal__btn-secondary:hover {
+  background-color: var(--color-surface-hover);
+}
+
+/* ── Signers modal ───────────────────────────────────────────────────── */
+
+.signers-modal {
+  position: relative;
+  width: min(88vw, 860px);
+  min-height: 370px;
+  max-height: min(720px, calc(100vh - 48px));
+  overflow: auto;
+  background: #171716;
+  border: 1px solid #242424;
+  border-radius: 16px;
+  padding: 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  color: #f7f7f7;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.65);
+}
+
+.signers-modal .signing-modal__title {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.signers-modal__lede {
+  margin: 0;
+  color: #d6d6d6;
+  font-size: 17px;
+}
+
+.signers-modal__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.signers-modal__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 32px;
+  gap: 22px;
+  align-items: center;
+}
+
+.signers-modal__row--header {
+  margin-bottom: -4px;
+  font-size: 16px;
+  color: #f0f0f0;
+  font-weight: 700;
+}
+
+.signers-modal__input {
+  height: 44px;
+  padding: 0 16px;
+  background: transparent;
+  border: 1px solid #656565;
+  border-radius: var(--radius-md);
+  color: #ffffff;
+  font-family: var(--font-ui);
+  font-size: 18px;
+  outline: none;
+}
+
+.signers-modal__input:focus-visible {
+  border-color: var(--bui-color-border-interactive-enabled);
+  box-shadow: 0 0 0 1px var(--bui-color-border-interactive-enabled);
+}
+
+.signers-modal__input::placeholder {
+  color: #b0b0b0;
+}
+
+.signers-modal__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #666666;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.signers-modal__remove:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.signers-modal__remove:hover:not(:disabled) {
+  background-color: var(--color-surface-hover);
+  color: var(--color-fg-primary);
+}
+
+.signers-modal__add {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 10px 16px;
+  background: #2d2d2d;
+  border: none;
+  border-radius: var(--radius-md);
+  color: #f5f5f5;
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.signers-modal__add:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.signers-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+
+.signers-modal .signing-modal__btn-secondary,
+.signers-modal .signing-modal__insert {
+  min-width: 86px;
+  height: 44px;
+  padding: 0 18px;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.signers-modal .signing-modal__btn-secondary {
+  background: #2d2d2d;
+  color: #ffffff;
+}
+
+.signers-modal .signing-modal__insert:not(:disabled) {
+  background: #f4f4f4;
+  color: #111111;
+}
+
+/* ── Floating toolbar (shared by Ink + Text modes) ──────────────────── */
+
+.ink-toolbar {
+  position: fixed;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  /* Use portal-safe hardcoded colors instead of --color-surface / --color-border,
+     which resolve through --bui-* tokens that don't always reach overlay subtrees. */
+  background: var(--sign-popover-bg);
+  border: 1px solid var(--sign-popover-border);
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+}
+
+.ink-toolbar__grip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 28px;
+  color: var(--color-fg-secondary);
+  cursor: grab;
+  border-radius: var(--radius-sm);
+}
+
+.ink-toolbar__grip:active {
+  cursor: grabbing;
+}
+
+.ink-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: var(--color-fg-primary);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 150ms ease-out;
+}
+
+.ink-btn:hover:not(:disabled) {
+  background-color: var(--color-surface-hover);
+}
+
+.ink-btn:disabled {
+  color: var(--color-fg-subtle);
+  cursor: not-allowed;
+}
+
+.ink-btn--active {
+  background-color: var(--bui-color-background-interactive-enabled);
+  color: #ffffff;
+}
+
+.ink-btn--active:hover:not(:disabled) {
+  background-color: var(--bui-color-background-interactive-enabled);
+}
+
+.ink-btn__color-dot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* ── Ink popovers (color grid + stroke widths) ───────────────────────── */
+
+.ink-popover {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  /* Portal-safe colors: PopoverContent renders into a portal outside the
+     ThemeProvider subtree, so --bui-* (and therefore --color-*) tokens are
+     unreliable here. Match the .ink-toolbar approach. */
+  background: var(--sign-popover-bg);
+  border: 1px solid var(--sign-popover-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+}
+
+.ink-popover--colors {
+  width: 360px;
+}
+
+.ink-popover__title {
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.02em;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: var(--space-2);
+}
+
+.color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  padding: 0;
+}
+
+.color-swatch--active {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.stroke-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.stroke-option:hover {
+  background-color: var(--sign-popover-preview-bg);
+}
+
+.stroke-option--active {
+  background-color: var(--sign-popover-preview-bg);
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+}
+
+.stroke-option__bar {
+  background: #ffffff;
+  border-radius: 999px;
+  display: block;
+}
+
+.text-size-option {
+  width: 72px;
+  gap: var(--space-2);
+  color: #ffffff;
+}
+
+.text-size-option__label {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.text-size-option:nth-child(1) .text-size-option__label {
+  font-size: 12px;
+}
+.text-size-option:nth-child(2) .text-size-option__label {
+  font-size: 18px;
+}
+.text-size-option:nth-child(3) .text-size-option__label {
+  font-size: 24px;
+}
+
+.text-size-option__value {
+  font-family: var(--font-mono, var(--font-ui));
+  font-size: 11px;
+  color: #888888;
+}
