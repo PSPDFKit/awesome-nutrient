@@ -359,12 +359,12 @@ const DocumentEditor = (props: Props) => {
         });
 
         const importOperation: DocumentOperations.ImportDocumentAfterOperation =
-          {
-            type: "importDocument",
-            afterPageIndex: afterIndex,
-            document: copiedFile,
-            treatImportedDocumentAsOnePage: true,
-          };
+        {
+          type: "importDocument",
+          afterPageIndex: afterIndex,
+          document: copiedFile,
+          treatImportedDocumentAsOnePage: true,
+        };
 
         // Add a placeholder draft page for the imported document
         setDraftPages((current) => {
