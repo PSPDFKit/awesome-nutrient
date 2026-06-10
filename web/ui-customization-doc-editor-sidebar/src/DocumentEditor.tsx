@@ -309,11 +309,13 @@ const DocumentEditor = (props: Props) => {
       // Move each selected page one slot to the left with its own operation.
       // A single backward `movePages` with `beforePageIndex` can diverge from
       // the expected result for multi-page selections.
-      const operations: DocumentOperation[] = sortedIndexes.map((pageIndex) => ({
-        type: "movePages",
-        pageIndexes: [pageIndex],
-        beforePageIndex: pageIndex - 1,
-      }));
+      const operations: DocumentOperation[] = sortedIndexes.map(
+        (pageIndex) => ({
+          type: "movePages",
+          pageIndexes: [pageIndex],
+          beforePageIndex: pageIndex - 1,
+        }),
+      );
 
       setOperationQueue((prev) => [...prev, ...operations]);
       setIsUnsavedTagDismissed(false);
@@ -359,12 +361,12 @@ const DocumentEditor = (props: Props) => {
         });
 
         const importOperation: DocumentOperations.ImportDocumentAfterOperation =
-        {
-          type: "importDocument",
-          afterPageIndex: afterIndex,
-          document: copiedFile,
-          treatImportedDocumentAsOnePage: true,
-        };
+          {
+            type: "importDocument",
+            afterPageIndex: afterIndex,
+            document: copiedFile,
+            treatImportedDocumentAsOnePage: true,
+          };
 
         // Add a placeholder draft page for the imported document
         setDraftPages((current) => {
@@ -535,8 +537,7 @@ const DocumentEditor = (props: Props) => {
   // Don't allow removing every page — the document must keep at least one.
   const isRemoveDisabled =
     isOperationsDisabled ||
-    (draftPages.length > 0 &&
-      selectedPageIndexes.length === draftPages.length);
+    (draftPages.length > 0 && selectedPageIndexes.length === draftPages.length);
   // Disable the move buttons when the selection is already at the edge.
   const canMoveLeft =
     selectedPageIndexes.length > 0 && !selectedPageIndexes.includes(0);
