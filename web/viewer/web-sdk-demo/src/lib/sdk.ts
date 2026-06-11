@@ -13,3 +13,17 @@ export function annotationIdList(ids: string[]): unknown {
   const ImmutableList = window.NutrientViewer?.Immutable?.List
   return ImmutableList ? ImmutableList(ids) : ids
 }
+
+export function isAnnotationOfType(value: unknown, annotationName: string): boolean {
+  if (!value || typeof value !== 'object') return false
+
+  const AnnotationCtor = (
+    window.NutrientViewer?.Annotations as Record<string, unknown> | undefined
+  )?.[annotationName]
+
+  if (typeof AnnotationCtor === 'function' && value instanceof AnnotationCtor) {
+    return true
+  }
+
+  return (value as { constructor?: { name?: string } }).constructor?.name === annotationName
+}

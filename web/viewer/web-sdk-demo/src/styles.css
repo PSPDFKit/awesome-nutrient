@@ -373,17 +373,28 @@ button {
   display: flex;
   align-items: center;
   gap: var(--space-1);
+  flex: 0 0 auto;
   min-width: 0;
 }
 
 .toolbar__group--grow {
-  flex: 1;
-  min-width: 0;
+  flex: 0 0 auto;
 }
 
 .toolbar__group--right {
-  margin-left: auto;
+  margin-left: 0;
   justify-content: flex-end;
+}
+
+.toolbar__status {
+  flex: 0 0 auto;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
 
 .toolbar__divider {
@@ -468,6 +479,7 @@ button {
 .icon-btn,
 .label-btn,
 .toolbar__zoom {
+  flex: 0 0 auto;
   outline: none;
 }
 

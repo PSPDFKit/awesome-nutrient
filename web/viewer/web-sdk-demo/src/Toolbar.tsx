@@ -32,6 +32,20 @@ export function Toolbar({
   const [zoom, setZoom] = useState(1)
   const [pageInput, setPageInput] = useState('1')
   const [signMenuOpen, setSignMenuOpen] = useState(false)
+  const [operationError, setOperationError] = useState<string | null>(null)
+
+  const syncPageState = () => {
+    if (!instance) return
+    const nextPageCount = instance.totalPageCount
+    const nextPageIndex = Math.min(
+      instance.viewState.currentPageIndex,
+      Math.max(nextPageCount - 1, 0),
+    )
+    setPageIndex(nextPageIndex)
+    setPageCount(nextPageCount)
+    setZoom(instance.currentZoomLevel ?? 1)
+    setPageInput(String(nextPageIndex + 1))
+  }
 
   useEffect(() => {
     if (!instance) {
@@ -39,18 +53,21 @@ export function Toolbar({
       setPageCount(0)
       setZoom(1)
       setPageInput('1')
+      setOperationError(null)
       return
     }
 
-    setPageIndex(instance.viewState.currentPageIndex)
-    setPageCount(instance.totalPageCount)
-    setZoom(instance.currentZoomLevel ?? 1)
-    setPageInput(String(instance.viewState.currentPageIndex + 1))
+    syncPageState()
 
     const onViewState = (vs: unknown) => {
       const state = vs as SDKInstance['viewState']
-      setPageIndex(state.currentPageIndex)
-      setPageInput(String(state.currentPageIndex + 1))
+      const nextPageIndex = Math.min(
+        state.currentPageIndex,
+        Math.max(instance.totalPageCount - 1, 0),
+      )
+      setPageIndex(nextPageIndex)
+      setPageCount(instance.totalPageCount)
+      setPageInput(String(nextPageIndex + 1))
     }
     const onZoom = (z: unknown) => setZoom(z as number)
 
@@ -61,6 +78,12 @@ export function Toolbar({
       instance.removeEventListener('viewState.zoom.change', onZoom)
     }
   }, [instance])
+
+  useEffect(() => {
+    if (!operationError) return
+    const timeout = window.setTimeout(() => setOperationError(null), 4000)
+    return () => window.clearTimeout(timeout)
+  }, [operationError])
 
   const apply = (transform: (vs: SDKInstance['viewState']) => SDKInstance['viewState']) => {
     if (!instance) return
@@ -81,33 +104,55 @@ export function Toolbar({
   const fitWidth = () =>
     apply((vs) => vs.set('zoom', window.NutrientViewer!.ZoomMode.FIT_TO_WIDTH))
 
-  const rotatePages = async (rotateBy: 90 | -90) => {
-    if (!instance) return
-    await instance.applyOperations([
-      { type: 'rotatePages', pageIndexes: [pageIndex], rotateBy },
-    ])
+  const runOperation = async (
+    label: string,
+    operation: (viewer: SDKInstance) => Promise<unknown>,
+    refreshPages = true,
+  ) => {
+    if (!instance) return false
+    setOperationError(null)
+    try {
+      await operation(instance)
+      if (refreshPages) syncPageState()
+      return true
+    } catch (err) {
+      console.error(`${label} failed`, err)
+      setOperationError(`${label} failed`)
+      return false
+    }
   }
-  const deletePage = async () => {
-    if (!instance || pageCount <= 1) return
-    await instance.applyOperations([
-      { type: 'removePages', pageIndexes: [pageIndex] },
-    ])
+
+  const rotatePages = (rotateBy: 90 | -90) => {
+    return runOperation('Rotate page', (viewer) =>
+      viewer.applyOperations([
+        { type: 'rotatePages', pageIndexes: [pageIndex], rotateBy },
+      ]),
+    )
   }
-  const addPage = async () => {
-    if (!instance) return
-    await instance.applyOperations([
-      {
-        type: 'addPage',
-        afterPageIndex: pageIndex,
-        backgroundColor: window.NutrientViewer!.Color
-          ? new (window.NutrientViewer!.Color as new (...args: unknown[]) => unknown)({
-              r: 255,
-              g: 255,
-              b: 255,
-            })
-          : undefined,
-      },
-    ])
+  const deletePage = () => {
+    if (pageCount <= 1) return
+    return runOperation('Delete page', (viewer) =>
+      viewer.applyOperations([
+        { type: 'removePages', pageIndexes: [pageIndex] },
+      ]),
+    )
+  }
+  const addPage = () => {
+    return runOperation('Add page', (viewer) =>
+      viewer.applyOperations([
+        {
+          type: 'addPage',
+          afterPageIndex: pageIndex,
+          backgroundColor: window.NutrientViewer!.Color
+            ? new (window.NutrientViewer!.Color as new (...args: unknown[]) => unknown)({
+                r: 255,
+                g: 255,
+                b: 255,
+              })
+            : undefined,
+        },
+      ]),
+    )
   }
 
   const search = () => setMode(window.NutrientViewer!.InteractionMode.SEARCH)
@@ -123,12 +168,18 @@ export function Toolbar({
     const fromIndex = fromOneBased - 1
     if (fromIndex < 0 || fromIndex >= pageCount) return
 
-    // The user's mental model: "After page N" means the moved page should end up
-    // at slot N+1 in the resulting document. Compute that target final index and
-    // translate it into the SDK's afterPageIndex/beforePageIndex (which reference
-    // the *original* page positions).
+    const afterIndex = afterOneBased - 1
+    if (afterOneBased > pageCount || afterIndex === fromIndex) {
+      setMovePopoverOpen(false)
+      return
+    }
+
     const targetIndex =
-      afterOneBased <= 0 ? 0 : Math.min(afterOneBased, pageCount - 1)
+      afterOneBased <= 0
+        ? 0
+        : fromIndex < afterIndex
+          ? afterIndex
+          : afterIndex + 1
 
     if (targetIndex === fromIndex) {
       setMovePopoverOpen(false)
@@ -136,48 +187,75 @@ export function Toolbar({
     }
 
     const op =
-      targetIndex === 0
+      afterOneBased <= 0
         ? { type: 'movePages', pageIndexes: [fromIndex], beforePageIndex: 0 }
         : {
             type: 'movePages',
             pageIndexes: [fromIndex],
-            // Forward move: removing the source shifts later pages left by one,
-            // so the original-numbering anchor equals the desired final index.
-            // Backward move: source removal doesn't affect indices before it,
-            // so the anchor is target − 1 (insert "after that" → at target).
-            afterPageIndex: targetIndex > fromIndex ? targetIndex : targetIndex - 1,
+            afterPageIndex: afterIndex,
           }
 
-    await instance.applyOperations([op])
-    instance.setViewState((vs) => vs.set('currentPageIndex', targetIndex))
-    setMovePopoverOpen(false)
+    const moved = await runOperation('Move page', async (viewer) => {
+      await viewer.applyOperations([op])
+      viewer.setViewState((vs) => vs.set('currentPageIndex', targetIndex))
+    })
+    if (moved) setMovePopoverOpen(false)
   }
 
-  const insertImage = async () => {
+  const insertImage = () => {
     if (!instance) return
+    const sdk = window.NutrientViewer
+    const ImageAnnotation = sdk?.Annotations?.ImageAnnotation ?? sdk?.ImageAnnotation
+    const Rect = sdk?.Geometry?.Rect ?? sdk?.Rect
+    if (!sdk || !ImageAnnotation || !Rect || !instance.createAttachment) {
+      setOperationError('Insert image unavailable')
+      return
+    }
+
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = 'image/*'
     input.onchange = () => {
-      // Triggering image insertion requires deeper SDK plumbing (attachments +
-      // image annotations). For this demo, we just enter PAN mode and log.
-      console.info('TODO: wire insertImage to instance.create()', input.files)
+      const file = input.files?.[0]
+      if (!file) return
+      void runOperation(
+        'Insert image',
+        async (viewer) => {
+          const attachmentId = await viewer.createAttachment(file)
+          const pageIndex = viewer.viewState.currentPageIndex
+          const annotation = new ImageAnnotation({
+            id: sdk.generateInstantId?.(),
+            pageIndex,
+            boundingBox: new Rect({ left: 80, top: 80, width: 180, height: 120 }),
+            description: file.name || 'Inserted image',
+            imageAttachmentId: attachmentId,
+            contentType: file.type || 'image/png',
+          })
+          await viewer.create(annotation)
+        },
+        false,
+      )
     }
     input.click()
   }
 
-  const download = async () => {
-    if (!instance) return
-    const buffer = await instance.exportPDF()
-    const blob = new Blob([buffer], { type: 'application/pdf' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = fileName ?? 'document.pdf'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+  const download = () => {
+    return runOperation(
+      'Download',
+      async (viewer) => {
+        const buffer = await viewer.exportPDF()
+        const blob = new Blob([buffer], { type: 'application/pdf' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = fileName ?? 'document.pdf'
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.setTimeout(() => URL.revokeObjectURL(url), 0)
+      },
+      false,
+    )
   }
 
   const disabled = !instance
@@ -412,6 +490,12 @@ export function Toolbar({
           </PopoverContent>
         </Popover>
       </div>
+
+      {operationError && (
+        <span className="toolbar__status" role="status">
+          {operationError}
+        </span>
+      )}
 
       <div className="toolbar__group toolbar__group--right">
         <IconButton

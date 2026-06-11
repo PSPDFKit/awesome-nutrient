@@ -15,6 +15,8 @@ type SDK = {
   Annotations?: {
     WidgetAnnotation?: new (...args: unknown[]) => { id: string }
     ImageAnnotation?: new (...args: unknown[]) => unknown
+    InkAnnotation?: new (...args: unknown[]) => unknown
+    TextAnnotation?: new (...args: unknown[]) => unknown
   }
   WidgetAnnotation?: new (...args: unknown[]) => { id: string }
   ImageAnnotation?: new (...args: unknown[]) => unknown
@@ -86,7 +88,7 @@ export type SDKInstance = {
   delete: (idOrList: unknown) => Promise<unknown>
   update: (objectOrList: unknown) => Promise<unknown>
   createAttachment: (blob: Blob) => Promise<string>
-  getFormFields?: () => Promise<{
+  getFormFields: () => Promise<{
     toArray: () => Array<{
       id?: string
       name: string

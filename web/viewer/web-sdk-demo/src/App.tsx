@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { FileExplorer } from './FileExplorer'
 import { NutrientViewer } from './NutrientViewer'
 import { Toolbar } from './Toolbar'
@@ -36,6 +36,7 @@ const BUILTIN_FILE: FileEntry = {
 
 export function App() {
   const [files, setFiles] = useState<FileEntry[]>([BUILTIN_FILE])
+  const filesRef = useRef<FileEntry[]>([BUILTIN_FILE])
   const [activeId, setActiveId] = useState<string>(BUILTIN_FILE.id)
   const [instance, setInstance] = useState<SDKInstance | null>(null)
 
@@ -82,12 +83,15 @@ export function App() {
   )
 
   useEffect(() => {
+    filesRef.current = files
+  }, [files])
+
+  useEffect(() => {
     return () => {
-      files.forEach((f) => {
+      filesRef.current.forEach((f) => {
         if (!f.isBuiltin) URL.revokeObjectURL(f.url)
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ── Place a field at a specific page-space rect (used by drag-drop + click) ──
@@ -160,7 +164,9 @@ export function App() {
 
         if (!formField) {
           console.warn('SDK FormField constructor not found for field type:', type)
-          await instance.create(widget)
+          window.alert(
+            'Could not create this form field because the SDK form-field constructor is unavailable.',
+          )
           return
         }
 
@@ -297,15 +303,20 @@ export function App() {
         const Rect = sdk.Geometry?.Rect ?? sdk.Rect
         if (!ImageAnnotation || !Rect) {
           console.warn('SDK ImageAnnotation/Rect not found — signature not inserted.')
+          window.alert(
+            'Could not insert the signature because image annotations are unavailable.',
+          )
           return
         }
 
         const res = await fetch(dataUrl)
         const blob = await res.blob()
         const contentType = blob.type || getDataUrlContentType(dataUrl) || 'image/png'
-        const attachmentId = instance.createAttachment
-          ? await instance.createAttachment(blob)
-          : null
+        if (!instance.createAttachment) {
+          window.alert('Could not insert the signature because attachments are unavailable.')
+          return
+        }
+        const attachmentId = await instance.createAttachment(blob)
         const { pageIndex, boundingBox } = await resolveSignatureInsertionTarget(
           instance,
           signingModal,
@@ -322,8 +333,10 @@ export function App() {
         await instance.create(annotation)
       } catch (err) {
         console.error('Failed to insert signature', err)
+        window.alert('Could not insert the signature.')
+      } finally {
+        setSigningModal(null)
       }
-      setSigningModal(null)
     },
     [instance, refreshSavedSignatures, signingModal],
   )

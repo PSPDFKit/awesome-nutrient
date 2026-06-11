@@ -9,6 +9,7 @@ import {
 import { buildSDKColor } from '../lib/color'
 import { CloseIcon, GripIcon, TrashIcon, UndoIcon } from '../lib/icons'
 import { getFirstSelectedAnnotation, getSelectionSize } from '../lib/selection'
+import { isAnnotationOfType } from '../lib/sdk'
 import type { SDKInstance } from '../types/global'
 
 const COLORS: string[] = [
@@ -36,6 +37,8 @@ type Props = {
   instance: SDKInstance | null
   onClose: () => void
 }
+
+type TextAnnotationApi = NonNullable<NonNullable<SDKInstance['annotations']>['text']>
 
 export function TextToolbar({ instance, onClose }: Props) {
   const [color, setColor] = useState<string>('#ffffff')
@@ -99,68 +102,69 @@ export function TextToolbar({ instance, onClose }: Props) {
   // selection (Slate transforms) when in EDITING mode, or the annotation
   // model when only SELECTED. Each handler is the user's explicit intent —
   // we only push the property they actually changed.
-  const applyColor = useCallback(
-    (next: string) => {
-      setColor(next)
+  const withTextApi = useCallback(
+    (applyTextUpdate: (textApi: TextAnnotationApi) => void) => {
       if (!instance) return
       const textApi = instance.annotations?.text
       if (!textApi) return
       if (!hasSingleTextAnnotationSelected(instance)) return
-      const fontColor = buildSDKColor(next)
-      if (fontColor) safeCall(() => textApi.setFontColor(fontColor))
+      safeCall(() => applyTextUpdate(textApi))
     },
     [instance],
+  )
+
+  const applyColor = useCallback(
+    (next: string) => {
+      setColor(next)
+      const fontColor = buildSDKColor(next)
+      if (fontColor) withTextApi((textApi) => textApi.setFontColor(fontColor))
+    },
+    [withTextApi],
   )
 
   const applyFontSize = useCallback(
     (nextId: string) => {
       setFontSizeId(nextId)
-      if (!instance) return
-      const textApi = instance.annotations?.text
-      if (!textApi) return
-      if (!hasSingleTextAnnotationSelected(instance)) return
       const value = FONT_SIZES.find((s) => s.id === nextId)?.value
-      if (typeof value === 'number') safeCall(() => textApi.setFontSize(value))
+      if (typeof value === 'number') withTextApi((textApi) => textApi.setFontSize(value))
     },
-    [instance],
+    [withTextApi],
   )
 
   const applyBold = useCallback(
     (next: boolean) => {
       setIsBold(next)
-      if (!instance) return
-      const textApi = instance.annotations?.text
-      if (!textApi) return
-      if (!hasSingleTextAnnotationSelected(instance)) return
-      safeCall(() => textApi.setTextStyle({ bold: next }))
+      withTextApi((textApi) => textApi.setTextStyle({ bold: next }))
     },
-    [instance],
+    [withTextApi],
   )
 
   const applyItalic = useCallback(
     (next: boolean) => {
       setIsItalic(next)
-      if (!instance) return
-      const textApi = instance.annotations?.text
-      if (!textApi) return
-      if (!hasSingleTextAnnotationSelected(instance)) return
-      safeCall(() => textApi.setTextStyle({ italic: next }))
+      withTextApi((textApi) => textApi.setTextStyle({ italic: next }))
     },
-    [instance],
+    [withTextApi],
   )
 
   // `horizontalAlign` isn't in the editor namespace — it's a per-annotation
   // property (not per-character), so we update the model directly.
   const applyAlign = useCallback(
-    (next: Align) => {
+    async (next: Align) => {
+      const previous = align
       setAlign(next)
       if (!instance) return
       const selected = getFirstSelectedAnnotation(instance.getSelectedAnnotations?.())
       if (isTextAnnotation(selected) && selected.horizontalAlign !== next) {
-        void instance.update(selected.set('horizontalAlign', next))
+        try {
+          await instance.update(selected.set('horizontalAlign', next))
+        } catch (err) {
+          setAlign(previous)
+          console.warn('Could not update text alignment', err)
+        }
       }
     },
-    [instance],
+    [align, instance],
   )
 
   // Enter TEXT mode on mount, exit on close. The contextual annotation
@@ -203,7 +207,7 @@ export function TextToolbar({ instance, onClose }: Props) {
       const list = await instance.getAnnotations(pageIndex)
       const textIds = list
         .toArray()
-        .filter((a) => a.constructor?.name === 'TextAnnotation')
+        .filter((a) => isAnnotationOfType(a, 'TextAnnotation'))
         .map((a) => a.id)
       if (textIds.length > 0) await instance.delete(textIds)
       const sdk = window.NutrientViewer
@@ -497,7 +501,6 @@ function AlignIcon({ align }: { align: Align }) {
 
 type SettableTextAnnotation = {
   set: (key: string, value: unknown) => SettableTextAnnotation
-  constructor: { name: string }
   horizontalAlign?: Align
 }
 
@@ -510,7 +513,7 @@ function hasSingleTextAnnotationSelected(instance: SDKInstance): boolean {
 function isTextAnnotation(value: unknown): value is SettableTextAnnotation {
   if (!value || typeof value !== 'object') return false
   const candidate = value as SettableTextAnnotation
-  return candidate.constructor?.name === 'TextAnnotation' && typeof candidate.set === 'function'
+  return isAnnotationOfType(candidate, 'TextAnnotation') && typeof candidate.set === 'function'
 }
 
 function safeCall(fn: () => void) {

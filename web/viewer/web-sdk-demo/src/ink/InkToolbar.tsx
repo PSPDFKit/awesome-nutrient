@@ -9,6 +9,7 @@ import {
 import { buildSDKColor } from '../lib/color'
 import { CloseIcon, GripIcon, TrashIcon, UndoIcon } from '../lib/icons'
 import { getFirstSelectedAnnotation } from '../lib/selection'
+import { isAnnotationOfType } from '../lib/sdk'
 import type { SDKInstance } from '../types/global'
 
 const COLORS: string[] = [
@@ -89,7 +90,9 @@ export function InkToolbar({ instance, onClose }: Props) {
         const updated = selected
           .set('strokeColor', newStrokeColor)
           .set('lineWidth', lineWidth)
-        void instance.update(updated)
+        void instance.update(updated).catch((err) => {
+          console.warn('Could not update selected ink annotation', err)
+        })
       }
     } catch (err) {
       console.warn('Could not update ink preset', err)
@@ -139,7 +142,7 @@ export function InkToolbar({ instance, onClose }: Props) {
       const list = await instance.getAnnotations(pageIndex)
       const inkIds = list
         .toArray()
-        .filter((a) => a.constructor?.name === 'InkAnnotation')
+        .filter((a) => isAnnotationOfType(a, 'InkAnnotation'))
         .map((a) => a.id)
       if (inkIds.length > 0) await instance.delete(inkIds)
       // Deleting clears the active interactionMode — pop us back into INK
@@ -371,7 +374,6 @@ function StrokeIcon() {
 
 type InProgressInkAnnotation = {
   set: (key: string, value: unknown) => InProgressInkAnnotation
-  constructor: { name: string }
   lines?: { size: number }
 }
 
@@ -383,7 +385,7 @@ type InProgressInkAnnotation = {
 function isPristineInkAnnotation(value: unknown): value is InProgressInkAnnotation {
   if (!value || typeof value !== 'object') return false
   const candidate = value as InProgressInkAnnotation
-  if (candidate.constructor?.name !== 'InkAnnotation') return false
+  if (!isAnnotationOfType(candidate, 'InkAnnotation')) return false
   if (typeof candidate.set !== 'function') return false
   const linesSize = candidate.lines?.size
   return linesSize == null || linesSize === 0

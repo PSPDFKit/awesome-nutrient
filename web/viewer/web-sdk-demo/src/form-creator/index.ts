@@ -225,15 +225,19 @@ async function getFormFieldForAnnotation(
   instance: SDKInstance,
   annotation: WidgetLikeAnnotation,
 ) {
-  const fields = await instance.getFormFields?.()
-  const allFields = fields?.toArray?.() ?? []
+  const fields = await instance.getFormFields()
+  const allFields = fields.toArray()
   return allFields.find((field) => field.name === annotation.formFieldName) ?? null
 }
 
 async function deleteField(instance: SDKInstance, annotation: WidgetLikeAnnotation) {
   try {
     const formField = await getFormFieldForAnnotation(instance, annotation)
-    const target = formField?.id ?? formField ?? annotation.id
+    if (!formField) {
+      console.warn('No backing form field found; skipping widget-only delete.')
+      return
+    }
+    const target = formField.id ?? formField
     if (!target) return
     await instance.delete(target)
   } catch (error) {
@@ -250,8 +254,13 @@ async function renameField(
     const updates: unknown[] = []
     const formField = await getFormFieldForAnnotation(instance, annotation)
 
-    if (formField?.set) updates.push(formField.set('name', nextName))
-    if (annotation.set) updates.push(annotation.set('formFieldName', nextName))
+    if (!formField?.set || !annotation.set) {
+      console.warn('No backing form field found; skipping partial field rename.')
+      return
+    }
+
+    updates.push(formField.set('name', nextName))
+    updates.push(annotation.set('formFieldName', nextName))
 
     if (updates.length > 0) await instance.update(updates)
   } catch (error) {
