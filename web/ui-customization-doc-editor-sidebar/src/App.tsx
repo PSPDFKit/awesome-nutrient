@@ -4,6 +4,10 @@ import { createRoot } from "react-dom/client";
 import "./App.css";
 import DocumentEditor from "./DocumentEditor";
 
+// Identifier for the custom sidebar slot. The same value is used as the
+// `sidebarMode` view state to open/close the sidebar.
+const SIDEBAR_ID = "customDocumentEditorSidebar";
+
 function App() {
   const containerRef = useRef(null);
 
@@ -30,13 +34,15 @@ function App() {
           styleSheets: [`${baseUrl}document-editor.css`],
           ui: {
             sidebar: {
-              documentEditor: (instance) => {
+              [SIDEBAR_ID]: (getInstance) => {
                 const container = document.createElement("div");
                 const root = createRoot(container);
 
                 return {
                   render: () => container,
                   onMount: () => {
+                    const instance = getInstance();
+
                     if (instance) {
                       root.render(<DocumentEditor instance={instance} />);
                     }
@@ -53,6 +59,12 @@ function App() {
             viewState.set("sidebarWidth", 600),
           );
 
+          // Custom sidebar identifiers are valid `sidebarMode` values at
+          // runtime, but the published `sidebarMode` type only lists the
+          // built-in modes. Cast our custom id so TypeScript accepts it.
+          const customSidebarMode =
+            SIDEBAR_ID as unknown as typeof instance.viewState.sidebarMode;
+
           function getDocumentEditorToolbarItem(isSelected: boolean) {
             return {
               type: "custom" as const,
@@ -65,9 +77,9 @@ function App() {
                 instance.setViewState((viewState) =>
                   viewState.set(
                     "sidebarMode",
-                    viewState.sidebarMode === "documentEditor"
+                    viewState.sidebarMode === customSidebarMode
                       ? null
-                      : "documentEditor",
+                      : customSidebarMode,
                   ),
                 );
               },
@@ -78,7 +90,7 @@ function App() {
           instance.setToolbarItems([
             ...NutrientViewer.defaultToolbarItems,
             getDocumentEditorToolbarItem(
-              instance.viewState.sidebarMode === "documentEditor",
+              instance.viewState.sidebarMode === customSidebarMode,
             ),
           ]);
 
@@ -86,7 +98,7 @@ function App() {
             instance.setToolbarItems([
               ...NutrientViewer.defaultToolbarItems,
               getDocumentEditorToolbarItem(
-                viewState.sidebarMode === "documentEditor",
+                viewState.sidebarMode === customSidebarMode,
               ),
             ]);
           });
