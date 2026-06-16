@@ -29,13 +29,15 @@ function App() {
           useCDN: true,
           styleSheets: [`${baseUrl}comment-thread.css`],
           ui: {
-            commentThread: (instance, id) => {
+            commentThread: (getInstance, id) => {
               const container = document.createElement("div");
               const root = createRoot(container);
 
               return {
                 render: () => container,
                 onMount: () => {
+                  const instance = getInstance();
+
                   root.render(<CommentThread instance={instance} id={id} />);
                 },
                 onUnmount: () => {

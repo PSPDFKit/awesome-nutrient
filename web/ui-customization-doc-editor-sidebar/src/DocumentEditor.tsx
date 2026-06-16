@@ -45,6 +45,8 @@ interface DraftPageData {
   pageIndex: number;
   src: string;
   rotation: number;
+  width: number;
+  height: number;
 
   draftRotation?: number; // Additional rotation applied in draft state
   isNew?: boolean;
@@ -68,6 +70,9 @@ const DocumentEditor = (props: Props) => {
   const [operationQueue, setOperationQueue] = useState<DocumentOperation[]>([]);
   const [isUnsavedTagDismissed, setIsUnsavedTagDismissed] = useState(false);
   const blobUrlsRef = useRef<Set<string>>(new Set());
+  // Monotonic counter so temporary (added/duplicated/imported) pages always get
+  // unique IDs, even when created within the same millisecond.
+  const temporaryPageCounterRef = useRef(0);
 
   const cleanupBlobUrls = useCallback(() => {
     blobUrlsRef.current.forEach((url) => {
@@ -100,12 +105,16 @@ const DocumentEditor = (props: Props) => {
       }
 
       pagesData.push({
-        id: pageInfo.label,
+        // Page labels aren't guaranteed to be unique, so build a stable ID from
+        // the page index and label instead of using the label alone.
+        id: `page-${pageInfo.index}-${pageInfo.label}`,
         label: pageInfo.label,
         alt: pageInfo.label,
         pageIndex: pageInfo.index,
         src,
         rotation: pageInfo.rotation || 0,
+        width: pageInfo.width,
+        height: pageInfo.height,
       });
     }
 
@@ -182,24 +191,37 @@ const DocumentEditor = (props: Props) => {
       });
     } else if (operation === "add-page") {
       const selectedPageIndexes = getPageIndexesFromSelectedKeys();
-      const afterIndex = selectedPageIndexes[0];
+      // Add can be used without a selection — append the new page at the end in
+      // that case. Otherwise insert it after the selected page.
+      const afterIndex =
+        selectedPageIndexes.length === 1
+          ? selectedPageIndexes[0]
+          : Math.max(draftPages.length - 1, 0);
+      // Match the new page size to a reference page instead of hardcoding it.
+      const referencePage = draftPages[afterIndex] ?? draftPages[0];
+      const pageWidth = referencePage?.width ?? 595;
+      const pageHeight = referencePage?.height ?? 842;
+
       operationData = {
         type: "addPage",
         afterPageIndex: afterIndex,
         backgroundColor: new NutrientViewer.Color({ r: 255, g: 255, b: 255 }),
-        pageHeight: 400,
-        pageWidth: 300,
+        pageHeight,
+        pageWidth,
         rotateBy: 0,
       };
 
       setDraftPages((current) => {
+        temporaryPageCounterRef.current += 1;
         const newPage: DraftPageData = {
-          id: `temp-${Date.now()}`,
+          id: `temp-${Date.now()}-${temporaryPageCounterRef.current}`,
           label: "New Page",
           alt: "New blank page",
           pageIndex: afterIndex + 1,
           src: "",
           rotation: 0,
+          width: pageWidth,
+          height: pageHeight,
           isNew: true,
         };
         const result = [
@@ -224,9 +246,10 @@ const DocumentEditor = (props: Props) => {
         for (const pageIndex of selectedPageIndexes) {
           const originalPage = result.find((p) => p.pageIndex === pageIndex);
           if (originalPage) {
+            temporaryPageCounterRef.current += 1;
             const duplicatedPage: DraftPageData = {
               ...originalPage,
-              id: `temp-dup-${Date.now()}-${pageIndex}`,
+              id: `temp-dup-${Date.now()}-${temporaryPageCounterRef.current}`,
               label: `${originalPage.label} (copy)`,
               alt: `${originalPage.alt} (copy)`,
             };
@@ -274,38 +297,44 @@ const DocumentEditor = (props: Props) => {
         return updatePageIndexes(result);
       });
     } else if (operation === "move-left") {
-      const selectedPageIndexes = getPageIndexesFromSelectedKeys().sort(
+      const sortedIndexes = getPageIndexesFromSelectedKeys().sort(
         (a, b) => a - b,
       );
 
       // Can't move left if the leftmost selected page is already at the start
-      const minIndex = Math.min(...selectedPageIndexes);
-      if (minIndex === 0) {
+      if (sortedIndexes.length === 0 || sortedIndexes[0] === 0) {
         return;
       }
 
-      operationData = {
-        type: "movePages",
-        pageIndexes: selectedPageIndexes,
-        beforePageIndex: minIndex - 1,
-      };
+      // Move each selected page one slot to the left with its own operation.
+      // A single backward `movePages` with `beforePageIndex` can diverge from
+      // the expected result for multi-page selections.
+      const operations: DocumentOperation[] = sortedIndexes.map(
+        (pageIndex) => ({
+          type: "movePages",
+          pageIndexes: [pageIndex],
+          beforePageIndex: pageIndex - 1,
+        }),
+      );
+
+      setOperationQueue((prev) => [...prev, ...operations]);
+      setIsUnsavedTagDismissed(false);
 
       setDraftPages((current) => {
-        const pagesToMove = selectedPageIndexes.map((index) => current[index]);
-        const remaining = current.filter(
-          (_, index) => !selectedPageIndexes.includes(index),
-        );
+        const result = [...current];
 
-        // Insert all pages before minIndex position (adjust for removed pages)
-        const insertPosition = minIndex - 1;
-        const result = [
-          ...remaining.slice(0, insertPosition),
-          ...pagesToMove,
-          ...remaining.slice(insertPosition),
-        ];
+        for (const pageIndex of sortedIndexes) {
+          const page = result[pageIndex];
+          if (page) {
+            result.splice(pageIndex, 1);
+            result.splice(pageIndex - 1, 0, page);
+          }
+        }
 
         return updatePageIndexes(result);
       });
+
+      return; // Operations already queued above.
     } else if (operation === "import-document") {
       // Create file input
       const input = document.createElement("input");
@@ -320,25 +349,37 @@ const DocumentEditor = (props: Props) => {
         const afterIndex =
           selectedPageIndexes.length > 0
             ? Math.max(...selectedPageIndexes)
-            : draftPages.length - 1;
+            : Math.max(draftPages.length - 1, 0);
+
+        // Copy the uploaded file into a fresh `File` so the import operation
+        // doesn't rely on the original file handle, which the browser can
+        // invalidate before the operation runs.
+        const arrayBuffer = await file.arrayBuffer();
+        const copiedFile = new File([arrayBuffer], file.name, {
+          type: file.type,
+          lastModified: file.lastModified,
+        });
 
         const importOperation: DocumentOperations.ImportDocumentAfterOperation =
           {
             type: "importDocument",
             afterPageIndex: afterIndex,
-            document: file,
+            document: copiedFile,
             treatImportedDocumentAsOnePage: true,
           };
 
         // Add a placeholder draft page for the imported document
         setDraftPages((current) => {
+          temporaryPageCounterRef.current += 1;
           const newPage: DraftPageData = {
-            id: `temp-import-${Date.now()}`,
+            id: `temp-import-${Date.now()}-${temporaryPageCounterRef.current}`,
             label: file.name,
             alt: `Imported: ${file.name}`,
             pageIndex: afterIndex + 1,
             src: "", // Will be populated after save
             rotation: 0,
+            width: 595,
+            height: 842,
             isNew: true,
           };
           const result = [
@@ -492,6 +533,17 @@ const DocumentEditor = (props: Props) => {
   };
 
   const isOperationsDisabled = selectedKeys.size === 0;
+  const selectedPageIndexes = getPageIndexesFromSelectedKeys();
+  // Don't allow removing every page — the document must keep at least one.
+  const isRemoveDisabled =
+    isOperationsDisabled ||
+    (draftPages.length > 0 && selectedPageIndexes.length === draftPages.length);
+  // Disable the move buttons when the selection is already at the edge.
+  const canMoveLeft =
+    selectedPageIndexes.length > 0 && !selectedPageIndexes.includes(0);
+  const canMoveRight =
+    selectedPageIndexes.length > 0 &&
+    !selectedPageIndexes.includes(draftPages.length - 1);
 
   return (
     <ThemeProvider theme={themes.base.light}>
@@ -593,7 +645,7 @@ const DocumentEditor = (props: Props) => {
                     aria-label="Delete Page"
                     tooltip
                     size="lg"
-                    isDisabled={isOperationsDisabled}
+                    isDisabled={isRemoveDisabled}
                     onPress={() => queueDocumentOperation("remove-pages")}
                   />
                   <ActionIconButton
@@ -602,7 +654,6 @@ const DocumentEditor = (props: Props) => {
                     aria-label="Add Page"
                     tooltip
                     size="lg"
-                    isDisabled={isOperationsDisabled}
                     onPress={() => queueDocumentOperation("add-page")}
                   />
                   <ActionIconButton
@@ -628,7 +679,7 @@ const DocumentEditor = (props: Props) => {
                     aria-label="Move Left"
                     tooltip
                     size="lg"
-                    isDisabled={isOperationsDisabled}
+                    isDisabled={!canMoveLeft}
                     onPress={() => queueDocumentOperation("move-left")}
                   />
                   <ActionIconButton
@@ -637,7 +688,7 @@ const DocumentEditor = (props: Props) => {
                     aria-label="Move Right"
                     tooltip
                     size="lg"
-                    isDisabled={isOperationsDisabled}
+                    isDisabled={!canMoveRight}
                     onPress={() => queueDocumentOperation("move-right")}
                   />
                   <ActionIconButton
