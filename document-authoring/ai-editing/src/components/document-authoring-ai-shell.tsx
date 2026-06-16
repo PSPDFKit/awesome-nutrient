@@ -836,7 +836,7 @@ export function DocumentAuthoringAiShell() {
               href="https://nutrient.io/sdk/document-authoring/"
               className="app-header-btn app-header-btn-outline"
             >
-              Learn More
+              Document Authoring SDK
             </a>
             <a
               href="https://nutrient.io/contact-sales/"
