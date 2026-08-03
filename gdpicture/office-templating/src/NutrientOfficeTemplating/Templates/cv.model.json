@@ -1,0 +1,74 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "fullName": "Jane Doe",
+    "jobTitle": "Senior Product Designer",
+    "email": "jane.doe@example.com",
+    "phone": "+1 (555) 012-3456",
+    "location": "Berlin, Germany",
+    "summary": "Product designer with 8+ years of experience leading end-to-end design for B2B SaaS, from research and prototyping to design systems and shipped product.",
+    "experience": [
+      {
+        "role": "Lead Product Designer",
+        "company": "Acme Corp",
+        "period": "2021 — Present",
+        "description": "Own the design system and lead a team of 4 designers; cut time-to-ship for new features by 35%."
+      },
+      {
+        "role": "Product Designer",
+        "company": "Globex",
+        "period": "2018 — 2021",
+        "description": "Designed the flagship analytics dashboard used by 20k+ daily active users."
+      },
+      {
+        "role": "UX Designer",
+        "company": "Initech",
+        "period": "2015 — 2018",
+        "description": "Ran usability testing and redesigned the onboarding flow, lifting activation by 18%."
+      }
+    ],
+    "skills": [
+      {
+        "name": "Design Systems"
+      },
+      {
+        "name": "Figma"
+      },
+      {
+        "name": "Prototyping"
+      },
+      {
+        "name": "User Research"
+      },
+      {
+        "name": "Accessibility"
+      }
+    ],
+    "education": [
+      {
+        "degree": "BSc Computer Science",
+        "school": "TU Munich",
+        "year": "2015"
+      },
+      {
+        "degree": "UX Design Certificate",
+        "school": "Interaction Design Foundation",
+        "year": "2017"
+      }
+    ],
+    "photo": {
+      "_type": "image",
+      "source": "base64",
+      "format": "png",
+      "data": "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",
+      "borderColor": "F25E45",
+      "borderWidth": 2,
+      "borderStyle": "Solid"
+    }
+  }
+}

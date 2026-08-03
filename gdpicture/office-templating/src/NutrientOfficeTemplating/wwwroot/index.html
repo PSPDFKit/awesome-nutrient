@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nutrient — Office Templating</title>
+    <meta
+      name="description"
+      content="Generate Word, Excel and PowerPoint documents from templates and JSON data with the Nutrient .NET SDK."
+    />
+    <link rel="icon" href="assets/nutrient-symbol-inverse.png" />
+    <link rel="stylesheet" href="vendor/nutrient-kit.css" />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+
+  <body>
+    <div class="nk-shell">
+      <header class="nk-header">
+        <a class="nk-brand" href="./">
+          <img
+            class="nk-brand-logo"
+            src="assets/nutrient-logo-inverse.png"
+            alt="Nutrient"
+          />
+          <span class="nk-brand-divider" aria-hidden="true"></span>
+          <span class="nk-brand-product">Office Templating</span>
+        </a>
+        <nav class="nk-nav">
+          <a class="nk-nav-link" href="https://www.nutrient.io/sdk/dotnet" target="_blank" rel="noopener">.NET SDK</a>
+          <a class="nk-nav-link" href="https://www.nutrient.io/guides/dotnet/pdf-generation/from-word-template/" target="_blank" rel="noopener">Guides</a>
+        </nav>
+      </header>
+
+      <main class="nk-main">
+        <div class="nk-page">
+          <div class="nk-page-header app-page-header">
+            <p class="nk-eyebrow">Nutrient .NET SDK</p>
+            <div class="nk-page-header-row">
+              <div>
+                <h1 class="nk-title-page">Office templating</h1>
+                <p class="nk-lede" style="margin-top: var(--space-4)">
+                  One template, one JSON model, one API. Generate Word, Excel and
+                  PowerPoint documents &mdash; then export accessible PDF/UA.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ====================================== STEPPER + TOP NAVIGATION -->
+          <!-- Steps are buttons: any reachable step can be jumped to directly. -->
+          <div class="app-nav">
+            <ol class="app-stepper" id="stepper" aria-label="Progress">
+              <li><button class="app-step" data-step="1" type="button"><span class="app-step-num">1</span><span class="app-step-label">Template</span></button></li>
+              <li><button class="app-step" data-step="2" type="button"><span class="app-step-num">2</span><span class="app-step-label">Placeholders</span></button></li>
+              <li><button class="app-step" data-step="3" type="button"><span class="app-step-num">3</span><span class="app-step-label">Data</span></button></li>
+              <li><button class="app-step" data-step="4" type="button"><span class="app-step-num">4</span><span class="app-step-label">Validate</span></button></li>
+              <li><button class="app-step" data-step="5" type="button"><span class="app-step-num">5</span><span class="app-step-label">Generate</span></button></li>
+              <li><button class="app-step" data-step="6" type="button"><span class="app-step-num">6</span><span class="app-step-label">PDF/UA</span></button></li>
+            </ol>
+
+            <div class="app-nav-actions">
+              <button class="nk-btn nk-btn--ghost nk-btn--sm" id="preview-template" type="button" hidden>
+                Preview template
+              </button>
+              <button class="nk-btn nk-btn--sm" id="nav-prev" type="button">&larr; Back</button>
+              <button class="nk-btn nk-btn--primary nk-btn--sm" id="nav-next" type="button">Next &rarr;</button>
+            </div>
+          </div>
+
+          <!-- ============================================ STEP 1 — TEMPLATE -->
+          <section id="step-1" class="app-section" hidden>
+            <div class="nk-panel">
+              <h2 class="nk-title-section">Pick a template</h2>
+              <p class="nk-lede app-panel-lede">
+                Each one exercises a different corner of the templating engine &mdash; and
+                the same four SDK calls generate every one of them.
+              </p>
+              <div id="template-groups"></div>
+
+              <h3 class="nk-title-card" style="margin-top: var(--space-12)">Or use your own</h3>
+              <p class="nk-lede app-panel-lede">
+                Upload a <span class="nk-mono">.docx</span>,
+                <span class="nk-mono">.xlsx</span> or <span class="nk-mono">.pptx</span>
+                containing <span class="nk-mono">{{placeholders}}</span>. We'll read them
+                and scaffold a starter data model for you.
+              </p>
+
+              <div class="app-upload" id="dropzone">
+                <input type="file" id="file-input" accept=".docx,.xlsx,.pptx" hidden />
+                <p class="app-upload-text">
+                  Drop a template here, or
+                  <button class="nk-link app-upload-btn" id="browse" type="button">browse</button>
+                </p>
+                <p class="nk-help">Max 10 MB. Uploads are held in memory for 30 minutes.</p>
+              </div>
+              <div id="upload-error"></div>
+            </div>
+          </section>
+
+          <!-- ======================================== STEP 2 — PLACEHOLDERS -->
+          <section id="step-2" class="app-section" hidden>
+            <div class="nk-panel">
+              <div class="app-panel-head">
+                <div>
+                  <h2 class="nk-title-section">Placeholders in the template</h2>
+                  <p class="nk-lede app-panel-lede">
+                    The template holds the layout and branding; these markers are
+                    where your data lands. Downloading it here gives you the
+                    <strong>unfilled</strong> template &mdash; the generated
+                    document comes at step&nbsp;5.
+                  </p>
+                </div>
+                <a class="nk-btn" id="download-template" download>Download template</a>
+              </div>
+
+              <ul class="nk-list app-ph-grid" id="template-placeholders"></ul>
+            </div>
+
+            <div class="nk-panel" style="margin-top: var(--space-9)">
+              <h3 class="nk-title-card">Syntax</h3>
+              <div class="app-syntax" id="syntax-legend" style="margin-top: var(--space-8)"></div>
+            </div>
+
+            <div class="nk-panel" id="image-support" style="margin-top: var(--space-9)"></div>
+          </section>
+
+          <!-- ================================================ STEP 3 — DATA -->
+          <section id="step-3" class="app-section" hidden>
+            <div class="nk-panel">
+              <div class="app-panel-head">
+                <div>
+                  <h2 class="nk-title-section">The data model</h2>
+                  <p class="nk-lede app-panel-lede">
+                    Edit freely &mdash; this JSON is what drives the generation.
+                  </p>
+                </div>
+                <button class="nk-btn nk-btn--ghost nk-btn--sm" id="reset-model" type="button">Reset</button>
+              </div>
+
+              <div class="nk-field">
+                <div id="model-editor"></div>
+                <p class="nk-help" id="model-status">&nbsp;</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================ STEP 4 — VALIDATE -->
+          <section id="step-4" class="app-section" hidden>
+            <div class="nk-panel">
+              <div class="app-panel-head">
+                <div>
+                  <h2 class="nk-title-section">Validation</h2>
+                  <p class="nk-lede app-panel-lede">
+                    Every placeholder in the template, checked against your data. All of
+                    them must be satisfied before generating.
+                  </p>
+                </div>
+                <div class="nk-stats" id="validate-stats"></div>
+              </div>
+
+              <div id="validate-result"></div>
+            </div>
+          </section>
+
+          <!-- ============================================ STEP 5 — GENERATE -->
+          <section id="step-5" class="app-section" hidden>
+            <div class="nk-panel">
+              <div class="app-panel-head">
+                <div>
+                  <h2 class="nk-title-section">Generated document</h2>
+                  <p class="nk-lede app-panel-lede" id="generate-summary"></p>
+                </div>
+                <div class="nk-stats" id="generate-stats"></div>
+              </div>
+
+              <div class="app-result" id="generate-result"></div>
+            </div>
+          </section>
+
+          <!-- ============================================== STEP 6 — PDF/UA -->
+          <section id="step-6" class="app-section" hidden>
+            <div class="nk-panel">
+              <div class="app-panel-head">
+                <div>
+                  <h2 class="nk-title-section">Accessible PDF</h2>
+                  <p class="nk-lede app-panel-lede">
+                    Converted to PDF/UA-1 &mdash; the conformance level behind
+                    Section&nbsp;508, ADA and EN&nbsp;301&nbsp;549.
+                  </p>
+                </div>
+                <div class="nk-stats" id="pdf-stats"></div>
+              </div>
+
+              <div class="app-result" id="pdf-result"></div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer class="nk-footer">
+        <span class="nk-muted">
+          Built with the
+          <a class="nk-link" href="https://www.nutrient.io/sdk/dotnet" target="_blank" rel="noopener">Nutrient .NET SDK</a>.
+          Generation runs server-side via <span class="nk-mono">GdPictureOfficeTemplater</span>.
+        </span>
+      </footer>
+    </div>
+
+    <!-- Preview drawer — the template or generated document, rendered to PDF. -->
+    <div class="app-drawer" id="preview-drawer" hidden>
+      <div class="app-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="preview-title">
+        <header class="app-drawer-head">
+          <div>
+            <h2 class="nk-title-card" id="preview-title">Preview</h2>
+            <p class="nk-help" id="preview-sub"></p>
+          </div>
+          <button class="nk-btn nk-btn--icon" id="preview-close" type="button" aria-label="Close preview">&times;</button>
+        </header>
+        <div class="app-drawer-body" id="preview-body"></div>
+      </div>
+    </div>
+
+    <!-- Blocking overlay during server round-trips. -->
+    <div class="app-overlay" id="overlay" hidden>
+      <div class="app-overlay-box">
+        <div class="app-spinner" aria-hidden="true"></div>
+        <p class="app-overlay-text" id="overlay-text">Working&hellip;</p>
+      </div>
+    </div>
+
+    <script src="js/app.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,112 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "department": {
+      "name": "Solutions Engineering",
+      "costCentre": "CC-4200",
+      "contact": "marta.feld@nutrient.io"
+    },
+    "fiscalYear": "FY 2026",
+    "period": "Q3, to 2026-06-30",
+    "basis": "Modified accrual",
+    "subtitle": "Unaudited budget to actuals",
+    "lines": [
+      {
+        "account": "5105",
+        "name": "Salaries — administrative",
+        "type": "Expense",
+        "budget": 180000,
+        "actual": 176400,
+        "variance": 3600,
+        "variancePct": 0.02,
+        "status": "Green"
+      },
+      {
+        "account": "5110",
+        "name": "Salaries — staff",
+        "type": "Expense",
+        "budget": 640000,
+        "actual": 661200,
+        "variance": -21200,
+        "variancePct": -0.033,
+        "status": "Amber"
+      },
+      {
+        "account": "5125",
+        "name": "Overtime",
+        "type": "Expense",
+        "budget": 24000,
+        "actual": 31800,
+        "variance": -7800,
+        "variancePct": -0.325,
+        "status": "Red"
+      },
+      {
+        "account": "5430",
+        "name": "Fees for professional services",
+        "type": "Expense",
+        "budget": 96000,
+        "actual": 78500,
+        "variance": 17500,
+        "variancePct": 0.182,
+        "status": "Green"
+      },
+      {
+        "account": "5440",
+        "name": "Staff development",
+        "type": "Expense",
+        "budget": 30000,
+        "actual": 12250,
+        "variance": 17750,
+        "variancePct": 0.592,
+        "status": "Amber"
+      },
+      {
+        "account": "5445",
+        "name": "Travel and mileage",
+        "type": "Expense",
+        "budget": 45000,
+        "actual": 44100,
+        "variance": 900,
+        "variancePct": 0.02,
+        "status": "Green"
+      },
+      {
+        "account": "4210",
+        "name": "Recharges to product teams",
+        "type": "Revenue",
+        "budget": 120000,
+        "actual": 134500,
+        "variance": 14500,
+        "variancePct": 0.121,
+        "status": "Green"
+      }
+    ],
+    "totals": {
+      "budget": 1015000,
+      "actual": 1004250,
+      "variance": 10750,
+      "variancePct": 0.011
+    },
+    "varianceThreshold": "An explanation is required for any line exceeding both $10,000 and 10% variance. Positive variance is favourable on both expense and revenue lines; note that the two are computed in opposite directions.",
+    "explanations": [
+      {
+        "account": "5125",
+        "explanation": "Overtime ran ahead of plan during the accessibility rework. Additional review capacity has been approved to reduce reliance on overtime in Q4."
+      },
+      {
+        "account": "5440",
+        "explanation": "Two conference bookings were deferred to Q4; spend is expected to normalise by year end."
+      }
+    ],
+    "preparedBy": "Jordan Reyes",
+    "preparedDate": "2026-07-14",
+    "approvedBy": "Dana Whitfield",
+    "approvedDate": "2026-07-18"
+  }
+}

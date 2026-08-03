@@ -1,0 +1,55 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "company": {
+      "name": "Nutrient GmbH",
+      "address": "Konrad-Zuse-Ring 3",
+      "cityStateZip": "10123 Berlin, Germany",
+      "phone": "+49 30 1234567",
+      "email": "billing@nutrient.io"
+    },
+    "client": {
+      "name": "Acme Corporation",
+      "address": "1 Market Street, San Francisco, CA 94105",
+      "phone": "+1 415 555 0100",
+      "email": "accounts.payable@acme.example"
+    },
+    "invoiceNo": "INV-2024-0042",
+    "issueDate": "2024-06-15",
+    "dueDate": "2024-07-15",
+    "terms": "Net 30",
+    "lineItems": [
+      {
+        "item": "1",
+        "description": "Logo design",
+        "hours": "3",
+        "rate": "50",
+        "amount": "150"
+      },
+      {
+        "item": "2",
+        "description": "Website mockups",
+        "hours": "8",
+        "rate": "75",
+        "amount": "600"
+      },
+      {
+        "item": "3",
+        "description": "Brand guidelines",
+        "hours": "5",
+        "rate": "60",
+        "amount": "300"
+      }
+    ],
+    "subtotal": "1050",
+    "discount": "50",
+    "taxRate": "8.5%",
+    "tax": "85",
+    "total": "1085"
+  }
+}

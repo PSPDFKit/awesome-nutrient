@@ -1,0 +1,6 @@
+{
+  "order": 3,
+  "title": "Timesheet",
+  "subtitle": "Days as rows, with a weekly boundary so overtime computes.",
+  "features": ["Two row loops", "Numeric hours", "Certification block"]
+}

@@ -1,0 +1,11 @@
+{
+  "order": 1,
+  "title": "Service agreement",
+  "subtitle": "A contract with scoped deliverables, a payment schedule and signature blocks.",
+  "features": [
+    "Nested fields",
+    "Two row loops",
+    "Conditional clause",
+    "Images — full options"
+  ]
+}

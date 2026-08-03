@@ -1,0 +1,6 @@
+{
+  "order": 2,
+  "title": "Mutual NDA",
+  "subtitle": "One flag switches the whole agreement between mutual and one-way.",
+  "features": ["Inverted sections", "Nested sections", "Notices table"]
+}

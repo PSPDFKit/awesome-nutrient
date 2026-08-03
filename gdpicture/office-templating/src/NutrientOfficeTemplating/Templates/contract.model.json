@@ -1,0 +1,102 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "agreementNo": "SA-2026-0117",
+    "effectiveDate": "2026-09-01",
+    "provider": {
+      "name": "Nutrient GmbH",
+      "address": "Konrad-Zuse-Ring 3, 10123 Berlin, Germany",
+      "email": "contracts@nutrient.io",
+      "signatory": "Marta Feld"
+    },
+    "client": {
+      "name": "Acme Corporation",
+      "address": "1 Market Street, San Francisco, CA 94105",
+      "email": "legal@acme.example",
+      "signatory": "Dana Whitfield"
+    },
+    "scopeSummary": "The Provider will design and deliver a document-processing integration covering template authoring, generation, and accessible PDF export, together with the handover documentation set out below.",
+    "deliverables": [
+      {
+        "ref": "1",
+        "title": "Discovery workshop and technical audit",
+        "due": "2026-09-12",
+        "fee": "4,000"
+      },
+      {
+        "ref": "2",
+        "title": "Template authoring — Word, Excel, PowerPoint",
+        "due": "2026-10-03",
+        "fee": "9,500"
+      },
+      {
+        "ref": "3",
+        "title": "Generation pipeline and PDF/UA export",
+        "due": "2026-10-24",
+        "fee": "12,000"
+      },
+      {
+        "ref": "4",
+        "title": "Handover, documentation, and training",
+        "due": "2026-11-07",
+        "fee": "3,500"
+      }
+    ],
+    "totalFee": "29,000",
+    "payments": [
+      {
+        "milestone": "Discovery sign-off",
+        "trigger": "Acceptance of audit report",
+        "due": "2026-09-19",
+        "amount": "4,000"
+      },
+      {
+        "milestone": "Templates delivered",
+        "trigger": "All three formats accepted",
+        "due": "2026-10-10",
+        "amount": "9,500"
+      },
+      {
+        "milestone": "Pipeline in production",
+        "trigger": "PDF/UA export verified",
+        "due": "2026-10-31",
+        "amount": "12,000"
+      },
+      {
+        "milestone": "Handover complete",
+        "trigger": "Training delivered",
+        "due": "2026-11-14",
+        "amount": "3,500"
+      }
+    ],
+    "paymentTerms": {
+      "days": "30",
+      "currency": "EUR"
+    },
+    "hasRetainer": true,
+    "retainerAmount": "1,200",
+    "logo": {
+      "_type": "image",
+      "source": "base64",
+      "format": "png",
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAIAAABt+uBvAAABKklEQVR42u3ZwQ3CMBAEwCsiL/rvjQcPWqAAUBQU8N7BSPtFKCMnXp/rsm2yk0IACBAgQIAAAQIkgAABAgQIECBAAggQIECAAL2X++0K6LXLcwDt6bQyqp46fYyqrU4TI0CAJgId1OlgVKku81md7zlWqst8BGjBiqtUlzkPtOatrGCXSf12HVBqFaz8uld8q059v8YAxXfAbwGluszi/62JbfhPXzFA/wcUnOnM6EHZqeCMJp2dK884i3W4meh+mncvBkgAAZoPdH6vWb9L1oi2ErztqIjOu3Oi4I1QpXQOPmH81qyCOq1mz4AAzQI6Pzlucn9vBQECpAf9aA/SpJ3FnObNgwABAgQIECBAgAQQIECAAAECBEgAAQIECBAgQIAEECBAgAD1zgMp24yIUsvQ1gAAAABJRU5ErkJggg==",
+      "width": 64,
+      "height": 64,
+      "altText": "Nutrient logo",
+      "title": "Nutrient — provider mark",
+      "borderColor": "F25E45",
+      "borderWidth": 1,
+      "borderStyle": "Solid",
+      "rotation": 0,
+      "link": "https://www.nutrient.io",
+      "caption": "{{provider.name}} mark",
+      "captionLabel": "Figure",
+      "captionPosition": "Below"
+    }
+  }
+}

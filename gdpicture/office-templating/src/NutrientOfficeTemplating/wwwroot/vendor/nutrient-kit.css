@@ -1,0 +1,26 @@
+/* ===========================================================================
+ * Nutrient Design Kit — single-import bundle
+ * ---------------------------------------------------------------------------
+ * Convenience entry point. Imports font + tokens + reset + components in the
+ * right order.
+ *
+ * NOT included (add yourself if you want them):
+ *   tokens-light.css — light mode; see its header for caveats.
+ *
+ *   <link rel="stylesheet" href="/nutrient/nutrient-kit.css">
+ *
+ * or, from a bundler:
+ *
+ *   import "nutrient-design-kit/css/nutrient-kit.css";
+ *
+ * If your bundler doesn't follow @import, import the four files directly in
+ * this order instead.
+ *
+ * Note: font.css loads Archivo from Google Fonts, so the CSS folder is
+ * self-contained — no font assets to relocate alongside it.
+ * =========================================================================== */
+
+@import "./font.css";
+@import "./tokens.css";
+@import "./reset.css";
+@import "./components.css";

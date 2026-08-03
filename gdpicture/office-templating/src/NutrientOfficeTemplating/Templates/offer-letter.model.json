@@ -1,0 +1,100 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "letterDate": "2026-08-14",
+    "employer": {
+      "name": "Nutrient GmbH"
+    },
+    "candidate": {
+      "name": "Rowan Ellis",
+      "firstName": "Rowan",
+      "address": "48 Sonnenallee, 12045 Berlin, Germany"
+    },
+    "position": {
+      "title": "Senior Solutions Engineer",
+      "reportsTo": "Marta Feld, Director of Solutions Engineering",
+      "startDate": "2026-09-28",
+      "payFrequency": "in semi-monthly instalments"
+    },
+    "compensation": [
+      {
+        "component": "Annual base salary",
+        "amount": "EUR 92,000",
+        "note": "Reviewed annually each March."
+      },
+      {
+        "component": "Target bonus",
+        "amount": "12% of base",
+        "note": "Against company and individual objectives."
+      },
+      {
+        "component": "Equity grant",
+        "amount": "4,000 options",
+        "note": "Four-year vest, one-year cliff, then monthly."
+      }
+    ],
+    "benefits": [
+      {
+        "label": "30 days of annual leave, prorated in your first calendar year."
+      },
+      {
+        "label": "Statutory health insurance with employer contribution."
+      },
+      {
+        "label": "Company pension scheme after six months of service."
+      },
+      {
+        "label": "EUR 1,500 annual learning and conference budget."
+      }
+    ],
+    "contingencies": [
+      {
+        "label": "Satisfactory completion of reference checks."
+      },
+      {
+        "label": "Evidence of your right to work in Germany."
+      },
+      {
+        "label": "Signature of the Company's confidentiality agreement."
+      }
+    ],
+    "hasSigningBonus": true,
+    "signingBonus": {
+      "amount": "EUR 5,000",
+      "clawbackMonths": "12"
+    },
+    "hasRelocation": true,
+    "relocation": {
+      "cap": "EUR 8,000"
+    },
+    "needsSponsorship": false,
+    "sponsorship": {
+      "visaType": "EU Blue Card"
+    },
+    "atWillNotice": "YOUR EMPLOYMENT WITH THE COMPANY IS FOR NO SPECIFIED PERIOD AND CONSTITUTES AT-WILL EMPLOYMENT. EITHER YOU OR THE COMPANY MAY TERMINATE THE EMPLOYMENT RELATIONSHIP AT ANY TIME, WITH OR WITHOUT CAUSE AND WITH OR WITHOUT ADVANCE NOTICE.",
+    "notAContractNotice": "This letter is not a contract of employment for any specific duration, and supersedes all prior representations, whether written or oral, including any made during recruitment.",
+    "offerExpiry": "2026-08-28",
+    "signatory": {
+      "name": "Marta Feld",
+      "title": "Director, Solutions Engineering"
+    },
+    "logo": {
+      "_type": "image",
+      "source": "base64",
+      "format": "png",
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAIAAABt+uBvAAABKklEQVR42u3ZwQ3CMBAEwCsiL/rvjQcPWqAAUBQU8N7BSPtFKCMnXp/rsm2yk0IACBAgQIAAAQIkgAABAgQIECBAAggQIECAAL2X++0K6LXLcwDt6bQyqp46fYyqrU4TI0CAJgId1OlgVKku81md7zlWqst8BGjBiqtUlzkPtOatrGCXSf12HVBqFaz8uld8q059v8YAxXfAbwGluszi/62JbfhPXzFA/wcUnOnM6EHZqeCMJp2dK884i3W4meh+mncvBkgAAZoPdH6vWb9L1oi2ErztqIjOu3Oi4I1QpXQOPmH81qyCOq1mz4AAzQI6Pzlucn9vBQECpAf9aA/SpJ3FnObNgwABAgQIECBAgAQQIECAAAECBEgAAQIECBAgQIAEECBAgAD1zgMp24yIUsvQ1gAAAABJRU5ErkJggg==",
+      "width": 64,
+      "height": 64,
+      "altText": "Nutrient logo",
+      "title": "Employer letterhead mark",
+      "borderColor": "F25E45",
+      "borderWidth": 1,
+      "borderStyle": "Solid"
+    }
+  }
+}

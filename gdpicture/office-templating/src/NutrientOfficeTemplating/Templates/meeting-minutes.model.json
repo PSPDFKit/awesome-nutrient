@@ -1,0 +1,88 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "meeting": {
+      "title": "Document generation programme — weekly review",
+      "date": "2026-08-05",
+      "time": "10:00–11:00 CEST",
+      "location": "Berlin office, room 3.2 and video",
+      "chair": "Dana Whitfield",
+      "scribe": "Jordan Reyes"
+    },
+    "attendees": [
+      {
+        "name": "Dana Whitfield",
+        "role": "VP Operations (chair)",
+        "attendance": "Present"
+      },
+      {
+        "name": "Marta Feld",
+        "role": "Director, Solutions Engineering",
+        "attendance": "Present"
+      },
+      {
+        "name": "Jordan Reyes",
+        "role": "Solutions Engineer",
+        "attendance": "Present"
+      },
+      {
+        "name": "Tomas Brandt",
+        "role": "Platform lead",
+        "attendance": "Apologies"
+      }
+    ],
+    "items": [
+      {
+        "title": "1.1  Template authoring status",
+        "discussion": "All twelve templates are authored. Two required rework after the accessibility review; both are now passing. No further authoring work is expected this phase."
+      },
+      {
+        "title": "1.2  Container font licensing",
+        "discussion": "The Microsoft core fonts package is required for faithful Office-to-PDF conversion. Legal are reviewing redistribution terms for the container image and will report back in week 32."
+      },
+      {
+        "title": "1.3  Release readiness",
+        "discussion": "Staging has been stable for eleven days. The group agreed to hold the production date and add reviewer capacity rather than reduce the accessibility scope."
+      }
+    ],
+    "decisions": [
+      {
+        "ref": "D1",
+        "decision": "Hold the 4 September production date",
+        "rationale": "Slippage is recoverable with additional review capacity."
+      },
+      {
+        "ref": "D2",
+        "decision": "Add 0.4 FTE to the accessibility workstream",
+        "rationale": "Cheaper than a delayed release; funded from the phase contingency."
+      }
+    ],
+    "actions": [
+      {
+        "ref": "A1",
+        "action": "Confirm font redistribution terms for the container",
+        "owner": "Legal",
+        "due": "2026-08-12"
+      },
+      {
+        "ref": "A2",
+        "action": "Book the production readiness review",
+        "owner": "Jordan Reyes",
+        "due": "2026-08-14"
+      },
+      {
+        "ref": "A3",
+        "action": "Circulate the Q4 template shortlist",
+        "owner": "Marta Feld",
+        "due": "2026-08-19"
+      }
+    ],
+    "hasNextMeeting": true,
+    "nextMeeting": "2026-08-12, 10:00 CEST"
+  }
+}

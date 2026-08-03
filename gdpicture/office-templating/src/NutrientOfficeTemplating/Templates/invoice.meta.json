@@ -1,0 +1,6 @@
+{
+  "order": 1,
+  "title": "Invoice",
+  "subtitle": "A billing workbook whose line-item rows grow with the data.",
+  "features": ["Nested fields", "Row loops", "Cell types preserved", "Images"]
+}

@@ -1,0 +1,6 @@
+{
+  "order": 5,
+  "title": "Quotation",
+  "subtitle": "Line items with per-line discount, tax, and a terms table.",
+  "features": ["Two row loops", "Percentage cells", "Image in a cell"]
+}

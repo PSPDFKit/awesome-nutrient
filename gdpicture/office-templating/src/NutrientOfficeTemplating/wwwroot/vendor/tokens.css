@@ -1,0 +1,194 @@
+/* ===========================================================================
+ * Nutrient Design Kit — Tokens
+ * ---------------------------------------------------------------------------
+ * The single source of truth for colour, type, spacing, radius and motion.
+ * Everything else in this kit (and in your app) should reference these
+ * variables rather than raw values.
+ *
+ * Dark-mode first. See tokens-light.css for the light-mode override block.
+ *
+ * FONTS: this file only references the family *name* ("Archivo"). Loading it
+ * is font.css's job — that's the one file whose URL you need to edit for your
+ * deployment. Skip font.css entirely if you already load Archivo some other
+ * way.
+ * =========================================================================== */
+
+:root {
+  /* =======================================================================
+   * 1. BRAND PALETTE (raw)
+   * Do not reference these directly in components — use the semantic roles
+   * in section 3. These exist so the brand values live in exactly one place.
+   * ===================================================================== */
+
+  /* Primary brand colours (light variants) */
+  --nutrient-white: #ffffff;
+  --nutrient-disc-pink: #de9dcc;
+  --nutrient-code-coral: #f25e45;
+  --nutrient-data-green: #6eb579;
+  --nutrient-digital-pollen: #f0c968;
+
+  /* Dark-mode companions — deep, desaturated versions of the above.
+   * Use as backgrounds behind the light variant used as text/border. */
+  --nutrient-warm-black-dm: #1a1414;
+  --nutrient-disc-pink-dm: #4f2b45;
+  --nutrient-code-coral-dm: #672d23;
+  --nutrient-data-green-dm: #2b412f;
+  --nutrient-digital-pollen-dm: #5b481a;
+
+  /* Neutrals */
+  --nutrient-off-white: #efebe7;
+  --nutrient-pixel-mist: #e2dbd9;
+  --nutrient-soft-grey: #c2b8ae;
+  --nutrient-warm-grey: #67594b;
+
+  /* =======================================================================
+   * 2. DERIVED SURFACES
+   * Not part of the published brand palette. These are Warm Black lifted
+   * toward the warm end so stacked surfaces separate without hard borders.
+   * ===================================================================== */
+  --nutrient-surface-1: #221a1a; /* elevated: panels, sidebars */
+  --nutrient-surface-2: #2a1f1f; /* card: content blocks on panels */
+  --nutrient-surface-3: #332626; /* hover / pressed */
+
+  /* =======================================================================
+   * 3. SEMANTIC ROLES (dark mode)
+   * These are what components should reference.
+   * ===================================================================== */
+
+  /* Surfaces */
+  --bg-base: var(--nutrient-warm-black-dm);
+  --bg-elevated: var(--nutrient-surface-1);
+  --bg-card: var(--nutrient-surface-2);
+  --bg-hover: var(--nutrient-surface-3);
+
+  /* Borders — Pixel Mist at low alpha reads as a warm hairline on dark. */
+  --border-subtle: rgba(226, 219, 217, 0.08);
+  --border-strong: rgba(226, 219, 217, 0.18);
+
+  /* Text — contrast against --bg-base (#1A1414), measured:
+   *   --text-primary    15.34:1  AA / AAA
+   *   --text-secondary   9.32:1  AA / AAA
+   *   --text-muted       2.69:1  FAILS AA (and large-text AA)
+   *
+   * --text-muted is a deliberate low-contrast decorative tone, inherited
+   * from the source app. Use it ONLY for de-emphasised metadata a user
+   * never has to read (timestamps, counts beside a visible label).
+   * For anything readable, use --text-secondary.
+   *
+   * If you need muted text to be accessible, override with the AA-passing
+   * alternative below (5.34:1) — it's Warm Grey lightened, same hue:
+   *   :root { --text-muted: var(--text-muted-aa); }
+   */
+  --text-primary: var(--nutrient-off-white);
+  --text-secondary: var(--nutrient-soft-grey);
+  --text-muted: var(--nutrient-warm-grey);
+  --text-muted-aa: #9a8878; /* opt-in accessible muted, 5.34:1 on base */
+  --text-inverse: var(--nutrient-warm-black-dm); /* on light fills */
+
+  /* Intent — each has a "soft" background companion for filled badges. */
+  --accent: var(--nutrient-code-coral);
+  --accent-soft: var(--nutrient-code-coral-dm);
+  --positive: var(--nutrient-data-green);
+  --positive-soft: var(--nutrient-data-green-dm);
+  --warn: var(--nutrient-digital-pollen);
+  --warn-soft: var(--nutrient-digital-pollen-dm);
+  --info: var(--nutrient-disc-pink);
+  --info-soft: var(--nutrient-disc-pink-dm);
+
+  /* Focus ring — always Code Coral so keyboard nav is unmistakable. */
+  --focus-ring: var(--nutrient-code-coral);
+
+  /* =======================================================================
+   * 4. TYPOGRAPHY
+   * ===================================================================== */
+  --font-sans:
+    "Archivo", "Arial", -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+    sans-serif;
+  --font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Type scale — the sizes actually used across the reference app. */
+  --text-2xs: 10px; /* uppercase micro-labels, counts */
+  --text-xs: 11px; /* badges, stat labels */
+  --text-sm: 12px; /* nav, meta, chips */
+  --text-base: 13px; /* body, inputs, list rows */
+  --text-md: 14px;
+  --text-lg: 16px; /* card titles */
+  --text-xl: 18px; /* section headings */
+  --text-2xl: 22px; /* stat values */
+  --text-3xl: 28px; /* page titles */
+  --text-hero: clamp(34px, 5vw, 54px);
+
+  /* Tracking — negative on display sizes, positive on uppercase micro-text. */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.06em;
+  --tracking-widest: 0.08em;
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.3;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;
+
+  /* =======================================================================
+   * 5. SPACING — 2px base, jumps to 4px steps above 8.
+   * ===================================================================== */
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 10px;
+  --space-6: 12px;
+  --space-7: 14px;
+  --space-8: 16px;
+  --space-9: 18px;
+  --space-10: 22px;
+  --space-11: 28px;
+  --space-12: 32px;
+  --space-14: 36px;
+  --space-16: 48px;
+  --space-20: 64px;
+
+  /* =======================================================================
+   * 6. RADIUS
+   * ===================================================================== */
+  --radius-sm: 4px; /* micro-badges, count pills */
+  --radius-md: 6px; /* buttons, inputs */
+  --radius-lg: 8px; /* tabs, search fields, small panels */
+  --radius-xl: 12px; /* cards, panels, viewer chrome */
+  --radius-full: 999px; /* chips, badges */
+
+  /* =======================================================================
+   * 7. ELEVATION
+   * Dark UI: shadows read as depth only when they're deep and soft.
+   * ===================================================================== */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 18px 36px rgba(0, 0, 0, 0.35);
+
+  /* =======================================================================
+   * 8. MOTION
+   * Fast and unfussy. Nothing over 180ms.
+   * ===================================================================== */
+  --ease: cubic-bezier(0.2, 0, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 140ms;
+  --duration-slow: 180ms;
+
+  /* =======================================================================
+   * 9. LAYOUT
+   * ===================================================================== */
+  --container-max: 1440px;
+  --container-pad: var(--space-12);
+  --header-height: 60px;
+}
+
+/* Respect the OS reduced-motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}

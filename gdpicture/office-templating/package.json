@@ -1,0 +1,12 @@
+{
+  "name": "nutrient-office-templating-assets",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Front-end asset dependencies. Exists only to pin the Nutrient Web SDK version; the app itself has no build step.",
+  "scripts": {
+    "postinstall": "node scripts/copy-web-sdk.mjs"
+  },
+  "dependencies": {
+    "@nutrient-sdk/viewer": "1.19.0"
+  }
+}

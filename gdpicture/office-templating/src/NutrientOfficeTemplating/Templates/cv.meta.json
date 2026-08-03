@@ -1,0 +1,6 @@
+{
+  "order": 1,
+  "title": "Résumé deck",
+  "subtitle": "A three-slide CV with repeating experience and skills sections.",
+  "features": ["Loops across slides", "Images — border only"]
+}

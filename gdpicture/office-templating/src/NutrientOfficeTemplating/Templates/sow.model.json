@@ -1,0 +1,127 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "sowNo": "SOW-2026-014",
+    "revision": "1.0",
+    "sowDate": "2026-08-20",
+    "msaDate": "2025-04-02",
+    "supplier": {
+      "name": "Nutrient GmbH",
+      "contact": "Marta Feld, Engagement Lead",
+      "email": "delivery@nutrient.io",
+      "signatory": "Marta Feld"
+    },
+    "client": {
+      "name": "Acme Corporation",
+      "contact": "Dana Whitfield, VP Operations",
+      "email": "dana.whitfield@acme.example",
+      "signatory": "Dana Whitfield"
+    },
+    "objectives": [
+      {
+        "label": "Replace the manual document assembly process with templated generation."
+      },
+      {
+        "label": "Produce accessible PDF output meeting PDF/UA-1 conformance."
+      },
+      {
+        "label": "Hand over authoring documentation the Client's team can maintain."
+      }
+    ],
+    "deliverables": [
+      {
+        "id": "D1",
+        "name": "Discovery report and technical audit",
+        "format": "PDF",
+        "due": "15 CD DD",
+        "acceptance": "Client sign-off"
+      },
+      {
+        "id": "D2",
+        "name": "Template set — Word, Excel, PowerPoint",
+        "format": "OOXML",
+        "due": "10 WD ARC",
+        "acceptance": "Renders without placeholders"
+      },
+      {
+        "id": "D3",
+        "name": "Generation service and API",
+        "format": "Source + container",
+        "due": "45 CD DD",
+        "acceptance": "Passes acceptance suite"
+      },
+      {
+        "id": "D4",
+        "name": "Authoring guide and training",
+        "format": "PDF + session",
+        "due": "5 WD ARF",
+        "acceptance": "Session delivered"
+      }
+    ],
+    "milestones": [
+      {
+        "name": "Discovery complete",
+        "completion": "2026-09-11",
+        "trigger": "Acceptance of D1",
+        "amount": "6,000"
+      },
+      {
+        "name": "Templates delivered",
+        "completion": "2026-10-02",
+        "trigger": "Acceptance of D2",
+        "amount": "11,000"
+      },
+      {
+        "name": "Service in production",
+        "completion": "2026-10-30",
+        "trigger": "Acceptance of D3",
+        "amount": "18,000"
+      },
+      {
+        "name": "Handover",
+        "completion": "2026-11-13",
+        "trigger": "Acceptance of D4",
+        "amount": "5,000"
+      }
+    ],
+    "assumptions": [
+      {
+        "label": "The Client provides sample documents within five days of kick-off."
+      },
+      {
+        "label": "One review cycle per deliverable is included; further cycles are chargeable."
+      },
+      {
+        "label": "Work is performed remotely; on-site visits are billed separately."
+      }
+    ],
+    "clientObligations": [
+      {
+        "ref": "1",
+        "label": "Nominate a single decision-maker for acceptance",
+        "owner": "VP Operations",
+        "requiredBy": "Kick-off"
+      },
+      {
+        "ref": "2",
+        "label": "Provide access to the document repository",
+        "owner": "IT Operations",
+        "requiredBy": "Week 1"
+      },
+      {
+        "ref": "3",
+        "label": "Supply brand assets and font licences",
+        "owner": "Marketing",
+        "requiredBy": "Week 2"
+      }
+    ],
+    "acceptanceDays": "10",
+    "isTimeAndMaterials": false,
+    "notToExceed": "EUR 60,000"
+  }
+}

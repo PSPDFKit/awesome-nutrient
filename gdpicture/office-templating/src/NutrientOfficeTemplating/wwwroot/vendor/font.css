@@ -1,0 +1,18 @@
+/* ===========================================================================
+ * Nutrient Design Kit — Archivo
+ * ---------------------------------------------------------------------------
+ * Archivo is loaded from Google Fonts rather than bundled as a .woff2.
+ *
+ * Archivo is licensed under the SIL Open Font License 1.1, which requires the
+ * licence text to travel with the font file. Linking it avoids redistributing a
+ * .woff2 with no OFL.txt beside it — and Google Fonts serves a per-browser
+ * subset, which is smaller than the full variable file anyway.
+ *
+ * To self-host instead: download Archivo from
+ * https://github.com/Omnibus-Type/Archivo, place it next to its OFL.txt, and
+ * replace the @import below with an @font-face pointing at your copy.
+ *
+ * tokens.css references only the family *name*, so either strategy works.
+ * =========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@100..900&display=swap");
