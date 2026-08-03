@@ -110,9 +110,12 @@
                     document comes at step&nbsp;5.
                   </p>
                 </div>
-                <!-- href is rewritten per template by app.js; "#" keeps the anchor
-                     valid before a template is chosen. -->
-                <a class="nk-btn" id="download-template" href="#" download>Download template</a>
+                <!-- A button, not an anchor: there is no URL to link to until a
+                     template is chosen, and an anchor without a real href is
+                     neither valid HTML nor reachable by assistive technology. -->
+                <button class="nk-btn" id="download-template" type="button">
+                  Download template
+                </button>
               </div>
 
               <ul class="nk-list app-ph-grid" id="template-placeholders"></ul>

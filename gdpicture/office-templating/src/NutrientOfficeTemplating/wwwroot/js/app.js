@@ -520,9 +520,14 @@ function renderPlaceholderStep() {
     </p>
     <ul class="nk-list" style="margin-top:var(--space-8)">${rows}</ul>`;
 
-  const link = $("#download-template");
-  link.href = `/api/templates/${APP.selected.id}/file`;
-  link.textContent = `Download empty template (.${APP.selected.extension})`;
+  // A button rather than an anchor, so the download is triggered rather than linked.
+  // The endpoint sends Content-Disposition: attachment, so navigating to it downloads
+  // the file instead of replacing the page.
+  const download = $("#download-template");
+  download.textContent = `Download empty template (.${APP.selected.extension})`;
+  download.onclick = () => {
+    window.location.href = `/api/templates/${APP.selected.id}/file`;
+  };
 }
 
 /* ------------------------------------------------------- step 3: the model */
