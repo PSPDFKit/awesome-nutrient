@@ -81,8 +81,8 @@
               <p class="nk-lede app-panel-lede">
                 Upload a <span class="nk-mono">.docx</span>,
                 <span class="nk-mono">.xlsx</span> or <span class="nk-mono">.pptx</span>
-                containing <span class="nk-mono">{{placeholders}}</span>. We'll read them
-                and scaffold a starter data model for you.
+                containing <span class="nk-mono">&#123;&#123;placeholders&#125;&#125;</span>.
+                We'll read them and scaffold a starter data model for you.
               </p>
 
               <div class="app-upload" id="dropzone">
@@ -110,7 +110,9 @@
                     document comes at step&nbsp;5.
                   </p>
                 </div>
-                <a class="nk-btn" id="download-template" download>Download template</a>
+                <!-- href is rewritten per template by app.js; "#" keeps the anchor
+                     valid before a template is chosen. -->
+                <a class="nk-btn" id="download-template" href="#" download>Download template</a>
               </div>
 
               <ul class="nk-list app-ph-grid" id="template-placeholders"></ul>
