@@ -1,0 +1,109 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "employee": {
+      "name": "Sam Okonkwo",
+      "id": "E-10902",
+      "department": "Professional Services",
+      "payGroup": "Biweekly, non-exempt",
+      "supervisor": "Marta Feld"
+    },
+    "period": {
+      "weekEnding": "2026-08-07",
+      "weekStartsOn": "Saturday"
+    },
+    "days": [
+      {
+        "date": "2026-08-01",
+        "day": "Saturday",
+        "task": "—",
+        "timeIn": "—",
+        "timeOut": "—",
+        "hours": 0,
+        "payCode": "—"
+      },
+      {
+        "date": "2026-08-02",
+        "day": "Sunday",
+        "task": "—",
+        "timeIn": "—",
+        "timeOut": "—",
+        "hours": 0,
+        "payCode": "—"
+      },
+      {
+        "date": "2026-08-03",
+        "day": "Monday",
+        "task": "Acme — template authoring",
+        "timeIn": "09:00",
+        "timeOut": "17:30",
+        "hours": 8,
+        "payCode": "REG"
+      },
+      {
+        "date": "2026-08-04",
+        "day": "Tuesday",
+        "task": "Acme — template authoring",
+        "timeIn": "08:45",
+        "timeOut": "18:15",
+        "hours": 9,
+        "payCode": "REG"
+      },
+      {
+        "date": "2026-08-05",
+        "day": "Wednesday",
+        "task": "Internal — release review",
+        "timeIn": "09:00",
+        "timeOut": "17:00",
+        "hours": 7.5,
+        "payCode": "REG"
+      },
+      {
+        "date": "2026-08-06",
+        "day": "Thursday",
+        "task": "Acme — accessibility rework",
+        "timeIn": "09:00",
+        "timeOut": "19:00",
+        "hours": 9.5,
+        "payCode": "REG"
+      },
+      {
+        "date": "2026-08-07",
+        "day": "Friday",
+        "task": "Acme — accessibility rework",
+        "timeIn": "09:00",
+        "timeOut": "18:00",
+        "hours": 8,
+        "payCode": "REG"
+      }
+    ],
+    "totals": [
+      {
+        "category": "Regular",
+        "hours": 40
+      },
+      {
+        "category": "Overtime",
+        "hours": 2
+      },
+      {
+        "category": "Paid leave",
+        "hours": 0
+      },
+      {
+        "category": "Unpaid",
+        "hours": 0
+      }
+    ],
+    "totalHours": 42,
+    "overtimeHours": 2,
+    "certification": "I certify that this time report correctly reflects all time worked by me for the pay period indicated. Overtime is calculated on hours worked over 40 in the workweek, in accordance with the Fair Labor Standards Act.",
+    "submittedDate": "2026-08-07",
+    "approvedDate": "2026-08-10"
+  }
+}

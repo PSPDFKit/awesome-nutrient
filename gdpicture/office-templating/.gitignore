@@ -1,0 +1,18 @@
+bin/
+obj/
+*.user
+.DS_Store
+
+# The Nutrient Web SDK is installed by npm and copied into wwwroot at build time —
+# ~148 MB of WASM and font resources that must not enter git history. See
+# scripts/copy-web-sdk.mjs; the version is pinned in package.json.
+node_modules/
+src/NutrientOfficeTemplating/wwwroot/vendor/nutrient/
+
+# Never commit a licence key.
+.env
+appsettings.Development.json
+appsettings.Local.json
+
+# Scratch output from local generation runs.
+output.*

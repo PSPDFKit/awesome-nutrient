@@ -1,0 +1,107 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "effectiveDate": "2026-09-01",
+    "currency": "EUR",
+    "region": "EMEA",
+    "products": [
+      {
+        "sku": "NUT-DOT-STD",
+        "name": "Nutrient .NET SDK",
+        "tier": "Standard",
+        "listPrice": 12000,
+        "annualPrice": 12000,
+        "unit": "per server"
+      },
+      {
+        "sku": "NUT-DOT-PRO",
+        "name": "Nutrient .NET SDK",
+        "tier": "Professional",
+        "listPrice": 18000,
+        "annualPrice": 18000,
+        "unit": "per server"
+      },
+      {
+        "sku": "NUT-DOT-ENT",
+        "name": "Nutrient .NET SDK",
+        "tier": "Enterprise",
+        "listPrice": 32000,
+        "annualPrice": 32000,
+        "unit": "per server"
+      },
+      {
+        "sku": "NUT-WEB-STD",
+        "name": "Nutrient Web SDK",
+        "tier": "Standard",
+        "listPrice": 9000,
+        "annualPrice": 9000,
+        "unit": "per domain"
+      },
+      {
+        "sku": "NUT-WEB-PRO",
+        "name": "Nutrient Web SDK",
+        "tier": "Professional",
+        "listPrice": 14000,
+        "annualPrice": 14000,
+        "unit": "per domain"
+      },
+      {
+        "sku": "NUT-OCR-ADD",
+        "name": "OCR add-on",
+        "tier": "Add-on",
+        "listPrice": 4500,
+        "annualPrice": 4500,
+        "unit": "per server"
+      },
+      {
+        "sku": "NUT-SUP-PRI",
+        "name": "Priority support",
+        "tier": "Service",
+        "listPrice": 6000,
+        "annualPrice": 6000,
+        "unit": "per contract"
+      },
+      {
+        "sku": "NUT-TPL-AUT",
+        "name": "Template authoring",
+        "tier": "Service",
+        "listPrice": 1400,
+        "annualPrice": 0,
+        "unit": "per template"
+      }
+    ],
+    "notes": "List prices exclude VAT. Annual prices apply to subscription terms of twelve months; multi-year terms are quoted separately.",
+    "volumeBands": [
+      {
+        "from": 1,
+        "to": "4",
+        "discount": 0.0,
+        "appliesTo": "All products"
+      },
+      {
+        "from": 5,
+        "to": "9",
+        "discount": 0.08,
+        "appliesTo": "Licences only"
+      },
+      {
+        "from": 10,
+        "to": "24",
+        "discount": 0.15,
+        "appliesTo": "Licences only"
+      },
+      {
+        "from": 25,
+        "to": "and above",
+        "discount": 0.22,
+        "appliesTo": "Licences and add-ons"
+      }
+    ],
+    "discountNote": "Volume discounts apply to licence quantity on a single order and are not cumulative with promotional pricing."
+  }
+}

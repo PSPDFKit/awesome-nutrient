@@ -1,0 +1,6 @@
+{
+  "order": 6,
+  "title": "Price list",
+  "subtitle": "Two worksheets — products and volume discount bands.",
+  "features": ["Multi-sheet workbook", "Two row loops", "Percentage cells"]
+}

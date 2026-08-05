@@ -1,0 +1,159 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "project": {
+      "name": "Document generation programme",
+      "client": "Acme Corporation",
+      "startDate": "2026-09-01",
+      "endDate": "2026-11-14"
+    },
+    "objectives": {
+      "headline": "Three outcomes this project must deliver",
+      "items": [
+        {
+          "label": "Replace manual document assembly with templated generation."
+        },
+        {
+          "label": "Produce PDF/UA-conformant output for every generated document."
+        },
+        {
+          "label": "Leave the Acme team able to author new templates unaided."
+        }
+      ]
+    },
+    "scope": {
+      "inScope": [
+        {
+          "label": "Word, Excel and PowerPoint template authoring — twelve templates."
+        },
+        {
+          "label": "Generation service with a documented HTTP API."
+        },
+        {
+          "label": "PDF/UA export and accessibility verification."
+        },
+        {
+          "label": "Authoring documentation and one training session."
+        }
+      ],
+      "outOfScope": [
+        {
+          "label": "Migration of historical documents."
+        },
+        {
+          "label": "Changes to the upstream CRM or ERP systems."
+        },
+        {
+          "label": "Translation or localisation of template content."
+        },
+        {
+          "label": "Ongoing template authoring after handover."
+        }
+      ]
+    },
+    "team": {
+      "headline": "Who's doing what",
+      "members": [
+        {
+          "name": "Dana Whitfield",
+          "role": "Sponsor",
+          "organisation": "Acme",
+          "responsibility": "Accepts deliverables and resolves escalations."
+        },
+        {
+          "name": "Marta Feld",
+          "role": "Engagement lead",
+          "organisation": "Nutrient",
+          "responsibility": "Owns delivery, scope and the weekly report."
+        },
+        {
+          "name": "Jordan Reyes",
+          "role": "Solutions engineer",
+          "organisation": "Nutrient",
+          "responsibility": "Template authoring and the generation service."
+        },
+        {
+          "name": "Tomas Brandt",
+          "role": "Platform lead",
+          "organisation": "Acme",
+          "responsibility": "Deployment, secrets and production access."
+        }
+      ]
+    },
+    "plan": {
+      "headline": "Four phases over eleven weeks",
+      "phases": [
+        {
+          "phase": "Discovery",
+          "dates": "1–12 Sep",
+          "milestone": "Audit accepted"
+        },
+        {
+          "phase": "Authoring",
+          "dates": "15 Sep – 3 Oct",
+          "milestone": "Templates accepted"
+        },
+        {
+          "phase": "Build",
+          "dates": "6–31 Oct",
+          "milestone": "Service in production"
+        },
+        {
+          "phase": "Handover",
+          "dates": "3–14 Nov",
+          "milestone": "Training delivered"
+        }
+      ]
+    },
+    "risks": {
+      "headline": "What we're watching from day one",
+      "items": [
+        {
+          "risk": "Font licensing for the container image",
+          "owner": "Acme Legal",
+          "mitigation": "Review booked for week 1; fallback fonts identified."
+        },
+        {
+          "risk": "Source data quality in the CRM export",
+          "owner": "Acme IT",
+          "mitigation": "Sample export requested before discovery ends."
+        },
+        {
+          "risk": "Single reviewer for acceptance",
+          "owner": "Dana Whitfield",
+          "mitigation": "Deputy nominated to avoid a single point of delay."
+        }
+      ]
+    },
+    "cadence": {
+      "headline": "How we'll run",
+      "items": [
+        {
+          "ceremony": "Weekly status",
+          "frequency": "Wednesdays, 30 min",
+          "participants": "Engagement lead, platform lead"
+        },
+        {
+          "ceremony": "Written status report",
+          "frequency": "Fridays",
+          "participants": "Circulated to sponsor and team"
+        },
+        {
+          "ceremony": "Phase acceptance",
+          "frequency": "End of each phase",
+          "participants": "Sponsor, engagement lead"
+        },
+        {
+          "ceremony": "Escalation",
+          "frequency": "As needed, within one day",
+          "participants": "Sponsor"
+        }
+      ]
+    }
+  }
+}

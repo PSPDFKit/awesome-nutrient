@@ -1,0 +1,102 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "reportNo": "EXP-2026-0412",
+    "periodStart": "2026-07-01",
+    "periodEnd": "2026-07-31",
+    "currency": "USD",
+    "employee": {
+      "name": "Jordan Reyes",
+      "id": "E-10428",
+      "department": "Solutions Engineering",
+      "costCentre": "CC-4200"
+    },
+    "expenses": [
+      {
+        "date": "2026-07-08",
+        "description": "Return flight, BER–SFO",
+        "category": "Air travel",
+        "paymentMethod": "Corporate card",
+        "receipt": "Yes",
+        "amount": 1284.6
+      },
+      {
+        "date": "2026-07-08",
+        "description": "Hotel, 3 nights",
+        "category": "Lodging",
+        "paymentMethod": "Corporate card",
+        "receipt": "Yes",
+        "amount": 912.0
+      },
+      {
+        "date": "2026-07-09",
+        "description": "Client dinner, 4 attendees",
+        "category": "Meals",
+        "paymentMethod": "Personal",
+        "receipt": "Yes",
+        "amount": 218.45
+      },
+      {
+        "date": "2026-07-10",
+        "description": "Conference registration",
+        "category": "Events",
+        "paymentMethod": "Corporate card",
+        "receipt": "Yes",
+        "amount": 650.0
+      },
+      {
+        "date": "2026-07-11",
+        "description": "Airport transfers",
+        "category": "Ground transport",
+        "paymentMethod": "Personal",
+        "receipt": "No",
+        "amount": 96.3
+      }
+    ],
+    "expensesSubtotal": 3161.35,
+    "mileageBasis": "Claimed at the IRS standard business rate in force on each date of travel.",
+    "mileage": [
+      {
+        "date": "2026-07-14",
+        "route": "Office → Client site, Palo Alto",
+        "purpose": "Implementation workshop",
+        "miles": 68,
+        "rate": "$0.725",
+        "amount": 49.3
+      },
+      {
+        "date": "2026-07-21",
+        "route": "Office → Regional office, Oakland",
+        "purpose": "Quarterly planning",
+        "miles": 42,
+        "rate": "$0.725",
+        "amount": 30.45
+      },
+      {
+        "date": "2026-07-28",
+        "route": "Office → Partner site, San Jose",
+        "purpose": "Integration review",
+        "miles": 91,
+        "rate": "$0.725",
+        "amount": 65.98
+      }
+    ],
+    "mileageSubtotal": 145.73,
+    "totalClaimed": 3307.08,
+    "advance": 500.0,
+    "dueToEmployee": 2807.08,
+    "submittedDate": "2026-08-01",
+    "approver": {
+      "name": "Marta Feld",
+      "title": "Director, Solutions Engineering",
+      "date": "2026-08-03"
+    },
+    "notes": "Mileage claimed at the IRS 2026 standard business rate of 72.5 cents per mile. One ground-transport receipt was unavailable; amount taken from the card statement.",
+    "substantiationNote": "Receipts are required for any lodging expenditure regardless of amount, and for any other expenditure of $75 or more (26 CFR 1.274-5). Submit within 60 days of the expense being incurred."
+  }
+}

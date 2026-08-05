@@ -1,0 +1,31 @@
+/* ===========================================================================
+ * Nutrient Web SDK viewer — brand alignment.
+ *
+ * Injected into the viewer via the `styleSheets` configuration option. The SDK
+ * renders inside its own shadow-DOM-like scope, so page CSS does not reach it —
+ * this file is the only way in.
+ *
+ * The SDK's own dark theme does most of the work; this nudges the accent and
+ * surfaces toward the design kit. Deliberately minimal: the viewer chrome is the
+ * SDK's design, not ours, and fighting it wholesale would be brittle across
+ * upgrades.
+ * =========================================================================== */
+
+:root {
+  /* Code Coral, for selection and focus inside the viewer. */
+  --nutrient-primary: #f25e45;
+  --nutrient-primary-dark: #b94a37;
+}
+
+/* Warm the toolbar to match the app's panels rather than neutral grey. */
+.PSPDFKit-Toolbar {
+  background: #221a1a;
+  border-bottom: 1px solid rgba(226, 219, 217, 0.08);
+}
+
+/* The page canvas sits on the app's base surface, so the document edge reads as
+ * paper on a warm background instead of grey on grey. */
+.PSPDFKit-Page-Container,
+.PSPDFKit-Scroll {
+  background: #1a1414;
+}

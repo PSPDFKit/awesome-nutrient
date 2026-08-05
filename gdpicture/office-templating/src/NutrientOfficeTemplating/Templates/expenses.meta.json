@@ -1,0 +1,6 @@
+{
+  "order": 2,
+  "title": "Expense report",
+  "subtitle": "Two independent row loops — itemised expenses and mileage.",
+  "features": ["Multiple row loops", "Currency cells", "Approval block"]
+}

@@ -1,0 +1,24 @@
+# The build context is sent to the daemon in full, so anything large and
+# reproducible is excluded here. The Web SDK is fetched by npm in its own stage
+# (see Dockerfile) rather than copied from the host.
+node_modules/
+src/NutrientOfficeTemplating/wwwroot/vendor/nutrient/
+
+bin/
+obj/
+**/bin/
+**/obj/
+
+.git/
+.gitignore
+.DS_Store
+
+# Not needed to build or run the app.
+research/
+nutrient-design-kit/
+README.md
+
+# Never send a licence key into a build context.
+.env
+**/appsettings.Development.json
+**/appsettings.Local.json

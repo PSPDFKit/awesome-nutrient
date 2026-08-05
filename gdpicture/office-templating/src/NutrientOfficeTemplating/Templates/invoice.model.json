@@ -1,0 +1,69 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "company": {
+      "name": "Nutrient GmbH",
+      "address": "Konrad-Zuse-Ring 3",
+      "cityStateZip": "10123 Berlin, Germany",
+      "phone": "+49 30 1234567",
+      "email": "billing@nutrient.io"
+    },
+    "client": {
+      "name": "Acme Corporation",
+      "address": "1 Market Street, San Francisco, CA 94105",
+      "phone": "+1 415 555 0100",
+      "email": "accounts.payable@acme.example"
+    },
+    "invoiceNo": "INV-2024-0042",
+    "issueDate": "2024-06-15",
+    "dueDate": "2024-07-15",
+    "terms": "Net 30",
+    "lineItems": [
+      {
+        "item": "1",
+        "description": "Logo design",
+        "hours": "3",
+        "rate": "50",
+        "amount": "150"
+      },
+      {
+        "item": "2",
+        "description": "Website mockups",
+        "hours": "8",
+        "rate": "75",
+        "amount": "600"
+      },
+      {
+        "item": "3",
+        "description": "Brand guidelines",
+        "hours": "5",
+        "rate": "60",
+        "amount": "300"
+      }
+    ],
+    "subtotal": "1050",
+    "discount": "50",
+    "taxRate": "8.5%",
+    "tax": "85",
+    "total": "1085",
+    "logo": {
+      "_type": "image",
+      "source": "base64",
+      "format": "png",
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAIAAABt+uBvAAABKklEQVR42u3ZwQ3CMBAEwCsiL/rvjQcPWqAAUBQU8N7BSPtFKCMnXp/rsm2yk0IACBAgQIAAAQIkgAABAgQIECBAAggQIECAAL2X++0K6LXLcwDt6bQyqp46fYyqrU4TI0CAJgId1OlgVKku81md7zlWqst8BGjBiqtUlzkPtOatrGCXSf12HVBqFaz8uld8q059v8YAxXfAbwGluszi/62JbfhPXzFA/wcUnOnM6EHZqeCMJp2dK884i3W4meh+mncvBkgAAZoPdH6vWb9L1oi2ErztqIjOu3Oi4I1QpXQOPmH81qyCOq1mz4AAzQI6Pzlucn9vBQECpAf9aA/SpJ3FnObNgwABAgQIECBAgAQQIECAAAECBEgAAQIECBAgQIAEECBAgAD1zgMp24yIUsvQ1gAAAABJRU5ErkJggg==",
+      "width": 72,
+      "height": 72,
+      "altText": "Nutrient logo",
+      "title": "Nutrient — biller mark",
+      "borderColor": "F25E45",
+      "borderWidth": 1,
+      "borderStyle": "Solid",
+      "rotation": 0
+    }
+  }
+}
