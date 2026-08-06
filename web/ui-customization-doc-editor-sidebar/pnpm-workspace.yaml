@@ -1,11 +1,12 @@
 packages:
   - .
-
 minimumReleaseAge: 21600 # 15 days
-
+minimumReleaseAgeExclude:
+  - brace-expansion
+  - postcss
 overrides:
+  dompurify: 3.4.12
   brace-expansion@<1.1.18: 1.1.18
   brace-expansion@>=4.0.0 <5.0.9: 5.0.9
-  dompurify: 3.4.12
-  js-yaml@>=4.0.0 <4.1.1: '>=4.1.1'
-  postcss@<=8.5.22: '>=8.5.23'
+  postcss@<=8.5.22: ">=8.5.23 <9"
+  js-yaml@>=4.0.0 <=4.1.1: ">=4.2.0"

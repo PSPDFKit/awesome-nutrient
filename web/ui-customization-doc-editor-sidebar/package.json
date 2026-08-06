@@ -1,6 +1,7 @@
 {
   "name": "ui-customization-doc-editor-sidebar",
   "private": true,
+  "packageManager": "pnpm@11.20.0",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -18,15 +19,11 @@
     "react-dom": "^19.1.1"
   },
   "overrides": {
-    "dompurify": "3.4.12"
-  },
-  "pnpm": {
-    "overrides": {
-      "dompurify": "3.4.12",
-      "brace-expansion@<1.1.18": "1.1.18",
-      "brace-expansion@>=4.0.0 <5.0.9": "5.0.9",
-      "postcss@<=8.5.22": ">=8.5.23"
-    }
+    "dompurify": "3.4.12",
+    "brace-expansion@<1.1.18": "1.1.18",
+    "brace-expansion@>=4.0.0 <5.0.9": "5.0.9",
+    "postcss@<=8.5.22": ">=8.5.23 <9",
+    "js-yaml@>=4.0.0 <=4.1.1": ">=4.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

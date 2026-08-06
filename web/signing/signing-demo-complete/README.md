@@ -10,7 +10,7 @@ To get started with the Signing Demo project, follow these steps:
 
 1. Clone the repository from the GitHub repository at `git clone https://github.com/Siddharth2001-July/signing-demo-baseline`.
 2. Open a terminal and navigate to the project directory.
-3. Run `npm i` to install the project dependencies.
+3. Run `npm i` to install the project dependencies. This example also ships a pnpm setup (`packageManager: pnpm@11.20.0` plus `pnpm-lock.yaml`); if you have enabled corepack's npm shim (`corepack enable npm`), corepack will refuse `npm` commands here — use `pnpm install` instead, or run npm with `COREPACK_ENABLE_STRICT=0`.
 4. Copy the Nutrient Web SDK library assets to the public directory by running:
 `cp -R ./node_modules/pspdfkit/dist/pspdfkit-lib public/pspdfkit-lib`
 5. You should now be able to run the project locally by executing `npm run dev`.
