@@ -42,7 +42,7 @@ export function App() {
   const [instance, setInstance] = useState<SDKInstance | null>(null)
 
   // ── Signing UI state ──
-  const [signersPanelOpen, setSignersPanelOpen] = useState(false)
+  const [signersPanelOpen, setSignersPanelOpen] = useState(true)
   const [inkOpen, setInkOpen] = useState(false)
   const [textOpen, setTextOpen] = useState(false)
   const [signersModalOpen, setSignersModalOpen] = useState(false)
