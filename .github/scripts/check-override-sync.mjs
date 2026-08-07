@@ -2,14 +2,22 @@
 // pnpm-workspace.yaml#overrides), so the dual-manager examples must keep the
 // two maps identical by hand. This check fails when they (or the committed
 // pnpm-lock.yaml overrides header) drift apart.
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, globSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 
-const EXAMPLES = [
-  "web/signing/signing-demo-complete",
-  "web/ui-customization",
-  "web/ui-customization-doc-editor-sidebar",
-];
+// A dual-manager example is any directory (outside node_modules) that commits
+// both an npm and a pnpm lockfile.
+const EXAMPLES = globSync("**/pnpm-lock.yaml", {
+  ignore: "**/node_modules/**",
+})
+  .map((lockfile) => dirname(lockfile))
+  .filter((dir) => existsSync(join(dir, "package-lock.json")))
+  .sort();
+
+if (EXAMPLES.length === 0) {
+  console.error("no dual-manager examples found; glob discovery is broken");
+  process.exit(1);
+}
 
 // Minimal parser for the flat `overrides:` block used in these files. Keys and
 // values may be quoted; the block ends at the first non-indented line.
@@ -63,9 +71,17 @@ for (const example of EXAMPLES) {
       `${example}: package.json has a "pnpm" block, which pnpm 11 ignores; move it to pnpm-workspace.yaml`,
     );
   }
+  const workspacePath = join(example, "pnpm-workspace.yaml");
+  if (!existsSync(workspacePath)) {
+    failed = true;
+    console.error(
+      `${example}: commits both lockfiles but has no pnpm-workspace.yaml to mirror package.json#overrides into`,
+    );
+    continue;
+  }
   const npmRules = normalize(pkg.overrides ?? {});
   const workspaceRules = normalize(
-    yamlOverrides(readFileSync(join(example, "pnpm-workspace.yaml"), "utf8")),
+    yamlOverrides(readFileSync(workspacePath, "utf8")),
   );
   const lockRules = normalize(
     yamlOverrides(readFileSync(join(example, "pnpm-lock.yaml"), "utf8")),

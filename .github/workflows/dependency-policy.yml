@@ -38,6 +38,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Keep in sync with the dual-manager examples (directories committing
+        # both package-lock.json and pnpm-lock.yaml). check-override-sync.mjs
+        # discovers those automatically; this matrix is maintained by hand.
         example:
           - web/signing/signing-demo-complete
           - web/ui-customization
@@ -51,7 +54,12 @@ jobs:
         with:
           node-version-file: '.tool-versions'
 
-      - name: Verify committed lockfile against the supply-chain policy
+      # A frozen, lockfile-only install verifies the committed lockfile still
+      # matches the manifest and override maps. It does NOT re-check
+      # minimumReleaseAge: pnpm applies the cooldown only while resolving, and
+      # the lockfile does not record the cooldown settings, so a lockfile
+      # regenerated with the cooldown bypassed would still pass this job.
+      - name: Verify lockfile matches manifest and overrides
         working-directory: ${{ matrix.example }}
         run: |
           corepack enable
