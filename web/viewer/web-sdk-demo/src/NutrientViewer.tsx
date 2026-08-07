@@ -114,7 +114,7 @@ export function NutrientViewer({
         onInstance(loadedInstance)
       })
       .catch((err: unknown) => {
-        console.error('Nutrient Web SDK failed to load', err)
+        if (!cancelled) console.error('Nutrient Web SDK failed to load', err)
       })
 
     return () => {
@@ -122,7 +122,14 @@ export function NutrientViewer({
       uninstallModeRestore?.()
       setReadyInstance(null)
       onInstance(null)
-      if (loadedInstance) sdk.unload(loadedInstance)
+      if (loadedInstance) {
+        sdk.unload(loadedInstance)
+      } else {
+        // `load()` claims the container before its promise resolves. React
+        // StrictMode cleans this effect up immediately in development, so the
+        // pending claim must be cancelled before the second effect run loads.
+        sdk.unload(container)
+      }
     }
   }, [documentUrl, onInstance, onOpenSignatureModal])
 
