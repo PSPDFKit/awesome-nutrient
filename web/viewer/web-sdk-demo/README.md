@@ -71,3 +71,24 @@ src/
 npm run build
 npm run preview
 ```
+
+## Signing kind persistence test plan
+
+The signing flow stores whether a field or placed mark represents `initials` or a
+`signature` in `customData.nutrientDemo.kind`. Field-name prefixes remain as a
+fallback for documents created before this metadata was added.
+
+1. Place one Initials field and one Signature field, then sign both.
+2. Call `instance.exportInstantJSON()`, reload `example.pdf` with the exported
+   payload as `instantJSON`, and confirm `getMarkKind()` reports `initials` and
+   `signature` for the two reloaded image annotations.
+3. Call `instance.exportPDF()`, load the exported bytes in a fresh viewer, and
+   confirm both reloaded image annotations retain their kind tags.
+4. Capture and save initials, then open a Signature field and its Saved tab.
+   Confirm the saved initials are not offered there.
+5. Open an existing widget whose field name begins with `initials-` and has no
+   `customData`; confirm the signing modal still opens in initials mode.
+6. Confirm an untagged placed mark is treated as a signature.
+
+Verified with the CDN Web SDK version pinned by this demo (`1.15.0`): both
+InstantJSON and PDF export/reload round trips preserved the namespaced kind tag.

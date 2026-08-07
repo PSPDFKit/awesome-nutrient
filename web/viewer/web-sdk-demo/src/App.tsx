@@ -14,6 +14,7 @@ import {
   type Signer,
 } from './signing/storage'
 import {
+  createKindCustomData,
   getDataUrlContentType,
   getSignatureTargetForAnnotation,
   isSignatureWidgetAnnotation,
@@ -99,25 +100,6 @@ export function App() {
     async (type: FieldType, pageIndex: number, leftTop: { x: number; y: number }) => {
       if (!instance) return
 
-      // Signatures/initials skip the form-field placeholder. Open the signing
-      // modal anchored to the drop point — only the signature image is placed
-      // on the page when the user inserts.
-      if (type === 'signature' || type === 'initials') {
-        const width = type === 'initials' ? 100 : 200
-        const height = 40
-        setSigningModal({
-          kind: type,
-          pageIndex,
-          boundingBox: {
-            left: Math.max(0, leftTop.x - width / 2),
-            top: Math.max(0, leftTop.y - height / 2),
-            width,
-            height,
-          },
-        })
-        return
-      }
-
       const sdk = window.NutrientViewer
       if (!sdk) return
       try {
@@ -125,6 +107,8 @@ export function App() {
         const WidgetAnnotation = sdk.Annotations?.WidgetAnnotation ?? sdk.WidgetAnnotation
         const TextFormField = sdk.FormFields?.TextFormField ?? sdk.TextFormField
         const CheckBoxFormField = sdk.FormFields?.CheckBoxFormField ?? sdk.CheckBoxFormField
+        const SignatureFormField =
+          sdk.FormFields?.SignatureFormField ?? sdk.SignatureFormField
         const FormOption = sdk.FormOption
         const list = <T,>(items: T[]) => (sdk.Immutable?.List ? sdk.Immutable.List(items) : items)
 
@@ -132,7 +116,8 @@ export function App() {
           console.warn('SDK Rect/WidgetAnnotation not found.')
           return
         }
-        const width = type === 'checkbox' ? 24 : 200
+        const isSigningField = type === 'signature' || type === 'initials'
+        const width = type === 'checkbox' ? 24 : type === 'initials' ? 100 : 200
         const height = type === 'checkbox' ? 24 : 40
         const boundingBox = new Rect({
           left: Math.max(0, leftTop.x - width / 2),
@@ -146,11 +131,15 @@ export function App() {
           pageIndex,
           boundingBox,
           formFieldName,
+          ...(isSigningField ? { customData: createKindCustomData(type) } : {}),
         })
 
         const annotationIds = list([widget.id])
         const formField =
-          type === 'checkbox'
+          isSigningField
+            ? SignatureFormField &&
+              new SignatureFormField({ name: formFieldName, annotationIds })
+            : type === 'checkbox'
             ? CheckBoxFormField &&
               new CheckBoxFormField({
                 name: formFieldName,
@@ -172,6 +161,9 @@ export function App() {
 
         await instance.create([widget, formField])
         instance.setSelectedAnnotations?.(annotationIdList([widget.id]))
+        if (isSigningField) {
+          setSigningModal(getSignatureTargetForAnnotation(widget, instance))
+        }
       } catch (err) {
         console.error('Could not place field', err)
         window.alert('Could not place the form field.')
@@ -318,7 +310,7 @@ export function App() {
           return
         }
         const attachmentId = await instance.createAttachment(blob)
-        const { pageIndex, boundingBox } = await resolveSignatureInsertionTarget(
+        const { kind, pageIndex, boundingBox } = await resolveSignatureInsertionTarget(
           instance,
           signingModal,
         )
@@ -330,6 +322,7 @@ export function App() {
           imageAttachmentId: attachmentId,
           contentType,
           isSignature: true,
+          customData: createKindCustomData(kind),
         })
         await instance.create(annotation)
       } catch (err) {

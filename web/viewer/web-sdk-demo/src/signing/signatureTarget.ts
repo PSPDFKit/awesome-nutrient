@@ -14,6 +14,14 @@ import type { SDKInstance } from '../types/global'
 
 export type SignatureKind = 'signature' | 'initials'
 
+type KindTaggedAnnotation = {
+  customData?: {
+    nutrientDemo?: {
+      kind?: unknown
+    }
+  }
+}
+
 export type Rect = { left: number; top: number; width: number; height: number }
 
 export type SignatureTarget = {
@@ -28,9 +36,19 @@ export type SignatureWidgetAnnotation = {
   formFieldName?: string
   pageIndex?: number
   boundingBox?: unknown
+  customData?: KindTaggedAnnotation['customData']
+}
+
+export function createKindCustomData(kind: SignatureKind) {
+  return { nutrientDemo: { kind } }
+}
+
+export function getMarkKind(annotation: unknown): SignatureKind {
+  return getTaggedKind(annotation) ?? 'signature'
 }
 
 export function isSignatureWidgetAnnotation(annotation: SignatureWidgetAnnotation | null) {
+  if (getTaggedKind(annotation)) return true
   const name = annotation?.formFieldName ?? ''
   return name.startsWith('signature-') || name.startsWith('initials-')
 }
@@ -39,8 +57,7 @@ export function getSignatureTargetForAnnotation(
   annotation: SignatureWidgetAnnotation | null,
   viewerInstance: SDKInstance,
 ): SignatureTarget {
-  const fieldName = annotation?.formFieldName ?? ''
-  const kind: SignatureKind = fieldName.startsWith('initials-') ? 'initials' : 'signature'
+  const kind = getWidgetKind(annotation)
 
   return {
     kind,
@@ -65,8 +82,10 @@ export async function resolveSignatureInsertionTarget(
     : null
 
   const widget = targetWidget ?? selectedWidget
+  const kind = widget ? getWidgetKind(widget) : (target?.kind ?? 'signature')
 
   return {
+    kind,
     pageIndex: widget?.pageIndex ?? target?.pageIndex ?? instance.viewState.currentPageIndex,
     boundingBox: toPlainRect(widget?.boundingBox, fallbackBox),
   }
@@ -78,6 +97,17 @@ export function getDataUrlContentType(dataUrl: string) {
 
 function defaultBox(kind: SignatureKind): Rect {
   return { left: 80, top: 80, width: kind === 'initials' ? 100 : 200, height: 40 }
+}
+
+function getWidgetKind(annotation: SignatureWidgetAnnotation | null): SignatureKind {
+  const taggedKind = getTaggedKind(annotation)
+  if (taggedKind) return taggedKind
+  return annotation?.formFieldName?.startsWith('initials-') ? 'initials' : 'signature'
+}
+
+function getTaggedKind(annotation: unknown): SignatureKind | null {
+  const kind = (annotation as KindTaggedAnnotation | null)?.customData?.nutrientDemo?.kind
+  return kind === 'signature' || kind === 'initials' ? kind : null
 }
 
 async function getAnnotationById(
