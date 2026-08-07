@@ -3,6 +3,7 @@ packages:
 minimumReleaseAge: 21600 # 15 days
 minimumReleaseAgeExclude:
   - brace-expansion
+  - js-yaml
   - postcss
   - next
   - "@next/*"
@@ -40,7 +41,7 @@ overrides:
   markdown-it@<=14.1.1: ">=14.2.0"
   dompurify@<=3.4.10: ">=3.4.11"
   linkify-it@<=5.0.0: ">=5.0.1"
-  js-yaml@>=4.0.0 <=4.1.1: ">=4.2.0"
+  js-yaml@>=4.0.0 <4.3.1: ">=4.3.1 <5"
   sharp@<0.35.0: ">=0.35.0 <1"
   brace-expansion@>=4.0.0 <5.0.9: 5.0.9
   postcss@<=8.5.22: ">=8.5.23 <9"
