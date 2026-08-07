@@ -28,12 +28,13 @@ export function NutrientViewer({
   hideContextualToolbar = false,
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null)
+  const instanceRef = useRef<SDKInstance | null>(null)
   const [readyInstance, setReadyInstance] = useState<SDKInstance | null>(null)
 
   // Stable slot bridges — recreating them would re-mount the slot DOM each
   // time `setUI` runs.
   const signatureSlot = useMemo(
-    () => createSignatureSlotBridge(onOpenSignatureModal),
+    () => createSignatureSlotBridge(() => instanceRef.current, onOpenSignatureModal),
     [onOpenSignatureModal],
   )
   const fieldEditorSlot = useMemo(() => createFieldPropertyEditorSlotBridge(), [])
@@ -109,6 +110,7 @@ export function NutrientViewer({
           return
         }
         loadedInstance = resolvedInstance
+        instanceRef.current = loadedInstance
         uninstallModeRestore = installFormCreatorModeRestore(loadedInstance)
         setReadyInstance(loadedInstance)
         onInstance(loadedInstance)
@@ -120,6 +122,7 @@ export function NutrientViewer({
     return () => {
       cancelled = true
       uninstallModeRestore?.()
+      if (instanceRef.current === loadedInstance) instanceRef.current = null
       setReadyInstance(null)
       onInstance(null)
       if (loadedInstance) {
@@ -149,14 +152,19 @@ export function NutrientViewer({
   return <div ref={containerRef} className="viewer" />
 }
 
-function createSignatureSlotBridge(onOpenSignatureModal: (instance: SDKInstance) => void) {
-  return (instance: unknown) => {
+function createSignatureSlotBridge(
+  getInstance: () => SDKInstance | null,
+  onOpenSignatureModal: (instance: SDKInstance) => void,
+) {
+  return () => {
     let opened = false
 
     const openOnce = () => {
       if (opened) return
+      const instance = getInstance()
+      if (!instance) return
       opened = true
-      onOpenSignatureModal(instance as SDKInstance)
+      onOpenSignatureModal(instance)
     }
 
     return {
