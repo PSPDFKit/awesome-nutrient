@@ -1,0 +1,10 @@
+{
+  "order": 6,
+  "title": "Meeting minutes",
+  "subtitle": "Attendance, discussion, decisions and actions with owners.",
+  "features": [
+    "Four row loops",
+    "Multi-paragraph section",
+    "Conditional footer"
+  ]
+}

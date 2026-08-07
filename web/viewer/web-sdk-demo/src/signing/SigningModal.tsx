@@ -61,7 +61,9 @@ export function SigningModal({ kind, onClose, onInsert }: Props) {
   const handleInsert = () => {
     if (!stagedDataUrl) return
     // Persist new (draw / type / upload), but skip re-saving an already-saved pick.
-    if (tab !== 'saved') saveSignature({ kind, dataUrl: stagedDataUrl })
+    if (tab !== 'saved' && !saveSignature({ kind, dataUrl: stagedDataUrl })) {
+      window.alert('The signature could not be saved locally. It will still be inserted.')
+    }
     onInsert(stagedDataUrl)
   }
 
@@ -317,6 +319,10 @@ function UploadPad({
     }
     const reader = new FileReader()
     reader.onload = () => onChange(typeof reader.result === 'string' ? reader.result : null)
+    reader.onerror = () => {
+      onChange(null)
+      window.alert('Could not read the selected image.')
+    }
     reader.readAsDataURL(file)
   }
 

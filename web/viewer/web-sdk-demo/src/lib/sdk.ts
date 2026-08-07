@@ -5,12 +5,11 @@ export function isFormCreatorMode(instance: SDKInstance): boolean {
   return Boolean(formCreator && instance.viewState.interactionMode === formCreator)
 }
 
-/**
- * `instance.setSelectedAnnotations` expects either an Immutable.List of ids or
- * a plain array, depending on SDK build. This builds the right shape.
- */
+/** Builds the Immutable.List required by `instance.setSelectedAnnotations`. */
 export function annotationIdList(ids: string[]): unknown {
   const ImmutableList = window.NutrientViewer?.Immutable?.List
+  // The array fallback keeps this demo from crashing if the CDN global is
+  // incomplete; it is not part of the documented SDK contract.
   return ImmutableList ? ImmutableList(ids) : ids
 }
 

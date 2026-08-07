@@ -2,7 +2,7 @@ export {}
 
 type SDK = {
   load: (config: Record<string, unknown>) => Promise<SDKInstance>
-  unload: (target: HTMLElement | string) => boolean
+  unload: (target: SDKInstance | HTMLElement | string) => boolean
   ViewState: new (props?: Record<string, unknown>) => SDKViewState
   generateInstantId?: () => string
   Theme: { DARK: unknown; LIGHT: unknown; AUTO?: unknown }

@@ -39,6 +39,7 @@ export function InkToolbar({ instance, onClose }: Props) {
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null)
   const [colorOpen, setColorOpen] = useState(false)
   const [widthOpen, setWidthOpen] = useState(false)
+  const [operationError, setOperationError] = useState<string | null>(null)
   const dragRef = useRef<{ dx: number; dy: number } | null>(null)
   const toolbarRef = useRef<HTMLDivElement | null>(null)
 
@@ -56,6 +57,12 @@ export function InkToolbar({ instance, onClose }: Props) {
       y: viewerRect.top + (viewerRect.height - toolbarRect.height) / 2,
     })
   }, [])
+
+  useEffect(() => {
+    if (!operationError) return
+    const timeout = window.setTimeout(() => setOperationError(null), 4000)
+    return () => window.clearTimeout(timeout)
+  }, [operationError])
 
   // Push our color/width into the SDK's ink preset whenever it changes.
   useEffect(() => {
@@ -132,6 +139,7 @@ export function InkToolbar({ instance, onClose }: Props) {
       }
     } catch (err) {
       console.warn('Undo failed', err)
+      setOperationError('Could not undo the last drawing.')
     }
   }, [instance])
 
@@ -153,6 +161,7 @@ export function InkToolbar({ instance, onClose }: Props) {
       }
     } catch (err) {
       console.warn('Delete-all failed', err)
+      setOperationError('Could not delete drawings on this page.')
     }
   }, [instance])
 
@@ -191,6 +200,11 @@ export function InkToolbar({ instance, onClose }: Props) {
       role="toolbar"
       aria-label="Ink drawing tools"
     >
+      {operationError && (
+        <span className="ink-toolbar__status" role="status">
+          {operationError}
+        </span>
+      )}
       <div
         className="ink-toolbar__grip"
         onPointerDown={onGripPointerDown}

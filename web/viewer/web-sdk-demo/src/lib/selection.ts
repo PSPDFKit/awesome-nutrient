@@ -1,13 +1,7 @@
 /**
- * `instance.getSelectedAnnotations()` doesn't have a single shape across SDK
- * versions and events:
- *
- *   - `viewState.change` payloads come through as `{ annotation }` objects.
- *   - Newer builds return an Immutable.List exposing `.first()` / `.get()`.
- *   - Some code paths return a plain JS array.
- *
- * These helpers normalize all three so callers can ask "what's selected?"
- * without re-implementing the shape-juggling.
+ * Selection events and `getSelectedAnnotations()` use an Immutable.List.
+ * These helpers also tolerate arrays and direct annotation wrappers so the
+ * demo fails safely when called with defensive integration-layer inputs.
  */
 
 type ListLike = {

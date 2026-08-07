@@ -1,0 +1,110 @@
+/* ===========================================================================
+ * Nutrient Design Kit — Reset / base
+ * ---------------------------------------------------------------------------
+ * Minimal. Sets box-sizing, kills default margins, applies the brand font and
+ * base colours, and styles scrollbars + selection to match the dark UI.
+ *
+ * Load AFTER tokens.css.
+ * =========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+html,
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Archivo stylistic sets: ss01 tightens punctuation, cv11 gives a
+   * single-storey 'a' variant that reads better at small sizes. Harmless
+   * if you swap the font — unknown features are ignored. */
+  font-feature-settings: "ss01", "cv11";
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-snug);
+}
+
+p {
+  margin: 0;
+}
+
+/* Numeric alignment in tables and stat rows. */
+[data-tabular],
+.nk-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: rgba(242, 94, 69, 0.28);
+  color: var(--text-primary);
+}
+
+/* Keyboard focus. Coral ring, inset so it never clips. */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+/* Thin warm scrollbars. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-lg);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

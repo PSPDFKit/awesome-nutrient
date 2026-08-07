@@ -1,0 +1,194 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "quarter": "Q2 FY26",
+    "team": {
+      "name": "Solutions Engineering — EMEA"
+    },
+    "presenter": "Marta Feld",
+    "reviewDate": "2026-07-16",
+    "dataAsOf": "2026-06-30",
+    "summary": {
+      "headline": "Ahead on revenue, behind on ramp",
+      "performance": "Net new ARR closed at 108% of plan, the third consecutive quarter above target.",
+      "insight": "Growth came from expansion rather than new logos, which flatters the quarter but leaves the new-business pipeline thin going into Q3.",
+      "ask": "Approve two additional solutions engineers to unblock new-logo capacity."
+    },
+    "scorecard": [
+      {
+        "metric": "Net new ARR",
+        "plan": "1.20M",
+        "actual": "1.30M",
+        "variance": "+8%",
+        "status": "Green"
+      },
+      {
+        "metric": "Expansion ARR",
+        "plan": "0.45M",
+        "actual": "0.62M",
+        "variance": "+38%",
+        "status": "Green"
+      },
+      {
+        "metric": "New logos",
+        "plan": "14",
+        "actual": "9",
+        "variance": "-36%",
+        "status": "Red"
+      },
+      {
+        "metric": "Win rate",
+        "plan": "26%",
+        "actual": "24%",
+        "variance": "-2 pts",
+        "status": "Amber"
+      },
+      {
+        "metric": "Sales cycle",
+        "plan": "68 days",
+        "actual": "74 days",
+        "variance": "+9%",
+        "status": "Amber"
+      }
+    ],
+    "arr": {
+      "headline": "Where the quarter's ARR came from",
+      "bridge": [
+        {
+          "label": "Opening ARR",
+          "value": "12.40M"
+        },
+        {
+          "label": "New",
+          "value": "+0.68M"
+        },
+        {
+          "label": "Expansion",
+          "value": "+0.62M"
+        },
+        {
+          "label": "Contraction",
+          "value": "-0.11M"
+        },
+        {
+          "label": "Churn",
+          "value": "-0.19M"
+        },
+        {
+          "label": "Closing ARR",
+          "value": "13.40M"
+        }
+      ],
+      "nrr": "112%",
+      "grr": "97%"
+    },
+    "outcomes": {
+      "headline": "Expansion carried the quarter",
+      "wins": [
+        {
+          "result": "Three six-figure expansions",
+          "driver": "Templating drove seat growth in existing accounts."
+        },
+        {
+          "result": "Fastest enterprise close to date, 31 days",
+          "driver": "Pre-built accessibility evidence removed the security review."
+        }
+      ],
+      "misses": [
+        {
+          "result": "New logos 9 against a plan of 14",
+          "rootCause": "Two engineers spent the quarter on delivery, not pre-sales.",
+          "correctiveAction": "Ring-fence pre-sales capacity from Q3."
+        },
+        {
+          "result": "Win rate down two points",
+          "rootCause": "Losses concentrated in deals without an executive sponsor.",
+          "correctiveAction": "Sponsor identification added to stage-two exit criteria."
+        }
+      ]
+    },
+    "pipeline": {
+      "headline": "Coverage is adequate overall, thin for new business",
+      "segments": [
+        {
+          "segment": "Enterprise",
+          "quota": "0.90M",
+          "openPipeline": "3.60M",
+          "coverage": "4.0x"
+        },
+        {
+          "segment": "Mid-market",
+          "quota": "0.60M",
+          "openPipeline": "1.98M",
+          "coverage": "3.3x"
+        },
+        {
+          "segment": "New logo",
+          "quota": "0.50M",
+          "openPipeline": "1.15M",
+          "coverage": "2.3x"
+        }
+      ],
+      "note": "Coverage below 3.0x is treated as at risk. New-logo coverage has been below that threshold for two quarters."
+    },
+    "risks": {
+      "headline": "What could take Q3 off plan",
+      "items": [
+        {
+          "risk": "New-logo pipeline below coverage threshold",
+          "severity": "High",
+          "mitigation": "Two hires requested; outbound campaign starts week 32."
+        },
+        {
+          "risk": "Key-person dependency on one enterprise architect",
+          "severity": "Medium",
+          "mitigation": "Cross-training scheduled; runbooks documented by end of August."
+        }
+      ]
+    },
+    "nextQuarter": {
+      "headline": "Three priorities for Q3",
+      "priorities": [
+        {
+          "priority": "Rebuild new-logo pipeline",
+          "owner": "Marta Feld",
+          "measure": "3.0x coverage by 30 Sep"
+        },
+        {
+          "priority": "Ring-fence pre-sales capacity",
+          "owner": "Jordan Reyes",
+          "measure": "Zero delivery hours from pre-sales engineers"
+        },
+        {
+          "priority": "Ship the accessibility evidence pack",
+          "owner": "Tomas Brandt",
+          "measure": "Used in 100% of enterprise deals"
+        }
+      ]
+    },
+    "decisions": {
+      "headline": "Two decisions needed today",
+      "items": [
+        {
+          "decision": "Approve two solutions engineer hires",
+          "costOfDelay": "~0.35M of Q4 pipeline",
+          "recommendation": "Approve; start recruiting in week 32",
+          "owner": "Dana Whitfield",
+          "deadline": "2026-07-31"
+        },
+        {
+          "decision": "Confirm whether Q4 formats are in this phase",
+          "costOfDelay": "Two weeks of rework if decided late",
+          "recommendation": "Defer to the next phase",
+          "owner": "Dana Whitfield",
+          "deadline": "2026-08-14"
+        }
+      ]
+    }
+  }
+}

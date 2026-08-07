@@ -1,0 +1,149 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "company": {
+      "name": "Ledgerline",
+      "tagline": "Close the books in a day, not a fortnight.",
+      "stage": "Series A",
+      "location": "Berlin",
+      "contactName": "Priya Raman",
+      "contactEmail": "priya@ledgerline.example"
+    },
+    "deckDate": "August 2026",
+    "problem": {
+      "headline": "Month-end close is still manual",
+      "summary": "Finance teams reconcile across systems that were never designed to agree with each other.",
+      "points": [
+        {
+          "text": "The median mid-market close takes 11 working days."
+        },
+        {
+          "text": "Two-thirds of reconciliation work is copying between systems."
+        },
+        {
+          "text": "Errors surface after reporting, when they are most expensive."
+        }
+      ]
+    },
+    "solution": {
+      "headline": "A ledger that reconciles itself",
+      "summary": "Ledgerline ingests every source system, matches entries continuously, and surfaces only the exceptions a human needs to judge.",
+      "capabilities": [
+        {
+          "name": "Continuous matching",
+          "detail": "entries reconcile as they arrive, not at period end"
+        },
+        {
+          "name": "Exception queues",
+          "detail": "reviewers see the 2% that need judgement"
+        },
+        {
+          "name": "Audit trail",
+          "detail": "every match is explainable and reversible"
+        }
+      ]
+    },
+    "market": {
+      "headline": "Every company with more than one system of record",
+      "tam": "$14B",
+      "sam": "$3.2B",
+      "growth": "18%",
+      "note": "Mid-market finance software, excluding enterprise ERP suites and single-entity bookkeeping tools."
+    },
+    "traction": {
+      "headline": "Growing through finance teams that tell each other",
+      "metrics": [
+        {
+          "value": "$2.4M",
+          "label": "ARR",
+          "delta": "+140% YoY"
+        },
+        {
+          "value": "68",
+          "label": "Paying customers",
+          "delta": "+31 this year"
+        },
+        {
+          "value": "119%",
+          "label": "Net revenue retention",
+          "delta": "+7 pts"
+        },
+        {
+          "value": "4.2 days",
+          "label": "Median close time",
+          "delta": "from 11"
+        }
+      ]
+    },
+    "milestonesHeadline": "What the next three quarters buy",
+    "milestones": [
+      {
+        "quarter": "Q3 2026",
+        "title": "Ship the reconciliation API",
+        "detail": "Open the matching engine to customers who want to drive it from their own systems rather than our UI.",
+        "status": "In progress",
+        "owner": "Platform team",
+        "targetDate": "2026-09-30"
+      },
+      {
+        "quarter": "Q4 2026",
+        "title": "SOC 2 Type II",
+        "detail": "Complete the observation window and publish the report; the largest blocker in enterprise deals.",
+        "status": "Scheduled",
+        "owner": "Security",
+        "targetDate": "2026-12-15"
+      },
+      {
+        "quarter": "Q1 2027",
+        "title": "Multi-entity consolidation",
+        "detail": "Support groups closing several entities at once, in different currencies and jurisdictions.",
+        "status": "Planned",
+        "owner": "Core ledger",
+        "targetDate": "2027-03-31"
+      }
+    ],
+    "team": {
+      "headline": "Built by people who have closed the books",
+      "members": [
+        {
+          "name": "Priya Raman",
+          "role": "Co-founder, CEO",
+          "background": "Formerly financial controller at a listed logistics group; led three ERP migrations."
+        },
+        {
+          "name": "Tomas Brandt",
+          "role": "Co-founder, CTO",
+          "background": "Payments infrastructure at two fintechs; built the settlement engine at Kestrel Pay."
+        },
+        {
+          "name": "Aline Duarte",
+          "role": "VP Engineering",
+          "background": "Scaled data platforms from 5 to 60 engineers at Northwind Analytics."
+        }
+      ]
+    },
+    "ask": {
+      "amount": "$12M Series A",
+      "purpose": "To take continuous reconciliation from 68 customers to 400, and from one entity to consolidated groups.",
+      "useOfFunds": [
+        {
+          "share": "55%",
+          "purpose": "Engineering — API, multi-entity, and the exception model"
+        },
+        {
+          "share": "30%",
+          "purpose": "Go-to-market — finance-led sales and partner integrations"
+        },
+        {
+          "share": "15%",
+          "purpose": "Compliance and security certification"
+        }
+      ]
+    }
+  }
+}

@@ -42,8 +42,14 @@ function readJSON<T>(key: string, fallback: T): T {
   }
 }
 
-function writeJSON(key: string, value: unknown) {
-  localStorage.setItem(key, JSON.stringify(value))
+function writeJSON(key: string, value: unknown): boolean {
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+    return true
+  } catch (error) {
+    console.warn('Could not write signing data to local storage', error)
+    return false
+  }
 }
 
 // ── Signers ───────────────────────────────────────────────────────────
@@ -69,15 +75,16 @@ export function getSavedSignatures(kind?: SavedSignature['kind']): SavedSignatur
   return kind ? all.filter((s) => s.kind === kind) : all
 }
 
-export function saveSignature(entry: Omit<SavedSignature, 'id' | 'createdAt'>): SavedSignature {
+export function saveSignature(
+  entry: Omit<SavedSignature, 'id' | 'createdAt'>,
+): SavedSignature | null {
   const record: SavedSignature = {
     id: `sig-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     createdAt: Date.now(),
     ...entry,
   }
   const all = readJSON<SavedSignature[]>(SIGNATURES_KEY, [])
-  writeJSON(SIGNATURES_KEY, [record, ...all])
-  return record
+  return writeJSON(SIGNATURES_KEY, [record, ...all]) ? record : null
 }
 
 export function deleteSignature(id: string) {

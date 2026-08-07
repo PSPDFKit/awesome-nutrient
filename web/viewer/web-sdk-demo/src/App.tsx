@@ -174,6 +174,7 @@ export function App() {
         instance.setSelectedAnnotations?.(annotationIdList([widget.id]))
       } catch (err) {
         console.error('Could not place field', err)
+        window.alert('Could not place the form field.')
       }
     },
     [instance],

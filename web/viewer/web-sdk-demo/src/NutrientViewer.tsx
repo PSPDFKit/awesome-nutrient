@@ -103,11 +103,12 @@ export function NutrientViewer({
         }),
       })
       .then((instance) => {
+        const resolvedInstance = instance as SDKInstance
         if (cancelled) {
-          sdk.unload(container)
+          sdk.unload(resolvedInstance)
           return
         }
-        loadedInstance = instance as SDKInstance
+        loadedInstance = resolvedInstance
         uninstallModeRestore = installFormCreatorModeRestore(loadedInstance)
         setReadyInstance(loadedInstance)
         onInstance(loadedInstance)
@@ -121,7 +122,7 @@ export function NutrientViewer({
       uninstallModeRestore?.()
       setReadyInstance(null)
       onInstance(null)
-      sdk.unload(container)
+      if (loadedInstance) sdk.unload(loadedInstance)
     }
   }, [documentUrl, onInstance, onOpenSignatureModal])
 

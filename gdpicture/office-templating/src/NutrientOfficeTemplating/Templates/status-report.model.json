@@ -1,0 +1,130 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "project": {
+      "name": "Document generation programme",
+      "id": "PRJ-2026-031",
+      "phase": "Implementation",
+      "criticality": "Medium",
+      "status": "Amber",
+      "percentComplete": "62%",
+      "preparedBy": "Jordan Reyes",
+      "sponsor": "Dana Whitfield"
+    },
+    "period": {
+      "start": "2026-07-01",
+      "end": "2026-07-31"
+    },
+    "summary": "Template authoring is complete for all three formats and the generation service is running in staging. Schedule slipped by six working days against a plan of ninety, driven by the accessibility rework described below; the recovery plan brings delivery back to the baseline date.",
+    "accomplishments": [
+      {
+        "label": "All twelve templates authored and reviewed."
+      },
+      {
+        "label": "Generation service deployed to staging behind a feature flag."
+      },
+      {
+        "label": "PDF/UA conformance verified on the first six outputs."
+      }
+    ],
+    "variances": [
+      {
+        "dimension": "Schedule",
+        "planned": "90 days",
+        "actual": "96 days",
+        "variance": "6.7%",
+        "status": "Amber"
+      },
+      {
+        "dimension": "One-time cost",
+        "planned": "40,000",
+        "actual": "41,200",
+        "variance": "3.0%",
+        "status": "Green"
+      },
+      {
+        "dimension": "Deliverables",
+        "planned": "12",
+        "actual": "12",
+        "variance": "0%",
+        "status": "Green"
+      },
+      {
+        "dimension": "Resources",
+        "planned": "3.0 FTE",
+        "actual": "3.4 FTE",
+        "variance": "13.3%",
+        "status": "Red"
+      }
+    ],
+    "milestones": [
+      {
+        "name": "Templates authored",
+        "target": "2026-07-10",
+        "forecast": "2026-07-10",
+        "status": "Complete"
+      },
+      {
+        "name": "Service in staging",
+        "target": "2026-07-24",
+        "forecast": "2026-07-31",
+        "status": "Complete, late"
+      },
+      {
+        "name": "Accessibility audit",
+        "target": "2026-08-14",
+        "forecast": "2026-08-21",
+        "status": "At risk"
+      },
+      {
+        "name": "Production release",
+        "target": "2026-09-04",
+        "forecast": "2026-09-04",
+        "status": "On target"
+      }
+    ],
+    "risks": [
+      {
+        "id": "R1",
+        "description": "Font licensing unresolved for the container image",
+        "probability": "Medium",
+        "impact": "High",
+        "mitigation": "Legal review booked for week 32",
+        "owner": "Legal"
+      },
+      {
+        "id": "R2",
+        "description": "Accessibility rework may extend into the audit window",
+        "probability": "High",
+        "impact": "Medium",
+        "mitigation": "Second reviewer added",
+        "owner": "Engineering"
+      }
+    ],
+    "decisions": [
+      {
+        "label": "Approve 0.4 FTE of additional engineering capacity to hold the release date."
+      },
+      {
+        "label": "Confirm whether the Q4 formats are in scope for this phase or the next."
+      }
+    ],
+    "noDecisionsNote": "No decisions are required this period; the report is for visibility.",
+    "lookAhead": [
+      {
+        "label": "Complete the accessibility audit and remediate findings."
+      },
+      {
+        "label": "Run the production readiness review."
+      },
+      {
+        "label": "Begin authoring the Q4 template set."
+      }
+    ]
+  }
+}

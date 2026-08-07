@@ -1566,6 +1566,21 @@ button {
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
 }
 
+.ink-toolbar__status {
+  position: absolute;
+  left: calc(100% + var(--space-2));
+  top: 0;
+  width: max-content;
+  max-width: 240px;
+  padding: var(--space-2) var(--space-3);
+  background: var(--sign-popover-bg);
+  border: 1px solid var(--sign-popover-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
 .ink-toolbar__grip {
   display: flex;
   align-items: center;

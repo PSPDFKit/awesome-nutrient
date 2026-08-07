@@ -1,0 +1,610 @@
+/* ===========================================================================
+ * App-specific styles for the Office Templating demo.
+ *
+ * Everything here references the design kit's *semantic* roles (--accent,
+ * --bg-card, …) and never a raw --nutrient-* value, so a re-theme stays a
+ * one-file change in the kit.
+ * =========================================================================== */
+
+/* The kit ships --text-muted at 2.69:1, which fails AA. It's intended for
+ * decorative metadata, but this UI has muted text people actually need to
+ * read, so take the kit's own opt-in accessible value. */
+:root {
+  --text-muted: var(--text-muted-aa);
+}
+
+/* --------------------------------------------------------- header + navbar */
+
+/* The kit's page-header draws a bottom rule. With the stepper directly beneath
+ * it that reads as a divider between "chrome" and "content", which it isn't. */
+.app-page-header {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Stepper and prev/next share one row, so navigation sits above the fold
+ * instead of at the bottom of a long panel. */
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  align-items: center;
+  justify-content: space-between;
+  margin: var(--space-10) 0 var(--space-9);
+}
+
+.app-nav-actions {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+/* ------------------------------------------------------------------ stepper */
+
+.app-stepper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-stepper > li {
+  display: flex;
+  align-items: center;
+}
+
+/* Steps are real buttons — reset the UA chrome, keep the kit's focus ring. */
+.app-step {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease);
+}
+
+.app-step:hover:not(:disabled) {
+  color: var(--text-primary);
+}
+
+.app-step:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* A connector between steps, but not trailing the last one. */
+.app-stepper > li:not(:last-child)::after {
+  content: "";
+  width: 18px;
+  height: 1px;
+  margin: 0 var(--space-3);
+  background: var(--border-strong);
+}
+
+.app-step-num {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  transition: background var(--duration-fast) var(--ease);
+}
+
+/* "Active means inverted" — the kit's convention for on-state, everywhere. */
+.app-step[aria-current="step"] {
+  color: var(--text-primary);
+}
+
+.app-step[aria-current="step"] .app-step-num {
+  border-color: transparent;
+  background: var(--text-primary);
+  color: var(--text-inverse);
+}
+
+.app-step.is-done {
+  color: var(--text-secondary);
+}
+
+.app-step.is-done .app-step-num {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (max-width: 900px) {
+  /* Labels are the first thing to go; the numbers still convey position. */
+  .app-step-label {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ sections */
+
+.app-section[hidden] {
+  display: none;
+}
+
+.app-panel-lede {
+  margin-top: var(--space-3);
+  font-size: var(--text-base);
+}
+
+.app-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-9);
+}
+
+/* ------------------------------------------------ step 1: template picker */
+
+/* The cards are <button>s so they're keyboard-reachable, which means resetting
+ * the UA button styles the kit's <a>-based cards never needed. */
+.app-card-btn {
+  width: 100%;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* A badge inside a flex/grid child stretches to the column width unless it's
+ * told to hug its content. */
+.app-card-btn .nk-badge {
+  align-self: start;
+  width: fit-content;
+}
+
+/* ------------------------------------------- step 1: format groups */
+
+.app-group + .app-group {
+  margin-top: var(--space-12);
+}
+
+.app-group:first-child {
+  margin-top: var(--space-9);
+}
+
+.app-group-head {
+  margin-bottom: var(--space-8);
+}
+
+/* The count sits inline with the format name, so the heading reads "DOCX 2". */
+.app-group-head .nk-title-card {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.app-group-head .nk-help {
+  margin-top: var(--space-2);
+}
+
+/* ------------------------------------------------- step 2: syntax reference */
+
+.app-syntax {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.app-syntax-item {
+  padding: var(--space-8);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+}
+
+.app-syntax-code {
+  display: block;
+  margin-bottom: var(--space-4);
+  color: var(--accent);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--text-md);
+}
+
+.app-syntax-desc {
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+/* --------------------------------------------------- step 3: editor + aside */
+
+/* --------------------------------------------------------------- JSON editor */
+
+/* A transparent textarea over a highlighted <pre>. Both layers must share
+ * identical metrics or the caret drifts from the text under it. */
+.jed {
+  position: relative;
+  overflow: hidden;
+  height: min(62vh, 620px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--bg-base);
+}
+
+.jed:focus-within {
+  border-color: var(--accent);
+}
+
+.jed-view,
+.jed-input {
+  margin: 0;
+  padding: var(--space-8);
+  border: 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  tab-size: 2;
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+.jed-view {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  pointer-events: none;
+  color: var(--text-primary);
+}
+
+.jed-input {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: transparent;
+  /* The text itself is drawn by the layer below; only the caret shows here. */
+  color: transparent;
+  caret-color: var(--accent);
+  resize: none;
+}
+
+.jed-input::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.jed-input:focus {
+  outline: none;
+}
+
+/* Token colours — brand hues, chosen so keys and values separate at a glance. */
+.jed-view .jk {
+  color: var(--info);
+}
+.jed-view .js {
+  color: var(--text-primary);
+}
+.jed-view .jn {
+  color: var(--warn);
+}
+.jed-view .jl {
+  color: var(--accent);
+}
+.jed-view .jp {
+  color: var(--text-muted);
+}
+
+#model-status.is-invalid {
+  color: var(--accent);
+}
+
+#model-status.is-valid {
+  color: var(--positive);
+}
+
+.app-ph {
+  display: flex;
+  gap: var(--space-4);
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.app-ph:last-child {
+  border-bottom: 0;
+}
+
+.app-ph-name {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--text-sm);
+  word-break: break-all;
+}
+
+/* --------------------------------------------------- steps 4/5: the results */
+
+.app-result {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.app-file {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-9);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+}
+
+.app-file-meta {
+  display: flex;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.app-file-name {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--text-md);
+}
+
+.app-file-size {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The PDF preview frame. Given a floor so it never collapses on short docs. */
+.app-preview {
+  width: 100%;
+  min-height: 640px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+}
+
+/* Host for the Nutrient Web SDK viewer.
+ * The SDK measures its container, so an explicit height is required — a percentage or
+ * `auto` gives it nothing to work with and the viewer renders zero-height. */
+.app-viewer {
+  width: 100%;
+  height: min(70vh, 760px);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+}
+
+/* In the drawer the viewer fills the remaining space instead of a viewport fraction. */
+.app-viewer--tall {
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.app-error {
+  padding: var(--space-8);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-lg);
+  background: var(--accent-soft);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+.app-error-detail {
+  margin-top: var(--space-4);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--text-sm);
+  opacity: 0.85;
+}
+
+.app-ok {
+  padding: var(--space-8);
+  border: 1px solid var(--positive);
+  border-radius: var(--radius-lg);
+  background: var(--positive-soft);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+/* Missing data is a warning, not a blocker — pollen rather than coral, so it reads
+ * as "look at this" instead of "you can't continue". */
+.app-warn {
+  padding: var(--space-8);
+  border: 1px solid var(--warn);
+  border-radius: var(--radius-lg);
+  background: var(--warn-soft);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+/* -------------------------------------------------------------- upload zone */
+
+.app-upload {
+  display: grid;
+  gap: var(--space-3);
+  place-items: center;
+  margin-top: var(--space-8);
+  padding: var(--space-14);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  text-align: center;
+  transition:
+    border-color var(--duration-fast) var(--ease),
+    background var(--duration-fast) var(--ease);
+}
+
+.app-upload.is-over {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.app-upload-text {
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+}
+
+.app-upload-btn {
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------- placeholder listings */
+
+/* Two columns once there's room — these lists get long. */
+.app-ph-grid {
+  display: grid;
+  gap: 0 var(--space-9);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .app-ph-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ----------------------------------------------------------- preview drawer */
+
+.app-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  justify-content: flex-end;
+  background: color-mix(in srgb, var(--bg-base) 70%, transparent);
+}
+
+.app-drawer[hidden] {
+  display: none;
+}
+
+.app-drawer-panel {
+  display: flex;
+  width: min(920px, 100%);
+  /* An explicit height, so the body below it has a basis to divide up. */
+  height: 100%;
+  flex-direction: column;
+  border-left: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-lg);
+}
+
+.app-drawer-head {
+  display: flex;
+  gap: var(--space-8);
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-9) var(--space-10);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* A flex *container*, not just a flex item: the viewer child sizes itself from this
+ * box, and a bare `height: 100%` inside a non-flex parent resolves against nothing —
+ * the SDK then refuses to mount with "the mounting container has no width". */
+.app-drawer-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  padding: var(--space-8) var(--space-10) var(--space-10);
+}
+
+.app-drawer-body > * {
+  flex: 1;
+  min-height: 0;
+}
+
+.app-preview--tall {
+  height: 100%;
+  min-height: 0;
+}
+
+/* ------------------------------------------------------------------ overlay */
+
+.app-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--bg-base) 82%, transparent);
+  backdrop-filter: blur(2px);
+}
+
+.app-overlay[hidden] {
+  display: none;
+}
+
+.app-overlay-box {
+  display: grid;
+  gap: var(--space-8);
+  place-items: center;
+  padding: var(--space-14) var(--space-16);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-lg);
+}
+
+.app-overlay-text {
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+}
+
+.app-spinner {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent);
+  border-radius: var(--radius-full);
+  animation: app-spin 720ms linear infinite;
+}
+
+@keyframes app-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* The kit zeroes motion under this query; match it rather than spinning on. */
+@media (prefers-reduced-motion: reduce) {
+  .app-spinner {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 720px) {
+  /* Stack the navbar so the stepper keeps a full row of its own. */
+  .app-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .app-nav-actions {
+    justify-content: space-between;
+  }
+
+  .app-drawer-panel {
+    width: 100%;
+  }
+}

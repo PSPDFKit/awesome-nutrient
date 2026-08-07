@@ -52,6 +52,7 @@ export function TextToolbar({ instance, onClose }: Props) {
   const [colorOpen, setColorOpen] = useState(false)
   const [sizeOpen, setSizeOpen] = useState(false)
   const [alignOpen, setAlignOpen] = useState(false)
+  const [operationError, setOperationError] = useState<string | null>(null)
   const dragRef = useRef<{ dx: number; dy: number } | null>(null)
   const toolbarRef = useRef<HTMLDivElement | null>(null)
 
@@ -68,6 +69,12 @@ export function TextToolbar({ instance, onClose }: Props) {
       y: viewerRect.top + (viewerRect.height - toolbarRect.height) / 2,
     })
   }, [])
+
+  useEffect(() => {
+    if (!operationError) return
+    const timeout = window.setTimeout(() => setOperationError(null), 4000)
+    return () => window.clearTimeout(timeout)
+  }, [operationError])
 
   // Keep the `text` preset in sync so newly-placed text annotations pick up
   // the current toolbar values. Annotation/editor-selection updates happen
@@ -197,6 +204,7 @@ export function TextToolbar({ instance, onClose }: Props) {
       }
     } catch (err) {
       console.warn('Undo failed', err)
+      setOperationError('Could not undo the last text change.')
     }
   }, [instance])
 
@@ -216,6 +224,7 @@ export function TextToolbar({ instance, onClose }: Props) {
       }
     } catch (err) {
       console.warn('Delete-all failed', err)
+      setOperationError('Could not delete text on this page.')
     }
   }, [instance])
 
@@ -253,6 +262,11 @@ export function TextToolbar({ instance, onClose }: Props) {
       role="toolbar"
       aria-label="Text annotation tools"
     >
+      {operationError && (
+        <span className="ink-toolbar__status" role="status">
+          {operationError}
+        </span>
+      )}
       <div
         className="ink-toolbar__grip"
         onPointerDown={onGripPointerDown}

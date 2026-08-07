@@ -242,6 +242,7 @@ async function deleteField(instance: SDKInstance, annotation: WidgetLikeAnnotati
     await instance.delete(target)
   } catch (error) {
     console.error('Failed to delete field', error)
+    window.alert('Could not delete the form field.')
   }
 }
 
@@ -251,7 +252,6 @@ async function renameField(
   nextName: string,
 ) {
   try {
-    const updates: unknown[] = []
     const formField = await getFormFieldForAnnotation(instance, annotation)
 
     if (!formField?.set || !annotation.set) {
@@ -259,12 +259,13 @@ async function renameField(
       return
     }
 
-    updates.push(formField.set('name', nextName))
-    updates.push(annotation.set('formFieldName', nextName))
-
-    if (updates.length > 0) await instance.update(updates)
+    await instance.update([
+      formField.set('name', nextName),
+      annotation.set('formFieldName', nextName),
+    ])
   } catch (error) {
     console.error('Failed to rename field', error)
+    window.alert('Could not rename the form field.')
   }
 }
 

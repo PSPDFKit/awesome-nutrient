@@ -1,0 +1,131 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "course": {
+      "title": "Office templating with Nutrient",
+      "subtitle": "Authoring templates and generating documents at scale",
+      "instructor": "Jordan Reyes",
+      "duration": "Half day, 3.5 hours",
+      "level": "Intermediate",
+      "contact": "Questions afterwards: training@nutrient.io"
+    },
+    "outcomes": {
+      "headline": "By the end of this session you will be able to",
+      "items": [
+        {
+          "label": "Author a Word, Excel or PowerPoint template with placeholders."
+        },
+        {
+          "label": "Model repeating and conditional content in JSON."
+        },
+        {
+          "label": "Generate documents from a template and a data model."
+        },
+        {
+          "label": "Export accessible PDF/UA output and verify conformance."
+        }
+      ]
+    },
+    "agenda": {
+      "headline": "Four modules",
+      "modules": [
+        {
+          "number": "1",
+          "title": "How templating works",
+          "duration": "30 min"
+        },
+        {
+          "number": "2",
+          "title": "Authoring your first template",
+          "duration": "60 min"
+        },
+        {
+          "number": "3",
+          "title": "Repeating and conditional content",
+          "duration": "60 min"
+        },
+        {
+          "number": "4",
+          "title": "Accessible PDF output",
+          "duration": "45 min"
+        }
+      ]
+    },
+    "modules": {
+      "headline": "What each module covers",
+      "items": [
+        {
+          "title": "1  How templating works",
+          "duration": "30 min",
+          "objective": "The four SDK calls, and why the same code path serves all three formats.",
+          "exercise": "Generate the sample invoice unchanged."
+        },
+        {
+          "title": "2  Authoring your first template",
+          "duration": "60 min",
+          "objective": "Placeholder syntax, and why a marker must sit in a single run.",
+          "exercise": "Add three fields to a letterhead and generate it."
+        },
+        {
+          "title": "3  Repeating and conditional content",
+          "duration": "60 min",
+          "objective": "Sections, inverted sections, and table row loops.",
+          "exercise": "Build a line-item table that grows with the data."
+        },
+        {
+          "title": "4  Accessible PDF output",
+          "duration": "45 min",
+          "objective": "PDF/UA conformance, and what alt text does for generated images.",
+          "exercise": "Export a template to PDF/UA and inspect the tag tree."
+        }
+      ]
+    },
+    "prerequisites": {
+      "headline": "What to have ready",
+      "items": [
+        {
+          "item": ".NET 10 SDK",
+          "detail": "Installed and on your PATH."
+        },
+        {
+          "item": "A licence key",
+          "detail": "Optional — output is watermarked without one."
+        },
+        {
+          "item": "Word, Excel or PowerPoint",
+          "detail": "To open the generated documents."
+        },
+        {
+          "item": "The sample repository",
+          "detail": "Cloned and building before we start."
+        }
+      ]
+    },
+    "resources": {
+      "headline": "Where to go next",
+      "items": [
+        {
+          "title": "Nutrient .NET SDK guides",
+          "where": "nutrient.io/guides/dotnet"
+        },
+        {
+          "title": "Office templating reference",
+          "where": "The from-Word-template guide"
+        },
+        {
+          "title": "PDF/UA and accessibility",
+          "where": "nutrient.io/guides — accessibility"
+        },
+        {
+          "title": "This demo's source",
+          "where": "The repository you cloned"
+        }
+      ]
+    }
+  }
+}

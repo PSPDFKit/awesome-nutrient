@@ -16,11 +16,11 @@
   },
   "dependencies": {
     "@langchain/core": "^1.1.24",
-    "@langchain/langgraph": "1.1.4",
+    "@langchain/langgraph": "^1.4.7",
     "@langchain/openai": "^1.2.7",
     "@nutrient-sdk/document-authoring": "^1.11.0",
     "jsonrepair": "^3.13.2",
-    "next": "16.1.6",
+    "next": "^16.2.10",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "zod": "^4.3.6"
