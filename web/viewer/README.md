@@ -18,6 +18,16 @@ npm install
 npm start
 ```
 
+### web-sdk-demo
+**Description**: Full host-application shell around the Web SDK viewer, including custom toolbars, signing, file navigation, and form creation.
+
+**Quick start**:
+```bash
+cd web-sdk-demo
+npm install
+npm run dev
+```
+
 ---
 
 ## Prerequisites

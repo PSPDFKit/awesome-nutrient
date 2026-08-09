@@ -1,0 +1,181 @@
+/*
+ * Custom CSS injected into the SDK iframe via the `styleSheets` config option
+ * in NutrientViewer.tsx. Use this for narrowly-scoped element overrides that
+ * don't belong in the shared theme.
+ */
+
+/*
+ * Match the demo's scrollbar style inside the SDK iframe. Thin, transparent
+ * track, rounded thumb tinted with the border token. Mirrors the rules in
+ * src/styles.css.
+ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bui-color-border-medium) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--bui-color-border-medium);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--bui-color-foreground-secondary-medium);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Remove the vertical padding the Baseline UI image gallery applies. */
+.PSPDFKit-Image-Gallery,
+[class*='PSPDFKit-Image-Gallery'] {
+  padding-block-start: unset;
+  padding-block-end: unset;
+}
+
+/*
+ * Strip the blue accent pill behind the page-number tag under each thumbnail.
+ * The Thumbnails recipe wraps the page index in a Baseline UI <Tag>, which
+ * picks up `background.interactive.enabled` from the theme. We only want the
+ * digit, no background.
+ */
+.PSPDFKit-Image-Gallery [class*='BaselineUI-Tag'],
+[class*='PSPDFKit-Image-Gallery'] [class*='BaselineUI-Tag'] {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: var(--bui-color-text-primary-strong) !important;
+}
+
+.PSPDFKit-Form-Creator-Popover,
+.PSPDFKit-Form-Creator-Popover [data-block-id='form-creator-decorator'],
+.PSPDFKit-Form-Creator-Popover [data-block-id='FormCreator'] {
+  background: #232220 !important;
+}
+
+.PSPDFKit-Form-Creator-Popover [data-block-id='FormCreator'] {
+  width: 320px !important;
+  max-height: none !important;
+  color: #ffffff;
+}
+
+.PSPDFKit-Form-Creator-Popover [role='separator'],
+.PSPDFKit-Form-Creator-Popover [class*='Separator'] {
+  display: none !important;
+}
+
+.demo-field-editor {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 320px;
+  max-width: 100%;
+  padding: 20px;
+  background: transparent;
+  border-radius: 0;
+  color: #ffffff;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+}
+
+.demo-field-editor__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.demo-field-editor__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  font-size: 17px;
+  font-weight: 760;
+  letter-spacing: -0.04em;
+}
+
+.demo-field-editor__title svg {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+}
+
+.demo-field-editor__delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.demo-field-editor__delete:hover,
+.demo-field-editor__delete:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+
+.demo-field-editor__delete svg {
+  width: 25px;
+  height: 25px;
+}
+
+.demo-field-editor__label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 740;
+  letter-spacing: -0.03em;
+  text-align: left;
+}
+
+.demo-field-editor__label > span {
+  text-align: left;
+}
+
+.demo-field-editor__select,
+.demo-field-editor__input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  background: transparent;
+  border: 2px solid #5a5550;
+  border-radius: 11px;
+  color: #ffffff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+}
+
+.demo-field-editor__select:focus-visible,
+.demo-field-editor__input:focus-visible {
+  border-color: #6ea4ff;
+  outline: none;
+}
+
+.demo-field-editor__input {
+  font-weight: 400;
+}
