@@ -1,0 +1,79 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "agreementRef": "NDA-2026-0088",
+    "effectiveDate": "2026-09-01",
+    "partyA": {
+      "name": "Nutrient GmbH",
+      "entityType": "a company registered in Germany",
+      "address": "Konrad-Zuse-Ring 3, 10123 Berlin, Germany",
+      "signatory": "Marta Feld"
+    },
+    "partyB": {
+      "name": "Acme Corporation",
+      "entityType": "a Delaware corporation",
+      "address": "1 Market Street, San Francisco, CA 94105",
+      "signatory": "Dana Whitfield"
+    },
+    "mutual": true,
+    "purpose": "evaluating a potential document-processing integration",
+    "categories": [
+      {
+        "label": "Technical information, including source code, architecture, and benchmarks."
+      },
+      {
+        "label": "Commercial information, including pricing, roadmaps, and customer lists."
+      },
+      {
+        "label": "The existence and contents of this Agreement itself."
+      }
+    ],
+    "obligations": [
+      {
+        "heading": "Use and disclosure",
+        "points": [
+          {
+            "text": "Use the Confidential Information solely for the stated purpose."
+          },
+          {
+            "text": "Disclose it only to personnel who need it and are bound by equivalent obligations."
+          }
+        ]
+      },
+      {
+        "heading": "Care and security",
+        "points": [
+          {
+            "text": "Apply at least the degree of care used for its own confidential information."
+          },
+          {
+            "text": "Notify the other party promptly on discovering any unauthorised disclosure."
+          }
+        ]
+      }
+    ],
+    "termYears": "3",
+    "survivalYears": "5",
+    "requiresReturn": true,
+    "returnDays": "30",
+    "notices": [
+      {
+        "party": "Nutrient GmbH",
+        "contact": "Legal — contracts@nutrient.io",
+        "address": "Konrad-Zuse-Ring 3, 10123 Berlin, Germany"
+      },
+      {
+        "party": "Acme Corporation",
+        "contact": "General Counsel — legal@acme.example",
+        "address": "1 Market Street, San Francisco, CA 94105"
+      }
+    ],
+    "governingLaw": "Germany",
+    "jurisdiction": "Berlin"
+  }
+}

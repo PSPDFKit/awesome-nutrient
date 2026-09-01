@@ -1,0 +1,50 @@
+# The reference deployment is https://nutrient-office-templating.fly.dev.
+#
+# To deploy your own, change this name first — `flyctl deploy` targets whatever is
+# here, and the name must be globally unique across Fly:
+#
+#   flyctl apps create my-office-templating
+#   # set `app` below to match, then:
+#   flyctl deploy --remote-only
+app = "nutrient-office-templating"
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  ASPNETCORE_URLS = "http://+:8080"
+
+# Licence keys are Fly secrets, not env vars here — see the Dockerfile:
+#   fly secrets set NUTRIENT_LICENSE_KEY="..." NUTRIENT_WEB_LICENSE_KEY="..."
+# Both are optional; without them the SDKs run in evaluation mode.
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  # A demo has no traffic most of the time; let it scale to zero.
+  min_machines_running = 0
+
+  # An *unlicensed* .NET SDK terminates its process after one hour, so a machine can die
+  # mid-session through no fault of the app. This check makes Fly notice and replace it
+  # instead of routing to a corpse. /healthz makes no SDK call, so it still answers while
+  # a document is being generated.
+  [[http_service.checks]]
+    grace_period = "20s"
+    interval = "30s"
+    method = "GET"
+    timeout = "5s"
+    path = "/healthz"
+
+[[vm]]
+  # x86_64 matches the platform the Nutrient sample containers target. The SDK
+  # documents Linux ARM64 support too, but that combination is unverified here.
+  size = "shared-cpu-1x"
+  # 2 GB rather than 1: the .NET SDK rasterises Office documents server-side, and the
+  # image also serves ~148 MB of Web SDK assets. Office-to-PDF conversion of a large
+  # workbook is the memory high-water mark.
+  memory = "2gb"
+  cpu_kind = "shared"
+  cpus = 1

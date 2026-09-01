@@ -1,0 +1,6 @@
+{
+  "order": 4,
+  "title": "Budget",
+  "subtitle": "Budget vs actual with variance, and a per-row expense/revenue flag.",
+  "features": ["Two row loops", "Percentage cells", "Variance explanations"]
+}

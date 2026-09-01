@@ -1,0 +1,92 @@
+{
+  "config": {
+    "delimiter": {
+      "start": "{{",
+      "end": "}}"
+    }
+  },
+  "model": {
+    "quoteNo": "Q-2026-0311",
+    "quoteDate": "2026-08-06",
+    "validUntil": "2026-09-05",
+    "currency": "EUR",
+    "client": {
+      "name": "Acme Corporation",
+      "contact": "Dana Whitfield, VP Operations",
+      "address": "1 Market Street, San Francisco, CA 94105"
+    },
+    "items": [
+      {
+        "ref": "1",
+        "description": "Nutrient .NET SDK — production licence, 1 year",
+        "quantity": 1,
+        "unitPrice": 18000,
+        "discount": 0.0,
+        "amount": 18000
+      },
+      {
+        "ref": "2",
+        "description": "Nutrient Web SDK — production licence, 1 year",
+        "quantity": 1,
+        "unitPrice": 14000,
+        "discount": 0.1,
+        "amount": 12600
+      },
+      {
+        "ref": "3",
+        "description": "Implementation services — template authoring",
+        "quantity": 12,
+        "unitPrice": 1400,
+        "discount": 0.0,
+        "amount": 16800
+      },
+      {
+        "ref": "4",
+        "description": "Priority support, 12 months",
+        "quantity": 1,
+        "unitPrice": 6000,
+        "discount": 0.15,
+        "amount": 5100
+      }
+    ],
+    "subtitle": "",
+    "subtotal": 54800,
+    "discountTotal": -2300,
+    "taxLabel": "VAT at 19%",
+    "tax": 9975,
+    "total": 62475,
+    "terms": [
+      {
+        "label": "Payment",
+        "detail": "Net 30 from date of invoice."
+      },
+      {
+        "label": "Delivery",
+        "detail": "Licence keys issued within two business days of order."
+      },
+      {
+        "label": "Validity",
+        "detail": "This quotation is valid for 30 days from its date."
+      }
+    ],
+    "footnote": "Prices exclude any withholding tax. Licence terms are those of the Nutrient SDK subscription agreement in force at the order date.",
+    "logo": {
+      "_type": "image",
+      "source": "base64",
+      "format": "png",
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAIAAABt+uBvAAABKklEQVR42u3ZwQ3CMBAEwCsiL/rvjQcPWqAAUBQU8N7BSPtFKCMnXp/rsm2yk0IACBAgQIAAAQIkgAABAgQIECBAAggQIECAAL2X++0K6LXLcwDt6bQyqp46fYyqrU4TI0CAJgId1OlgVKku81md7zlWqst8BGjBiqtUlzkPtOatrGCXSf12HVBqFaz8uld8q059v8YAxXfAbwGluszi/62JbfhPXzFA/wcUnOnM6EHZqeCMJp2dK884i3W4meh+mncvBkgAAZoPdH6vWb9L1oi2ErztqIjOu3Oi4I1QpXQOPmH81qyCOq1mz4AAzQI6Pzlucn9vBQECpAf9aA/SpJ3FnObNgwABAgQIECBAgAQQIECAAAECBEgAAQIECBAgQIAEECBAgAD1zgMp24yIUsvQ1gAAAABJRU5ErkJggg==",
+      "width": 64,
+      "height": 64,
+      "altText": "Nutrient logo",
+      "title": "Nutrient — provider mark",
+      "borderColor": "F25E45",
+      "borderWidth": 1,
+      "borderStyle": "Solid",
+      "rotation": 0,
+      "link": "https://www.nutrient.io",
+      "caption": "{{provider.name}} mark",
+      "captionLabel": "Figure",
+      "captionPosition": "Below"
+    }
+  }
+}

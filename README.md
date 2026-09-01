@@ -110,6 +110,7 @@ Server-side PDF processing and manipulation:
 - [AI-Assisted Document Editing](./document-authoring/ai-editing/) — AI-assisted document editing with Document Authoring SDK. Like Cursor for documents.
 - [Document Authoring Template Population](./web/document-authoring-template-population/) — TypeScript library for populating templates with data (placeholders, loops, conditionals, table rows)
 - [Document Generator (Vanilla JS)](./web/document-generator-vanillajs/) — Step-by-step PDF generation with Document Authoring SDK
+- [Office Templating (.NET)](./gdpicture/office-templating/) — Generate Word, Excel and PowerPoint from templates + JSON with the .NET SDK, then export PDF/UA. 17 templates, [live demo](https://nutrient-office-templating.fly.dev)
 
 ### MCP Servers Hub
 
