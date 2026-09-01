@@ -11,5 +11,8 @@
   "start": "node server.js",
   "devDependencies": {
     "shx": "^0.3.4"
+  },
+  "engines": {
+    "npm": ">=11.10.1"
   }
 }

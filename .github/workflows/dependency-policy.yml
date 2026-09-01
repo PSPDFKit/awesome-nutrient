@@ -11,6 +11,11 @@ on:
       - '**/package-lock.json'
       - '**/pnpm-workspace.yaml'
       - '**/pnpm-lock.yaml'
+      # Unsupported lockfile types; check-cooldown-coverage.mjs rejects these.
+      - '**/yarn.lock'
+      - '**/bun.lock'
+      - '**/bun.lockb'
+      - '**/npm-shrinkwrap.json'
       - '.tool-versions'
       - '.github/workflows/dependency-policy.yml'
       - '.github/scripts/check-override-sync.mjs'
@@ -46,7 +51,12 @@ jobs:
       # dual-manager example is picked up by both jobs automatically.
       - name: Discover dual-manager examples
         id: discover
-        run: echo "examples=$(node .github/scripts/check-override-sync.mjs --json)" >> "$GITHUB_OUTPUT"
+        # Two statements so the node exit code fails the step; a command
+        # substitution inside echo's arguments would be swallowed by echo's
+        # own (always zero) exit status.
+        run: |
+          examples=$(node .github/scripts/check-override-sync.mjs --json)
+          echo "examples=$examples" >> "$GITHUB_OUTPUT"
 
   pnpm-lockfile-policy:
     needs: policy-checks

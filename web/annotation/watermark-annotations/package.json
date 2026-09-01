@@ -15,5 +15,8 @@
   },
   "dependencies": {
     "@nutrient-sdk/viewer": "1.9.1"
+  },
+  "engines": {
+    "npm": ">=11.10.1"
   }
 }

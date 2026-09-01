@@ -12,5 +12,8 @@
   "description": "",
   "dependencies": {
     "pspdfkit": "^2024.4.0"
+  },
+  "engines": {
+    "npm": ">=11.10.1"
   }
 }
