@@ -5,11 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  dompurify: 3.4.12
-  brace-expansion@<1.1.18: 1.1.18
-  brace-expansion@>=4.0.0 <5.0.9: 5.0.9
-  postcss@<=8.5.22: '>=8.5.23 <9'
+  brace-expansion@<1.1.18: '>=1.1.18 <2'
+  brace-expansion@>=4.0.0 <5.0.9: '>=5.0.9 <6'
+  dompurify@<3.4.13: '>=3.4.13 <4'
   js-yaml@>=4.0.0 <4.3.1: '>=4.3.1 <5'
+  nanoid@<3.3.18: '>=3.3.18 <4'
+  postcss@<8.5.23: '>=8.5.23 <9'
 
 importers:
 
@@ -1044,8 +1045,8 @@ packages:
     resolution: {integrity: sha512-GYqKi1aH7PJXxdhTeZBFrg8vUBeKXi+cNprXsC1kpJcbcVnV9wBsrOu1cQEdG0WeQwlfHiy3XvnKfIrJ2R0NzQ==}
     hasBin: true
 
-  dompurify@3.4.12:
-    resolution: {integrity: sha512-zQvGet8Z2sWbQhCmfFz/T5QWH2oBmjnqK3qvOjaqaNLrLEF912WamU+ohnTp0TCep/MFVHpdJuCZEdFOdTnEFg==}
+  dompurify@3.4.13:
+    resolution: {integrity: sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ==}
 
   downshift@6.1.12:
     resolution: {integrity: sha512-7XB/iaSJVS4T8wGFT3WRXmSF1UlBHAA40DshZtkrIscIN+VC+Lh363skLxFTvJwtNgHxAMDGEHT4xsyQFWL+UA==}
@@ -1102,6 +1103,7 @@ packages:
   eslint@9.39.5:
     resolution: {integrity: sha512-DgZS62aPLXKlnxILS/AYCoRvHaZeXceIzlXPkkGGzJWSow1aEk0lbTlxUSlyjC8jcaKxAdOnTDz+o1JFSBsyjw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -1421,8 +1423,8 @@ packages:
     resolution: {integrity: sha512-2PJADREjOusk3iJkD3rXV2YjAxTuaLxdfqtqTEt6vcY07LtEBR1seHuBHXWEIuscqRDGvbauYPs+A4Rj/KTczQ==}
     engines: {node: '>=14.0'}
 
-  nanoid@3.3.16:
-    resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
+  nanoid@3.3.18:
+    resolution: {integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -1948,7 +1950,7 @@ snapshots:
       '@vanilla-extract/dynamic': 2.1.5
       class-variance-authority: 0.7.1
       comlink: 4.4.2
-      dompurify: 3.4.12
+      dompurify: 3.4.13
       granular-hooks: 1.1.0(react@19.2.7)
       kdbush: 4.1.0
       lodash: 4.18.1
@@ -1986,7 +1988,7 @@ snapshots:
 
   '@baseline-ui/icons@0.48.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      dompurify: 3.4.12
+      dompurify: 3.4.13
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
@@ -2491,7 +2493,7 @@ snapshots:
       jotai-optics: 0.3.2(jotai@2.20.1(@babel/core@7.29.7(supports-color@7.2.0))(@babel/template@7.29.7)(@types/react@19.2.17)(react@19.2.7))(optics-ts@2.4.1)
       jotai-x: 1.2.4(@types/react@19.2.17)(jotai@2.20.1(@babel/core@7.29.7(supports-color@7.2.0))(@babel/template@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
       lodash: 4.18.1
-      nanoid: 3.3.16
+      nanoid: 3.3.18
       optics-ts: 2.4.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
@@ -2872,7 +2874,7 @@ snapshots:
 
   direction@1.0.4: {}
 
-  dompurify@3.4.12:
+  dompurify@3.4.13:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -3209,7 +3211,7 @@ snapshots:
 
   mutative@1.1.0: {}
 
-  nanoid@3.3.16: {}
+  nanoid@3.3.18: {}
 
   nanoid@5.1.16: {}
 
@@ -3254,7 +3256,7 @@ snapshots:
 
   postcss@8.5.25:
     dependencies:
-      nanoid: 3.3.16
+      nanoid: 3.3.18
       picocolors: 1.1.1
       source-map-js: 1.2.1
 

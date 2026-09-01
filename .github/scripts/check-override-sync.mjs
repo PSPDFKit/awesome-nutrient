@@ -8,7 +8,7 @@ import { dirname, join } from "node:path";
 // A dual-manager example is any directory (outside node_modules) that commits
 // both an npm and a pnpm lockfile.
 const EXAMPLES = globSync("**/pnpm-lock.yaml", {
-  ignore: "**/node_modules/**",
+  exclude: (path) => path.includes("node_modules"),
 })
   .map((lockfile) => dirname(lockfile))
   .filter((dir) => existsSync(join(dir, "package-lock.json")))
@@ -17,6 +17,14 @@ const EXAMPLES = globSync("**/pnpm-lock.yaml", {
 if (EXAMPLES.length === 0) {
   console.error("no dual-manager examples found; glob discovery is broken");
   process.exit(1);
+}
+
+// --json prints the discovered dual-manager examples for CI to build its
+// pnpm-lockfile-policy matrix from, so the matrix cannot drift from the
+// set of examples this script checks.
+if (process.argv.includes("--json")) {
+  console.log(JSON.stringify(EXAMPLES));
+  process.exit(0);
 }
 
 // Minimal parser for the flat `overrides:` block used in these files. Keys and

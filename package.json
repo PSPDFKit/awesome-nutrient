@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "npm": ">=11.10.1"
+  },
   "devDependencies": {
     "@biomejs/biome": "^2.3.1",
     "@eslint/js": "^9.18.0",

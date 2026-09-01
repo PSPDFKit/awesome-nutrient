@@ -1,5 +1,8 @@
 name: Dependency policy
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths:
@@ -11,15 +14,18 @@ on:
       - '.tool-versions'
       - '.github/workflows/dependency-policy.yml'
       - '.github/scripts/check-override-sync.mjs'
+      - '.github/scripts/check-cooldown-coverage.mjs'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  override-sync:
+  policy-checks:
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    outputs:
+      dual-manager-examples: ${{ steps.discover.outputs.examples }}
     steps:
       - name: Checkout
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
@@ -29,22 +35,27 @@ jobs:
         with:
           node-version-file: '.tool-versions'
 
+      - name: Check every committed lockfile is covered by the cooldown
+        run: node .github/scripts/check-cooldown-coverage.mjs
+
       - name: Check npm and pnpm override maps stay identical
         run: node .github/scripts/check-override-sync.mjs
 
+      # The matrix for pnpm-lockfile-policy comes from the same discovery
+      # logic check-override-sync.mjs runs its checks on, so a new
+      # dual-manager example is picked up by both jobs automatically.
+      - name: Discover dual-manager examples
+        id: discover
+        run: echo "examples=$(node .github/scripts/check-override-sync.mjs --json)" >> "$GITHUB_OUTPUT"
+
   pnpm-lockfile-policy:
+    needs: policy-checks
     runs-on: ubuntu-latest
     timeout-minutes: 5
     strategy:
       fail-fast: false
       matrix:
-        # Keep in sync with the dual-manager examples (directories committing
-        # both package-lock.json and pnpm-lock.yaml). check-override-sync.mjs
-        # discovers those automatically; this matrix is maintained by hand.
-        example:
-          - web/signing/signing-demo-complete
-          - web/ui-customization
-          - web/ui-customization-doc-editor-sidebar
+        example: ${{ fromJSON(needs.policy-checks.outputs.dual-manager-examples) }}
     steps:
       - name: Checkout
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
@@ -55,11 +66,18 @@ jobs:
           node-version-file: '.tool-versions'
 
       # A frozen, lockfile-only install verifies the committed lockfile still
-      # matches the manifest and override maps. It does NOT re-check
-      # minimumReleaseAge: pnpm applies the cooldown only while resolving, and
-      # the lockfile does not record the cooldown settings, so a lockfile
-      # regenerated with the cooldown bypassed would still pass this job.
-      - name: Verify lockfile matches manifest and overrides
+      # matches the manifest and override maps, and — as of pnpm 11.20, with
+      # trustLockfile left at its false default — re-checks minimumReleaseAge
+      # against every committed lockfile entry, so a lockfile regenerated with
+      # the cooldown bypassed fails here. Do not set trustLockfile: true to
+      # silence such a failure; it is catching a real policy bypass.
+      #
+      # npm has no equivalent job: npm applies min-release-age only while
+      # resolving, so `npm ci` (and `npm install` against a valid lockfile)
+      # installs a cooldown-bypassing package-lock.json without complaint.
+      # The npm-side lockfiles are covered by the cooldown at regeneration
+      # time and by review, not by CI verification.
+      - name: Verify lockfile against manifest, overrides, and cooldown
         working-directory: ${{ matrix.example }}
         run: |
           corepack enable
