@@ -18,7 +18,7 @@ This project demonstrates how to integrate the [Nutrient (PSPDFKit) Web SDK](htt
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (v16 or newer recommended)
+- [Node.js](https://nodejs.org/) 20.17+ (20.x line) or 22.9+ with npm 11.10.0+ (Node.js 24.19.0 is pinned in the repository)
 - A valid Nutrient (PSPDFKit) Web SDK license key ([Get one here](https://www.nutrient.io/try/))
 - A Mixpanel project token ([Create free account](https://mixpanel.com/register/))
 

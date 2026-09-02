@@ -12,5 +12,9 @@
   "description": "",
   "dependencies": {
     "pspdfkit": "^2024.4.0"
+  },
+  "engines": {
+    "node": "^20.17.0 || >=22.9.0",
+    "npm": ">=11.10.0"
   }
 }

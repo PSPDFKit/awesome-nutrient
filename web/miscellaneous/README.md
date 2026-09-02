@@ -25,8 +25,7 @@ npm start
 ## Prerequisites
 
 All examples require:
-- **Node.js** (v16 or higher recommended)
-- **npm** or **yarn**
+- **Node.js 20.17+ (20.x line) or 22.9+ with npm 11.10.0+** (Node.js 24.19.0 is pinned in the repository)
 - Additional service credentials where applicable (e.g., Mixpanel API key)
 
 ## Need Help?

@@ -10,8 +10,7 @@ Clean UI - Modern, minimalist interface inspired by Apryse showcase
 Responsive Design - Works seamlessly on desktop and tablet devices
 
 ## 📋 Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn package manager
+- Node.js 20.17+ (20.x line) or 22.9+ with npm 11.10.0+
 - Nutrient/PSPDFKit license key (optional for evaluation)
 - Web browser (latest Chrome, Firefox, Edge, etc.)
 - Internet access for CDN resources

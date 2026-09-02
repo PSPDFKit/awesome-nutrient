@@ -4,8 +4,7 @@ This is a simple sample project built in React, TypeScript, and Vite to mark the
 
 ## Prerequisites
 
-- Node.js (version 14 or later)
-- npm (version 6 or later)
+- Node.js 20.17+ (20.x line) or 22.9+ with npm 11.10.0+
 
 ## Getting Started
 

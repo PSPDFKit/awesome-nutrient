@@ -1,5 +1,12 @@
 packages:
   - .
-
+minimumReleaseAge: 21600 # 15 days
 overrides:
-  js-yaml@>=4.0.0 <4.1.1: '>=4.1.1'
+  "brace-expansion@<1.1.18": ">=1.1.18 <2"
+  "brace-expansion@>=4.0.0 <5.0.9": ">=5.0.9 <6"
+  "browserslist@<=4.28.6": ">=4.28.8 <5"
+  "dompurify@<3.4.13": ">=3.4.13 <4"
+  "js-yaml@>=4.0.0 <4.3.1": ">=4.3.1 <5"
+  "nanoid@<3.3.18": ">=3.3.18 <4"
+  "nanoid@>=4.0.0 <5.1.16": ">=5.1.16 <6"
+  "postcss@<8.5.23": ">=8.5.23 <9"

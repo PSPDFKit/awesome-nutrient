@@ -3,5 +3,9 @@
   "scripts": {
     "add-assets": "cp -R ./node_modules/pspdfkit/dist/ ./assets/",
     "start": "serve -l 8080 ."
+  },
+  "engines": {
+    "node": "^20.17.0 || >=22.9.0",
+    "npm": ">=11.10.0"
   }
 }

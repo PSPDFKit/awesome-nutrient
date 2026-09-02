@@ -4,8 +4,7 @@ This project enables snipping annotations in PDFs using PSPDFKit. It is built wi
 
 ## Prerequisites
 
-- Node.js (version 14 or later)
-- npm (version 6 or later)
+- Node.js 20.17+ (20.x line) or 22.9+ with npm 11.10.0+
 
 ## Getting Started
 

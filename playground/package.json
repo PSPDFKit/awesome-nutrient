@@ -7,5 +7,9 @@
   "devDependencies": {
     "@nutrient-sdk/viewer": "^1.9.1",
     "typescript": "5.9.2"
+  },
+  "engines": {
+    "node": "^20.17.0 || >=22.9.0",
+    "npm": ">=11.10.0"
   }
 }
