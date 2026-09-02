@@ -28,7 +28,8 @@ if (process.argv.includes("--json")) {
 }
 
 // Minimal parser for the flat `overrides:` block used in these files. Keys and
-// values may be quoted; the block ends at the first non-indented line.
+// values may be quoted; blank and comment lines are ignored, and the block ends
+// at the first non-indented content line.
 function yamlOverrides(text) {
   const overrides = {};
   let inBlock = false;

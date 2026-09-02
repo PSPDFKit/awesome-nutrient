@@ -15,8 +15,7 @@ Secure Signing: Implements secure hash-based signing using SHA-256.
 Prerequisites
 Ensure you have the following installed:
 ```
-Node.js (v14 or higher recommended)
-npm or yarn
+Node.js 20.17+ (20.x line) or 22.9+ with npm 11.10.0+
 A valid PSPDFKit license key (trial or full version)
 ```
 

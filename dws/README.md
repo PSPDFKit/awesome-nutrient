@@ -15,8 +15,7 @@ A modern React application built with Vite that demonstrates secure PDF viewing 
 
 Before running this example, you'll need:
 
-- Node.js (v16 or higher)
-- npm or yarn package manager
+- Node.js 20.17+ (20.x line) or 22.9+ with npm 11.10.0+
 - Two Nutrient DWS API keys:
   - **Viewer API key** — For document viewing and session management
   - **Processor API key** — For table extraction and document conversion

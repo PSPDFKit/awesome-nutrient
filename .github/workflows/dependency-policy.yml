@@ -4,6 +4,10 @@ permissions:
   contents: read
 
 on:
+  # Re-check the invariant after merge too, so a direct push or administrative
+  # merge cannot leave master silently outside the policy.
+  push:
+    branches: [master]
   pull_request:
     paths:
       - '**/.npmrc'
@@ -18,8 +22,7 @@ on:
       - '**/npm-shrinkwrap.json'
       - '.tool-versions'
       - '.github/workflows/dependency-policy.yml'
-      - '.github/scripts/check-override-sync.mjs'
-      - '.github/scripts/check-cooldown-coverage.mjs'
+      - '.github/scripts/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -39,6 +42,9 @@ jobs:
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version-file: '.tool-versions'
+
+      - name: Test dependency policy checks
+        run: npm run test:dependency-policy
 
       - name: Check every committed lockfile is covered by the cooldown
         run: node .github/scripts/check-cooldown-coverage.mjs
@@ -90,5 +96,5 @@ jobs:
       - name: Verify lockfile against manifest, overrides, and cooldown
         working-directory: ${{ matrix.example }}
         run: |
-          corepack enable
+          corepack enable pnpm
           pnpm install --lockfile-only --frozen-lockfile --ignore-scripts

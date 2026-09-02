@@ -19,6 +19,12 @@ This repository contains examples built with [Nutrient](https://www.nutrient.io/
 - **Local Examples**: Clone and run complete projects on your machine
 - **Official Catalogs**: Explore comprehensive SDK capabilities
 
+### Local JavaScript requirements
+
+Use the repository toolchain pinned in [`.tool-versions`](./.tool-versions) (Node.js 24.19.0), or another Node.js version supported by npm 11 with **npm 11.10.0 or newer**. Node.js 20 and 22 bundle older npm releases, so update npm separately if needed. Installs fail loudly on unsupported versions because the dependency cooldown requires npm 11.10.0+.
+
+Contributors adding or updating examples should follow the [dependency cooldown policy](./documentation/dependency-cooldowns.md).
+
 ---
 
 

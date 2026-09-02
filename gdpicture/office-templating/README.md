@@ -175,7 +175,7 @@ preview is opened.
 
 ## Running it
 
-Requires the **.NET 10 SDK** and **Node 20+** (Node only to fetch the Web SDK).
+Requires the **.NET 10 SDK** and **Node.js 20.17+ (20.x line) or 22.9+ with npm 11.10.0+** (Node.js is only used to fetch the Web SDK).
 
 ```bash
 npm install && dotnet run --project src/NutrientOfficeTemplating

@@ -15,7 +15,7 @@ A TypeScript library for applying template data to [Nutrient Document Authoring]
 
 ## Prerequisites
 
-- Node.js 18 or later
+- Node.js 20.17+ (20.x line) or 22.9+ with npm 11.10.0+
 - A Nutrient Document Authoring license key (optional - will show watermark without one)
 
 ## Getting Started

@@ -7,6 +7,7 @@ overrides:
   "brace-expansion@<1.1.18": ">=1.1.18 <2"
   "brace-expansion@>=2.0.0 <2.1.4": ">=2.1.4 <3"
   "brace-expansion@>=4.0.0 <5.0.9": ">=5.0.9 <6"
+  "browserslist@<=4.28.6": ">=4.28.8 <5"
   "dompurify@<3.4.13": ">=3.4.13 <4"
   "flatted@<3.4.2": ">=3.4.2 <4"
   "js-yaml@>=4.0.0 <4.3.1": ">=4.3.1 <5"

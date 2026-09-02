@@ -11,6 +11,7 @@ Before making changes, inspect these files instead of relying on this guide as a
 - `playground/README.md` — Playground-specific organization and navigation
 - The nearest category `README.md` under `web/` (or another platform folder) — local conventions and example index
 - The example's own `README.md` and `package.json` — setup and run instructions
+- `documentation/dependency-cooldowns.md` — dependency-manager, lockfile, and cooldown requirements
 - `package.json` — repo-level scripts
 - `biome.json` — formatting and linting rules
 - `.github/workflows/` — CI checks
@@ -48,6 +49,7 @@ For local examples:
 - Update the nearest category `README.md` so the example is discoverable
 - If needed, update the root `README.md` when adding a new top-level category or notable entry point
 - Do **not** assume every example uses the same run script — inspect that example's `package.json`
+- Follow `documentation/dependency-cooldowns.md` when adding dependencies, lockfiles, or package-manager configuration
 
 ## Contribution Rules
 
@@ -66,3 +68,4 @@ Before opening a PR:
 - Verify changed links and referenced paths
 - Check `.github/workflows/` if CI expectations are unclear
 - Run formatting via the repo's documented scripts when applicable
+- Run `npm run test:dependency-policy` after changing dependency policy tooling
