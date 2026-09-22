@@ -36,7 +36,7 @@
     "express": "^4.19.2",
     "form-data": "^4.0.0",
     "globals": "^16.0.0",
-    "multer": "^1.4.5-lts.1",
+    "multer": "^2.3.0",
     "node-fetch": "^3.3.2",
     "rollup-plugin-copy": "^3.5.0",
     "typescript": "^5.9.2",
