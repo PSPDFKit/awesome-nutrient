@@ -1,228 +1,155 @@
 import type { Instance } from "@nutrient-sdk/viewer";
 import { baseOptions } from "../../shared/base-options";
 
-window.NutrientViewer.load({
-  ...baseOptions,
-  theme: window.NutrientViewer.Theme.DARK,
-}).then((instance: Instance) => {
-  const panel = document.createElement("div");
-  panel.style.cssText =
-    "position:fixed;top:10px;right:10px;z-index:99999;background:#2d2d2d;color:#e0e0e0;padding:12px;border:1px solid #555;border-radius:8px;font:12px system-ui;max-width:280px";
-  panel.innerHTML = `
-  <div style="font-weight:600;margin-bottom:8px">Print selected pages</div>
-  <button id="btn-print-current" style="width:100%;padding:8px;margin-bottom:8px;background:#007aff;color:#fff;border:0;border-radius:4px;cursor:pointer">Print current page</button>
-  <input id="inp-range" placeholder="e.g. 1,3-5,8" style="width:100%;box-sizing:border-box;padding:7px;border-radius:4px;border:1px solid #555;background:#1a1a1a;color:#e0e0e0;margin-bottom:6px" />
-  <button id="btn-print-range" style="width:100%;padding:8px;margin-bottom:8px;background:#34c759;color:#fff;border:0;border-radius:4px;cursor:pointer">Print selected pages</button>
-  <label style="display:block;margin-bottom:4px"><input type="radio" name="m" value="tab" checked /> New tab</label>
-  <label style="display:block;margin-bottom:8px"><input type="radio" name="m" value="iframe" /> Iframe auto-print (best effort)</label>
-  <div id="log" style="background:#1a1a1a;border-radius:4px;padding:8px;font:11px ui-monospace, SFMono-Regular, Menlo, monospace;max-height:140px;overflow:auto;color:#aaa"></div>
-`;
-  document.body.appendChild(panel);
+// Print the current page or selected pages.
+// In the default DOM print mode, instance.print() renders every page of the
+// document before the print dialog opens, so large documents take a while even
+// when the user picks a page range in the dialog. This example exports only the
+// selected pages with a keepPages operation, loads that copy in a headless
+// instance, and prints the copy. The document open in the viewer stays unchanged.
+// Requires the Document Editor component in the license.
 
-  const logEl = panel.querySelector("#log") as HTMLElement;
-  const log = (msg: string, level: "info" | "error" | "success" = "info") => {
-    const c =
-      level === "error"
-        ? "#ff3b30"
-        : level === "success"
-          ? "#34c759"
-          : "#4aa3ff";
-    const line = document.createElement("div");
-    line.style.color = c;
-    line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
-    logEl.appendChild(line);
-    logEl.scrollTop = logEl.scrollHeight;
-    console.log("[PrintPages]", msg);
-  };
+// Options shared by the viewer and the print copy. The Playground's
+// baseOptions carries a custom theme, so set a built-in one.
+const options = { ...baseOptions, theme: window.NutrientViewer.Theme.DARK };
 
-  async function getTotalPages(): Promise<number> {
-    if (typeof instance.totalPageCount === "number")
-      return instance.totalPageCount;
-    if (
-      instance.document &&
-      typeof instance.document.getPageCount === "function"
-    )
-      return await instance.document.getPageCount();
-    throw new Error("Unable to determine page count from SDK instance.");
+let isPreparing = false;
+let printInstance: Instance | null = null;
+
+// Unload the copy from the previous print job, if it's still loaded.
+function unloadPrintInstance(): void {
+  if (printInstance) {
+    window.NutrientViewer.unload(printInstance);
+    printInstance = null;
+  }
+}
+
+async function printPages(
+  instance: Instance,
+  pageIndexes: number[],
+): Promise<void> {
+  // Respect printing that was disabled on the viewer.
+  if (!instance.viewState.allowPrinting) {
+    throw new Error("Printing is disabled.");
   }
 
-  function parseRange(str: string, totalPages: number): number[] {
-    const parts = str
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-    const set = new Set<number>();
-
-    for (const part of parts) {
-      if (part.includes("-")) {
-        const [a, b] = part
-          .split("-")
-          .map((s) => Number.parseInt(s.trim(), 10));
-        if (!Number.isInteger(a) || !Number.isInteger(b))
-          throw new Error(`Invalid range: "${part}"`);
-        if (a > b) throw new Error(`Invalid range (start > end): "${part}"`);
-        for (let p = a; p <= b; p++) {
-          if (p < 1 || p > totalPages)
-            throw new Error(`Page ${p} out of bounds (1-${totalPages})`);
-          set.add(p - 1);
-        }
-      } else {
-        const p = Number.parseInt(part, 10);
-        if (!Number.isInteger(p)) throw new Error(`Invalid page: "${part}"`);
-        if (p < 1 || p > totalPages)
-          throw new Error(`Page ${p} out of bounds (1-${totalPages})`);
-        set.add(p - 1);
-      }
-    }
-
-    return Array.from(set).sort((x, y) => x - y);
+  // Ignore clicks while the previous request is still exporting and loading.
+  // A newer request replaces a copy that is still rendering.
+  if (isPreparing) {
+    return;
   }
+  isPreparing = true;
 
-  async function exportSubset(pageIndexes: number[]): Promise<ArrayBuffer> {
-    log(
-      `Exporting pages (1-based): ${pageIndexes.map((i) => i + 1).join(", ")}`,
-    );
-    const buf = await instance.exportPDFWithOperations([
+  try {
+    const pdf = await instance.exportPDFWithOperations([
       { type: "keepPages", pageIndexes },
     ]);
-    log(`Export complete (${Math.round(buf.byteLength / 1024)} KB)`, "success");
-    return buf;
-  }
 
-  function printNewTabWithPopupSafeNavigation(
-    buf: ArrayBuffer,
-    preOpenedWindow: Window | null,
-  ): void {
-    const blob = new Blob([buf], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
+    unloadPrintInstance();
 
-    // If we successfully opened a window synchronously, navigate it now.
-    if (preOpenedWindow && !preOpenedWindow.closed) {
-      preOpenedWindow.location.href = url;
-      log("Opened subset PDF in the pre-opened tab.", "success");
-    } else {
-      // Fallback attempt (may be blocked depending on browser)
-      const w = window.open(url, "_blank", "noopener,noreferrer");
-      if (!w) {
-        log(
-          "Popup blocked. Please allow popups, or switch to iframe method.",
-          "error",
-        );
-      } else {
-        log("Opened subset PDF in a new tab.", "success");
-      }
-    }
+    // Same options as the viewer (license and so on), without a user interface.
+    // The SDK logs a warning for viewer-only options, such as `container`,
+    // that it ignores in headless mode.
+    const copy = await window.NutrientViewer.load({
+      ...options,
+      headless: true,
+      document: pdf,
+    });
+    printInstance = copy;
 
-    // Conservative cleanup: do not revoke quickly.
-    setTimeout(() => {
-      try {
-        URL.revokeObjectURL(url);
-      } catch (_) {}
-      log("Blob URL revoked (cleanup).");
-    }, 120000);
-  }
+    // Unload the copy once the browser finishes printing it.
+    window.addEventListener(
+      "afterprint",
+      () => {
+        if (printInstance === copy) {
+          unloadPrintInstance();
+        }
+      },
+      { once: true },
+    );
 
-  function printViaIframe(buf: ArrayBuffer): void {
-    const blob = new Blob([buf], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
-
-    const iframe = document.createElement("iframe");
-    iframe.style.cssText =
-      "position:fixed;left:-9999px;top:0;width:1px;height:1px;border:0";
-    iframe.src = url;
-
-    const cleanup = () => {
-      setTimeout(() => {
-        try {
-          URL.revokeObjectURL(url);
-        } catch (_) {}
-        try {
-          iframe.remove();
-        } catch (_) {}
-        log("Iframe cleaned up.");
-      }, 120000);
-    };
-
-    iframe.onload = () => {
-      log("PDF loaded in iframe. Trying print()...");
-      try {
-        iframe.contentWindow?.focus();
-        iframe.contentWindow?.print();
-        log("Print dialog triggered (iframe).", "success");
-      } catch (e) {
-        log(`Iframe print failed: ${(e as Error)?.message || e}`, "error");
-      } finally {
-        cleanup();
-      }
-    };
-
-    iframe.onerror = () => {
-      log("Iframe failed to load PDF.", "error");
-      cleanup();
-    };
-
-    document.body.appendChild(iframe);
-  }
-
-  async function runPrint(
-    pageIndexes: number[],
-    clickEvent: MouseEvent,
-  ): Promise<void> {
-    // Determine method and pre-open tab synchronously if needed (avoids popup blockers)
-    const method = panel.querySelector<HTMLInputElement>(
-      'input[name="m"]:checked',
-    )?.value;
-
-    let preOpenedWindow: Window | null = null;
-    if (method === "tab") {
-      // Must happen synchronously during the click handler call stack
-      preOpenedWindow = window.open("about:blank", "_blank");
-      if (!preOpenedWindow)
-        log(
-          "Popup blocked when opening blank tab. Will try direct open later.",
-          "error",
-        );
-    }
-
+    // DOM mode prints from the current window, which then fires `afterprint`.
+    // print() throws when the document doesn't allow printing, so unload the
+    // copy in that case.
     try {
-      const buf = await exportSubset(pageIndexes);
-      if (method === "tab") {
-        printNewTabWithPopupSafeNavigation(buf, preOpenedWindow);
-      } else {
-        printViaIframe(buf);
-      }
-    } catch (e) {
-      log((e as Error)?.message || String(e), "error");
-      try {
-        if (preOpenedWindow && !preOpenedWindow.closed) preOpenedWindow.close();
-      } catch (_) {}
+      copy.print({ mode: window.NutrientViewer.PrintMode.DOM });
+    } catch (error) {
+      unloadPrintInstance();
+      throw error;
+    }
+  } finally {
+    isPreparing = false;
+  }
+}
+
+// Convert "1, 3-5" (1-based page numbers) to page indexes (0-based): [0, 2, 3, 4].
+function toPageIndexes(instance: Instance, input: string): number[] {
+  const total = instance.totalPageCount;
+  const pageIndexes: number[] = [];
+
+  for (const part of input.split(",").map((value) => value.trim())) {
+    const bounds = part.split("-").map((value) => value.trim());
+    const [start, end = start] = bounds.map(Number);
+    const isValid =
+      bounds.length <= 2 &&
+      bounds.every((value) => /^\d+$/.test(value)) &&
+      Number.isInteger(start) &&
+      Number.isInteger(end) &&
+      start >= 1 &&
+      end <= total &&
+      start <= end;
+
+    if (!isValid) {
+      throw new Error(
+        `Enter pages between 1 and ${total}, for example, 1, 3-5.`,
+      );
+    }
+
+    for (let pageNumber = start; pageNumber <= end; pageNumber++) {
+      pageIndexes.push(pageNumber - 1);
     }
   }
 
-  // Wire buttons
-  panel
-    .querySelector("#btn-print-current")
-    ?.addEventListener("click", async (ev) => {
-      const idx = instance.viewState?.currentPageIndex;
-      if (typeof idx !== "number")
-        return log("Could not read currentPageIndex from viewState.", "error");
-      await runPrint([idx], ev as MouseEvent);
-    });
+  return pageIndexes;
+}
 
-  panel
-    .querySelector("#btn-print-range")
-    ?.addEventListener("click", async (ev) => {
-      const input = (
-        panel.querySelector("#inp-range") as HTMLInputElement
-      )?.value.trim();
-      if (!input) return log("Enter a page list, e.g. 1,3-5,8", "error");
+function addControls(instance: Instance): void {
+  const panel = document.createElement("div");
+  panel.style.cssText =
+    "position:fixed;bottom:10px;right:10px;z-index:99999;display:flex;gap:6px;padding:8px;background:#fff;border:1px solid #ccc;border-radius:6px;font:13px system-ui";
+  panel.innerHTML = `
+    <button id="print-current">Print current page</button>
+    <input id="page-numbers" placeholder="1, 3-5" size="10" />
+    <button id="print-selected">Print selected pages</button>
+  `;
+  document.body.appendChild(panel);
 
-      const total = await getTotalPages();
-      const indexes = parseRange(input, total);
-      if (!indexes.length)
-        return log("No pages selected after parsing.", "error");
-      await runPrint(indexes, ev as MouseEvent);
-    });
+  panel.querySelector("#print-current")?.addEventListener("click", () => {
+    // `currentPageIndex` is already 0-based.
+    printPages(instance, [instance.viewState.currentPageIndex]).catch(
+      (error: Error) => {
+        console.error("Failed to print the current page:", error.message);
+      },
+    );
+  });
 
-  log("Print controls ready.", "success");
-});
+  panel.querySelector("#print-selected")?.addEventListener("click", () => {
+    try {
+      const input =
+        panel.querySelector<HTMLInputElement>("#page-numbers")?.value ?? "";
+      printPages(instance, toPageIndexes(instance, input)).catch(
+        (error: Error) => {
+          console.error("Failed to print the selected pages:", error.message);
+        },
+      );
+    } catch (error) {
+      console.error((error as Error).message);
+    }
+  });
+}
+
+window.NutrientViewer.load(options)
+  .then(addControls)
+  .catch((error: Error) => {
+    console.error("Failed to load document:", error.message);
+  });
