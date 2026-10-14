@@ -11,7 +11,7 @@ import { baseOptions } from "../../shared/base-options";
 
 // Options shared by the viewer and the print copy. The Playground's
 // baseOptions carries a custom theme, so set a built-in one.
-const options = { ...baseOptions, theme: window.NutrientViewer.Theme.DARK };
+const options = { ...baseOptions, theme: NutrientViewer.Theme.DARK };
 
 let isPreparing = false;
 let printInstance: Instance | null = null;
@@ -19,7 +19,7 @@ let printInstance: Instance | null = null;
 // Unload the copy from the previous print job, if it's still loaded.
 function unloadPrintInstance(): void {
   if (printInstance) {
-    window.NutrientViewer.unload(printInstance);
+    NutrientViewer.unload(printInstance);
     printInstance = null;
   }
 }
@@ -50,7 +50,7 @@ async function printPages(
     // Same options as the viewer (license and so on), without a user interface.
     // The SDK logs a warning for viewer-only options, such as `container`,
     // that it ignores in headless mode.
-    const copy = await window.NutrientViewer.load({
+    const copy = await NutrientViewer.load({
       ...options,
       headless: true,
       document: pdf,
@@ -72,7 +72,7 @@ async function printPages(
     // print() throws when the document doesn't allow printing, so unload the
     // copy in that case.
     try {
-      copy.print({ mode: window.NutrientViewer.PrintMode.DOM });
+      copy.print({ mode: NutrientViewer.PrintMode.DOM });
     } catch (error) {
       unloadPrintInstance();
       throw error;
@@ -93,8 +93,6 @@ function toPageIndexes(instance: Instance, input: string): number[] {
     const isValid =
       bounds.length <= 2 &&
       bounds.every((value) => /^\d+$/.test(value)) &&
-      Number.isInteger(start) &&
-      Number.isInteger(end) &&
       start >= 1 &&
       end <= total &&
       start <= end;
@@ -148,7 +146,7 @@ function addControls(instance: Instance): void {
   });
 }
 
-window.NutrientViewer.load(options)
+NutrientViewer.load(options)
   .then(addControls)
   .catch((error: Error) => {
     console.error("Failed to load document:", error.message);
