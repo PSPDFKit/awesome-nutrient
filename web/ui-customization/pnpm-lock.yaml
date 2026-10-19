@@ -6,9 +6,9 @@ settings:
 
 overrides:
   ajv@<6.14.0: '>=6.14.0 <7'
-  brace-expansion@<1.1.18: '>=1.1.18 <2'
+  brace-expansion@<1.1.20: '>=1.1.20 <2'
   brace-expansion@>=2.0.0 <2.1.4: '>=2.1.4 <3'
-  brace-expansion@>=4.0.0 <5.0.9: '>=5.0.9 <6'
+  brace-expansion@>=4.0.0 <5.0.11: '>=5.0.11 <6'
   browserslist@<=4.28.6: '>=4.28.8 <5'
   dompurify@<3.4.13: '>=3.4.13 <4'
   esbuild@>=0.27.3 <0.28.1: '>=0.28.1 <1'
@@ -22,6 +22,7 @@ overrides:
   picomatch@<2.3.2: '>=2.3.2 <3'
   picomatch@>=4.0.0 <4.0.5: '>=4.0.5 <5'
   postcss@<8.5.23: '>=8.5.23 <9'
+  source-map-js@>=1.0.0 <1.2.2: '>=1.2.2 <2'
   rollup@>=4.0.0 <4.59.0: '>=4.59.0 <5'
 
 importers:
@@ -977,11 +978,11 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
-  brace-expansion@1.1.18:
-    resolution: {integrity: sha512-Edep/X9fGqVNmzKBVsDYIOtD+z1tuezV70LBjdCst9Tqu76lsnvRiZ6oTic1n+/BIwX6QDGAO94PN4N2SADvtw==}
+  brace-expansion@1.1.21:
+    resolution: {integrity: sha512-9zeA+KLZNNzglF2TPKRQEDyx6Yby7daAkuy8MiPzpXPsYDWi/DRM8jmwUDxokQjYqBpv5DgPiwD4h4ZZSy1Ujw==}
 
-  brace-expansion@5.0.9:
-    resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
+  brace-expansion@5.0.12:
+    resolution: {integrity: sha512-YovQ3rzhaLMIrDjNDMkNS01tea93qhEhG5xy8f6+R0l+dw3Ki+5sCoIoI942iuLZTHWogWktgwVDhU09iNEimQ==}
     engines: {node: 20 || >=22}
 
   browserslist@4.28.8:
@@ -1682,8 +1683,8 @@ packages:
   slate@0.112.0:
     resolution: {integrity: sha512-PRnfFgDA3tSop4OH47zu4M1R4Uuhm/AmASu29Qp7sGghVFb713kPBKEnSf1op7Lx/nCHkRlCa3ThfHtCBy+5Yw==}
 
-  source-map-js@1.2.1:
-    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
+  source-map-js@1.2.2:
+    resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
     engines: {node: '>=0.10.0'}
 
   strip-json-comments@3.1.1:
@@ -2887,12 +2888,12 @@ snapshots:
 
   baseline-browser-mapping@2.11.15: {}
 
-  brace-expansion@1.1.18:
+  brace-expansion@1.1.21:
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
 
-  brace-expansion@5.0.9:
+  brace-expansion@5.0.12:
     dependencies:
       balanced-match: 4.0.4
 
@@ -3303,11 +3304,11 @@ snapshots:
 
   minimatch@10.2.5:
     dependencies:
-      brace-expansion: 5.0.9
+      brace-expansion: 5.0.12
 
   minimatch@3.1.5:
     dependencies:
-      brace-expansion: 1.1.18
+      brace-expansion: 1.1.21
 
   modern-ahocorasick@1.1.0: {}
 
@@ -3380,7 +3381,7 @@ snapshots:
     dependencies:
       nanoid: 3.3.18
       picocolors: 1.1.1
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   prelude-ls@1.2.1: {}
 
@@ -3560,7 +3561,7 @@ snapshots:
       is-plain-object: 5.0.0
       tiny-warning: 1.0.3
 
-  source-map-js@1.2.1: {}
+  source-map-js@1.2.2: {}
 
   strip-json-comments@3.1.1: {}
 

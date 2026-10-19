@@ -3,9 +3,9 @@ packages:
 minimumReleaseAge: 21600 # 15 days
 overrides:
   "ajv@<6.14.0": ">=6.14.0 <7"
-  "brace-expansion@<1.1.18": ">=1.1.18 <2"
+  "brace-expansion@<1.1.20": ">=1.1.20 <2"
   "brace-expansion@>=2.0.0 <2.1.4": ">=2.1.4 <3"
-  "brace-expansion@>=4.0.0 <5.0.9": ">=5.0.9 <6"
+  "brace-expansion@>=4.0.0 <5.0.11": ">=5.0.11 <6"
   "browserslist@<=4.28.6": ">=4.28.8 <5"
   "dompurify@<3.4.13": ">=3.4.13 <4"
   "esbuild@>=0.27.3 <0.28.1": ">=0.28.1 <1"
@@ -19,4 +19,5 @@ overrides:
   "picomatch@<2.3.2": ">=2.3.2 <3"
   "picomatch@>=4.0.0 <4.0.5": ">=4.0.5 <5"
   "postcss@<8.5.23": ">=8.5.23 <9"
+  "source-map-js@>=1.0.0 <1.2.2": ">=1.2.2 <2"
   "rollup@>=4.0.0 <4.59.0": ">=4.59.0 <5"

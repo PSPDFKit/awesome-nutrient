@@ -12,6 +12,9 @@
   "devDependencies": {
     "serve": "^14.2.0"
   },
+  "overrides": {
+    "compression": "^1.8.2"
+  },
   "engines": {
     "node": "^20.17.0 || >=22.9.0",
     "npm": ">=11.10.0"
