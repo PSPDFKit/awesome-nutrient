@@ -197,6 +197,87 @@ test("accepts the plain YAML the dual-manager examples commit", () => {
   assert.deepEqual(checkCooldownCoverage(root).messages, []);
 });
 
+test("allows only reviewed exact pnpm security-release exclusions", () => {
+  const root = fixture();
+  write(
+    root,
+    "pnpm-example/pnpm-workspace.yaml",
+    'minimumReleaseAge: 21600\nminimumReleaseAgeExclude: ["next@16.4.1", "@next/env@16.4.1", "@next/swc-darwin-arm64@16.4.1", "dompurify@3.4.17", "markdown-it@14.3.3"]\n',
+  );
+  assert.deepEqual(checkCooldownCoverage(root).messages, []);
+
+  for (const exclusion of [
+    '["dompurify"]',
+    '["dompurify@^3.4.17"]',
+    '["dompurify@3.4.16"]',
+    '["@next/*@16.4.1"]',
+    '["dompurify@3.4.17", "dompurify@3.4.17"]',
+    '"dompurify@3.4.17"',
+    '["dompurify@3.4.17", 1]',
+    "[]",
+    '["latest"]',
+  ]) {
+    write(
+      root,
+      "pnpm-example/pnpm-workspace.yaml",
+      `minimumReleaseAge: 21600\nminimumReleaseAgeExclude: ${exclusion}\n`,
+    );
+    assert.match(
+      messages(root),
+      /minimumReleaseAgeExclude bypasses the cooldown/,
+      exclusion,
+    );
+  }
+});
+
+test("rejects quoted YAML strings that resemble pnpm exclusion arrays", () => {
+  const root = fixture();
+  for (const exclusion of [
+    "'[\"dompurify@3.4.17\"]'",
+    '"[\\"dompurify@3.4.17\\"]"',
+  ]) {
+    write(
+      root,
+      "pnpm-example/pnpm-workspace.yaml",
+      `minimumReleaseAge: 21600\nminimumReleaseAgeExclude: ${exclusion}\n`,
+    );
+    assert.match(
+      messages(root),
+      /minimumReleaseAgeExclude bypasses the cooldown/,
+      exclusion,
+    );
+  }
+});
+
+test("rejects pnpm exclusion aliases, block lists, malformed JSON and duplicates", () => {
+  const root = fixture();
+  for (const exclusion of [
+    '&approved ["dompurify@3.4.17"]',
+    "*approved",
+    '|\n  ["dompurify@3.4.17"]',
+    '\n  - "dompurify@3.4.17"',
+    '["dompurify@3.4.17",]',
+  ]) {
+    write(
+      root,
+      "pnpm-example/pnpm-workspace.yaml",
+      `minimumReleaseAge: 21600\nminimumReleaseAgeExclude: ${exclusion}\n`,
+    );
+    assert.match(
+      messages(root),
+      /minimumReleaseAgeExclude bypasses the cooldown|uses a YAML anchor, alias, tag or block scalar/,
+      exclusion,
+    );
+  }
+
+  write(
+    root,
+    "pnpm-example/pnpm-workspace.yaml",
+    'minimumReleaseAge: 21600\nminimumReleaseAgeExclude: ["dompurify@3.4.17"]\nminimumReleaseAgeExclude: ["markdown-it@14.3.3"]\n',
+  );
+  assert.match(messages(root), /minimumReleaseAgeExclude is set 2 times/);
+});
+
 test("requires engines.npm to exclude unsupported npm versions", () => {
   const root = fixture();
   write(

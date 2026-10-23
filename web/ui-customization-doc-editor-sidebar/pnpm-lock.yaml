@@ -5,10 +5,11 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  dompurify: 3.4.17
+  markdown-it: 14.3.3
   brace-expansion@<1.1.20: '>=1.1.20 <2'
   brace-expansion@>=4.0.0 <5.0.11: '>=5.0.11 <6'
   browserslist@<=4.28.6: '>=4.28.8 <5'
-  dompurify@<3.4.13: '>=3.4.13 <4'
   js-yaml@>=4.0.0 <4.3.2: '>=4.3.2 <5'
   nanoid@<3.3.18: '>=3.3.18 <4'
   nanoid@>=4.0.0 <5.1.16: '>=5.1.16 <6'
@@ -52,7 +53,7 @@ importers:
         version: 19.2.3(@types/react@19.2.17)
       '@vitejs/plugin-react':
         specifier: ^5.1.2
-        version: 5.2.0(supports-color@7.2.0)(vite@7.3.6(@types/node@24.13.3))
+        version: 5.2.0(supports-color@7.2.0)(vite@7.3.7(@types/node@24.13.3))
       eslint:
         specifier: ^9.36.0
         version: 9.39.5(supports-color@7.2.0)
@@ -73,7 +74,7 @@ importers:
         version: 8.63.0(eslint@9.39.5(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
       vite:
         specifier: ^7.3.1
-        version: 7.3.6(@types/node@24.13.3)
+        version: 7.3.7(@types/node@24.13.3)
 
 packages:
 
@@ -1048,8 +1049,8 @@ packages:
     resolution: {integrity: sha512-GYqKi1aH7PJXxdhTeZBFrg8vUBeKXi+cNprXsC1kpJcbcVnV9wBsrOu1cQEdG0WeQwlfHiy3XvnKfIrJ2R0NzQ==}
     hasBin: true
 
-  dompurify@3.4.13:
-    resolution: {integrity: sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ==}
+  dompurify@3.4.17:
+    resolution: {integrity: sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w==}
 
   downshift@6.1.12:
     resolution: {integrity: sha512-7XB/iaSJVS4T8wGFT3WRXmSF1UlBHAA40DshZtkrIscIN+VC+Lh363skLxFTvJwtNgHxAMDGEHT4xsyQFWL+UA==}
@@ -1379,8 +1380,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  markdown-it@14.3.0:
-    resolution: {integrity: sha512-RCEsPjR+sr0x+AuYp601tKTkgFG4YEPLCzHST3cQ/fhlJkqAkz1L2/Qbp1j9qw5SBwQHFBoW8+hoN5xssOF0Tw==}
+  markdown-it@14.3.3:
+    resolution: {integrity: sha512-L//tDAkjTjJCU6pBUSBTgs3Kg4InVaZuUZog/b6V12UKhcDQ7S78877ibbCanRExwPuYP1CZD7Gd2dxSy1GXRg==}
     hasBin: true
 
   mdurl@2.0.0:
@@ -1712,8 +1713,8 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  vite@7.3.6:
-    resolution: {integrity: sha512-4XP60spRGjSZFf1qYH+dJIkK2znL3zQfl9KkOV9MkkRR/3Dls0dxaBsQPTloEc5BLXWPL9vsOxopxyKoMmDueg==}
+  vite@7.3.7:
+    resolution: {integrity: sha512-AHEzTORMbi7/7aXp7w7KZ5+DCUdSeLsJz0grY8xHpc9DHdYb0vQu6DqJfm2tOw3gDExNgPgnJTXxM6syYFHaCA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -1953,11 +1954,11 @@ snapshots:
       '@vanilla-extract/dynamic': 2.1.5
       class-variance-authority: 0.7.1
       comlink: 4.4.2
-      dompurify: 3.4.13
+      dompurify: 3.4.17
       granular-hooks: 1.1.0(react@19.2.7)
       kdbush: 4.1.0
       lodash: 4.18.1
-      markdown-it: 14.3.0
+      markdown-it: 14.3.3
       motion: 12.0.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       perfect-freehand: 1.2.3
       react: 19.2.7
@@ -1991,7 +1992,7 @@ snapshots:
 
   '@baseline-ui/icons@0.48.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      dompurify: 3.4.13
+      dompurify: 3.4.17
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
@@ -2756,7 +2757,7 @@ snapshots:
     dependencies:
       '@vanilla-extract/css': 1.17.4
 
-  '@vitejs/plugin-react@5.2.0(supports-color@7.2.0)(vite@7.3.6(@types/node@24.13.3))':
+  '@vitejs/plugin-react@5.2.0(supports-color@7.2.0)(vite@7.3.7(@types/node@24.13.3))':
     dependencies:
       '@babel/core': 7.29.7(supports-color@7.2.0)
       '@babel/plugin-transform-react-jsx-self': 7.29.7(@babel/core@7.29.7(supports-color@7.2.0))
@@ -2764,7 +2765,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-rc.3
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: 7.3.6(@types/node@24.13.3)
+      vite: 7.3.7(@types/node@24.13.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -2877,7 +2878,7 @@ snapshots:
 
   direction@1.0.4: {}
 
-  dompurify@3.4.13:
+  dompurify@3.4.17:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -3171,7 +3172,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  markdown-it@14.3.0:
+  markdown-it@14.3.3:
     dependencies:
       argparse: 2.0.1
       entities: 4.5.0
@@ -3483,7 +3484,7 @@ snapshots:
     dependencies:
       react: 19.2.7
 
-  vite@7.3.6(@types/node@24.13.3):
+  vite@7.3.7(@types/node@24.13.3):
     dependencies:
       esbuild: 0.28.1
       fdir: 6.5.0(picomatch@4.0.5)
