@@ -9,31 +9,13 @@ import { existsSync, globSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const MIN_DAYS = 15;
+const MIN_DAYS = 7;
 const MIN_NPM_VERSION = [11, 10, 0];
 // npm 11 supports these Node release lines. Keep the user-facing Node guard
 // aligned with npm's own runtime requirement rather than forcing Node 24.
 const REQUIRED_NODE_RANGE = "^20.17.0 || >=22.9.0";
 // pnpm's minimumReleaseAge is expressed in minutes.
 const MIN_MINUTES = MIN_DAYS * 24 * 60;
-// These exact releases are the narrowly reviewed, temporary exceptions for
-// security fixes published before the 15-day cooldown elapsed. Any addition
-// requires code review; package names, ranges and wildcard selectors remain
-// prohibited.
-const APPROVED_PNPM_RELEASE_EXCLUSIONS = new Set([
-  "next@16.4.1",
-  "@next/env@16.4.1",
-  "@next/swc-darwin-x64@16.4.1",
-  "@next/swc-darwin-arm64@16.4.1",
-  "@next/swc-linux-x64-gnu@16.4.1",
-  "@next/swc-linux-x64-musl@16.4.1",
-  "@next/swc-win32-x64-msvc@16.4.1",
-  "@next/swc-linux-arm64-gnu@16.4.1",
-  "@next/swc-linux-arm64-musl@16.4.1",
-  "@next/swc-win32-arm64-msvc@16.4.1",
-  "dompurify@3.4.17",
-  "markdown-it@14.3.3",
-]);
 const SCRIPT_PATH = fileURLToPath(import.meta.url);
 const REPO_ROOT = resolve(dirname(SCRIPT_PATH), "../..");
 
@@ -115,47 +97,10 @@ function yamlSettings(file, label, fail) {
       continue;
     }
     const entries = settings.get(match[1]) ?? [];
-    // The pnpm release exclusion must be an actual YAML array, not a quoted
-    // scalar that happens to contain JSON. Keep its raw value so the
-    // allowlist validator can distinguish those shapes. Other settings keep
-    // their existing scalar normalization.
-    entries.push(
-      match[1] === "minimumReleaseAgeExclude"
-        ? value
-        : value.replace(/^(["'])(.*)\1$/, "$2"),
-    );
+    entries.push(value.replace(/^(["'])(.*)\1$/, "$2"));
     settings.set(match[1], entries);
   }
   return settings;
-}
-
-function approvedPnpmReleaseExclusions(value, fileLabel, fail) {
-  let exclusions;
-  try {
-    if (!value?.startsWith("[") || !value.endsWith("]")) {
-      throw new Error("must be an inline JSON array");
-    }
-    exclusions = JSON.parse(value);
-  } catch {
-    fail(
-      `${fileLabel}: minimumReleaseAgeExclude bypasses the cooldown unless it is a strict JSON array of reviewed exact releases`,
-    );
-    return;
-  }
-
-  if (
-    !Array.isArray(exclusions) ||
-    exclusions.length === 0 ||
-    exclusions.some((exclusion) => typeof exclusion !== "string") ||
-    new Set(exclusions).size !== exclusions.length ||
-    exclusions.some(
-      (exclusion) => !APPROVED_PNPM_RELEASE_EXCLUSIONS.has(exclusion),
-    )
-  ) {
-    fail(
-      `${fileLabel}: minimumReleaseAgeExclude bypasses the cooldown unless every entry is a unique reviewed exact release`,
-    );
-  }
 }
 
 function compareVersions(left, right) {
@@ -316,7 +261,9 @@ export function checkCooldownCoverage(root = REPO_ROOT) {
       fail,
     );
     if (exclusion !== undefined) {
-      approvedPnpmReleaseExclusions(exclusion, workspaceLabel, fail);
+      fail(
+        `${workspaceLabel}: minimumReleaseAgeExclude bypasses the cooldown; wait for the release to mature instead of committing an exclusion`,
+      );
     }
     // pnpm defaults minimumReleaseAgeStrict to true once minimumReleaseAge is
     // set; any other value lets it fall back to an immature release, and any

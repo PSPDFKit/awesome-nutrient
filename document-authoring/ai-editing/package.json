@@ -17,10 +17,10 @@
   "dependencies": {
     "@langchain/core": "^1.1.24",
     "@langchain/langgraph": "^1.4.7",
-    "@langchain/openai": "^1.2.7",
-    "@nutrient-sdk/document-authoring": "^1.11.0",
+    "@langchain/openai": "1.2.10",
+    "@nutrient-sdk/document-authoring": "1.11.0",
     "jsonrepair": "^3.13.2",
-    "next": "16.4.1",
+    "next": "16.4.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "zod": "^4.3.6"
@@ -47,5 +47,8 @@
   "engines": {
     "node": "^20.17.0 || >=22.9.0",
     "npm": ">=11.10.0"
+  },
+  "overrides": {
+    "eslint-plugin-react-hooks": "7.0.1"
   }
 }
