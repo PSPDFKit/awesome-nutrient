@@ -1,10 +1,13 @@
 packages:
   - .
+allowBuilds:
+  esbuild: true
 minimumReleaseAge: 21600 # 15 days
 minimumReleaseAgeExclude: ["dompurify@3.4.17", "markdown-it@14.3.3"]
 overrides:
   dompurify: 3.4.17
   markdown-it: 14.3.3
+  zod-validation-error: 4.0.2
   "ajv@<6.14.0": ">=6.14.0 <7"
   "brace-expansion@<1.1.20": ">=1.1.20 <2"
   "brace-expansion@>=2.0.0 <2.1.4": ">=2.1.4 <3"

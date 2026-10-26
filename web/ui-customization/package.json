@@ -38,7 +38,8 @@
     "source-map-js@>=1.0.0 <1.2.2": ">=1.2.2 <2",
     "rollup@>=4.0.0 <4.59.0": ">=4.59.0 <5",
     "dompurify": "3.4.17",
-    "markdown-it": "14.3.3"
+    "markdown-it": "14.3.3",
+    "zod-validation-error": "4.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
