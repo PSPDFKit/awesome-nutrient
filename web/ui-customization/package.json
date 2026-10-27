@@ -39,7 +39,8 @@
     "rollup@>=4.0.0 <4.59.0": ">=4.59.0 <5",
     "typescript-eslint": "8.53.1",
     "dompurify": "3.4.17",
-    "markdown-it": "14.3.3"
+    "markdown-it": "14.3.3",
+    "zod-validation-error": "4.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
