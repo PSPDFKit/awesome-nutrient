@@ -37,6 +37,7 @@
     "postcss@<8.5.23": ">=8.5.23 <9",
     "source-map-js@>=1.0.0 <1.2.2": ">=1.2.2 <2",
     "rollup@>=4.0.0 <4.59.0": ">=4.59.0 <5",
+    "typescript-eslint": "8.53.1",
     "dompurify": "3.4.17",
     "markdown-it": "14.3.3",
     "zod-validation-error": "4.0.2"
@@ -52,7 +53,7 @@
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.45.0",
+    "typescript-eslint": "8.53.1",
     "vite": "^7.3.1"
   },
   "engines": {

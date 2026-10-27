@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@baseline-ui/core": "^0.16.0",
+    "@react-aria/i18n": "3.11.1",
     "file-saver": "^2.0.5",
     "pspdfkit": "^2024.3.0",
     "react": "^18.2.0",
+    "react-aria": "3.33.1",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {

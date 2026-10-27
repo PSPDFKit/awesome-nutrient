@@ -23,8 +23,8 @@
     "@types/multer": "^2.0.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
-    "@typescript-eslint/eslint-plugin": "^8.44.1",
-    "@typescript-eslint/parser": "^8.44.1",
+    "@typescript-eslint/eslint-plugin": "8.53.1",
+    "@typescript-eslint/parser": "8.53.1",
     "@vitejs/plugin-react": "^5.1.2",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
@@ -45,5 +45,9 @@
   "engines": {
     "node": "^20.17.0 || >=22.9.0",
     "npm": ">=11.10.0"
+  },
+  "overrides": {
+    "@typescript-eslint/eslint-plugin": "8.53.1",
+    "@typescript-eslint/parser": "8.53.1"
   }
 }

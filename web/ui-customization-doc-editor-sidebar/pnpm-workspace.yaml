@@ -1,7 +1,8 @@
 packages:
   - .
-minimumReleaseAge: 21600 # 15 days
-minimumReleaseAgeExclude: ["dompurify@3.4.17", "markdown-it@14.3.3"]
+allowBuilds:
+  esbuild: true
+minimumReleaseAge: 10080 # 7 days
 overrides:
   dompurify: 3.4.17
   markdown-it: 14.3.3
@@ -13,3 +14,4 @@ overrides:
   "nanoid@>=4.0.0 <5.1.16": ">=5.1.16 <6"
   "postcss@<8.5.23": ">=8.5.23 <9"
   "source-map-js@>=1.0.0 <1.2.2": ">=1.2.2 <2"
+  typescript-eslint: 8.53.1

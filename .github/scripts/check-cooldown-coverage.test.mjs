@@ -40,9 +40,9 @@ function fixture() {
       engines: { node: "^20.17.0 || >=22.9.0", npm: ">=11.10.0" },
     }),
   );
-  write(root, "npm-example/.npmrc", "min-release-age=15\nengine-strict=true\n");
+  write(root, "npm-example/.npmrc", "min-release-age=7\nengine-strict=true\n");
   write(root, "pnpm-example/pnpm-lock.yaml", "lockfileVersion: '9.0'\n");
-  write(root, "pnpm-example/pnpm-workspace.yaml", "minimumReleaseAge: 21600\n");
+  write(root, "pnpm-example/pnpm-workspace.yaml", "minimumReleaseAge: 10080\n");
   return root;
 }
 
@@ -60,18 +60,45 @@ test("accepts complete npm and pnpm cooldown coverage", () => {
   assert.deepEqual(checkCooldownCoverage(fixture()).messages, []);
 });
 
+test("accepts the seven-day npm and pnpm floors and stricter settings", () => {
+  assert.deepEqual(checkCooldownCoverage(fixture()).messages, []);
+
+  const root = fixture();
+  write(root, "npm-example/.npmrc", "min-release-age=8\nengine-strict=true\n");
+  write(root, "pnpm-example/pnpm-workspace.yaml", "minimumReleaseAge: 11520\n");
+  assert.deepEqual(checkCooldownCoverage(root).messages, []);
+});
+
+test("rejects npm and pnpm settings below the seven-day floor independently", () => {
+  const npmRoot = fixture();
+  write(
+    npmRoot,
+    "npm-example/.npmrc",
+    "min-release-age=6\nengine-strict=true\n",
+  );
+  assert.match(messages(npmRoot), /below the policy floor of 7/);
+
+  const pnpmRoot = fixture();
+  write(
+    pnpmRoot,
+    "pnpm-example/pnpm-workspace.yaml",
+    "minimumReleaseAge: 10079\n",
+  );
+  assert.match(messages(pnpmRoot), /below the policy floor of 10080/);
+});
+
 test("rejects npm and pnpm cooldown escape hatches", () => {
   const root = fixture();
   write(
     root,
     "npm-example/.npmrc",
-    "min-release-age=15\nengine-strict=true\nmin-release-age-exclude[]=*\n",
+    "min-release-age=7\nengine-strict=true\nmin-release-age-exclude[]=*\n",
   );
   write(
     root,
     "pnpm-example/pnpm-workspace.yaml",
     [
-      "minimumReleaseAge: 21600",
+      "minimumReleaseAge: 10080",
       "minimumReleaseAgeExclude:",
       "  - '*'",
       "minimumReleaseAgeStrict: false",
@@ -93,7 +120,7 @@ test("rejects duplicate npm policy keys instead of accepting the first value", (
     root,
     "npm-example/.npmrc",
     [
-      "min-release-age=15",
+      "min-release-age=7",
       "min-release-age=1",
       "engine-strict=true",
       "engine-strict=false",
@@ -103,7 +130,7 @@ test("rejects duplicate npm policy keys instead of accepting the first value", (
 
   const output = messages(root);
   assert.match(output, /min-release-age is set 2 times/);
-  assert.match(output, /below the policy floor of 15/);
+  assert.match(output, /below the policy floor of 7/);
   assert.match(output, /engine-strict is set 2 times/);
   assert.match(output, /does not set engine-strict=true/);
 });
@@ -114,7 +141,7 @@ test("reads .npmrc the way npm does: case-sensitive keys, bare keys, no sections
   write(
     root,
     "npm-example/.npmrc",
-    "; comment\n  min-release-age = 15  \nengine-strict\n",
+    "; comment\n  min-release-age = 7  \nengine-strict\n",
   );
   assert.deepEqual(checkCooldownCoverage(root).messages, []);
 
@@ -130,7 +157,7 @@ test("reads .npmrc the way npm does: case-sensitive keys, bare keys, no sections
   write(
     root,
     "npm-example/.npmrc",
-    "[cooldown]\nmin-release-age=15\nengine-strict=true\n",
+    "[cooldown]\nmin-release-age=7\nengine-strict=true\n",
   );
   output = messages(root);
   assert.match(output, /\.npmrc:1: ini section headers are not allowed/);
@@ -142,7 +169,7 @@ test("fails closed on pnpm-workspace.yaml syntax it cannot interpret", () => {
     ['"trustLockfile": true', /unsupported top-level YAML syntax/],
     ["'minimumReleaseAgeExclude': ['*']", /unsupported top-level YAML syntax/],
     ["<<: *defaults", /unsupported top-level YAML syntax/],
-    ["- minimumReleaseAge: 21600", /unsupported top-level YAML syntax/],
+    ["- minimumReleaseAge: 10080", /unsupported top-level YAML syntax/],
     ["trustLockfile: &t true", /trustLockfile uses a YAML anchor/],
     ["trustLockfile: *t", /trustLockfile uses a YAML anchor/],
     ["trustLockfile: !!bool true", /trustLockfile uses a YAML anchor/],
@@ -160,7 +187,7 @@ test("fails closed on pnpm-workspace.yaml syntax it cannot interpret", () => {
     write(
       root,
       "pnpm-example/pnpm-workspace.yaml",
-      `minimumReleaseAge: 21600\n${snippet}\n`,
+      `minimumReleaseAge: 10080\n${snippet}\n`,
     );
     assert.match(messages(root), expected, snippet);
   }
@@ -169,7 +196,7 @@ test("fails closed on pnpm-workspace.yaml syntax it cannot interpret", () => {
   write(
     root,
     "pnpm-example/pnpm-workspace.yaml",
-    "{minimumReleaseAge: 21600, trustLockfile: true}\n",
+    "{minimumReleaseAge: 10080, trustLockfile: true}\n",
   );
   const output = messages(root);
   assert.match(output, /unsupported top-level YAML syntax/);
@@ -186,7 +213,7 @@ test("accepts the plain YAML the dual-manager examples commit", () => {
       "# workspace settings",
       "packages:",
       "  - .",
-      "minimumReleaseAge: 21600 # 15 days",
+      "minimumReleaseAge: 10080 # 7 days",
       "minimumReleaseAgeStrict: true",
       "trustLockfile: false",
       "overrides:",
@@ -197,20 +224,14 @@ test("accepts the plain YAML the dual-manager examples commit", () => {
   assert.deepEqual(checkCooldownCoverage(root).messages, []);
 });
 
-test("allows only reviewed exact pnpm security-release exclusions", () => {
+test("rejects every pnpm release exclusion", () => {
   const root = fixture();
-  write(
-    root,
-    "pnpm-example/pnpm-workspace.yaml",
-    'minimumReleaseAge: 21600\nminimumReleaseAgeExclude: ["next@16.4.1", "@next/env@16.4.1", "@next/swc-darwin-arm64@16.4.1", "dompurify@3.4.17", "markdown-it@14.3.3"]\n',
-  );
-  assert.deepEqual(checkCooldownCoverage(root).messages, []);
-
   for (const exclusion of [
     '["dompurify"]',
     '["dompurify@^3.4.17"]',
     '["dompurify@3.4.16"]',
     '["@next/*@16.4.1"]',
+    '["dompurify@3.4.17"]',
     '["dompurify@3.4.17", "dompurify@3.4.17"]',
     '"dompurify@3.4.17"',
     '["dompurify@3.4.17", 1]',
@@ -220,7 +241,7 @@ test("allows only reviewed exact pnpm security-release exclusions", () => {
     write(
       root,
       "pnpm-example/pnpm-workspace.yaml",
-      `minimumReleaseAge: 21600\nminimumReleaseAgeExclude: ${exclusion}\n`,
+      `minimumReleaseAge: 10080\nminimumReleaseAgeExclude: ${exclusion}\n`,
     );
     assert.match(
       messages(root),
@@ -239,7 +260,7 @@ test("rejects quoted YAML strings that resemble pnpm exclusion arrays", () => {
     write(
       root,
       "pnpm-example/pnpm-workspace.yaml",
-      `minimumReleaseAge: 21600\nminimumReleaseAgeExclude: ${exclusion}\n`,
+      `minimumReleaseAge: 10080\nminimumReleaseAgeExclude: ${exclusion}\n`,
     );
     assert.match(
       messages(root),
@@ -261,7 +282,7 @@ test("rejects pnpm exclusion aliases, block lists, malformed JSON and duplicates
     write(
       root,
       "pnpm-example/pnpm-workspace.yaml",
-      `minimumReleaseAge: 21600\nminimumReleaseAgeExclude: ${exclusion}\n`,
+      `minimumReleaseAge: 10080\nminimumReleaseAgeExclude: ${exclusion}\n`,
     );
     assert.match(
       messages(root),
@@ -273,7 +294,7 @@ test("rejects pnpm exclusion aliases, block lists, malformed JSON and duplicates
   write(
     root,
     "pnpm-example/pnpm-workspace.yaml",
-    'minimumReleaseAge: 21600\nminimumReleaseAgeExclude: ["dompurify@3.4.17"]\nminimumReleaseAgeExclude: ["markdown-it@14.3.3"]\n',
+    'minimumReleaseAge: 10080\nminimumReleaseAgeExclude: ["dompurify@3.4.17"]\nminimumReleaseAgeExclude: ["markdown-it@14.3.3"]\n',
   );
   assert.match(messages(root), /minimumReleaseAgeExclude is set 2 times/);
 });
@@ -307,7 +328,7 @@ test("aggregates missing and malformed package manifests with pnpm violations", 
   rmSync(join(root, "npm-example/package.json"));
   write(root, "broken/package-lock.json", "{}");
   write(root, "broken/package.json", "{");
-  write(root, "broken/.npmrc", "min-release-age=15\nengine-strict=true\n");
+  write(root, "broken/.npmrc", "min-release-age=7\nengine-strict=true\n");
   write(root, "pnpm-example/pnpm-workspace.yaml", "minimumReleaseAge: 1\n");
 
   const output = messages(root);
@@ -316,7 +337,7 @@ test("aggregates missing and malformed package manifests with pnpm violations", 
     /npm-example: commits a package-lock\.json but has no package\.json/,
   );
   assert.match(output, /broken: package\.json is not valid JSON/);
-  assert.match(output, /below the policy floor of 21600/);
+  assert.match(output, /below the policy floor of 10080/);
 });
 
 test("CLI discovers the full repository even when launched from a subdirectory", () => {
