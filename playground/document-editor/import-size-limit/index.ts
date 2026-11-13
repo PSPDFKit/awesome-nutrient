@@ -7,6 +7,10 @@ import { baseOptions } from "../../shared/base-options";
 
 // Replace the Document Editor's Import Document button with one that rejects
 // PDFs over a size limit before they're added to the document.
+//
+// Needs Nutrient Web SDK 1.18.0 or later. On 1.17.0 and 1.9.1, a custom
+// button's `setOperations` call also applies edits the user undid, so Rotate,
+// Undo, then Import keeps the rotation and drops the import.
 
 // 1 MB here is 1024 × 1024 bytes.
 const MAX_FILE_SIZE_MB = 25;
