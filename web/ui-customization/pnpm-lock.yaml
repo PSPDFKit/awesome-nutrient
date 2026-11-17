@@ -42,8 +42,8 @@ importers:
         specifier: 3.9.0
         version: 3.9.0
       '@nutrient-sdk/viewer':
-        specifier: 1.15.1
-        version: 1.15.1
+        specifier: 1.25.0
+        version: 1.25.0
       react:
         specifier: ^19.1.1
         version: 19.3.1
@@ -438,8 +438,8 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@nutrient-sdk/viewer@1.15.1':
-    resolution: {integrity: sha512-VRj05CGGMoXZZbvWJSBBgYzYoCRdwOPne1IWFNr/l0hkyB5ijKoVh8m94O6w3Ru8cW0OnBv4VfjxJQK9Mci6Yg==}
+  '@nutrient-sdk/viewer@1.25.0':
+    resolution: {integrity: sha512-LCZoNVghVw4q3OtlMGB5JfAOgImh5zF0u2iRs05IH0O4PgCGgwxDkanaA7dbLHJYgiLuE9S9wamRvEPKK80M2A==}
 
   '@rolldown/pluginutils@1.0.0-rc.3':
     resolution: {integrity: sha512-eybk3TjzzzV97Dlj5c+XrBFW57eTNhzod66y9HrBlzJ6NsCrWCp/2kaPS3K9wJmurBC0Tdw4yPjXKZqlznim3Q==}
@@ -1673,7 +1673,7 @@ snapshots:
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     optional: true
 
-  '@nutrient-sdk/viewer@1.15.1':
+  '@nutrient-sdk/viewer@1.25.0':
     dependencies:
       '@types/react': 18.3.31
 
