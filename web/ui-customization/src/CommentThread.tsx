@@ -137,7 +137,7 @@ const CommentThread = (props: CommentThreadProps) => {
                    * So we need to update that draft comment instead of creating a new one.
                    */
 
-                  const draftCommentInThread: Comment =
+                  const draftCommentInThread =
                     // includeDrafts option helps us fetch draft comments
                     (await instance.getComments({ includeDrafts: true }))
                       .filter((c) => c.rootId === id && c.pageIndex === null)
@@ -152,7 +152,7 @@ const CommentThread = (props: CommentThreadProps) => {
                     .find((a) => a.id === id)
                     ?.set("isCommentThreadRoot", true);
 
-                  if (!rootAnnotation) {
+                  if (!draftCommentInThread || !rootAnnotation) {
                     return;
                   }
 
